@@ -374,35 +374,35 @@ csoportba másolódik.</blockquote>
 <blockquote>Íme néhány példa, amely megmutatja, milyen jellegű kontrollod van afölött,
 hová íródik az információ. Az egyes példákban minden parancs egyenértékű:
 
-<pre><span class='blk'># copy all tags to preferred groups (no destination group)</span>
+<pre><span class='blk'># az összes tag másolása a preferált csoportokba (nincs célcsoport)</span>
 exiftool -tagsfromfile src.jpg dst.jpg
 exiftool -tagsfromfile src.jpg -all dst.jpg
 exiftool -tagsfromfile src.jpg "-all&gt;all" dst.jpg
 exiftool -tagsfromfile src.jpg "-all:all&gt;all" dst.jpg
 
-<span class='blk'># copy all tags, preserving family 1 group (destination group 'all')</span>
+<span class='blk'># az összes tag másolása az 1. családbeli csoport megőrzésével (célcsoport: 'all')</span>
 exiftool -tagsfromfile src.jpg -all:all dst.jpg
 exiftool -tagsfromfile src.jpg "-all&gt;all:all" dst.jpg
 exiftool -tagsfromfile src.jpg "-all:all&gt;all:all" dst.jpg
 
-<span class='blk'># copy all tags to EXIF group (destination group 'exif')
-# [the destination family 1 group is the preferred EXIF IFD]</span>
+<span class='blk'># az összes tag másolása az EXIF csoportba (célcsoport: 'exif')
+# [a cél 1. családbeli csoportja a preferált EXIF IFD]</span>
 exiftool -tagsfromfile src.jpg "-all&gt;exif:all" dst.jpg
 exiftool -tagsfromfile src.jpg "-all:all&gt;exif:all" dst.jpg
 
-<span class='blk'># copy XMP tags to XMP group (destination group 'xmp')
-# [the destination family 1 group is the preferred XMP namespace]</span>
+<span class='blk'># az XMP tagek másolása az XMP csoportba (célcsoport: 'xmp')
+# [a cél 1. családbeli csoportja a preferált XMP-névtér]</span>
 exiftool -tagsfromfile src.jpg "-xmp:all" dst.jpg
 exiftool -tagsfromfile src.jpg "-xmp:all&gt;xmp:all" dst.jpg
 
-<span class='blk'># copy XMP tags, preserving family 1 group (destination group 'all')</span>
+<span class='blk'># az XMP tagek másolása az 1. családbeli csoport megőrzésével (célcsoport: 'all')</span>
 exiftool -tagsfromfile src.jpg "-xmp:all&gt;all:all" dst.jpg
 
-<span class='blk'># copy XMP tags to preferred groups (no destination group)</span>
+<span class='blk'># az XMP tagek másolása a preferált csoportokba (nincs célcsoport)</span>
 exiftool -tagsfromfile src.jpg "-xmp:all&gt;all" dst.jpg
 
-<span class='blk'># copy XMP tags to EXIF only (destination group 'exif')
-# [the destination family 1 group is the preferred EXIF IFD]</span>
+<span class='blk'># az XMP tagek másolása csak az EXIF-be (célcsoport: 'exif')
+# [a cél 1. családbeli csoportja a preferált EXIF IFD]</span>
 exiftool -tagsfromfile src.jpg "-xmp:all&gt;exif:all" dst.jpg
 </pre>
 
@@ -425,10 +425,10 @@ biztosan önálló (self-contained) legyen.  Vedd figyelembe azt is, hogy az EXI
 írható blokként TIFF-alapú fájlformátumokba.  Ügyelj rá, hogy a célfájlban lévő
 <b>bármely, ilyen típusú meglévő metaadatot</b> <b>felülír</b> az új blokk.
 
-<pre><span class='blk'># copy EXIF as a block between same-named JPG files in different directories</span>
+<pre><span class='blk'># az EXIF másolása blokként különböző könyvtárakban lévő, azonos nevű JPG fájlok között</span>
 exiftool -tagsfromfile SRCDIR/%f.%e -exif -ext jpg DSTDIR
 
-<span class='blk'># copy XMP as a block from one file to another</span>
+<span class='blk'># az XMP másolása blokként egyik fájlból a másikba</span>
 exiftool -tagsfromfile src.jpg -xmp dst.cr2
 </pre></blockquote>
 
@@ -852,10 +852,10 @@ karaktert tartalmazó értékek elronthatják a CSV-formázást.  Ha ez előford
 parancshoz hozzáadható az <code>-api filter</code> opció, amely szükség esetén
 idézőjelbe teszi az értékeket.  Például:
 
-<pre><span class='blk'># in a Windows CMD shell</span>
+<pre><span class='blk'># Windows CMD shellben</span>
 exiftool -api filter="$_ = qq{""""$_""""} if s/""/""""/g or /(^\s+|\s+$)/ or /[,\n\r]/" ...
 
-<span class='blk'># in Mac/Linux</span>
+<span class='blk'># Mac/Linuxon</span>
 exiftool -api filter='$_ = qq{"$_"} if s/"/""/g or /(^\s+|\s+$)/ or /[,\n\r]/' ...</pre>
 
 A <code>-p</code> opció argumentuma fájlnév helyett formátumsztring is lehet.  A
@@ -971,7 +971,7 @@ kinyerésre.  A 12.36 és újabb verziók írhatóvá teszik a Composite:GPSPosi
 taget, így az EXIF GPS-koordináták és referenciairányok mind egyetlen taggel
 írhatók:
 
-<pre><span class='blk'># write all 4 EXIF GPS tags (version 12.36 and later)</span>
+<pre><span class='blk'># mind a 4 EXIF GPS tag írása (12.36-os és újabb verzió)</span>
 exiftool -gpsposition="42 30 0.00 S, 33 15 0.00 W"
 exiftool -gpsposition="-42.5, -33.25"</pre>
 
@@ -981,7 +981,7 @@ taget, így a különálló EXIF koordináta- és referenciairány-tagek együtt
 tageket egyébként elkerüli az írás az EXIF tagek írásakor lehetséges összekeveredés
 miatt.)
 
-<pre><span class='blk'># write EXIF:GPSLatitude and GPSLatitudeRef together (12.44 and later)</span>
+<pre><span class='blk'># az EXIF:GPSLatitude és a GPSLatitudeRef együttes írása (12.44-es és újabb)</span>
 exiftool -composite:gpslatitude="42 30 0.00 S" a.jpg
 exiftool -composite:gpslatitude="-42.5" a.jpg</pre></blockquote>
 
@@ -1081,10 +1081,10 @@ hogy rákényszerítsd az exiftoolt más fájlok feldolgozására, azokat vagy n
 kell felsorolni a parancssorban, vagy az <code>-ext</code> illetve
 <code>-ext+</code> opcióval kell megadni, valahogy így:
 
-<pre><span class=blk># process AVI files in addition to other writable file types</span>
+<pre><span class=blk># az AVI fájlok feldolgozása a többi írható fájltípus mellett</span>
 exiftool -ext+ AVI -d pics/%Y/%m "-directory&lt;dateTimeOriginal" DIR
 
-<span class=blk># process only AVI and JPG files</span>
+<span class=blk># csak az AVI és JPG fájlok feldolgozása</span>
 exiftool -ext AVI -ext JPG -d pics/%Y/%m "-directory&lt;dateTimeOriginal" DIR
 </pre>
 
@@ -1320,10 +1320,10 @@ neked kell eldöntened, hogy ez elfogadható-e számodra.</blockquote>
 problémák megkerülésére az, hogy egy külön szövegfájlba/-ból nyered ki/írod, és egy
 UTF&#8209;8-at ismerő szövegszerkesztővel nézed meg/szerkeszted a szöveget.  Például:
 
-<pre><span class=blk># extracting...</span>
+<pre><span class=blk># kinyerés...</span>
 exiftool image.jpg &gt; out.txt
 
-<span class=blk># writing...</span>
+<span class=blk># írás...</span>
 exiftool "-subject&lt;=subject.txt" image.jpg</pre></blockquote>
 
 <a name="Q19"></a>
@@ -1627,8 +1627,8 @@ nem tárolódik.</blockquote>
 <blockquote>Például az ilyen parancsok a szokásos metaadat-tagekre hatnak, és a
 fájlrendszeri módosítási dátum/időt az aktuális dátum/időre állítják:
 
-<pre><span class='blk'># common metadata date/time tags are incremented by 1 hour, while
-# FileModifyDate is set to the current date/time</span>
+<pre><span class='blk'># a szokásos metaadat dátum/idő tagek 1 órával nőnek, míg a
+# FileModifyDate az aktuális dátum/időre áll</span>
 exiftool -alldates+=1 c:\images</pre>
 
 <i class=lt>[Az AllDates tag egy rövidítés, amely a 3 szokásos
@@ -1637,17 +1637,17 @@ ModifyDate.]</i></blockquote>
 
 <blockquote>A FileModifyDate azonban megőrizhető a <code>-P</code> opcióval:
 
-<pre><span class='blk'># FileModifyDate is not changed</span>
+<pre><span class='blk'># a FileModifyDate nem változik</span>
 exiftool -alldates+=1 -P c:\images</pre>
 
 Az ExifTool a FileModifyDate írását is lehetővé teszi, ami teljes kontrollt ad a
 fájlrendszeri módosítási dátum/idő felett íráskor:
 
-<pre><span class='blk'># FileModifyDate is incremented by 1 hour</span>
+<pre><span class='blk'># a FileModifyDate 1 órával nő</span>
 exiftool -alldates+=1 -filemodifydate+=1 c:\images
 
-<span class='blk'># FileModifyDate is set from the value of DateTimeOriginal
-# (before DateTimeOriginal is incremented by 1 hour)</span>
+<span class='blk'># a FileModifyDate a DateTimeOriginal értékéből lesz beállítva
+# (mielőtt a DateTimeOriginal 1 órával nőne)</span>
 exiftool -alldates+=1 "-filemodifydate&lt;datetimeoriginal" c:\images
 </pre></blockquote>
 
@@ -1675,19 +1675,19 @@ lásd a <a href="#Q12">12. GYIK-pontot</a>.]</i></blockquote>
 importálni, hogy kimeneti képfájlokba írja. Például a következő parancsok importált
 metaadatot használnak egy könyvtár összes képfájljába való íráshoz.
 
-<pre><span class='blk'># import from CSV file</span>
+<pre><span class='blk'># importálás CSV-fájlból</span>
 exiftool -csv="c:\Users\Phil\test.csv" "c:\Users\Phil\Images"
 
-<span class='blk'># import from JSON file</span>
+<span class='blk'># importálás JSON-fájlból</span>
 exiftool -json="c:\Users\Phil\test.json" "c:\Users\Phil\Images"</pre>
 
 A fenti parancsoknál a bemeneti CSV- vagy JSON-fájlnak ugyanolyan formátumúnak
 kell lennie, mint ezeknek a parancsoknak a kimenete:
 
-<pre><span class='blk'># export to CSV file</span>
+<pre><span class='blk'># exportálás CSV-fájlba</span>
 exiftool -csv "c:\Users\Phil\Images" > "c:\Users\Phil\test.csv"
 
-<span class='blk'># export to JSON file</span>
+<span class='blk'># exportálás JSON-fájlba</span>
 exiftool -json "c:\Users\Phil\Images" > "c:\Users\Phil\test.json"</pre>
 
 Konkrétan a CSV-fájl első sorának a tagneveket kell tartalmaznia.
@@ -1759,11 +1759,11 @@ formázási szolgáltatás</a> ShiftTime függvényének használata:
 Windows alatt futtatod.)
 </blockquote><blockquote class=prog>
 <b>Programozóknak</b>: íme az ezzel egyenértékű ExifTool API-függvényhívások:
-<pre><span class='blk'># using the GlobalTimeShift option</span>
+<pre><span class='blk'># a GlobalTimeShift opció használatával</span>
 $exiftool->Options(GlobalTimeShift => '-2');
 $exifTool->SetNewValuesFromFile($src, 'datetimeoriginal&lt;filemodifydate');
 
-<span class='blk'># using ShiftTime in an advanced formatting expression</span>
+<span class='blk'># a ShiftTime használatával egy haladó formázási kifejezésben</span>
 $exifTool->SetNewValuesFromFile($src, 'datetimeoriginal&lt;${filemodifydate;ShiftTime("-2")}');</pre>
 </blockquote>
 

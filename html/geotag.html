@@ -662,23 +662,23 @@ neveznek, ami az <a href="geolocation.html">ExifTool geolokáció-szolgáltatás
 nyomvonalnapló generálására használható:</p>
 
 <pre>#------------------------------------------------------------------------------
-# File:         gpx.fmt
+# Fájl:         gpx.fmt
 #
-# Description:  Example ExifTool print format file to generate a GPX track log
+# Leírás:       Példa ExifTool kiírási formátumfájl GPX nyomvonalnapló generálására
 #
-# Usage:        exiftool -p gpx.fmt -ee3 FILE [...] &gt; out.gpx
+# Használat:    exiftool -p gpx.fmt -ee3 FILE [...] &gt; out.gpx
 #
-# Requires:     ExifTool version 10.49 or later
+# Igényel:      ExifTool 10.49-es vagy újabb verzió
 #
-# Revisions:    2010/02/05 - P. Harvey created
-#               2018/01/04 - PH Added IF to be sure position exists
-#               2018/01/06 - PH Use DateFmt function instead of -d option
-#               2019/10/24 - PH Preserve sub-seconds in GPSDateTime value
+# Változások:   2010/02/05 - P. Harvey létrehozta
+#               2018/01/04 - PH IF hozzáadva, hogy biztosan legyen pozíció
+#               2018/01/06 - PH DateFmt függvény használata a -d opció helyett
+#               2019/10/24 - PH A másodperc törtrészének megőrzése a GPSDateTime értékben
 #
-# Notes:     1) Input file(s) must contain GPSLatitude and GPSLongitude.
-#            2) The -ee3 option is to extract the full track from video files.
-#            3) The -fileOrder option may be used to control the order of the
-#               generated track points when processing multiple files.
+# Megjegyzések: 1) A bemeneti fájl(ok)nak tartalmazniuk kell GPSLatitude és GPSLongitude taget.
+#              2) A -ee3 opció a teljes nyomvonal kinyerésére szolgál videofájlokból.
+#              3) A -fileOrder opció használható a több fájl feldolgozásakor
+#                 generált nyomvonalpontok sorrendjének szabályozására.
 #------------------------------------------------------------------------------
 #[HEAD]&lt;?xml version="1.0" encoding="utf-8"?&gt;
 #[HEAD]&lt;gpx version="1.0"
@@ -750,31 +750,31 @@ hozzáadott SECT szolgáltatást használja, hogy a helyjelzőket könyvtárnév
 mappákba ossza:</p>
 
 <pre>#------------------------------------------------------------------------------
-# File:         kml.fmt
+# Fájl:         kml.fmt
 #
-# Description:  Example ExifTool print format file for generating a
-#               Google Earth KML file from a collection of geotagged images
+# Leírás:       Példa ExifTool kiírási formátumfájl, amely geotaggelt képek
+#               gyűjteményéből Google Earth KML-fájlt generál
 #
-# Usage:        exiftool -p kml.fmt -r DIR [...] &gt; out.kml
+# Használat:    exiftool -p kml.fmt -r DIR [...] &gt; out.kml
 #
-# Requires:     ExifTool version 10.41 or later
+# Igényel:      ExifTool 10.41-es vagy újabb verzió
 #
-# Revisions:    2010/02/05 - P. Harvey created
-#               2013/02/05 - PH Fixed camera icon to work with new Google Earth
-#               2017/02/02 - PH Organize into folders based on file directory
-#               2018/01/04 - PH Added IF to be sure position exists
-#               2020/01/11 - F. Kotov Limited image preview size to 500px
+# Változások:   2010/02/05 - P. Harvey létrehozta
+#               2013/02/05 - PH A fényképezőgép-ikon javítása az új Google Earthhöz
+#               2017/02/02 - PH Fájlkönyvtár alapján mappákba rendezés
+#               2018/01/04 - PH IF hozzáadva, hogy biztosan legyen pozíció
+#               2020/01/11 - F. Kotov Kép-előnézet méretének 500 px-re korlátozása
 #
-# Notes:     1) Input files must contain GPSLatitude and GPSLongitude.
-#            2) Add the -ee3 option to extract the full track from video files.
-#            3) For Google Earth to be able to find the images, the input
-#               images must be specified using relative paths, and "out.kml"
-#               must stay in the same directory as where the command was run.
-#            4) Google Earth is picky about the case of the image file extension,
-#               and may not be able to display the image if an upper-case
-#               extension is used.
-#            5) The -fileOrder option may be used to control the order of the
-#               generated placemarks when processing multiple files.
+# Megjegyzések: 1) A bemeneti fájloknak tartalmazniuk kell GPSLatitude és GPSLongitude taget.
+#              2) Add hozzá a -ee3 opciót a teljes nyomvonal kinyeréséhez videofájlokból.
+#              3) Ahhoz, hogy a Google Earth megtalálja a képeket, a bemeneti
+#                 képeket relatív elérési úttal kell megadni, és az "out.kml"-nek
+#                 abban a könyvtárban kell maradnia, ahol a parancsot futtattad.
+#              4) A Google Earth kényes a képfájl-kiterjesztés kis-/nagybetűjére,
+#                 és lehet, hogy nem tudja megjeleníteni a képet, ha nagybetűs
+#                 kiterjesztést használsz.
+#              5) A -fileOrder opció használható a több fájl feldolgozásakor
+#                 generált helyjelzők sorrendjének szabályozására.
 #------------------------------------------------------------------------------
 #[HEAD]&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 #[HEAD]&lt;kml xmlns="http://earth.google.com/kml/2.0"&gt;

@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
 <head>
-  <title>Structured Information</title>
+  <title>Strukturált információ</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 <style type="text/css">
 <!--
@@ -15,37 +15,37 @@ li.c { margin-top: 0 }
 </head>
 <body>
 <div class='index'>
-<a href="#Reading">Reading</a>
-<br><a href="#Writing">Writing</a>
-<br><a href="#Copying">Copying</a>
-<br><a href="#Deleting">Deleting</a>
-<br><a href="#Fields">Field Names</a>
-<br><a href="#Serialize">Serialization</a>
-<br><a href="#Examples">Examples</a>
-<br><a href="#User">User-Defined</a>
+<a href="#Reading">Olvasás</a>
+<br><a href="#Writing">Írás</a>
+<br><a href="#Copying">Másolás</a>
+<br><a href="#Deleting">Törlés</a>
+<br><a href="#Fields">Mezőnevek</a>
+<br><a href="#Serialize">Szerializálás</a>
+<br><a href="#Examples">Példák</a>
+<br><a href="#User">Felhasználó által definiált</a>
 </div>
-<h1 class='up'>Structured Information</h1>
+<h1 class='up'>Strukturált információ</h1>
 
-<p>ExifTool has the ability to read and write XMP structures through the use of
-either <b>structured or flattened tags</b>.  The ability to write via structured
-input was added in ExifTool version 8.44; older versions accepted only flattened
-tags as input.</p>
+<p>Az ExifTool képes XMP-struktúrákat olvasni és írni <b>strukturált vagy
+lapított (flattened) tagek</b> használatával.  A strukturált bemeneten keresztüli
+írás lehetőségét az ExifTool 8.44-es verziójában adták hozzá; a régebbi verziók
+csak lapított tageket fogadtak el bemenetként.</p>
 
-<p>To illustrate the concept of a flattened tag, the <code>XMP-exif:Flash</code>
-structure contains <code>Fired</code> and <code>Mode</code> fields (among
-others).  The flattened tags corresponding to these structure fields are
-<code>XMP-exif:FlashFired</code> and <code>XMP-exif:FlashMode</code>.  In the
-<a href="TagNames/XMP.html">XMP Tags documentation</a>, flattened tags are
-indicated by an underline (<code>_</code>) after the Writable type.</p>
+<p>A lapított tag fogalmának szemléltetésére: az <code>XMP-exif:Flash</code>
+struktúra (többek között) <code>Fired</code> és <code>Mode</code> mezőt
+tartalmaz.  Az ezeknek a struktúramezőknek megfelelő lapított tagek az
+<code>XMP-exif:FlashFired</code> és az <code>XMP-exif:FlashMode</code>.  Az
+<a href="TagNames/XMP.html">XMP Tags dokumentációban</a> a lapított tageket a
+Writable típus után álló aláhúzás (<code>_</code>) jelzi.</p>
 
-<p>This page describes various techniques used to read and write XMP structures
-using both structured and flattened tags.</p>
+<p>Ez az oldal különböző technikákat ismertet, amelyekkel XMP-struktúrák
+olvashatók és írhatók strukturált és lapított tagek használatával.</p>
 
 <a name='Reading'></a>
-<h2>Reading</h2>
+<h2>Olvasás</h2>
 
-<p>When reading, structures are <b>flattened by default</b>, and ExifTool
-returns one "flattened" tag for each field in the structure:</p>
+<p>Olvasáskor a struktúrák <b>alapértelmezés szerint lapítottak</b>, és az
+ExifTool a struktúra minden mezőjéhez egy „lapított" taget ad vissza:</p>
 
 <blockquote><table class='box'><tr><td>
 <pre>&gt; <span class=code>exiftool -xmp:all a.xmp</span>
@@ -55,9 +55,9 @@ Flash Mode                      : On
 Flash Return                    : Return not detected</pre>
 </td></tr></table></blockquote>
 
-<p>But the <code>-struct</code> option may be used to give <b>structured
-output</b>.  In this mode structures are returned instead of separate
-"flattened" tags:</p>
+<p>A <code>-struct</code> opcióval azonban <b>strukturált kimenet</b> kérhető.
+Ebben a módban a különálló „lapított" tagek helyett struktúrák kerülnek
+visszaadásra:</p>
 
 <blockquote><table class='box'><tr><td>
 <pre>&gt; <span class=code>exiftool -struct -xmp:all a.xmp</span>
@@ -65,21 +65,21 @@ XMP Toolkit                     : Image::ExifTool 8.44
 Flash                           : {Fired=True,Mode=On,Return=Return not detected}</pre>
 </td></tr></table></blockquote>
 
-<p class=lt>(Note: As illustrated in the example above, structures are
-<a href='#Serialize'>serialized</a> for console output by the ExifTool
-application. However, via the API with the <code>Struct</code> option,
-they are returned as Perl HASH references.)</p>
+<p class=lt>(Megjegyzés: ahogy a fenti példa mutatja, az ExifTool alkalmazás a
+struktúrákat <a href='#Serialize'>szerializálja</a> a konzolkimenethez. Az API-n
+keresztül a <code>Struct</code> opcióval azonban Perl HASH-referenciákként kerülnek
+visszaadásra.)</p>
 
-<p>The <code>-struct</code> option may also be combined with the JSON
-(<code>-j</code>), PHP (<code>-php</code>) or XML (<code>-X</code>) output
-formats to provide a structured format which may be more compatible with other
-applications.</p>
+<p>A <code>-struct</code> opció kombinálható a JSON (<code>-j</code>), a PHP
+(<code>-php</code>) vagy az XML (<code>-X</code>) kimeneti formátummal is, hogy
+olyan strukturált formátumot adjon, amely kompatibilisebb lehet más
+alkalmazásokkal.</p>
 
 <a name='Writing'></a>
-<h2>Writing</h2>
+<h2>Írás</h2>
 
-<p>When writing, <b>flattened tags and structures may be used interchangeably</b>.
-For example, the following commands all have the same effect.</p>
+<p>Íráskor a <b>lapított tagek és a struktúrák felcserélhetően használhatók</b>.
+Például a következő parancsoknak mind ugyanaz a hatása.</p>
 
 <blockquote><table class='box'><tr><td>
 <pre class=code>exiftool -flashmode=on -flashreturn=not -flashfired=true a.xmp
@@ -87,217 +87,220 @@ exiftool -xmp:flash="{mode=on,fired=true}" -flashreturn=not a.xmp
 exiftool -xmp:flash="{mode=on,fired=true,return=not}" a.xmp</pre>
 </td></tr></table></blockquote>
 
-<p class=lt>(Note:  Structures must be <a href='#Serialize'>serialized</a> when
-writing via the command-line application, in the same format as when reading with
-the <code>-struct</code> option.)</p>
+<p class=lt>(Megjegyzés: a parancssori alkalmazáson keresztüli íráskor a struktúrákat
+<a href='#Serialize'>szerializálni</a> kell, ugyanabban a formátumban, mint a
+<code>-struct</code> opcióval való olvasáskor.)</p>
 
-<p>An advantage of writing in structured form is that it can be easier to
-achieve the desired hierarchy with complex structures or when there are multiple
-structures in a list.  For example, this command adds a new hierarchical keyword
-to the XMP-mwg-kw:HierarchicalKeywords list:</p>
+<p>A strukturált formában való írás egyik előnye, hogy összetett struktúráknál,
+vagy amikor egy listában több struktúra van, könnyebb lehet elérni a kívánt
+hierarchiát.  Például ez a parancs egy új hierarchikus kulcsszót ad az
+XMP-mwg-kw:HierarchicalKeywords listához:</p>
 
 <blockquote><table class='box'><tr><td>
 <pre class=code>exiftool -hierarchicalkeywords+="{keyword=cat,children={keyword=Siamese}}" a.jpg</pre>
 </td></tr></table></blockquote>
 
-<p>But the flattened tags may be more convenient for <b>adding or replacing a
-single field</b> in an existing structure because writing as a structure would
-require that the entire structure be replaced.  For example, the following command
-adds a new second-level keyword to an existing HierarchicalKeywords structure:</p>
+<p>A lapított tagek azonban kényelmesebbek lehetnek egy meglévő struktúrában
+<b>egyetlen mező hozzáadásához vagy cseréjéhez</b>, mert a struktúraként való írás
+megkövetelné a teljes struktúra cseréjét.  Például a következő parancs egy új
+másodszintű kulcsszót ad egy meglévő HierarchicalKeywords struktúrához:</p>
 
 <blockquote><table class='box'><tr><td>
 <pre class=code>exiftool -hierarchicalkeywords2+="Persian" a.jpg</pre>
 </td></tr></table></blockquote>
 
-<p><b>Tricky:</b> There is one drawback when using this technique to add new
-fields to existing structures in lists:  New fields are added to the first
-structure which doesn't already contain the corresponding field.  So before
-adding a new field to a arbitrary structure, dummy fields must first be added to
-all earlier structures in the list which are missing this field.  However, the
-alternative of adding a new field by writing structured information also has its
-drawbacks. Here, although a specific structure in a list can easily be targeted
-through any unique combination of field values, the drawback is that the entire
-structure must be replaced (see <a href="#Deleting">Deleting / Replacing</a>
-below).</p>
+<p><b>Kényes:</b> van egy hátránya annak, ha ezzel a technikával adsz új mezőket
+listákban lévő meglévő struktúrákhoz:  az új mezők ahhoz az első struktúrához
+adódnak, amely még nem tartalmazza a megfelelő mezőt.  Így mielőtt új mezőt adnál
+egy tetszőleges struktúrához, előbb ál-mezőket kell hozzáadni a listában lévő
+összes korábbi struktúrához, amelyből ez a mező hiányzik.  Az alternatíva, hogy új
+mezőt strukturált információ írásával adsz hozzá, szintén hátrányokkal jár. Itt bár
+egy listában lévő adott struktúra könnyen megcélozható a mezőértékek bármely
+egyedi kombinációján keresztül, a hátrány az, hogy a teljes struktúrát ki kell
+cserélni (lásd lentebb a <a href="#Deleting">Törlést / Cserét</a>).</p>
 
-<p>The flattened tag names may also be used to <b>write structures at any level
-in a complex hierarchy</b>.  The following example writes a third-level
-structure inside a HierarchicalKeywords structure:</p>
+<p>A lapított tagnevek arra is használhatók, hogy <b>egy összetett hierarchia
+bármely szintjén struktúrákat írj</b>.  A következő példa egy harmadszintű
+struktúrát ír egy HierarchicalKeywords struktúrán belül:</p>
 
 <blockquote><table class='box'><tr><td>
 <pre class=code>exiftool -hierarchicalkeywords2Children='{Keyword=Tabby,Applied=true}' a.jpg</pre>
 </td></tr></table></blockquote>
 
-<p class=lt>(Note: Containing structures are created as necessary.  In this
-case, the HierarchicalKeywords and top-level KeywordInfo structures would be
-created if they didn't already exist.)</p>
+<p class=lt>(Megjegyzés: a tartalmazó struktúrák szükség szerint jönnek létre.  Ebben
+az esetben a HierarchicalKeywords és a legfelső szintű KeywordInfo struktúra jönne
+létre, ha még nem léteztek.)</p>
 
-<p>The <b>order of structure fields is not significant</b>, so they may be read
-in a different order than written, unlike arrays which maintain the same order. 
-To give a predictable output, fields in structured information are <b>sorted in
-alphabetical order</b> of field name by ExifTool when reading and writing.</p>
+<p>A <b>struktúramezők sorrendje nem lényeges</b>, így más sorrendben olvashatók
+be, mint ahogyan írták őket, ellentétben a tömbökkel, amelyek megőrzik a
+sorrendet.  A kiszámítható kimenet érdekében a strukturált információ mezőit az
+ExifTool olvasáskor és íráskor <b>a mezőnév ábécésorrendjébe</b> rendezi.</p>
 
-<p>If there are <b>errors converting some fields</b> of the input structure,
-other fields are still written and a warning is issued (but only one warning per
-structure is reported).  This also applies when copying structured information
-except that the <code>-v3</code> option must be used to see the warnings when
-copying.</p>
+<p>Ha <b>hibák vannak a bemeneti struktúra egyes mezőinek konvertálásakor</b>, a
+többi mező akkor is megíródik, és figyelmeztetés jelenik meg (de struktúránként
+csak egy figyelmeztetés kerül jelentésre).  Ez strukturált információ másolására is
+érvényes, azzal a kivétellel, hogy másoláskor a <code>-v3</code> opciót kell
+használni a figyelmeztetések megtekintéséhez.</p>
 
-<p><b>Programmers:</b> Structured information is written and read as Perl HASH
-references via the ExifTool API, but it may also be written as a serialized
-string.  The following two techniques are equivalent:</p>
+<p><b>Programozóknak:</b> a strukturált információ Perl HASH-referenciákként
+íródik és olvasódik az ExifTool API-n keresztül, de szerializált sztringként is
+írható.  A következő két technika egyenértékű:</p>
 
 <blockquote><table class='box'><tr><td>
-<pre># as a HASH reference
+<pre># HASH-referenciaként
 <span class=code>$exifTool-&gt;SetNewValue('XMP:Flash' =&gt; { mode=>'on', fired=>'true', return=>'not' });
 </span>
-# as a serialized string
+# szerializált sztringként
 <span class=code>$exifTool-&gt;SetNewValue('XMP:Flash' =&gt; '{mode=on,fired=true,return=not}');</span></pre>
 </td></tr></table></blockquote>
 
 <a name='Copying'></a>
-<h2>Copying</h2>
+<h2>Másolás</h2>
 
-<p>By default, tags are <b>copied as structures</b>, but flattened tag names
-may still be copied by specifying them explicitly. <span class=lt>(Flattened
-tags are treated as "unsafe" for copying so they are not copied by default
-unless the Struct feature is disabled; see below.)</span> Copying as structures
-allows the hierarchy of complex structures to be preserved.</p>
+<p>Alapértelmezés szerint a tagek <b>struktúraként másolódnak</b>, de a lapított
+tagnevek is másolhatók, ha explicit módon megadod őket. <span class=lt>(A lapított
+tagek másoláshoz „nem biztonságosnak" minősülnek, így alapértelmezés szerint nem
+másolódnak, hacsak nem kapcsolod ki a Struct szolgáltatást; lásd lentebb.)</span> A
+struktúraként való másolás lehetővé teszi az összetett struktúrák hierarchiájának
+megőrzését.</p>
 
 <blockquote><table class='box'><tr><td>
-<pre># this copies all XMP information as structures
-# (flattened tags are not copied by default...)
+<pre># ez az összes XMP információt struktúraként másolja
+# (a lapított tageket alapértelmezésben nem másolja...)
 <span class=code>exiftool -tagsfromfile src.jpg -xmp:all dst.jpg
 </span>
-# ... but flattened tags may be copied individually.  Here the
-# first level hierarchical keywords are copied to the Subject tag
-# (this may be done in the same command as one that copies structures)
+# ... de a lapított tagek egyenként is másolhatók.  Itt az első
+# szintű hierarchikus kulcsszavakat a Subject tagbe másoljuk
+# (ez elvégezhető ugyanabban a parancsban, mint amelyik struktúrákat másol)
 <span class=code>exiftool -tagsfromfile src.jpg "-subject&lt;hierarchicalkeywords1" dst.jpg</span></pre>
 </td></tr></table></blockquote>
 
-<p>Note that when copying a specific structure, only the top-level structures
-may be specified:</p>
+<p>Vedd figyelembe, hogy egy adott struktúra másolásakor csak a legfelső szintű
+struktúrák adhatók meg:</p>
 
 <blockquote><table class='box'><tr><td>
-<pre># this copies the complete keyword hierarchy
+<pre># ez a teljes kulcsszó-hierarchiát másolja
 <span class=code>exiftool -tagsfromfile src.jpg -keywordinfo dst.jpg
 </span>
-# WRONG because HierarchicalKeywords is NOT a top-level structure!
+# HIBÁS, mert a HierarchicalKeywords NEM legfelső szintű struktúra!
 <span class=code>exiftool -tagsfromfile src.jpg -hierarchicalkeywords dst.jpg</span></pre>
 </td></tr></table></blockquote>
 
-<p>The copy-as-structure feature may be disabled with <code>--struct</code> on
-the command line, or by setting the <a href="ExifTool.html#Struct">Struct option</a>
-to 0 via the API.  When this is done, only flattened tags are copied, and
-structures may not be specified. Conversely, if the structure option is enabled
-(by setting the <a href="ExifTool.html#Struct">Struct option</a> to 1 via the API,
-or with <code>-struct</code> on the command line), only structures are copied,
-and flattened tags may not be specified.</p>
+<p>A struktúraként való másolás szolgáltatás kikapcsolható a parancssorban a
+<code>--struct</code>-kal, vagy az API-n keresztül a
+<a href="ExifTool.html#Struct">Struct opció</a> 0-ra állításával.  Ha ez
+megtörténik, csak a lapított tagek másolódnak, és struktúrák nem adhatók meg.
+Ezzel szemben, ha a struktúra opció engedélyezve van (az API-n keresztül a
+<a href="ExifTool.html#Struct">Struct opció</a> 1-re állításával, vagy a
+parancssorban a <code>-struct</code>-kal), csak struktúrák másolódnak, és lapított
+tagek nem adhatók meg.</p>
 
-<p class=lt>(Note: ExifTool 8.43 and earlier copied as flattened tags only, but
-copying as structures has been the default since the ability to write structured
-information was introduced in version 8.44.  An enhancement in version 8.82
-allowed flattened tags to be copied explicitly without the need to disable the
-Struct option.)</p>
+<p class=lt>(Megjegyzés: az ExifTool 8.43 és korábbi verziói csak lapított
+tagekként másoltak, de a struktúraként való másolás az alapértelmezett, amióta a
+strukturált információ írásának lehetőségét bevezették a 8.44-es verzióban.  A
+8.82-es verzió egyik fejlesztése lehetővé tette, hogy a lapított tageket explicit
+módon másold anélkül, hogy ki kellene kapcsolni a Struct opciót.)</p>
 
 <a name='Deleting'></a>
-<h2>Deleting / Replacing</h2>
+<h2>Törlés / csere</h2>
 
-<p>A <b>complete structure is deleted</b> by specifying one or more matching
-fields.  All fields must match for the structure to be deleted.  For example,
-the following command deletes all HierarchicalKeywords structures which have the
-Keyword "<code>Terrier</code>" at the second level:</p>
+<p>Egy <b>teljes struktúra törlődik</b>, ha egy vagy több illeszkedő mezőt adsz
+meg.  A struktúra törléséhez minden mezőnek illeszkednie kell.  Például a
+következő parancs törli az összes olyan HierarchicalKeywords struktúrát, amelynek
+a második szinten „<code>Terrier</code>" a Keyword értéke:</p>
 
 <blockquote><table class='box'><tr><td>
 <pre class=code>exiftool -hierarchicalkeywords-="{Children={Keyword=Terrier}}" a.jpg</pre>
 </td></tr></table></blockquote>
 
-<p>Structure <b>fields may also be deleted individually</b> using the flattened
-tag names.  The following command deletes only the matching fields from the
-second-level of all HierarchicalKeywords structures:</p>
+<p>A struktúra <b>mezői egyenként is törölhetők</b> a lapított tagnevekkel.  A
+következő parancs csak az illeszkedő mezőket törli az összes HierarchicalKeywords
+struktúra második szintjéről:</p>
 
 <blockquote><table class='box'><tr><td>
 <pre class=code>exiftool -hierarchicalkeywords2-="Terrier" a.jpg</pre>
 </td></tr></table></blockquote>
 
-<p>Individual structure <b>fields may NOT be deleted by writing a structure</b>
-with an empty field.  Instead, a command like this overwrites the entire
-structure with a new structure containing an empty field:</p>
+<p>Az egyes struktúra<b>mezők NEM törölhetők úgy, hogy üres mezős struktúrát
+írsz</b>.  Ehelyett egy ilyen parancs felülírja a teljes struktúrát egy üres mezőt
+tartalmazó új struktúrával:</p>
 
 <blockquote><table class='box'><tr><td>
-<pre><span class=code>exiftool -CreatorContactInfo="{CiAdrCity=}" a.jpg</span>  # WRONG!</pre>
+<pre><span class=code>exiftool -CreatorContactInfo="{CiAdrCity=}" a.jpg</span>  # HIBÁS!</pre>
 </td></tr></table></blockquote>
 
-<p>When deleting and adding back items in lists in the same command, new items
-are inserted at the point in the list where the first item was removed, or at
-the end of the list if no items were deleted.  This applies to lists of
-structures as well as simple lists of string values, and provides a mechanism to
-replace a specific structure or field.</p>
+<p>Amikor ugyanabban a parancsban listákból elemeket törölsz, majd újra
+hozzáadsz, az új elemek a lista azon pontjára kerülnek, ahol az első elemet
+eltávolítottad, vagy a lista végére, ha egyetlen elemet sem töröltél.  Ez a
+struktúrák listáira ugyanúgy vonatkozik, mint a sztringértékek egyszerű listáira,
+és mechanizmust biztosít egy adott struktúra vagy mező cseréjéhez.</p>
 
 <a name='Fields'></a>
-<h2>Field Names</h2>
+<h2>Mezőnevek</h2>
 
-<p>Structure field names use a format <b>very similar to tag names</b> in
-ExifTool.  The following table lists some similarities and differences
-between tag names and structure field names:</p>
+<p>A struktúramezők nevei az ExifToolban a <b>tagnevekhez nagyon hasonló</b>
+formátumot használnak.  A következő táblázat felsorol néhány hasonlóságot és
+különbséget a tagnevek és a struktúramezőnevek között:</p>
 
 <blockquote><table border=1 cellspacing=0 cellpadding=4 width='100%'>
-<tr><th>Feature</th><th>Example</th><th>Tag Names</th><th>Field Names</th></tr>
-<tr align=center><td align=left>Case Insensitivity</td><td>Title, title, TITLE</td>
-<td class=grn>Yes</td><td class=grn>Yes</td></tr>
-<tr align=center><td align=left>Alternate Language Suffix</td><td>Title-de</td>
-<td class=grn>Yes</td><td class=grn>Yes</td></tr>
-<tr align=center><td align=left>Numerical Value Suffix</td><td>Mode#</td>
-<td class=grn>Yes</td><td class=grn>Yes</td></tr>
-<tr align=center><td align=left>Group Name Prefix</td><td>XMP-dc:Title</td>
-<td class=grn>Yes</td><td class=red>No<sup>&dagger;</sup></td></tr>
+<tr><th>Tulajdonság</th><th>Példa</th><th>Tagnevek</th><th>Mezőnevek</th></tr>
+<tr align=center><td align=left>Kis-/nagybetűre nem érzékeny</td><td>Title, title, TITLE</td>
+<td class=grn>Igen</td><td class=grn>Igen</td></tr>
+<tr align=center><td align=left>Más nyelvi utótag</td><td>Title-de</td>
+<td class=grn>Igen</td><td class=grn>Igen</td></tr>
+<tr align=center><td align=left>Numerikus érték utótag</td><td>Mode#</td>
+<td class=grn>Igen</td><td class=grn>Igen</td></tr>
+<tr align=center><td align=left>Csoportnév előtag</td><td>XMP-dc:Title</td>
+<td class=grn>Igen</td><td class=red>Nem<sup>&dagger;</sup></td></tr>
 </table>
-<sup class=red>&dagger;</sup> Except that group name prefixes are
-allowed in structures which support arbitrary XMP fields (eg.
-<a href='TagNames/MWG.html#Extensions'>Region Extensions</a>)
+<sup class=red>&dagger;</sup> Kivéve, hogy a csoportnév-előtagok
+megengedettek azokban a struktúrákban, amelyek tetszőleges XMP-mezőket
+támogatnak (pl. <a href='TagNames/MWG.html#Extensions'>Region Extensions</a>)
 </blockquote>
 
 <a name='Serialize'></a>
-<h2>Serialization</h2>
+<h2>Szerializálás</h2>
 
-<p>Structures are <b>serialized when reading or writing from the command line</b>.
-However, serialization is not done when reading via the API, and is optional
-when writing via the API.  The default serialization algorithm is outlined
-below, but note that ExifTool 12.64 has an
-<a href="ExifTool.html#StructFormat">API StructFormat option</a> to allow
-JSON-format serialized structures.</p>
+<p>A struktúrák <b>szerializálódnak a parancssorból való olvasáskor vagy
+íráskor</b>.  Az API-n keresztüli olvasáskor azonban nincs szerializálás, az
+API-n keresztüli íráskor pedig opcionális.  Az alapértelmezett szerializálási
+algoritmust alább vázoljuk, de vedd figyelembe, hogy az ExifTool 12.64-nek van egy
+<a href="ExifTool.html#StructFormat">API StructFormat opciója</a>, amely lehetővé
+teszi a JSON-formátumú szerializált struktúrákat.</p>
 
-<p><u>Default serialization algorithm</u></p>
+<p><u>Alapértelmezett szerializálási algoritmus</u></p>
 
 <ol>
-<li>Escape the following characters in string values (structure field values and
-list items) by adding a leading pipe symbol (<code>|</code>):
+<li>Escape-eld a következő karaktereket a sztringértékekben (struktúramezők
+értékei és listaelemek) egy vezető függőleges vonás (<code>|</code>)
+hozzáadásával:
 <ul>
-<li class=c>pipe symbols (<code>|</code>) and commas (<code>,</code>) anywhere in the string</li>
-<li class=c>closing curly brackets (<code>}</code>) anywhere in structure field values</li>
-<li class=c>closing square brackets (<code>]</code>) anywhere in list items</li>
-<li class=c>an opening curly (<code>{</code>) or square (<code>[</code>)
-bracket, or whitespace character (SPACE, TAB, CR or LF) if it appears at the
-beginning of the string</li>
+<li class=c>függőleges vonás (<code>|</code>) és vessző (<code>,</code>) a sztringben bárhol</li>
+<li class=c>záró kapcsos zárójel (<code>}</code>) a struktúramezők értékeiben bárhol</li>
+<li class=c>záró szögletes zárójel (<code>]</code>) a listaelemekben bárhol</li>
+<li class=c>nyitó kapcsos (<code>{</code>) vagy szögletes (<code>[</code>)
+zárójel, vagy whitespace karakter (SPACE, TAB, CR vagy LF), ha a sztring elején
+áll</li>
 </ul>
-<span class=lt>(Note: Any other character may be escaped by adding
-a leading pipe symbol without effect.)</span></li>
-<li>Enclose structures in curly brackets.  Use an equal sign (<code>=</code>)
-to separate field names from their corresponding values, and a comma between
-structure fields.</li>
-<li>Enclose lists in square brackets, with a comma between list items.</li>
-<li>Optional whitespace padding may be added anywhere except inside a structure
-field name, or inside or after a string value, and an optional comma may be
-added after the last field in a structure.</li>
+<span class=lt>(Megjegyzés: bármely más karakter is escape-elhető egy vezető
+függőleges vonás hozzáadásával, hatás nélkül.)</span></li>
+<li>Zárd a struktúrákat kapcsos zárójelbe.  Használj egyenlőségjelet
+(<code>=</code>) a mezőnevek és a hozzájuk tartozó értékek elválasztására, és
+vesszőt a struktúramezők között.</li>
+<li>Zárd a listákat szögletes zárójelbe, a listaelemek között vesszővel.</li>
+<li>Opcionális whitespace-kitöltés adható bárhová, kivéve egy struktúramezőnéven
+belülre, illetve egy sztringérték belsejébe vagy után, és a struktúra utolsó
+mezője után opcionálisan vessző adható.</li>
 </ol>
 
-<p>For example, with this command:</p>
+<p>Például ezzel a paranccsal:</p>
 
 <blockquote><table class='box'><tr><td>
 <pre class=code>exiftool "-RegionInfo&lt;=INFILE" a.xmp</pre>
 </td></tr></table></blockquote>
 
-<p>and the INFILE below, structured information is written to XMP-mwg-rs:RegionInfo.</p>
+<p>és az alábbi INFILE-lal strukturált információ íródik az
+XMP-mwg-rs:RegionInfo-ba.</p>
 
 <blockquote><table class='box'><tr><td>
 <pre>{
@@ -338,99 +341,100 @@ added after the last field in a structure.</li>
 }</pre>
 </td></tr></table></blockquote>
 
-<p>In this example, white space has been added in all allowed locations for
-demonstration purposes and to improve readability.  Also, optional commas have
-been added after the last field of each structure.  (Note that a comma may NOT
-be added after the last item in a list because this would be interpreted as an
-additional list item consisting of a zero-length string.)</p>
+<p>Ebben a példában minden megengedett helyre whitespace került demonstrációs
+céllal és az olvashatóság javítása érdekében.  Emellett minden struktúra utolsó
+mezője után opcionális vessző került.  (Vedd figyelembe, hogy egy lista utolsó
+eleme után NEM adható vessző, mert ezt egy további, nulla hosszúságú sztringből
+álló listaelemként értelmezné.)</p>
 
 <a name='Examples'></a>
-<h2>Examples</h2>
+<h2>Példák</h2>
 
-<p>Here is an example of an advanced console session showing some commands which
-manipulate a complex list of structures (see the
-<a href="TagNames/XMP.html#iptcExt">XMP-iptcExt tag documentation</a> for details
-about the ArtworkOrObject structure tags used):</p>
+<p>Íme egy haladó konzol-munkamenet példája, amely néhány olyan parancsot mutat,
+amely egy összetett struktúralistát manipulál (a használt ArtworkOrObject
+struktúra-tagek részleteiért lásd az
+<a href="TagNames/XMP.html#iptcExt">XMP-iptcExt tag dokumentációt</a>):</p>
 
 <blockquote><table class='box'><tr><td>
-<pre><span class=lt># 1. Create a XMP-iptcExt:ArtworkOrObject structure using flattened tags</span>
+<pre><span class=lt># 1. Egy XMP-iptcExt:ArtworkOrObject struktúra létrehozása lapított tagekkel</span>
 &gt; <span class=code>exiftool -artworktitle="a title" a.xmp</span>
     1 image files created
 
-<span class=lt># -- Read back as flattened tags (-S is used just to shorten the output)</span>
+<span class=lt># -- Visszaolvasás lapított tagekként (a -S csak a kimenet rövidítésére szolgál)</span>
 &gt; <span class=code>exiftool -xmp-iptcext:all -S a.xmp</span>
 ArtworkTitle: a title
 
-<span class=lt># -- Read back as a structure</span>
+<span class=lt># -- Visszaolvasás struktúraként</span>
 &gt; <span class=code>exiftool -xmp-iptcext:all -S -struct a.xmp</span>
 ArtworkOrObject: [{AOTitle=a title}]
 
-<span class=lt># 2. Write another field to the structure as a flattened tag</span>
+<span class=lt># 2. Egy másik mező írása a struktúrába lapított tagként</span>
 &gt; <span class=code>exiftool -artworkcreator=phil a.xmp</span>
     1 image files updated
 
-<span class=lt># -- Note that the structure now has a new field</span>
+<span class=lt># -- Vedd figyelembe, hogy a struktúrának most új mezője van</span>
 &gt; <span class=code>exiftool -xmp-iptcext:all -S -struct a.xmp</span>
 ArtworkOrObject: [{AOCreator=[phil],AOTitle=a title}]
 
-<span class=lt># 3. Add another creator using the "+=" operator</span>
+<span class=lt># 3. Egy másik creator hozzáadása a "+=" operátorral</span>
 &gt; <span class=code>exiftool -artworkcreator+=joe a.xmp</span>
     1 image files updated
 
-<span class=lt># -- It was added to the first AOCreator list</span>
+<span class=lt># -- Az első AOCreator listához adódott hozzá</span>
 &gt; <span class=code>exiftool -xmp-iptcext:all -S -struct a.xmp</span>
 ArtworkOrObject: [{AOCreator=[phil,joe],AOTitle=a title}]
 
-<span class=lt># 4. Add another artwork title</span>
+<span class=lt># 4. Egy másik artwork title hozzáadása</span>
 &gt; <span class=code>exiftool -artworktitle+="another one" a.xmp</span>
     1 image files updated
 
-<span class=lt># -- This created a new ArtworkOrObject structure in the list of structures
-# (AOTitle itself is not a list, so a new structure must be created)</span>
+<span class=lt># -- Ez egy új ArtworkOrObject struktúrát hozott létre a struktúrák listájában
+# (az AOTitle maga nem lista, így új struktúrát kell létrehozni)</span>
 &gt; <span class=code>exiftool -xmp-iptcext:all -S -struct a.xmp</span>
 ArtworkOrObject: [{AOCreator=[phil,joe],AOTitle=a title},{AOTitle=another one}]
 
-<span class=lt># 5. Simply write a different title (do not add with "+=")</span>
+<span class=lt># 5. Egyszerűen egy másik title írása (ne a "+="-szel add hozzá)</span>
 &gt; <span class=code>exiftool -artworktitle="different" a.xmp</span>
     1 image files updated
 
-<span class=lt># -- This deleted all existing AOTitle fields and wrote back only one
-# (if the second ArtworkOrObject structure had contained more fields, they would have been
-# preserved, and the second structure would still exist, but without an AOTitle field)</span>
+<span class=lt># -- Ez törölte az összes meglévő AOTitle mezőt, és csak egyet írt vissza
+# (ha a második ArtworkOrObject struktúra több mezőt tartalmazott volna, azok
+# megmaradtak volna, és a második struktúra továbbra is létezne, de AOTitle mező nélkül)</span>
 &gt; <span class=code>exiftool -xmp-iptcext:all -S -struct a.xmp</span>
 ArtworkOrObject: [{AOCreator=[phil,joe],AOTitle=different}]
 
-<span class=lt># 6. Add a completely new structure to the list
-# (this is very difficult to do properly using flattened tags)</span>
+<span class=lt># 6. Egy teljesen új struktúra hozzáadása a listához
+# (ezt lapított tagekkel nagyon nehéz helyesen megcsinálni)</span>
 &gt; <span class=code>exiftool -artworkorobject+="{aotitle=help,aocreator=[paul,ringo]}" a.xmp</span>
     1 image files updated
 
-<span class=lt># -- The new structure was added with the specified fields</span>
+<span class=lt># -- Az új struktúra a megadott mezőkkel adódott hozzá</span>
 &gt; <span class=code>exiftool -xmp-iptcext:all -S -struct a.xmp</span>
 ArtworkOrObject: [{AOCreator=[phil,joe],AOTitle=different},{AOCreator=[paul,ringo],AOTitle=help}]
 
-<span class=lt># -- See how the relationships are lost when reading as flattened tags</span>
+<span class=lt># -- Nézd meg, hogyan vesznek el a kapcsolatok, amikor lapított tagekként olvasod be</span>
 &gt; <span class=code>exiftool -xmp-iptcext:all -S a.xmp</span>
 ArtworkCreator: phil, joe, paul, ringo
 ArtworkTitle: different, help
 
-<span class=lt># 7. Delete all structures containing a specific field value</span>
+<span class=lt># 7. Az adott mezőértéket tartalmazó összes struktúra törlése</span>
 &gt; <span class=code>exiftool -artworkorobject-="{AOCreator=phil}" a.xmp</span>
     1 image files updated
 
-<span class=lt># -- The ArtworkOrObject list now contains only one structure</span>
+<span class=lt># -- Az ArtworkOrObject lista most már csak egy struktúrát tartalmaz</span>
 &gt; <span class=code>exiftool -xmp-iptcext:all -S -struct a.xmp</span>
 ArtworkOrObject: [{AOCreator=[paul,ringo],AOTitle=help}]</pre></td></tr></table></blockquote>
 
 <a name='User'></a>
-<h2>User-Defined Structures</h2>
+<h2>Felhasználó által definiált struktúrák</h2>
 
-<p>User-defined XMP structure tags may be created via the ExifTool config file.
-See the NewXMPxxxStruct tag definition in the <a href="config.html#xmp-xxx">XMP-xxx
-examples of the sample config file</a> for more details.</p>
+<p>Felhasználó által definiált XMP-struktúra-tagek hozhatók létre az ExifTool
+konfigurációs fájlon keresztül.  További részletekért lásd a NewXMPxxxStruct
+tagdefiníciót a <a href="config.html#xmp-xxx">minta konfigurációs fájl XMP-xxx
+példáiban</a>.</p>
 
 <hr>
-<i>Last revised Jun 12, 2023</i>
-<p class='lf'><a href="index.html">&lt;-- Back to ExifTool home page</a></p>
+<i>Utoljára módosítva: 2023. június 12.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
 </body>
 </html>

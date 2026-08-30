@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
 <head>
-  <title>Metadata Sidecar Files</title>
+  <title>Metaadat-kísérőfájlok</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 <style type="text/css">
 <!--
@@ -19,171 +19,171 @@ p.c         { margin: 1em 2em 1em 2.2em; color: #666 }
 </head>
 <body>
 <div class='index'>
-<a href="#xmp">XMP Sidecar Files</a>
-<br><a href="#xml">ExifTool XML Files</a>
-<br><a href="#exif">EXIF Files</a>
-<br><a href="#mie">MIE Files</a>
-<br><a href="#exv">EXV Files</a>
+<a href="#xmp">XMP-kísérőfájlok</a>
+<br><a href="#xml">ExifTool XML-fájlok</a>
+<br><a href="#exif">EXIF-fájlok</a>
+<br><a href="#mie">MIE-fájlok</a>
+<br><a href="#exv">EXV-fájlok</a>
 </div>
 
-<h1 class=up>Metadata Sidecar Files</h1>
+<h1 class=up>Metaadat-kísérőfájlok</h1>
 
-<p>Metadata for images and other file types may be stored in a separate metadata
-file. These are the only files that exiftool can create from scratch.  A common
-example of this is the XMP "sidecar" file (which is discussed in the next
-section in some detail).  Other supported metadata file types are EXIF, MIE,
-EXV, ICC and VRD.  As well, ExifTool supports XML-format output, which can also
-be used to generate metadata sidecar files.</p>
+<p>A képek és más fájltípusok metaadatai külön metaadatfájlban is tárolhatók. Ezek
+az egyetlen fájlok, amelyeket az exiftool a nulláról létre tud hozni.  Ennek
+gyakori példája az XMP „kísérőfájl" (sidecar) (amelyről a következő szakasz
+részletesebben szól).  További támogatott metaadatfájl-típusok: EXIF, MIE,
+EXV, ICC és VRD.  Emellett az ExifTool támogatja az XML-formátumú kimenetet,
+amely szintén használható metaadat-kísérőfájlok generálására.</p>
 
 <hr>
 <a name="xmp"></a>
-<h3>XMP Sidecar Files</h3>
+<h3>XMP-kísérőfájlok</h3>
 
-<p>There are a number of different ways to generate an XMP sidecar file with
-exiftool, and the method you choose depends on your circumstances and
-preferences. Below are a number of example commands which write an output XMP
-file from information in a source file of any type.</p>
+<p>Többféleképpen is lehet XMP-kísérőfájlt generálni az exiftoollal, és az általad
+választott módszer a körülményeidtől és a preferenciáidtól függ. Alább néhány
+példaparancs következik, amelyek egy tetszőleges típusú forrásfájl információiból
+kimeneti XMP-fájlt írnak.</p>
 
-<p class=a><a name="EX1">1.</a> Copy same-named tags from all information types to preferred locations in XMP:</p>
-<p class=b>(<code><i>SRC</i>.<i>EXT</i></code> is the source file name and
-extension, and <code><i>DST</i></code> is the destination file name)</p>
+<p class=a><a name="EX1">1.</a> Azonos nevű tagek másolása az összes információtípusból a preferált XMP-helyekre:</p>
+<p class=b>(a <code><i>SRC</i>.<i>EXT</i></code> a forrásfájl neve és
+kiterjesztése, a <code><i>DST</i></code> pedig a célfájl neve)</p>
 <pre>exiftool -tagsfromfile <i>SRC</i>.<i>EXT</i> <i>DST</i>.xmp</pre>
 
-<p class=a><a name="EX2">2.</a> Rewrite source file to destination XMP file:</p>
-<p class=b>(same effect as above, but the command will exit with an error if the output XMP file already exists)</p>
+<p class=a><a name="EX2">2.</a> Forrásfájl újraírása cél XMP-fájlba:</p>
+<p class=b>(ugyanaz a hatás, mint fent, de a parancs hibával kilép, ha a kimeneti XMP-fájl már létezik)</p>
 <pre>exiftool <i>SRC</i>.<i>EXT</i> -o <i>DST</i>.xmp</pre>
 
-<p class=a><a name="EX3">3.</a> Copy XMP, preserving original locations:</p>
-<p class=b>(ie. copies XMP tags only to the same namespaces in the destination file)</p>
+<p class=a><a name="EX3">3.</a> XMP másolása az eredeti helyek megőrzésével:</p>
+<p class=b>(azaz az XMP tageket csak a célfájl ugyanazon névtereibe másolja)</p>
 <pre>exiftool -tagsfromfile <i>SRC</i>.<i>EXT</i> -all:all <i>DST</i>.xmp</pre>
-<p class=c>Advanced: Notice that <code>-all:all</code> is used above instead of
-<code>-xmp:all</code> even though only XMP tags will be copied (since the destination
-is an XMP file).  This is because <code>-all:all</code> preserves the family 1 group
-(ie. XMP namespace) while <code>-xmp:all</code> would copy tags to the preferred XMP
-namespace, which may be different for XMP tags that exist in multiple namespaces.
-To get the best of both worlds, <code>"-all:all&lt;xmp:all"</code> may be used to
-avoid the inefficiencies of assigning tags which aren't copied, while still
-preserving the family 1 group.</p>
+<p class=c>Haladó: figyeld meg, hogy fent az <code>-all:all</code> szerepel az
+<code>-xmp:all</code> helyett, pedig csak XMP tagek másolódnak (mivel a cél egy
+XMP-fájl).  Ez azért van, mert az <code>-all:all</code> megőrzi az 1. családbeli
+csoportot (azaz az XMP-névteret), míg az <code>-xmp:all</code> a tageket a
+preferált XMP-névtérbe másolná, ami eltérhet a több névtérben létező XMP tageknél.
+Hogy mindkét világ előnyeit megkapd, a <code>"-all:all&lt;xmp:all"</code>
+használható, hogy elkerüld a nem másolt tagek hozzárendelésének hatékonysági
+veszteségeit, miközben megőrzöd az 1. családbeli csoportot.</p>
 
-<p class=a><a name="EX4">4.</a> Rewrite source to XMP file, preserving locations:</p>
-<p class=b>(same effect as above, but the command will fail if the XMP file already exists)</p>
+<p class=a><a name="EX4">4.</a> Forrás újraírása XMP-fájlba a helyek megőrzésével:</p>
+<p class=b>(ugyanaz a hatás, mint fent, de a parancs hibázik, ha az XMP-fájl már létezik)</p>
 <pre>exiftool <i>SRC</i>.<i>EXT</i> -o <i>DST</i>.xmp -all:all</pre>
 
-<p class=a><a name="EX5">5.</a> Generate XMP from EXIF and IPTC using standard tag name mappings:</p>
-<p class=b> (the <code>.args</code> files are available in the full ExifTool distribution)</p>
+<p class=a><a name="EX5">5.</a> XMP generálása EXIF-ből és IPTC-ből szabványos tagnév-leképezésekkel:</p>
+<p class=b> (a <code>.args</code> fájlok a teljes ExifTool disztribúcióban elérhetők)</p>
 <pre>exiftool -tagsfromfile <i>SRC</i>.<i>EXT</i> -@ exif2xmp.args -@ iptc2xmp.args <i>DST</i>.xmp</pre>
 
-<p class=a><a name="EX6">6.</a> Copy XMP as a block to an XMP file:</p>
-<p class=b>(writing as a block is the only way to transfer unknown or non-writable XMP tags)</p>
+<p class=a><a name="EX6">6.</a> XMP másolása blokként egy XMP-fájlba:</p>
+<p class=b>(a blokként való írás az egyetlen módja az ismeretlen vagy nem írható XMP tagek átvitelének)</p>
 <pre>exiftool -tagsfromfile <i>SRC</i>.<i>EXT</i> -xmp <i>DST</i>.xmp</pre>
-<p class=c>Note that this will not deal with extended XMP segments in JPEG
-images if they exist.</p>
+<p class=c>Vedd figyelembe, hogy ez nem kezeli a JPEG képekben lévő bővített
+XMP-szegmenseket, ha léteznek.</p>
 
-<p><a name="EX7">7.</a> Extract XMP as a block and write to output XMP file: <span class=lt>(same effect as above)</span></p>
+<p><a name="EX7">7.</a> XMP kinyerése blokként és kimeneti XMP-fájlba írása: <span class=lt>(ugyanaz a hatás, mint fent)</span></p>
 <pre>exiftool -xmp -b <i>SRC</i>.<i>EXT</i> > <i>DST</i>.xmp</pre>
-<p class=c>As with the previous command, this command will not copy extended XMP
-segments in JPEG images, but in this case the <code>-a</code> option may be
-added to also extract extended XMP blocks.  However, the result would be a
-non-standard XMP file that ExifTool could read but other utilities may not.</p>
+<p class=c>Az előző parancshoz hasonlóan ez a parancs sem másolja a JPEG képekben
+lévő bővített XMP-szegmenseket, de ebben az esetben a <code>-a</code> opció
+hozzáadható a bővített XMP-blokkok kinyeréséhez is.  Az eredmény azonban egy nem
+szabványos XMP-fájl lenne, amelyet az ExifTool be tudna olvasni, de más
+segédprogramok esetleg nem.</p>
 
-<p class=a><a name="EX8">8.</a> Extract XMP as a block to an output text file with .xmp extension:</p>
-<p class=b>(same effect as above, but the destination file name will be the same
-as the source file, and this command will fail if the XMP file exists while the
-previous command will overwrite an existing file)</p>
+<p class=a><a name="EX8">8.</a> XMP kinyerése blokként egy .xmp kiterjesztésű kimeneti szövegfájlba:</p>
+<p class=b>(ugyanaz a hatás, mint fent, de a célfájl neve azonos lesz a
+forrásfájléval, és ez a parancs hibázik, ha az XMP-fájl létezik, míg az előző
+parancs felülír egy meglévő fájlt)</p>
 <pre>exiftool -xmp -b -w xmp <i>SRC</i>.<i>EXT</i></pre>
-<p class=c>The advantage of this command is that it may be applied to multiple
-source files or entire directories.</p>
+<p class=c>Ennek a parancsnak az az előnye, hogy több forrásfájlra vagy egész
+könyvtárakra is alkalmazható.</p>
 
-<p><a name="EX9">9.</a> Restore all XMP tags from an XMP sidecar file to XMP in a JPG image:</p>
+<p><a name="EX9">9.</a> Az összes XMP tag visszaállítása egy XMP-kísérőfájlból egy JPG kép XMP-jébe:</p>
 <pre>exiftool -tagsfromfile <i>SRC</i>.xmp -all:all <i>DST</i>.jpg</pre>
 
-<p class=a><a name="EX10">10.</a> Restore XMP as a block from an XMP sidecar file to a JPG image:</p>
-<p class=b>(same effect as above except that any non-writable XMP tags would be
-copied by this command, and the 2 kB of padding recommended by the XMP
-specification is not added when copying as a block)</p>
+<p class=a><a name="EX10">10.</a> XMP visszaállítása blokként egy XMP-kísérőfájlból egy JPG képbe:</p>
+<p class=b>(ugyanaz a hatás, mint fent, azzal a kivétellel, hogy ez a parancs a nem
+írható XMP tageket is átmásolná, és a blokként való másoláskor nem adódik hozzá az
+XMP-specifikáció által ajánlott 2 kB kitöltés)</p>
 <pre>exiftool -tagsfromfile <i>SRC</i>.xmp -xmp <i>DST</i>.jpg</pre>
-<p class=b>or equivalently</p>
+<p class=b>vagy ezzel egyenértékűen</p>
 <pre>exiftool "-xmp&lt;=<i>SRC</i>.xmp" <i>DST</i>.jpg</pre>
 
-<h4>Batch Processing</h4>
+<h4>Kötegelt feldolgozás</h4>
 
-<p>Multiple files may be processed in a single command by specifying multiple
-file and/or directory names on the command line.  The examples below demonstrate
-how to process all files with a specific extension in an entire directory tree.</p>
+<p>Egyetlen paranccsal több fájl is feldolgozható, ha a parancssorban több
+fájl- és/vagy könyvtárnevet adsz meg.  Az alábbi példák bemutatják, hogyan
+dolgozz fel egy egész könyvtárfában minden adott kiterjesztésű fájlt.</p>
 
-<p class=a><a name="EX11">11.</a> Create XMP sidecar files for all files with extension EXT in a
-directory tree:</p>
-<p class=b>(when batch-generating sidecar files from many images, the <code>-o</code>
-form of the command is easier to use, but can not be used to modify
-existing XMP files)</p>
+<p class=a><a name="EX11">11.</a> XMP-kísérőfájlok létrehozása egy könyvtárfa minden EXT kiterjesztésű
+fájljához:</p>
+<p class=b>(amikor sok képből kötegelten generálsz kísérőfájlokat, a parancs
+<code>-o</code> alakja könnyebben használható, de meglévő XMP-fájlok
+módosítására nem használható)</p>
 <pre>exiftool -ext <i>EXT</i> -o %d%f.xmp -r <i>DIR</i></pre>
-<p class=c>where <code><i>DIR</i></code> is the name of the directory containing
-the images.  The <code>-r</code> option causes sub-directories to be recursively
-processed.  Multiple <code>-ext</code> options may be used to process different
-file types in a single command.  With this command, same-named tags from any type
-of metadata will be written to the preferred XMP namespace in the output XMP
-file.  To copy only XMP tags, <code>-xmp:all</code> may be added to the command.
-(See example 14 for more about this.)</p>
+<p class=c>ahol a <code><i>DIR</i></code> a képeket tartalmazó könyvtár neve.  A
+<code>-r</code> opció hatására az alkönyvtárak rekurzívan feldolgozásra kerülnek.
+Több <code>-ext</code> opció is használható különböző fájltípusok egyetlen
+parancsban való feldolgozásához.  Ezzel a paranccsal bármely típusú metaadatból az
+azonos nevű tagek a kimeneti XMP-fájl preferált XMP-névterébe íródnak.  Ha csak XMP
+tageket akarsz másolni, az <code>-xmp:all</code> hozzáadható a parancshoz.
+(Erről bővebben lásd a 14. példát.)</p>
 
-<p class=a><a name="EX12">12.</a> Copy tags to sidecar files that already exist:</p>
-<p class=b>(same as above, but copies only to existing XMP files)</p>
+<p class=a><a name="EX12">12.</a> Tagek másolása már létező kísérőfájlokba:</p>
+<p class=b>(ugyanaz, mint fent, de csak a meglévő XMP-fájlokba másol)</p>
 <pre>exiftool -ext xmp -tagsfromfile %d%f.<i>EXT</i> -r <i>DIR</i></pre>
-<p class=c>This command will add tags from the source files to information that
-already exists in the XMP files, but note that this command searches for the XMP
-files instead of the image files, so it will not generate new XMP sidecar files
-if some images don't have them.  For this, the advanced (ie. tricky and
-confusing to use) <code>-srcfile</code> option comes in handy:</p>
+<p class=c>Ez a parancs a forrásfájlokból származó tageket hozzáadja az
+XMP-fájlokban már meglévő információhoz, de vedd figyelembe, hogy ez a parancs a
+képfájlok helyett az XMP-fájlokat keresi, így nem generál új XMP-kísérőfájlokat,
+ha egyes képeknek nincs ilyen.  Ehhez a haladó (azaz kényes és zavaróan
+használható) <code>-srcfile</code> opció jön jól:</p>
 
-<p class=a><a name="EX13">13.</a> Copy tags to sidecar files, generating new files if necessary:</p>
-<p class=b>(same as above, but also creates new XMP files if they don't exist)</p>
+<p class=a><a name="EX13">13.</a> Tagek másolása kísérőfájlokba, szükség esetén új fájlok generálásával:</p>
+<p class=b>(ugyanaz, mint fent, de új XMP-fájlokat is létrehoz, ha nem léteznek)</p>
 <pre>exiftool -ext <i>EXT</i> -tagsfromfile @ -srcfile %d%f.xmp -r <i>DIR</i></pre>
-<p class=c>Note that as with the previous two commands, this command will
-commute metadata from other groups to the preferred location in XMP.</p>
+<p class=c>Vedd figyelembe, hogy az előző két parancshoz hasonlóan ez a parancs is
+áthelyezi a metaadatot más csoportokból az XMP-ben lévő preferált helyre.</p>
 
-<p class=a><a name="EX14">14.</a> Copy only XMP tags to the same namespace in sidecar files:</p>
-<p class=b>(same as above, but copies only XMP and preserves specific tag locations)</p>
+<p class=a><a name="EX14">14.</a> Csak XMP tagek másolása a kísérőfájlokban lévő ugyanazon névtérbe:</p>
+<p class=b>(ugyanaz, mint fent, de csak XMP-t másol, és megőrzi az adott tag-helyeket)</p>
 <pre>exiftool -ext <i>EXT</i> -tagsfromfile @ "-all:all&lt;xmp:all" -srcfile %d%f.xmp -r <i>DIR</i></pre>
-<p class=c>In this command, if "<code>-xmp:all</code>" was used instead of
-<code>"-all:all&lt;xmp:all"</code>, then all XMP tags would have been copied to
-their preferred namespaces in the sidecar file.  But by writing to the
-destination group of "<code>all</code>", the specific location (ie. XMP
-namespace) of each tag is preserved.</p>
+<p class=c>Ha ebben a parancsban a <code>"-all:all&lt;xmp:all"</code> helyett az
+"<code>-xmp:all</code>" szerepelne, akkor az összes XMP tag a kísérőfájlban lévő
+preferált névterébe másolódott volna.  De azzal, hogy az "<code>all</code>"
+célcsoportba írsz, minden tag adott helye (azaz XMP-névtere) megőrződik.</p>
 
-<p class=a><a name="EX15">15.</a> Copy XMP from sidecar files back to the same locations in the source files:</p>
-<p class=b>(the inverse of the previous command)</p>
+<p class=a><a name="EX15">15.</a> XMP visszamásolása a kísérőfájlokból a forrásfájlok ugyanazon helyeire:</p>
+<p class=b>(az előző parancs fordítottja)</p>
 <pre>exiftool -ext <i>EXT</i> -tagsfromfile %d%f.xmp -all:all -r <i>DIR</i></pre>
-<p class=c>Here,
-<code>-all:all</code> copies all metadata (in this case only XMP, since the
-sidecar XMP file contains no other types) to the same specific locations in the
-target files (extension <code><i>EXT</i></code>).</p>
+<p class=c>Itt az
+<code>-all:all</code> az összes metaadatot (ebben az esetben csak XMP-t, mivel a
+kísérő XMP-fájl nem tartalmaz más típust) a célfájlok
+(<code><i>EXT</i></code> kiterjesztés) ugyanazon adott helyeire másolja.</p>
 
-<p class=a><a name="EX16">16.</a> Write a tag to XMP sidecar if it exists, or the original file otherwise:</p>
+<p class=a><a name="EX16">16.</a> Tag írása az XMP-kísérőfájlba, ha az létezik, egyébként az eredeti fájlba:</p>
 <pre>exiftool -ext <i>EXT</i> -artist="Phil" -srcfile %d%f.xmp -srcfile @ <i>DIR</i></pre>
-<p class=c>When multiple <code>-srcfile</code> options are used, the first
-existing file is processed.  If none of the specified source files exists, then
-the first one in the list is created (however, this won't happen with this
-example since one of the specified source files is "<code>@</code>", which
-represents the original file name).</p>
+<p class=c>Amikor több <code>-srcfile</code> opciót használsz, az első létező fájl
+kerül feldolgozásra.  Ha a megadott forrásfájlok egyike sem létezik, akkor a
+listában lévő első jön létre (ez azonban nem történik meg ebben a példában, mivel
+az egyik megadott forrásfájl a "<code>@</code>", amely az eredeti fájlnevet
+képviseli).</p>
 
-<p class=a><a name="EX17">17.</a> Create XMP sidecar file in another directory:</p>
+<p class=a><a name="EX17">17.</a> XMP-kísérőfájl létrehozása egy másik könyvtárban:</p>
 <pre>exiftool -ext <i>EXT</i> -o <i>DSTDIR</i>/%f.xmp -r <i>SRCDIR</i></pre>
-<p class=c>By specifying a directory name instead of <code>%d</code>, this
-command writes XMP files to <code><i>DSTDIR</i></code> instead of the original
-source directory. The same technique may be used in any of the above commands to
-write XMP to a sidecar file in a different directory.</p>
+<p class=c>Azzal, hogy a <code>%d</code> helyett könyvtárnevet adsz meg, ez a
+parancs az XMP-fájlokat a <code><i>DSTDIR</i></code>-be írja az eredeti
+forráskönyvtár helyett. Ugyanez a technika a fenti parancsok bármelyikében
+használható, hogy egy másik könyvtárban lévő kísérőfájlba írj XMP-t.</p>
 
-<h4>Via the API</h4>
+<h4>Az API-n keresztül</h4>
 
-<p>By specifying different tags in the
+<p>Ha különböző tageket adsz meg a
 <a href="ExifTool.html#SetNewValuesFromFile">SetNewValuesFromFile</a>
-call, the above examples numbered 1-6 are programmed like this:</p>
+hívásban, a fenti 1–6. számú példák így programozhatók:</p>
 
 <blockquote><table class='box'><tr><td><pre class='code'>
 $exifTool-><a href="ExifTool.html#SetNewValuesFromFile">SetNewValuesFromFile</a>('SRC.EXT', @tags_to_copy);
 $exifTool-><a href="ExifTool.html#WriteInfo">WriteInfo</a>(undef, 'DST.xmp');
 </pre></td></tr></table></blockquote>
 
-<p>and examples 7 and 8 use this general technique:</p>
+<p>a 7. és 8. példa pedig ezt az általános technikát használja:</p>
 
 <blockquote><table class='box'><tr><td><pre class='code'>
 my $info = <a href="ExifTool.html#ImageInfo">ImageInfo</a>('SRC.EXT', 'xmp');
@@ -195,53 +195,54 @@ close FILE;
 
 <hr>
 <a name="xml"></a>
-<h3>ExifTool XML Files</h3>
+<h3>ExifTool XML-fájlok</h3>
 
-<p>Closely related to the XMP sidecar file is the XML file written using the
-exiftool <code>-X</code> option.  This file is RDF/XML format like XMP, but uses
-exiftool-specific namespaces to give an exact mapping for all exiftool tag
-names.  This type of file is better suited to general information
-storage/recovery since it facilitates copying of more original metadata than an
-XMP file, but it doesn't have the portability of an XMP file or the ability to
-store native-format data like a MIE or EXV file, and ExifTool can not be used to
-edit XML files as it can with other metadata files.  Below are example commands
-demonstrating the use of exiftool XML files.</p>
+<p>Az XMP-kísérőfájlhoz szorosan kapcsolódik az exiftool <code>-X</code>
+opciójával írt XML-fájl.  Ez a fájl az XMP-hez hasonlóan RDF/XML formátumú, de
+exiftool-specifikus névtereket használ, hogy pontos leképezést adjon az összes
+exiftool-tagnévhez.  Ez a fájltípus jobban megfelel az általános
+információtárolásra/-visszaállításra, mivel több eredeti metaadat másolását teszi
+lehetővé, mint egy XMP-fájl, de nincs meg az XMP-fájl hordozhatósága, sem az a
+képesség, hogy natív formátumú adatot tároljon, mint egy MIE- vagy EXV-fájl, és az
+ExifTool nem használható XML-fájlok szerkesztésére úgy, mint más
+metaadatfájloknál.  Alább példaparancsok következnek, amelyek bemutatják az
+exiftool XML-fájlok használatát.</p>
 
-<p>Create an exiftool XML sidecar file:</p>
+<p>exiftool XML-kísérőfájl létrehozása:</p>
 <pre>exiftool -X a.jpg > a.xml</pre>
 
-<p>Restore original meta information from exiftool XML file:</p>
+<p>Eredeti metainformáció visszaállítása exiftool XML-fájlból:</p>
 <pre>exiftool -tagsfromfile a.xml -all:all a.jpg</pre>
 
-<p>The <code>-X</code> option also supports extracting binary data when
-<code>-b</code> is added.  For example, the above command may be modified to
-also store the binary MakerNotes block like this:</p>
+<p>A <code>-X</code> opció bináris adat kinyerését is támogatja, ha hozzáadod a
+<code>-b</code>-t.  Például a fenti parancs módosítható úgy, hogy a bináris
+MakerNotes blokkot is tárolja, így:</p>
 <pre>exiftool -X -b -makernotes -all a.jpg > a.xml</pre>
-<p>Note that we needed to add <code>-makernotes</code> because it isn't
-extracted as a block unless requested, and since we specified a tag to extract
-we also needed to add <code>-all</code> to continue extracting other tags as
-well.  Restoring the original metadata from this file is the same as in the
-previous example.</p>
+<p>Vedd figyelembe, hogy hozzá kellett adnunk a <code>-makernotes</code>-t, mert
+az kérés nélkül nem kerül kinyerésre blokként, és mivel megadtunk egy kinyerendő
+taget, hozzá kellett adnunk az <code>-all</code>-t is, hogy a többi taget is
+tovább nyerjük ki.  Az eredeti metaadat visszaállítása ebből a fájlból ugyanaz,
+mint az előző példában.</p>
 
-<h4>Via the API</h4>
+<h4>Az API-n keresztül</h4>
 
-<p>There is no way to automatically produce a sidecar exiftool XML file via the
-API since this function is accomplished with an output formatting option of the
-exiftool application.  However, the API may be used to read and copy tags
-from an exiftool XML file just like any other file format.  When reading
-ExifTool XML files, all tags except those in the <code>ExifTool</code>,
-<code>File</code> and <code>Composite</code> groups are extracted with their
-original family 1 groups to facilitate copying of these tags back into their
-original locations in an image.</p>
+<p>Nincs mód arra, hogy az API-n keresztül automatikusan előállíts egy kísérő
+exiftool XML-fájlt, mivel ezt a funkciót az exiftool alkalmazás egyik kimeneti
+formázási opciója valósítja meg.  Az API azonban használható arra, hogy tageket
+olvass és másolj egy exiftool XML-fájlból, ugyanúgy, mint bármely más
+fájlformátumból.  Az ExifTool XML-fájlok olvasásakor az összes tag, kivéve az
+<code>ExifTool</code>, <code>File</code> és <code>Composite</code> csoportban
+lévőket, az eredeti 1. családbeli csoportjukkal kerül kinyerésre, hogy
+megkönnyítse ezeknek a tageknek a visszamásolását egy kép eredeti helyeire.</p>
 
 <hr>
 <a name="exif"></a>
-<h3>EXIF Files</h3>
+<h3>EXIF-fájlok</h3>
 
-<p>EXIF files store EXIF information in the same TIFF-based format as the EXIF
-APP1 segment of a JPEG image, but without the "Exif\0\0" header.  The three
-commands below illustrate techniques for copying the entire EXIF block from a
-source image (<code><i>SRCFILE</i></code>) to an output EXIF file
+<p>Az EXIF-fájlok az EXIF információt ugyanabban a TIFF-alapú formátumban tárolják,
+mint egy JPEG kép EXIF APP1 szegmense, de az „Exif\0\0" fejléc nélkül.  Az alábbi
+három parancs technikákat szemléltet a teljes EXIF-blokk másolására egy
+forrásképből (<code><i>SRCFILE</i></code>) egy kimeneti EXIF-fájlba
 (<code>out.exif</code>):</p>
 
 <pre>exiftool -exif -b <i>SRCFILE</i> > out.exif
@@ -250,74 +251,74 @@ exiftool -tagsfromfile <i>SRCFILE</i> -exif out.exif
 
 exiftool -o out.exif -exif <i>SRCFILE</i></pre>
 
-<p>The <a href="TagNames/Extra.html">Extra</a> EXIF tag used in each of the
-above commands (the "<code>-exif</code>" argument) represents the EXIF metadata
-in the form of a binary data block.  JPEG, PNG, JP2, MIE and MIFF files all
-support storage of EXIF data blocks in this format, although exiftool does not
-currently write MIFF images.</p>
+<p>A fenti parancsok mindegyikében használt <a href="TagNames/Extra.html">Extra</a>
+EXIF tag (a "<code>-exif</code>" argumentum) az EXIF metaadatot bináris
+adatblokk formájában képviseli.  A JPEG-, PNG-, JP2-, MIE- és MIFF-fájlok mind
+támogatják az EXIF adatblokkok tárolását ebben a formátumban, bár az exiftool
+jelenleg nem ír MIFF képeket.</p>
 
-<p>Tags may also be copied individually to and from an EXIF file, but remember
-that this will not copy "unsafe" tags unless they are specified explicitly.  The
-following command creates an EXIF file from the metadata in a source file:</p>
+<p>A tagek egyenként is másolhatók egy EXIF-fájlba és -ból, de ne feledd, hogy ez
+nem másolja a „nem biztonságos" tageket, hacsak nem adod meg őket explicit módon.
+A következő parancs egy forrásfájl metaadatából EXIF-fájlt hoz létre:</p>
 
 <pre>exiftool -o out.exif -all -unsafe <i>SRCFILE</i>
 </pre>
 
-<p>This technique works for any type of source file, provided the file contains
-at least one tag with the same name as an EXIF tag.  Below is an example of how
-to apply this to all files in a directory:</p>
+<p>Ez a technika bármely típusú forrásfájlnál működik, feltéve, hogy a fájl
+legalább egy olyan taget tartalmaz, amelynek neve megegyezik egy EXIF tagével.
+Alább egy példa arra, hogyan alkalmazd ezt egy könyvtár összes fájljára:</p>
 
 <pre>exiftool -o %d%f.exif -all -unsafe <i>DIR</i>
 </pre>
 
 <hr>
 <a name="mie"></a>
-<h3>MIE Files</h3>
+<h3>MIE-fájlok</h3>
 
-<p>The <a href="MIE1.1-20070121.pdf">MIE file format</a> allows storage of
-native binary meta information, and is the best option for saving metadata from
-a file in its original format.  Here are two examples that copy all individual
-tags plus the ICC Profile to a MIE sidecar file:</p>
+<p>A <a href="MIE1.1-20070121.pdf">MIE fájlformátum</a> lehetővé teszi a natív
+bináris metainformáció tárolását, és a legjobb választás egy fájl metaadatának
+eredeti formátumban való mentésére.  Íme két példa, amely az összes egyedi
+taget plusz az ICC-profilt egy MIE-kísérőfájlba másolja:</p>
 
 <pre>exiftool -tagsfromfile a.jpg -all:all -icc_profile a.mie</pre>
 <pre>exiftool -o a.mie -all:all -icc_profile a.jpg</pre>
 
-<p>And the following command performs the inverse operation, restoring metadata
-in a JPG image from a MIE file:</p>
+<p>A következő parancs pedig a fordított műveletet végzi el, egy JPG kép
+metaadatát állítva vissza egy MIE-fájlból:</p>
 
 <pre>exiftool -tagsfromfile a.mie -all:all -icc_profile a.jpg</pre>
 
-<p>Information can also be copied in block form to a MIE file.  This allows
-preservation of the original data structure as well as unknown and non-writable
-tags.  The command below copies the full EXIF segment as a block from a JPEG
-image,</p>
+<p>Az információ blokk formájában is másolható egy MIE-fájlba.  Ez lehetővé teszi
+az eredeti adatszerkezet, valamint az ismeretlen és nem írható tagek megőrzését.
+Az alábbi parancs a teljes EXIF szegmenst blokként másolja egy JPEG képből,</p>
 
 <pre>exiftool -tagsfromfile a.jpg -exif a.mie</pre>
 
-<p>which is functionally different from copying all writable EXIF tags
-individually with a command more like this</p>
+<p>ami funkcionálisan eltér attól, mint amikor az összes írható EXIF taget
+egyenként másolod egy inkább ilyen paranccsal</p>
 
 <pre>exiftool -tagsfromfile a.jpg -exif:all a.mie</pre>
 
-<p>Block-writable tags are listed in the
-<a href="TagNames/Extra.html">Extra Tags documentation</a>.</p>
+<p>A blokként írható tagek az
+<a href="TagNames/Extra.html">Extra Tags dokumentációban</a> vannak felsorolva.</p>
 
-<p>MIE files also have the ability to store information in compressed format with
-the <code>-z</code> option (provided Compress::Zlib is installed on your system),
-which may be useful if disk space is at a premium.</p>
+<p>A MIE-fájlok az információt tömörített formátumban is tudják tárolni a
+<code>-z</code> opcióval (feltéve, hogy a Compress::Zlib telepítve van a
+rendszereden), ami hasznos lehet, ha kevés a lemezterület.</p>
 
 <hr>
 <a name="exv"></a>
-<h3>EXV Files</h3>
+<h3>EXV-fájlok</h3>
 
-<p>EXV files are used by <a href="http://exiv2.org/">Exiv2</a>, and are
-basically a JPEG file without the image data, so they may be used as a metadata
-file to contain any information supported by the JPEG format (EXIF, XMP, IPTC,
-etc.).  ExifTool has full read, write and create support for this format.</p>
+<p>Az EXV-fájlokat az <a href="http://exiv2.org/">Exiv2</a> használja, és
+alapvetően képadat nélküli JPEG-fájlok, így metaadatfájlként használhatók, hogy a
+JPEG formátum által támogatott bármely információt (EXIF, XMP, IPTC stb.)
+tartalmazzák.  Az ExifTool teljes olvasási, írási és létrehozási támogatással
+rendelkezik ehhez a formátumhoz.</p>
 
 <hr>
-<i>Created Nov 12, 2008</i><br>
-<i>Last revised July 31, 2019</i>
-<p class='lf'><a href="index.html">&lt;-- Back to ExifTool home page</a></p>
+<i>Létrehozva: 2008. november 12.</i><br>
+<i>Utoljára módosítva: 2019. július 31.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
 </body>
 </html>

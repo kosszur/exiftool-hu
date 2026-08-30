@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <title>ExifTool Geolocation Feature</title>
+  <title>ExifTool geolokáció-szolgáltatás</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 <style type="text/css">
 <!--
@@ -17,42 +17,42 @@ i.sm  { font-size: 12pt }
 </head>
 <body>
 <div class='index'>
-<a href="#Read">Reading Geolocation</a>
-<br>&nbsp; - <a href="#DefTags">Default tags</a>
-<br>&nbsp; - <a href="#DefInput">Default input</a>
-<br>&nbsp; - <a href="#Reg">Regular expressions</a>
-<br><a href="#Write">Writing Geolocation</a>
-<br>&nbsp; - <a href="#Geotag">While geotagging</a>
-<br><a href="#Extra">Extra Features</a>
-<br>&nbsp; - <a href="#Lang">Language translations</a>
-<br>&nbsp; - <a href="#Params">Optional parameters</a>
-<br>&nbsp; - <a href="#Alt">Alternate databases</a>
-<br>&nbsp; - <a href="#List">Listing the database</a>
-<br>&nbsp; - <a href="#Custom">Customization</a>
-<br><a href="#Troubleshooting">Troubleshooting</a>
+<a href="#Read">Geolokáció olvasása</a>
+<br>&nbsp; - <a href="#DefTags">Alapértelmezett tagek</a>
+<br>&nbsp; - <a href="#DefInput">Alapértelmezett bemenet</a>
+<br>&nbsp; - <a href="#Reg">Reguláris kifejezések</a>
+<br><a href="#Write">Geolokáció írása</a>
+<br>&nbsp; - <a href="#Geotag">Geotaggelés közben</a>
+<br><a href="#Extra">További szolgáltatások</a>
+<br>&nbsp; - <a href="#Lang">Nyelvi fordítások</a>
+<br>&nbsp; - <a href="#Params">Opcionális paraméterek</a>
+<br>&nbsp; - <a href="#Alt">Alternatív adatbázisok</a>
+<br>&nbsp; - <a href="#List">Az adatbázis listázása</a>
+<br>&nbsp; - <a href="#Custom">Testreszabás</a>
+<br><a href="#Troubleshooting">Hibaelhárítás</a>
 </div>
 <a name="Geolocation"></a>
-<h1>ExifTool Geolocation Feature
-<i class='sm lt'>(aka "Reverse Geocoding")</i></h1>
+<h1>ExifTool geolokáció-szolgáltatás
+<i class='sm lt'>(más néven „reverse geocoding")</i></h1>
 
-<p>ExifTool has the ability to generate geolocation information (including city,
-region, subregion and country) from GPS coordinates (and visa versa) using an
-included database of all cities with population 2000 or greater based
-on a Creative Commons database from <a href="http://www.geonames.org/export/">geonames.org</a>.
-(An extended version of the ExifTool database is available with cities down to a
-population of 500. <a href="#Alt">See below</a> for more information.) There are
-two basic modes of operation: one to generate geolocation information when
-reading from a file, and another to write geolocation information to a file.</p>
+<p>Az ExifTool képes geolokációs információt (várost, régiót, alrégiót és országot
+is beleértve) generálni GPS-koordinátákból (és fordítva) egy beépített adatbázis
+segítségével, amely a 2000 főnél nagyobb népességű összes várost tartalmazza, a
+<a href="http://www.geonames.org/export/">geonames.org</a> Creative Commons
+adatbázisa alapján.  (Az ExifTool-adatbázis bővített változata is elérhető, 500 fős
+népességig lemenő városokkal. <a href="#Alt">Lásd lentebb</a> a további
+információkat.) Két alapvető működési mód van: az egyik geolokációs információt
+generál fájl olvasásakor, a másik pedig geolokációs információt ír egy fájlba.</p>
 
 <a name="Read"></a>
-<h3>Reading Geolocation Information</h3>
+<h3>Geolokációs információ olvasása</h3>
 
-<blockquote>Geolocation tags may be generated when reading a file by setting the
-<a href="ExifTool.html#Geolocation">API Geolocation option</a>.  For example,
+<blockquote>Fájl olvasásakor geolokáció-tagek generálhatók az
+<a href="ExifTool.html#Geolocation">API Geolocation opció</a> beállításával.  Például
 
 <pre>exiftool -api geolocation "-geolocation*" test.jpg</pre>
 
-produces an output similar to this for a file containing GPS coordinates:
+GPS-koordinátákat tartalmazó fájlnál ehhez hasonló kimenetet ad:
 
 <pre class=blk>Geolocation City                : Saint-Hyacinthe
 Geolocation Region              : Quebec
@@ -67,25 +67,25 @@ Geolocation Position            : 45.6307, -72.9571
 Geolocation Distance            : 1.8 km
 Geolocation Bearing             : 226</pre>
 
-The above tags are generated based on either a GPS position (preferentially), or
-from city, state/province and country information.  Note that the term "City"
-used in this context may be more aptly called "Feature Name" since the database
-may include some features which are not cities.  Also, the meanings of the
-resulting region and subregion tags vary by country.  In North America for
-example, region corresponds to state or province, and subregion corresponds to
-county. The population is rounded to 2 significant digits, and the distance and
-bearing are generated only when an input GPS position is provided, and give the
-distance in km and the compass bearing from the input GPS point to the
-GeolocationPosition of the returned city.  See the
-<a href="TagNames/Extra.html">Extra Tags documentation</a> for a brief description
-of each Geolocation tag.</blockquote>
+A fenti tagek vagy egy GPS-pozíció (elsősorban), vagy város, állam/tartomány és
+ország információ alapján generálódnak.  Vedd figyelembe, hogy az ebben a
+kontextusban használt „City" (város) kifejezést találóbb lenne „Feature
+Name"-nek (objektumnévnek) nevezni, mivel az adatbázis tartalmazhat olyan
+objektumokat is, amelyek nem városok.  Emellett a kapott region és subregion tagek
+jelentése országonként változik.  Észak-Amerikában például a region az államnak
+vagy tartománynak felel meg, a subregion pedig a megyének. A népesség 2 értékes
+jegyre kerekül, a distance és a bearing pedig csak akkor generálódik, ha van
+bemeneti GPS-pozíció megadva, és a távolságot km-ben, valamint az iránytű szerinti
+irányt adja meg a bemeneti GPS-ponttól a visszaadott város
+GeolocationPosition értékéig.  Az egyes Geolocation tagek rövid leírásáért lásd az
+<a href="TagNames/Extra.html">Extra Tags dokumentációt</a>.</blockquote>
 
 <a name="DefTags"></a>
-<p><b>Default tags</b></p>
+<p><b>Alapértelmezett tagek</b></p>
 
-<blockquote>The Geolocation option has a list of default tags that it looks for
-in the source file to use as inputs for determining the nearest city.  These tags
-are, in order:
+<blockquote>A Geolocation opciónak van egy alapértelmezett taglistája, amelyet a
+forrásfájlban keres, hogy a legközelebbi város meghatározásához bemenetként
+használja.  Ezek a tagek sorrendben:
 
 <blockquote>GPSLatitude, GPSLongitude, GPSLatitudeRef, GPSLongitudeRef,
 GPSCoordinates, LocationShownGPSLatitude, LocationShownGPSLongitude,
@@ -94,56 +94,56 @@ IPTC:City, Province-State, Country-PrimaryLocationCode, Country-PrimaryLocationN
 LocationShownCity, LocationShownProvinceState, LocationShownCountryCode,
 LocationShownCountryName</blockquote>
 
-First, the file is checked for GPS tags in this list, and coordinates from the
-first available of these tags are used as inputs to determine the geolocation. 
-If no GPS position is found, the file is checked for
-city/state/province/country/countrycode tags in the list, and the inputs are
-taken from the first available city information.  Note that each specified city
-tag must come before the corresponding state/province, etc.  If multiple
-matches are found, the city with the largest population is returned unless
-the <code>-a</code> (API <a href="ExifTool.html#Duplicates">Duplicates</a>)
-option is used in which case all matching cities are returned.</blockquote>
+Először a fájlt ellenőrzi az ebben a listában lévő GPS tagekre, és a koordináták
+ezek közül az első elérhető tagből kerülnek bemenetként felhasználásra a geolokáció
+meghatározásához.  Ha nem található GPS-pozíció, a fájlt ellenőrzi a listában lévő
+város/állam/tartomány/ország/országkód tagekre, és a bemenet az első elérhető
+városinformációból származik.  Vedd figyelembe, hogy minden megadott város-tagnek
+meg kell előznie a hozzá tartozó állam/tartomány stb. taget.  Ha több találat van,
+a legnagyobb népességű város kerül visszaadásra, hacsak nem használod a
+<code>-a</code> (API <a href="ExifTool.html#Duplicates">Duplicates</a>) opciót,
+amely esetben minden illeszkedő város visszaadásra kerül.</blockquote>
 
-<blockquote>To override the default list of tags, set the Geolocation option
-to a comma-separated list of tags beginning with dollar signs, but <b>note that
-Composite tags may not be used</b>.  For example:
+<blockquote>Az alapértelmezett taglista felülírásához állítsd a Geolocation opciót
+dollárjellel kezdődő tagek vesszővel elválasztott listájára, de <b>vedd figyelembe,
+hogy Composite tagek nem használhatók</b>.  Például:
 
 <pre>exiftool -api geolocation="$XMP:GPSLatitude,$XMP:GPSLongitude" test.jpg</pre>
 
-<i>(Note: On Mac/Linux/PowerShell, use single quotes (<code>'</code>) instead
-of double quotes (<code>"</code>) around arguments containing a dollar sign
-(<code>$</code>).)</i></blockquote>
+<i>(Megjegyzés: Mac/Linux/PowerShell alatt a dollárjelet (<code>$</code>)
+tartalmazó argumentumok körül dupla idézőjel (<code>"</code>) helyett egyszeres
+idézőjelet (<code>'</code>) használj.)</i></blockquote>
 
 <a name="DefInput"></a>
-<p><b>Default input</b></p>
+<p><b>Alapértelmezett bemenet</b></p>
 
-<blockquote>It may be useful to specify a default input for the case where none
-of the specified tags are found.  For this, the default input is added to the
-Geolocation setting.  For example, the information returned by this command
-includes Geolocation information for the specified coordinates if none of the
-default tags listed above are found:
+<blockquote>Hasznos lehet alapértelmezett bemenetet megadni arra az esetre, ha a
+megadott tagek egyike sem található meg.  Ehhez az alapértelmezett bemenet a
+Geolocation beállításhoz kerül hozzáadásra.  Például az ezen parancs által
+visszaadott információ tartalmazza a megadott koordináták geolokációs
+információját, ha a fent felsorolt alapértelmezett tagek egyike sem található:
 
 <pre>exiftool -api geolocation="44.3414,-72,1234" test.jpg</pre>
 
-Alternately, default city information may be specified.  When doing this, the
-city name comes first, and is optionally followed by region (eg. state or
-province), subregion (eg. county), country code and/or country name in any
-order, separated by commas.  For example:
+Alternatívaként alapértelmezett városinformáció is megadható.  Ilyenkor a város
+neve jön először, majd opcionálisan a régió (pl. állam vagy tartomány), az alrégió
+(pl. megye), az országkód és/vagy az országnév következik tetszőleges sorrendben,
+vesszővel elválasztva.  Például:
 
 <pre>exiftool -api geolocation="London,England" test.jpg</pre>
 
-The default tags may be specified at the same time as the default value to
-override the pre-defined list of default tags, for example:
+Az alapértelmezett tagek az alapértelmezett értékkel egyidejűleg is megadhatók az
+előre definiált alapértelmezett taglista felülírásához, például:
 
 <pre>exiftool -api geolocation="$gpslatitude,$gpslatituderef,\
     $gpslongitude,$gpslongituderef,-37.81,144.96" test.jpg</pre>
 
-This feature may be used to generate geolocation information with no input file
-at all.  For example, this command:
+Ez a szolgáltatás bemeneti fájl nélkül is használható geolokációs információ
+generálására.  Például ez a parancs:
 
 <pre>exiftool -api geolocation=Munich,Germany</pre>
 
-produces this output:
+ezt a kimenetet adja:
 
 <pre class=blk>Geolocation City                : Munich
 Geolocation Region              : Bavaria
@@ -156,10 +156,10 @@ Geolocation Feature Type        : Seat Of A First-order Administrative Division
 Geolocation Population          : 1300000
 Geolocation Position            : 48.1375, 11.5755</pre>
 
-If both city name and GPS coordinates are provided, the nearest city
-matching the specified name(s) is returned, and the result includes the
-distance and compass bearing from the specified GPS position to this city.
-For example:
+Ha város nevét és GPS-koordinátákat is megadsz, a megadott név(ek)re illeszkedő
+legközelebbi város kerül visszaadásra, és az eredmény tartalmazza a megadott
+GPS-pozíciótól ehhez a városhoz mért távolságot és iránytű szerinti irányt.
+Például:
 
 <pre class=blk>> <span class=code>exiftool -api geolocation=44,-76,Kingston</span>
 Geolocation City                : Kingston
@@ -175,12 +175,12 @@ Geolocation Position            : 44.2298, -76.4810
 Geolocation Distance            : 46.12 km
 Geolocation Bearing             : 296</pre>
 
-Multiple nearby cities may be returned instead of just the nearest by adding
-<code>num=##</code> to the Geolocation option string, where <code>##</code> is the
-desired number of cities.  The returned cities are ordered from nearest to
-furthest, and distinguished by the family 3 (document number) group which allows
-them to be output as separate lines with the <code>-p</code> option.  For example,
-the nearest cities to a specified GPS position:
+Csak a legközelebbi helyett több közeli város is visszaadható, ha a Geolocation
+opció sztringjéhez hozzáadod a <code>num=##</code>-t, ahol a <code>##</code> a
+kívánt városok száma.  A visszaadott városok a legközelebbitől a legtávolabbiig
+vannak rendezve, és a 3. család (dokumentumszám) csoport különbözteti meg őket,
+ami lehetővé teszi, hogy a <code>-p</code> opcióval külön sorokként íródjanak ki.
+Például egy megadott GPS-pozícióhoz legközelebbi városok:
 
 <pre class=blk>> <span class=code>exiftool -ee -p geo.fmt -api geolocation=49.48,6.37,num=4</span>
 7.00 km,286 deg,PPLA3,Mondorf-les-Bains,Luxembourg
@@ -188,7 +188,7 @@ the nearest cities to a specified GPS position:
 11.55 km,80 deg,PPL,Orscholz,Germany
 12.32 km,240 deg,PPL,Cattenom,France</pre>
 
-or the nearest cities to a specified city:
+vagy egy megadott városhoz legközelebbi városok:
 
 <pre class=blk>> <span class=code>exiftool -ee -p geo.fmt -api geolocation="new york city,num=5"</span>
 0.00 km,0 deg,PPL,New York City,United States
@@ -197,101 +197,104 @@ or the nearest cities to a specified city:
 0.85 km,77 deg,PPLX,Chinatown,United States
 0.92 km,255 deg,PPL,Battery Park City,United States</pre>
 
-Note that the <code>-ee</code> option must be used for the <code>-p</code>
-option to iterate through the returned cities since they are returned as
-sub-documents.  Here is the "geo.fmt" file used in the above commands:
+Vedd figyelembe, hogy a <code>-ee</code> opciót kell használni ahhoz, hogy a
+<code>-p</code> opció végigmenjen a visszaadott városokon, mivel azok
+aldokumentumokként kerülnek visszaadásra.  Íme a fenti parancsokban használt
+„geo.fmt" fájl:
 
 <pre>$geolocationdistance,$geolocationbearing deg,$geolocationfeaturecode,$geolocationcity,$geolocationcountry</pre>
 
-Or for a JSON-format output, a command like this may be useful:
+Vagy JSON-formátumú kimenethez egy ilyen parancs lehet hasznos:
 
 <pre class=blk><span class=code>exiftool -j -g3 -api geolocation=49.48,6.37,num=4</span></pre>
 </blockquote>
 
 <a name="Reg"></a>
-<p><b>Regular expressions</b></p>
+<p><b>Reguláris kifejezések</b></p>
 
-<blockquote>An advanced feature allows standard Perl regular expressions of the
-form <code>/expr/</code> to be used to match city, region, etc names. The
-regular expression may be prefixed by "<code>ci</code>", "<code>re</code>",
-"<code>sr</code>", "<code>cc</code>" or "<code>co</code>" to apply only to City,
-Region, Subregion, CountryCode or Country names, otherwise the expression
-matches any of these. A dash at the start is used to exclude matching entries
-(eg. <code>-co/Canada/</code> excludes cities in Canada from the search).  The
-<b>regular expression matches are case sensitive</b> unless "<code>i</code>" is
-added after the expression.  For example:
+<blockquote>Egy haladó szolgáltatás lehetővé teszi <code>/expr/</code> alakú
+szabványos Perl reguláris kifejezések használatát város-, régió- stb. nevek
+illesztéséhez. A reguláris kifejezés elé "<code>ci</code>", "<code>re</code>",
+"<code>sr</code>", "<code>cc</code>" vagy "<code>co</code>" előtag írható, hogy csak
+City, Region, Subregion, CountryCode vagy Country nevekre vonatkozzon, egyébként a
+kifejezés ezek bármelyikére illeszkedik. Az elején lévő kötőjel az illeszkedő
+bejegyzések kizárására szolgál (pl. a <code>-co/Canada/</code> kizárja a
+kanadai városokat a keresésből).  A <b>reguláris kifejezés illesztése
+kis-/nagybetűérzékeny</b>, hacsak nem adsz hozzá "<code>i</code>"-t a kifejezés
+után.  Például:
 
-<pre><span class=blk># this matches "Frontenac" in any place name (case insensitive<sup>&dagger;</sup>)</span>
+<pre><span class=blk># ez a "Frontenac"-re illeszkedik bármely helynévben (kis-/nagybetűre nem érzékeny<sup>&dagger;</sup>)</span>
 exiftool -api geolocation=/frontenac/i
 
-<span class=blk># while this matches "Frontenac" only in subregion names</span>
+<span class=blk># ez viszont csak alrégiónevekben illeszkedik a "Frontenac"-re</span>
 exiftool -api geolocation=sr/frontenac/i
 
-<span class=blk># and this matches the city "Kingston" with "Ontario" in any other field</span>
+<span class=blk># ez pedig a "Kingston" városra illeszkedik, ahol bármely más mezőben szerepel az "Ontario"</span>
 exiftool -api geolocation=kingston,/ontario/i</pre>
 
-One more feature allows both GPS and place names to be used together if no input
-tags are found and the default value includes both of these.  In this case the
-closest city matching all of the specified names is returned.  For example, to
-find the closest city in Canada to a specified location, you could do this:
+Egy további szolgáltatás lehetővé teszi, hogy GPS- és helyneveket együtt
+használj, ha nem található bemeneti tag, és az alapértelmezett érték mindkettőt
+tartalmazza.  Ebben az esetben az összes megadott névre illeszkedő legközelebbi
+város kerül visszaadásra.  Például egy megadott helyhez legközelebbi kanadai
+város megkereséséhez ezt tehetnéd:
 
 <pre>exiftool -api geolocation="40.784,-73.966,co/Canada/"</pre>
 
-This technique may be useful if you were travelling near the border of
-a country and want to keep the geolocated cities within that country.</blockquote>
+Ez a technika akkor lehet hasznos, ha egy ország határának közelében utaztál, és
+azt szeretnéd, hogy a geolokált városok azon az országon belül maradjanak.</blockquote>
 
-<blockquote><sup>&dagger;</sup> <i>Currently case insensitivity applies only to ASCII characters.</i></blockquote>
+<blockquote><sup>&dagger;</sup> <i>Jelenleg a kis-/nagybetű figyelmen kívül hagyása csak az ASCII karakterekre vonatkozik.</i></blockquote>
 
 <hr>
 <a name="Write"></a>
-<h3>Writing Geolocation Information</h3>
+<h3>Geolokációs információ írása</h3>
 
-<blockquote>A write-only <a href="TagNames/Extra.html">Geolocate tag</a> is
-provided as a convenience to simplify the writing of standard geolocation tags.
-This is an alternative to using the API <a href="ExifTool.html#Geolocation">Geolocation</a>
-option and copying the generated Geolocation tags individually to the desired
-locations, and is completely independent of the API Geolocation setting
-(although the <a href="#Params">optional parameters</a> still apply).</blockquote>
+<blockquote>A csak írható <a href="TagNames/Extra.html">Geolocate tag</a> a
+kényelem kedvéért áll rendelkezésre, hogy leegyszerűsítse a szabványos
+geolokáció-tagek írását.  Ez alternatívája annak, hogy az API
+<a href="ExifTool.html#Geolocation">Geolocation</a> opciót használd, és a
+generált Geolocation tageket egyenként a kívánt helyekre másold, és teljesen
+független az API Geolocation beállítástól (bár az
+<a href="#Params">opcionális paraméterek</a> továbbra is érvényesek).</blockquote>
 
-<blockquote>Writing the Geolocate tag with GPS coordinates generates city,
-state/province, country code and country tags.  By default, XMP tags are
-generated (plus Keys:LocationName for videos), but group name(s) may be
-specified to write tags to other locations (see table below).  For example, to
-write the XMP City, State, CountryCode and Country tags from specified GPS
-coordinates:
+<blockquote>A Geolocate tag GPS-koordinátákkal való írása város-, állam/tartomány-,
+országkód- és ország-tageket generál.  Alapértelmezés szerint XMP tagek generálódnak
+(plusz a Keys:LocationName videóknál), de csoportnév(ek) megadható(k), hogy más
+helyekre íródjanak tagek (lásd az alábbi táblázatot).  Például az XMP City, State,
+CountryCode és Country tagek megadott GPS-koordinátákból való írásához:
 
 <pre>exiftool "-geolocate=45.6429,-72.9374" test.jpg</pre>
 
-or to write the IPTC tags from GPS coordinates in a file:
+vagy az IPTC tagek egy fájlban lévő GPS-koordinátákból való írásához:
 
 <pre>exiftool "-iptc:geolocate&lt;gpsposition" test.jpg</pre>
 
-Conversely, GPS coordinates may be generated by writing Geolocate with a city
-name.  A region, subregion, country code and/or country name may be added in any
-order after the city name, separated by commas.  Fields must match exactly the
-entries in the database, but case is not significant<sup>&dagger;</sup>.  Regular expressions may
-also be used in the same format as for the API Geolocation option
-(<a href="#Reg">see above</a>).  If more than one matching city is found then a
-minor warning is issued and the tags are not written, but the IgnoreMinorErrors
-option may be used to write tags for the matching city with the largest
-population.  For example, the following command writes XMP:GPSLatitude, etc and
-IPTC:City, etc for Paris France.
+Ezzel szemben GPS-koordináták is generálhatók a Geolocate város névvel való
+írásával.  A város neve után tetszőleges sorrendben, vesszővel elválasztva
+hozzáadható régió, alrégió, országkód és/vagy országnév.  A mezőknek pontosan
+egyezniük kell az adatbázis bejegyzéseivel, de a kis-/nagybetű nem
+számít<sup>&dagger;</sup>.  Reguláris kifejezések is használhatók, ugyanabban a
+formátumban, mint az API Geolocation opciónál (<a href="#Reg">lásd fentebb</a>).  Ha
+egynél több illeszkedő város található, kisebb figyelmeztetés jelenik meg, és a
+tagek nem íródnak meg, de az IgnoreMinorErrors opcióval megírhatók a legnagyobb
+népességű illeszkedő város tagjei.  Például a következő parancs XMP:GPSLatitude
+stb. és IPTC:City stb. tageket ír a franciaországi Párizshoz.
 
 <pre>exiftool -xmp:iptc:geolocate="paris,fr" test.jpg</pre>
 
-The table below lists the tags that are written for each group name specified
-for the Geolocate tag.  Multiple group names may be used.  In some cases,
-different tags are written based on whether input GPS coordinates or a city name
-were used.  As mentioned, the Geolocate tag is for convenience only, and makes
-it easier to write common tags listed in the table below.  The API
-<a href="ExifTool.html#Geolocation">Geolocation</a> option is more flexible and
-may be used with the <code>-tagsFromFile</code> option to write any combination
-of tags, but the command may be more complicated.
+Az alábbi táblázat felsorolja a Geolocate taghez megadott egyes csoportnevekhez
+megírt tageket.  Több csoportnév is használható.  Bizonyos esetekben más tagek
+íródnak attól függően, hogy bemeneti GPS-koordinátákat vagy város nevét
+használtad.  Ahogy említettük, a Geolocate tag csak a kényelmet szolgálja, és
+megkönnyíti az alábbi táblázatban felsorolt szokásos tagek írását.  Az API
+<a href="ExifTool.html#Geolocation">Geolocation</a> opció rugalmasabb, és a
+<code>-tagsFromFile</code> opcióval használható tagek bármely kombinációjának
+írására, de a parancs bonyolultabb lehet.
 
 <blockquote><table width='90%' class='norm'>
-<tr><th rowspan='2'>Group Name(s) Specified</th><th colspan='2'>Tags Written based on input...</th></tr>
-<tr><th width='35%'>GPS coordinates</th><th width='35%'>City name</th></tr>
-<tr><td align='center'><i>(none)</i></td><td>
+<tr><th rowspan='2'>Megadott csoportnév(ek)</th><th colspan='2'>Megírt tagek a bemenet alapján...</th></tr>
+<tr><th width='35%'>GPS-koordináták</th><th width='35%'>Város neve</th></tr>
+<tr><td align='center'><i>(nincs)</i></td><td>
     XMP:City<br>
     XMP:State<br>
     XMP:CountryCode<br>
@@ -307,7 +310,7 @@ of tags, but the command may be more complicated.
     XMP:State<br>
     XMP:CountryCode<br>
     XMP:Country</td><td>
-    <i>(only if XMP-exif not specified)</i><br>
+    <i>(csak ha az XMP-exif nincs megadva)</i><br>
     XMP:GPSLatitude<br>
     XMP:GPSLongitude</td></tr>
 <tr><td align='center'>XMP-photoshop</td><td colspan='2'><div class='indent'>
@@ -326,7 +329,7 @@ of tags, but the command may be more complicated.
     XMP-iptcExt:LocationShownCountryName<br>
     XMP-iptcExt:LocationShownGPSLatitude<br>
     XMP-iptcExt:LocationShownGPSLongitude</div></td></tr>
-<tr><td align='center'>IPTC<br><i>(older IIM spec.)</i></td><td colspan='2'><div class='indent'>
+<tr><td align='center'>IPTC<br><i>(régebbi IIM spec.)</i></td><td colspan='2'><div class='indent'>
     IPTC:City<br>
     IPTC:Province-State<br>
     IPTC:Country-PrimaryLocationCode<br>
@@ -337,52 +340,52 @@ of tags, but the command may be more complicated.
     GPS:GPSLatitudeRef<br>
     GPS:GPSLongitudeRef</div></td></tr>
 <tr><td align='center'>Keys</td>
-    <td>Keys:LocationName<br>(with "City, Region, Country")</td>
+    <td>Keys:LocationName<br>(„City, Region, Country" alakban)</td>
     <td>Keys:GPSCoordinates</td></tr>
 <tr><td align='center'>ItemList</td><td colspan='2'><div class='indent'>
     ItemList:GPSCoordinates</div></td></tr>
 <tr><td align='center'>UserData</td><td colspan='2'><div class='indent'>
     UserData:GPSCoordinates</div></td></tr>
 <tr><td align='center'>QuickTime</td><td colspan='2'><div class='indent'>
-    <i>(only if not written to Keys, ItemList or UserData)</i><br>
+    <i>(csak ha nem íródik a Keys, ItemList vagy UserData helyre)</i><br>
     QuickTime:GPSCoordinates</div></td></tr>
 </table></blockquote></blockquote>
 
 <a name="Geotag"></a>
-<p><b>While geotagging</b></p>
+<p><b>Geotaggelés közben</b></p>
 
-<blockquote>The special value of "geotag" may be used to represent the GPS
-coordinates determined while <a href="geotag.html">geotagging</a> from a GPS
-track file. For example:
+<blockquote>A „geotag" speciális érték használható a GPS nyomvonalfájlból való
+<a href="geotag.html">geotaggelés</a> közben meghatározott GPS-koordináták
+jelölésére. Például:
 
 <pre>exiftool -geolocate=geotag -geotag track.gpx c:\images</pre>
 
-Regular expressions may be also used when geotagging.  For example, to constrain
-the search to cities within France or Germany:
+Geotaggeléskor reguláris kifejezések is használhatók.  Például a keresés
+Franciaország vagy Németország városaira korlátozásához:
 
 <pre>exiftool -geolocate="geotag,co/France|Germany/" -geotag track.gpx c:\images</pre>
 
-Limiting the search like this will result in better performance when geotagging
-a large number of files, but the overhead is significant so it would degrade
-performance if geotagging only a small number of files.</blockquote>
+A keresés ilyen korlátozása jobb teljesítményt eredményez nagyszámú fájl
+geotaggelésekor, de a járulékos költség jelentős, így csak kis számú fájl
+geotaggelésekor rontaná a teljesítményt.</blockquote>
 
 <hr>
 <a name="Extra"></a>
-<h3>Extra Features</h3>
+<h3>További szolgáltatások</h3>
 
 <a name="Lang"></a>
-<p><b>Language translations</b></p>
+<p><b>Nyelvi fordítások</b></p>
 
-<blockquote>The exiftool <code>-lang</code> option (API <a href="ExifTool.html#Lang">Lang</a>
-option) applies to the tags generated by the API
-<a href="ExifTool.html#Geolocation">Geolocation</a> option.  
-<b>Note that this language translation feature is optional</b>, and requires
-installation of an <a href="#Alt">alternate database</a>.  For example,
-with an alternate database installed:
+<blockquote>Az exiftool <code>-lang</code> opciója (API <a href="ExifTool.html#Lang">Lang</a>
+opció) az API <a href="ExifTool.html#Geolocation">Geolocation</a> opció által
+generált tagekre vonatkozik.
+<b>Vedd figyelembe, hogy ez a nyelvi fordítási szolgáltatás opcionális</b>, és egy
+<a href="#Alt">alternatív adatbázis</a> telepítését igényli.  Például egy
+telepített alternatív adatbázissal:
 
 <pre>exiftool -api geolocation=Munich,Germany -lang de</pre>
 
-gives this output
+ezt a kimenetet adja
 
 <pre class=blk>Geolocation City                : Muenchen
 Geolocation Region              : Bayern
@@ -395,247 +398,254 @@ Geolocation Feature Type        : Seat Of A First-order Administrative Division
 Geolocation Population          : 1300000
 Geolocation Position            : 48.1375, 11.5755</pre>
 
-Note that the language coverage currently isn't very comprehensive, and may only
-be used when reading (ie. not when writing the Geolocate tag or in the API
-<a href="ExifTool.html#Geolocation">Geolocation</a> option setting), but may be
-extended via user-defined translations (see <a href="#Custom">Customization</a>
-below).</blockquote>
+Vedd figyelembe, hogy a nyelvi lefedettség jelenleg nem túl átfogó, és csak
+olvasáskor használható (azaz nem a Geolocate tag írásakor vagy az API
+<a href="ExifTool.html#Geolocation">Geolocation</a> opció beállításában), de
+felhasználó által definiált fordításokkal bővíthető (lásd lentebb a
+<a href="#Custom">Testreszabást</a>).</blockquote>
 
 <a name="Params"></a>
-<p><b>Optional parameters</b></p>
+<p><b>Opcionális paraméterek</b></p>
 
-<blockquote>Four special API options are used as parameters in the geolocation
-search for both the API Geolocation option and when writing the Geolocate tag.
+<blockquote>Négy speciális API-opció használatos paraméterként a geolokációs
+keresésben, mind az API Geolocation opciónál, mind a Geolocate tag írásakor.
 
 <blockquote>
 <table class='norm'>
-<tr><th>API Option</th><th>Description</th></tr>
+<tr><th>API-opció</th><th>Leírás</th></tr>
 <tr><td><a href="ExifTool.html#GeolocMinPop">GeolocMinPop</a></td>
-<td>Minimum city population to consider when searching for a city in the
-database.  This is compared with the populations from the database which are
-stored with 2 significant digits.  Cities with populations lower than this are
-not considered in the search.</td></tr>
+<td>A figyelembe veendő minimális városnépesség, amikor várost keresel az
+adatbázisban.  Ez az adatbázisból származó, 2 értékes jeggyel tárolt népességekkel
+kerül összehasonlításra.  Az ennél kisebb népességű városokat nem veszi
+figyelembe a keresés.</td></tr>
 <tr><td><a href="ExifTool.html#GeolocMaxDist">GeolocMaxDist</a></td>
-<td>When determining geolocation from input GPS coordinates, cities with
-distances in km greater than this are ignored.</td></tr>
+<td>Amikor a geolokációt bemeneti GPS-koordinátákból határozod meg, az ennél
+nagyobb km-es távolságú városokat figyelmen kívül hagyja.</td></tr>
 <tr><td><a href="ExifTool.html#GeolocFeature">GeolocFeature</a></td>
-<td>Comma-separated list of feature codes to include in search, or to exclude
-if the list starts with a dash (-). Valid feature codes are PPL, PPLA, PPLA2,
-PPLA3, PPLA4, PPLA5, PPLC, PPLCH, PPLF, PPLG, PPLH, PPLL, PPLQ, PPLR, PPLS,
-PPLW, PPLX, STLMT and Other, plus possible user-included codes if an alternate
-database is used.  See <a href="http://www.geonames.org/export/codes.html#P">here</a>
-for a description of these codes.</td></tr>
+<td>A keresésbe bevonandó objektumkódok vesszővel elválasztott listája, illetve a
+kizárandóké, ha a lista kötőjellel (-) kezdődik. Az érvényes objektumkódok: PPL,
+PPLA, PPLA2, PPLA3, PPLA4, PPLA5, PPLC, PPLCH, PPLF, PPLG, PPLH, PPLL, PPLQ, PPLR,
+PPLS, PPLW, PPLX, STLMT és Other, plusz esetleges, felhasználó által bevont kódok,
+ha alternatív adatbázist használsz.  Ezeknek a kódoknak a leírásáért lásd
+<a href="http://www.geonames.org/export/codes.html#P">ezt</a>.</td></tr>
 <tr><td><a href="ExifTool.html#GeolocAltNames">GeolocAltNames</a></td>
-<td>Flag to use alternate names if available when search for a city
-name.  Default is 1.  See <a href="#Alt">Alternate databases</a> below
-for more information.</td></tr>
+<td>Jelző, amely alternatív nevek használatát írja elő, ha elérhetők, város
+nevének keresésekor.  Az alapértelmezés 1.  További információért lásd lentebb az
+<a href="#Alt">Alternatív adatbázisokat</a>.</td></tr>
 </table></blockquote></blockquote>
 
 <a name="Alt"></a>
-<p><b>Alternate databases</b></p>
+<p><b>Alternatív adatbázisok</b></p>
 
-<blockquote>ExifTool is distributed with a geolocation database of cities
-with population 2000 or greater (plus adm div down to
-<a href="http://www.geonames.org/export/codes.html#P">PPLA2</a>), but a larger
-database of cities with population 500 or greater and adm div down to
-<a href="http://www.geonames.org/export/codes.html#P">PPLA4</a> may be downloaded
-from the link below.  This database also includes alternate city names and
-language translations.  To use the new database, unzip the downloaded file and add
-the following line to your <a href="config.html">ExifTool config file</a>:
+<blockquote>Az ExifToolt egy olyan geolokációs adatbázissal terjesztik, amely a
+2000 főnél nagyobb népességű városokat tartalmazza (plusz közigazgatási
+egységeket a <a href="http://www.geonames.org/export/codes.html#P">PPLA2</a>
+szintig), de egy nagyobb adatbázis, amely az 500 főnél nagyobb népességű
+városokat és a <a href="http://www.geonames.org/export/codes.html#P">PPLA4</a>
+szintig lemenő közigazgatási egységeket tartalmazza, letölthető az alábbi
+linkről.  Ez az adatbázis alternatív városneveket és nyelvi fordításokat is
+tartalmaz.  Az új adatbázis használatához csomagold ki a letöltött fájlt, és add
+hozzá a következő sort az <a href="config.html">ExifTool konfigurációs
+fájlodhoz</a>:
 
 <pre>$Image::ExifTool::Geolocation::geoDir = '/PATH/TO/Geolocation500';</pre>
 
-where <code>/PATH/TO</code> is the name of the directory containing the unzipped
-Geolocation500 directory.  <i>(Note that this may not work in Windows if there
-are Unicode characters in the path name.)</i>  The <code>$geoDir</code> variable
-may also be set to an empty string to completely disable loading of a
-Geolocation database, which may be useful for working with only a user-defined
-database.  As a convenience, <code>$geoDir</code> may be set at runtime via the
-API <a href="ExifTool.html#GeoDir">GeoDir</a> pseudo-option.</blockquote>
+ahol a <code>/PATH/TO</code> a kicsomagolt Geolocation500 könyvtárat tartalmazó
+könyvtár neve.  <i>(Vedd figyelembe, hogy ez Windowson nem biztos, hogy működik,
+ha az elérési útban Unicode karakterek vannak.)</i>  A <code>$geoDir</code>
+változó üres sztringre is állítható a Geolokációs adatbázis betöltésének teljes
+kikapcsolására, ami hasznos lehet, ha csak felhasználó által definiált
+adatbázissal dolgozol.  A kényelem kedvéért a <code>$geoDir</code> futásidőben is
+beállítható az API <a href="ExifTool.html#GeoDir">GeoDir</a> pszeudo-opcióval.</blockquote>
 
-<blockquote>A database of alternate city names and language translation files are
-also included in the zip file.  The alternate names are consulted only when a full
-city name is provided in a search (ie. not using a regular expression), the API
-<a href="ExifTool.html#GeolocAltNames">GeolocAltNames</a> option is set (which is
-the default), and the AltNames.dat file is found and matches the number of
-entries in the currently loaded Geolocation.dat database.  For example, searching
-for "Big Apple" with the alternate names enabled would return the information for
-New York City.
+<blockquote>A zip fájl alternatív városneveket tartalmazó adatbázist és nyelvi
+fordítási fájlokat is tartalmaz.  Az alternatív neveket csak akkor veszi
+figyelembe, ha a keresésben teljes városnevet adsz meg (azaz nem reguláris
+kifejezést használsz), az API
+<a href="ExifTool.html#GeolocAltNames">GeolocAltNames</a> opció be van állítva
+(ami az alapértelmezés), és az AltNames.dat fájl megtalálható, és megegyezik a
+jelenleg betöltött Geolocation.dat adatbázis bejegyzéseinek számával.  Például a
+„Big Apple"-re való keresés az alternatív nevek engedélyezésével a New York City
+információját adná vissza.
 
 <blockquote><table class='dl'>
-<tr><td>Download database with cities of population 500 or<br>
-greater, including alternate names and translations:<br>
-(requires ExifTool 12.82 or later)</td>
+<tr><td>Az 500 főnél nagyobb népességű városokat tartalmazó adatbázis<br>
+letöltése, az alternatív nevekkel és fordításokkal együtt:<br>
+(ExifTool 12.82 vagy újabb szükséges)</td>
 <!-- NOTE: geo.txt on the web site is automatically updated by the publish script from this file name -->
 <td><a href="https://exiftool.org/Geolocation500-20260407.zip">Geolocation500-20260407.zip</a> (8.1 MB)</td></tr>
 </table></blockquote></blockquote>
 
-<blockquote>A "build_geolocation" utility script is available to allow users
-to build their own alternate geolocation databases for ExifTool.  This utility
-requires that the necessary input database files from
-<a href="https://download.geonames.org/export/dump/">geonames.org</a> have been
-downloaded, and provides control over the population thresholds and included
-feature codes on a per-country basis.
-<a href="build_geolocation.txt">Read the help documentation</a> or
-<a href="https://exiftool.org/build_geolocation.zip">download the utility</a>
-(requires Perl to run).</blockquote>
+<blockquote>Elérhető egy „build_geolocation" segédszkript, amely lehetővé teszi a
+felhasználók számára, hogy saját alternatív geolokációs adatbázisokat építsenek az
+ExifToolhoz.  Ehhez a segédprogramhoz le kell tölteni a szükséges bemeneti
+adatbázisfájlokat a
+<a href="https://download.geonames.org/export/dump/">geonames.org</a>-ról, és
+országonként ad kontrollt a népességküszöbök és a bevont objektumkódok felett.
+<a href="build_geolocation.txt">Olvasd el a súgódokumentációt</a>, vagy
+<a href="https://exiftool.org/build_geolocation.zip">töltsd le a segédprogramot</a>
+(futtatásához Perl szükséges).</blockquote>
 
-<blockquote>For example, the command below generates a database including cities
-of population 2000 or greater, except 500 or greater in Canada and the U.S.,
-plus all cities with feature class "PPL" regardless of population in Ontario
-Canada and New York State, with alternate names and translations only for
-English, French and German:
+<blockquote>Például az alábbi parancs olyan adatbázist generál, amely a 2000 főnél
+nagyobb népességű városokat tartalmazza, kivéve Kanadában és az USA-ban az 500
+főnél nagyobbakat, plusz Ontarióban (Kanada) és New York államban a „PPL"
+objektumosztályú összes várost a népességtől függetlenül, alternatív nevekkel és
+fordításokkal csak angolra, franciára és németre:
 
 <pre>build_geolocation -p 2000 -p ca,us=500 -c "ca.ontario,us.new york=+PPL" -l en,fr,de DIR</pre>
 
-For this command, the necessary geonames database files must exist in the
-<code>DIR</code> directory, and the output will go to
-"DIR/Geolocation_out" but the <code>-o</code> option may be used to specify
-another directory (see <code>build_geolocation -h</code> for details). The
-"<code>+PPL</code>" adds PPL to the list of features to always keep (which is
-"PPLA,PPLA2" by default).  Any feature type(s) from the geonames database
-may be added -- this isn't restricted to just cities.</blockquote>
+Ehhez a parancshoz a szükséges geonames adatbázisfájloknak a <code>DIR</code>
+könyvtárban kell lenniük, és a kimenet a „DIR/Geolocation_out" helyre kerül, de a
+<code>-o</code> opcióval másik könyvtár is megadható (a részletekért lásd a
+<code>build_geolocation -h</code>-t). A „<code>+PPL</code>" hozzáadja a PPL-t a
+mindig megtartandó objektumok listájához (amely alapértelmezés szerint
+„PPLA,PPLA2").  A geonames adatbázis bármely objektumtípusa hozzáadható -- ez nem
+korlátozódik csak városokra.</blockquote>
 
 <a name="List"></a>
-<p><b>Listing the database</b></p>
+<p><b>Az adatbázis listázása</b></p>
 
-<blockquote>The exiftool application <code>-listgeo</code> option may be used to
-list all entries in the Geolocation database, including any user-defined entries
-(see below for a description of how to create these).  For this output, the API
+<blockquote>Az exiftool alkalmazás <code>-listgeo</code> opciója a Geolokációs
+adatbázis összes bejegyzésének listázására használható, a felhasználó által
+definiált bejegyzéseket is beleértve (ezek létrehozásának leírását lásd lentebb).
+Ehhez a kimenethez az API
 <a href="ExifTool.html#GeolocMinPop">GeolocMinPop</a>,
-<a href="ExifTool.html#GeolocFeature">GeolocFeature</a> and
-<a href="ExifTool.html#GeolocAltNames">GeolocAltNames</a> options are in effect, and 
-the application <code>-sort</code> and <code>-lang</code> options may be used to
-sort the output alphabetically and/or apply a language translation.</blockquote>
+<a href="ExifTool.html#GeolocFeature">GeolocFeature</a> és
+<a href="ExifTool.html#GeolocAltNames">GeolocAltNames</a> opciók vannak érvényben,
+az alkalmazás <code>-sort</code> és <code>-lang</code> opcióival pedig
+ábécésorrendbe rendezhető a kimenet, és/vagy nyelvi fordítás alkalmazható.</blockquote>
 
 <a name="Custom"></a>
-<p><b>Customization</b></p>
+<p><b>Testreszabás</b></p>
 
-<blockquote>User-defined database entries and language translations may be added
-through definitions in the <a href="config.html">ExifTool config file</a>. (Note
-that the config file must be UTF-8 encoded.)</blockquote>
+<blockquote>Felhasználó által definiált adatbázis-bejegyzések és nyelvi fordítások
+adhatók hozzá az <a href="config.html">ExifTool konfigurációs fájlban</a> lévő
+definíciókkal. (Vedd figyelembe, hogy a konfigurációs fájlnak UTF-8 kódolásúnak
+kell lennie.)</blockquote>
 
-<blockquote>Database entries are added in this format:
+<blockquote>Az adatbázis-bejegyzések ebben a formátumban adhatók hozzá:
 
 <pre>
-<span class=blk># Add user-defined cities to the Geolocation lookup</span>
+<span class=blk># Felhasználó által definiált városok hozzáadása a Geolokációs kikereséshez</span>
 @Image::ExifTool::UserDefined::Geolocation = (
-    <span class=blk># (city,region,subregion,country_code,country,timezone,feature_code,population,lat,lon)</span>
+    <span class=blk># (város,régió,alrégió,országkód,ország,időzóna,objektumkód,népesség,szél,hossz)</span>
     ['Sinemorets','Burgas','Obshtina Tsarevo','BG','','Europe/Sofia','PPL',400,42.06115,27.97833],
     ['Silistar','Burgas','Obshtina Tsarevo','BG','','Europe/Sofia','PPL',0,42.02199,28.00959],
     ['Krapets','Dobrich','Obshtina Shabla','BG','','Europe/Sofia','PPL',300,43.62621,28.56669],
 );</pre>
 
-The city name, country_code, population and latitude/longitude fields must be
-filled, but all other fields may be left empty if they are not applicable or not
-known.  If the country name is empty (as above), then the name from the database
-is used if available, based on the specified country code.  An optional
-comma-separated list of alternate city names may be added as an additional item
-after the longitude.</blockquote>
+A city name, country_code, population és latitude/longitude mezőt ki kell tölteni,
+de minden más mező üresen hagyható, ha nem alkalmazható vagy nem ismert.  Ha az
+országnév üres (mint fentebb), akkor a megadott országkód alapján az adatbázisból
+származó nevet használja, ha elérhető.  A hosszúság után további elemként
+opcionálisan hozzáadható az alternatív városnevek vesszővel elválasztott listája.</blockquote>
 
-<blockquote>User-defined language translations take this format:
+<blockquote>A felhasználó által definiált nyelvi fordítások ilyen formátumúak:
 
-<pre><span class=blk># Add user-defined language translations (note that user-defined
-# translations override any preexisting translations)</span>
+<pre><span class=blk># Felhasználó által definiált nyelvi fordítások hozzáadása (vedd figyelembe, hogy a
+# felhasználó által definiált fordítások felülbírálnak minden korábbi fordítást)</span>
 %Image::ExifTool::Geolocation::geoLang = (
-    <span class=blk># translations for the Russian language</span>
+    <span class=blk># fordítások az orosz nyelvhez</span>
     ru => {
-        <span class=blk># city, region, subregion and/or country names may be specified
-        # alone to provide a translation for any matching name</span>
+        <span class=blk># város-, régió-, alrégió- és/vagy országnevek önmagukban is megadhatók,
+        # hogy fordítást adjanak bármely illeszkedő névhez</span>
         'Sinemorets' =&gt; 'синеморец',
         'Bulgaria' =&gt; 'Болгария',
-        <span class=blk># a country code and optional region (joined without a comma) and an
-        # optional subregion may be added before the city to be more specific</span>
+        <span class=blk># a város elé írható egy országkód és egy opcionális régió (vessző nélkül
+        # összefűzve), valamint egy opcionális alrégió a pontosabb megadáshoz</span>
         'BGBurgas,Obshtina Shabla,Silistar' =&gt; 'силистар',
         'BG,Krapets' =&gt; 'Крапец',
-        <span class=blk># the city is omitted to specify only region, subregion or country name</span>
-        'GR,' => 'Греция',          <span class=blk># translate country name only</span>
-        'BGBurgas,' => 'Бургас',    <span class=blk># translate region name only</span>
-        'BGBurgas,Obshtina Tsarevo,' => 'Муниципалитет Царево',<span class=blk># subregion only</span>
+        <span class=blk># a város elhagyható, ha csak régió-, alrégió- vagy országnevet adsz meg</span>
+        'GR,' => 'Греция',          <span class=blk># csak az országnév fordítása</span>
+        'BGBurgas,' => 'Бургас',    <span class=blk># csak a régiónév fordítása</span>
+        'BGBurgas,Obshtina Tsarevo,' => 'Муниципалитет Царево',<span class=blk># csak alrégió</span>
     },
-    <span class=blk># (add other languages here)</span>
+    <span class=blk># (ide vegyél fel további nyelveket)</span>
 );
 </pre>
 
-Translations in are organized into sections in the <code>%geoLang</code> hash
-based on the language code (eg. "<code>ru</code>" in the example above). Within
-each section are the key/value pairs which are used to apply the translation for
-that language. The keys on the left are used to match names in the database,
-translating them to the values on the right.  Here is a breakdown of the format
-of the keys on the left:
+A fordítások a <code>%geoLang</code> hashben a nyelvkód alapján vannak szakaszokba
+rendezve (pl. a fenti példában „<code>ru</code>"). Minden szakaszon belül kulcs-érték
+párok vannak, amelyek az adott nyelv fordításának alkalmazására szolgálnak. A bal
+oldali kulcsok az adatbázisban lévő nevek illesztésére szolgálnak, a jobb oldali
+értékekre fordítva őket.  Íme a bal oldali kulcsok formátumának lebontása:
 
-<blockquote><table class='norm'><tr><th>Key format</th><th>Matches...</th></tr>
-<tr><td>Nnnn</td><td>any city, region, subregion or country with name "Nnnn"</td></tr>
-<tr><td>,Nnnn</td><td>any city with name "Nnnn" in any region or country</td></tr>
-<tr><td>CC,Nnnn</td><td>any city with name "Nnnn" in any region and any subregion of the country with code "CC"</td></tr>
-<tr><td>CCRrrr,Nnnn</td><td>any city with name "Nnnn" in region "Rrrr" and any subregion of the country with code "CC"</td></tr>
-<tr><td>CCRrrr,Ssss,Nnnn</td><td>any city with name "Nnnn" in region "Rrrr" and subregion "Ssss" of the country with code "CC"</td></tr>
-<tr><td>CC,</td><td>the country with code "CC"</td></tr>
-<tr><td>CCRrrr,</td><td>the region "Rrrr" in the country with code "CC"</td></tr>
-<tr><td>CCRrrr,Ssss,</td><td>the subregion "Ssss" in region "Rrrr" of the country with code "CC"</td></tr>
+<blockquote><table class='norm'><tr><th>Kulcsformátum</th><th>Illeszkedik...</th></tr>
+<tr><td>Nnnn</td><td>bármely „Nnnn" nevű városra, régióra, alrégióra vagy országra</td></tr>
+<tr><td>,Nnnn</td><td>bármely „Nnnn" nevű városra bármely régióban vagy országban</td></tr>
+<tr><td>CC,Nnnn</td><td>bármely „Nnnn" nevű városra a „CC" kódú ország bármely régiójában és bármely alrégiójában</td></tr>
+<tr><td>CCRrrr,Nnnn</td><td>bármely „Nnnn" nevű városra a „CC" kódú ország „Rrrr" régiójában és bármely alrégiójában</td></tr>
+<tr><td>CCRrrr,Ssss,Nnnn</td><td>bármely „Nnnn" nevű városra a „CC" kódú ország „Rrrr" régiójában és „Ssss" alrégiójában</td></tr>
+<tr><td>CC,</td><td>a „CC" kódú országra</td></tr>
+<tr><td>CCRrrr,</td><td>a „CC" kódú ország „Rrrr" régiójára</td></tr>
+<tr><td>CCRrrr,Ssss,</td><td>a „CC" kódú ország „Rrrr" régiójában lévő „Ssss" alrégióra</td></tr>
 </table></blockquote>
 
-Entries in the table above are ordered from lowest priority at the top to
-highest at the bottom, with the match of highest priority taking precedence when
-translating a name.</blockquote>
+A fenti táblázat bejegyzései a legalacsonyabb prioritástól (felül) a legmagasabbig
+(alul) vannak rendezve, ahol egy név fordításakor a legmagasabb prioritású találat
+élvez elsőbbséget.</blockquote>
 
-<blockquote>User-defined language translations may be added for the default 'en'
-language to affect the returned names when no language is specified.</blockquote>
+<blockquote>Felhasználó által definiált nyelvi fordítások az alapértelmezett 'en'
+nyelvhez is hozzáadhatók, hogy befolyásolják a visszaadott neveket, amikor nincs
+nyelv megadva.</blockquote>
 
 <hr>
 <a name="Troubleshooting"></a>
-<h3>Troubleshooting</h3>
+<h3>Hibaelhárítás</h3>
 
 <a name="TR1"></a>
-<p>1. <b>"ExifTool returns an unexpected city for the specified GPS coordinates"</b></p>
+<p>1. <b>„Az ExifTool váratlan várost ad vissza a megadott GPS-koordinátákhoz"</b></p>
 
-<blockquote>First, try listing a number of nearby cities to see if ExifTool is
-just finding something closer.  For example the following command lists the
-10 cities nearest to a specified GPS position, where "LAT" and "LON" are signed
-floating-point latitude and longitude:
+<blockquote>Először próbálj kilistázni néhány közeli várost, hogy lásd, nem
+egyszerűen valami közelebbit talál-e az ExifTool.  Például a következő parancs
+kilistázza egy megadott GPS-pozícióhoz legközelebbi 10 várost, ahol a „LAT" és a
+„LON" előjeles, lebegőpontos szélesség és hosszúság:
 
 <pre>exiftool -api geolocation=LAT,LON,num=10 -a -g3</pre>
 
-If the expected city is in this list, take note of the feature codes and populations
-of these cities.  The API <a href="ExifTool.html#GeolocFeature">GeolocFeature</a>
-and API <a href="ExifTool.html#GeolocMinPop">GeolocMinPop</a> options may be used
-to limit the feature types and/or population of the returned cities according
-to your requirements.  For example, to avoid returning PPLX city types and cities
-with population less than 10000, you could do this:
+Ha a várt város szerepel ebben a listában, jegyezd meg ezeknek a városoknak az
+objektumkódjait és népességeit.  Az API <a href="ExifTool.html#GeolocFeature">GeolocFeature</a>
+és az API <a href="ExifTool.html#GeolocMinPop">GeolocMinPop</a> opcióval korlátozhatod
+a visszaadott városok objektumtípusait és/vagy népességét az igényeidnek
+megfelelően.  Például a PPLX várostípusok és a 10000-nél kisebb népességű városok
+visszaadásának elkerüléséhez ezt tehetnéd:
 
 <pre>exiftool -api geolocfeature=-PPLX -api geolocminpop=10000 ...</pre>
 
-However, if your city doesn't appear in the list, then it is likely that it
-doesn't exist in the ExifTool Geolocation database.  You can  check this by
-searching for the specific city in the ExifTool database.  This command returns
-all cities with name "CITYNAME" exactly (case insensitive):
+Ha azonban a városod nem jelenik meg a listában, akkor valószínűleg nem létezik az
+ExifTool Geolokációs adatbázisában.  Ezt úgy ellenőrizheted, hogy rákeresel az
+adott városra az ExifTool adatbázisában.  Ez a parancs minden pontosan „CITYNAME"
+nevű várost visszaad (kis-/nagybetűre nem érzékeny):
 
 <pre>exiftool -api geolocation="CITYNAME" -m -a -g3</pre>
 
-or this command may be used to match cities with "STRING" anywhere in their name
-(the added "<code>i</code>" makes the match case insensitive):
+vagy ezzel a paranccsal illeszthetsz olyan városokra, amelyek nevében bárhol
+szerepel a „STRING" (a hozzáadott „<code>i</code>" teszi a keresést
+kis-/nagybetűre nem érzékennyé):
 
 <pre>exiftool -api geolocation="ci/STRING/i" -m -a -g3</pre>
 
-A city may not appear in the ExifTool Geolocation database if the population
-is lower than a minimum, which is 2000 for the standard database.  An
-<a href="#Alt">alternate database</a> is available with cities down to population
-500, but it may be a good idea to first see if the city exists in the source
-geonames.org database.  Use the search field <a href="https://www.geonames.org">here</a>
-to see if the city does exist and to determine its population and feature codes
-(click on the appropriate city in the list returned by the search).</blockquote>
+Előfordulhat, hogy egy város nem jelenik meg az ExifTool Geolokációs
+adatbázisában, ha a népessége egy minimumnál kisebb, ami a szabványos adatbázisnál
+2000.  Elérhető egy <a href="#Alt">alternatív adatbázis</a> 500 fős népességig
+lemenő városokkal, de érdemes lehet előbb megnézni, hogy a város létezik-e a
+forrás geonames.org adatbázisban.  Használd <a href="https://www.geonames.org">itt</a>
+a keresőmezőt annak ellenőrzésére, hogy a város létezik-e, és a népességének és
+objektumkódjainak meghatározására (kattints a keresés által visszaadott listában a
+megfelelő városra).</blockquote>
 
-<blockquote>If the city doesn't exist at geonames.org or has incorrect information,
-there are two things you can do:  1. Create an account and geonames.org and update
-their database with the correct information.  This information will eventually
-propagate down to ExifTool (probably within a few months), or you can build your
-own <a href="#Alt">alternate database</a>.  Or 2. Create a
-<a href="#Custom">user-defined entry</a> for your city in the ExifTool config file.
+<blockquote>Ha a város nem létezik a geonames.org-on, vagy hibás információt
+tartalmaz, két dolgot tehetsz:  1. Hozz létre fiókot a geonames.org-on, és
+frissítsd az adatbázisukat a helyes információval.  Ez az információ végül
+lejut az ExifToolba is (valószínűleg néhány hónapon belül), vagy építhetsz saját
+<a href="#Alt">alternatív adatbázist</a>.  Vagy 2. Hozz létre
+<a href="#Custom">felhasználó által definiált bejegyzést</a> a városodhoz az
+ExifTool konfigurációs fájlban.
 </blockquote>
 
 <hr>
-<i>Created Mar 12, 2024</i><br>
-<i>Last revised Apr 7, 2026</i>
-<p class='lf'><a href="index.html">&lt;-- Back to ExifTool home page</a></p>
+<i>Létrehozva: 2024. március 12.</i><br>
+<i>Utoljára módosítva: 2026. április 7.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
 </body>
 </html>
