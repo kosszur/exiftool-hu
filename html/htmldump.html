@@ -212,43 +212,43 @@ mspan[0] = "t37";
 
 // End --->
 </script></head>
-<body><h2>ExifTool HtmlDump Option</h2>
-<p>Below is an example of the ExifTool HtmlDump output (the exiftool
-"<b>-htmlDump</b>" option).  Move your cursor over the data to highlight
-individual blocks and reveal tool tips for extra information. (You must have
-JavaScript enabled.)</p>
+<body><h2>Az ExifTool HtmlDump opciója</h2>
+<p>Az alábbiakban egy példa látható az ExifTool HtmlDump kimenetére (az exiftool
+"<b>-htmlDump</b>" opciója).  Mozgassa a kurzort az adatok fölé az egyes blokkok
+kiemeléséhez és a további információkat tartalmazó buboréksúgók megjelenítéséhez.
+(A JavaScriptnek engedélyezve kell lennie.)</p>
 
-<p>The command used to generate the output below was:</p>
+<p>Az alábbi kimenet előállításához használt parancs a következő volt:</p>
 
 <blockquote><code>exiftool -htmldump t/images/FujiFilm.jpg > out.html</code></blockquote>
 
-<p>In this output, <span onmouseover="high(event,1)" onmouseout="high(event,0)">normal
-data blocks are <a name=XA class=Y>light</a> or <a name=XA class=W>dark green</a>,
-unused blocks are <a name=XB class=U>brown</a>, and double-referenced blocks are
-<a name=XC class=V>red</a> or <a name=XC class=X>pink</a>. A
-<a name=XD class=H>blue</a> tag name indicates the value is referenced by an
-offset in the IFD (ie. the value is longer than 4 bytes),
-<a name=XD class=F>purple</a> indicates that the actual offset differs from the
-recorded offset, and a <a name=XD class=V>red</a> name indicates an invalid
-offset.  Odd offsets are flagged with "<span class=V>(odd)</span>" and
-out-of-sequence tag ID's are indicated by "<span class=V>(seq)</span>" because
-the TIFF specification states that values must begin on a (2-byte) word boundary
-and that IFD entries must be in order of increasing tag ID. All data in the
-maker notes value block is <a name=XE class='W M'>underlined</a>.</span></p>
+<p>Ebben a kimenetben a <span onmouseover="high(event,1)" onmouseout="high(event,0)">normál
+adatblokkok <a name=XA class=Y>világoszöldek</a> vagy <a name=XA class=W>sötétzöldek</a>,
+a nem használt blokkok <a name=XB class=U>barnák</a>, a kétszeresen hivatkozott blokkok pedig
+<a name=XC class=V>pirosak</a> vagy <a name=XC class=X>rózsaszínűek</a>. A
+<a name=XD class=H>kék</a> tagnév azt jelzi, hogy az értékre az IFD-ben lévő
+eltolás hivatkozik (azaz az érték 4 bájtnál hosszabb), a
+<a name=XD class=F>lila</a> azt jelzi, hogy a tényleges eltolás eltér a
+rögzített eltolástól, a <a name=XD class=V>piros</a> név pedig érvénytelen
+eltolást jelez.  A páratlan eltolásokat "<span class=V>(odd)</span>", a
+sorrenden kívüli tag-azonosítókat pedig "<span class=V>(seq)</span>" jelöli, mivel
+a TIFF-specifikáció kimondja, hogy az értékeknek (2 bájtos) szóhatáron kell
+kezdődniük, és hogy az IFD-bejegyzéseknek növekvő tag-azonosító sorrendben kell
+lenniük. A maker note értékblokkjának minden adata <a name=XE class='W M'>alá van húzva</a>.</span></p>
 
-<p>Clicking the mouse locks current the highlighted entry, and clicking again
-unlocks it.</p>
+<p>Az egérrel kattintva rögzítheti az aktuálisan kiemelt bejegyzést, ismét
+kattintva pedig feloldhatja a rögzítést.</p>
 
-<p>Currently, only TIFF/EXIF and JPEG meta information is dumped.  The leftmost
-column of the output gives the offset in hex relative to the start of the TIFF
-header (by default).  For a TIFF image this is at the start of the file, but for
-a JPEG image it is 10 bytes after the start of the APP1 EXIF segment.  However,
-this base offset can be specified on the command line with "-htmlDump#" (eg.
-"-htmlDump0" for absolute offsets), or via the API with the "HtmlDumpBase"
-option.</p>
+<p>Jelenleg csak a TIFF/EXIF és a JPEG metainformáció kerül kiíratásra.  A
+kimenet bal szélső oszlopa az eltolást adja meg hexadecimálisan, a TIFF-fejléc
+kezdetéhez viszonyítva (alapértelmezés szerint).  Egy TIFF-kép esetében ez a
+fájl elején van, egy JPEG-kép esetében viszont 10 bájttal az APP1 EXIF-szegmens
+kezdete után.  Ez az alapeltolás azonban megadható a parancssorban a
+"-htmlDump#" kapcsolóval (pl. "-htmlDump0" az abszolút eltolásokhoz), vagy az
+API-n keresztül a "HtmlDumpBase" opcióval.</p>
 
 <noscript><b class=V>--&gt;
-Enable JavaScript for active highlighting and information tool tips!
+Engedélyezze a JavaScriptet az aktív kiemeléshez és az információs buboréksúgókhoz!
 </b></noscript>
 <table class=dump cellspacing=0 cellpadding=2>
 <tr><td valign='top'><pre>-000c
