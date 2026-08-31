@@ -3,93 +3,95 @@
 <html>
 <!-- (this file generated automatically by Image::ExifTool::BuildTagLookup) -->
 <head>
-<title>XMP Tags</title>
+<title>XMP tagek</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 </head>
 <body>
-<h2 class=top>XMP Tags</h2>
+<h2 class=top>XMP tagek</h2>
 <p>
-XMP stands for &quot;Extensible Metadata Platform&quot;, an XML/RDF-based metadata
-format which is being pushed by Adobe.  Information in this format can be
-embedded in many different image file types including JPG, JP2, TIFF, GIF,
-EPS, PDF, PSD, IND, INX, PNG, DJVU, SVG, PGF, MIFF, XCF, CRW, DNG and a
-variety of proprietary TIFF-based RAW images, as well as MOV, AVI, ASF, WMV,
-FLV, SWF and MP4 videos, and WMA and audio formats supporting ID3v2
-information.</p>
+Az XMP az &quot;Extensible Metadata Platform&quot; rövidítése; ez egy XML/RDF-alapú
+metaadat-formátum, amelyet az Adobe szorgalmaz.  Az ilyen formátumú
+információ sokféle képfájltípusba beágyazható, többek között JPG, JP2, TIFF,
+GIF, EPS, PDF, PSD, IND, INX, PNG, DJVU, SVG, PGF, MIFF, XCF, CRW, DNG és
+számos tulajdonosi TIFF-alapú RAW-kép, valamint MOV, AVI, ASF, WMV, FLV, SWF
+és MP4 videók, illetve WMA és az ID3v2-információt támogató
+hangformátumok.</p>
 
-<p>The XMP <b>Tag ID</b>&#39;s aren&#39;t listed because in most cases they are identical
-to the <b>Tag Name</b> (aside from differences in case).  Tags with different
-ID&#39;s are mentioned in the <b>Notes</b> column of the HTML version of this
-document.</p>
+<p>Az XMP <b>Tag ID</b>-k nincsenek felsorolva, mert a legtöbb esetben azonosak
+a <b>Tag Name</b> névvel (a kis- és nagybetűk eltérésétől eltekintve).  Az
+eltérő ID-jű tageket ennek a dokumentumnak a HTML-változatában a <b>Notes</b>
+oszlop említi.</p>
 
-<p>All XMP information is stored as character strings.  The <b>Writable</b> column
-specifies the information format:  <code>string</code> is an unformatted string,
-<code>integer</code> is a string of digits (possibly beginning with a &#39;+&#39; or &#39;-&#39;),
-<code>real</code> is a floating point number, <code>rational</code> is entered as a floating
-point number but stored as two <code>integer</code> strings separated by a &#39;/&#39;
-character, <code>date</code> is a date/time string entered in the format &quot;YYYY:mm:dd
-HH:MM:SS[.ss][+/-HH:MM]&quot; but some partial date/time formats are also
-accepted (see <a href="../faq.html#Q5">faq.html#Q5</a>), <code>boolean</code> is either
-&quot;True&quot; or &quot;False&quot; (but &quot;true&quot; and &quot;false&quot; may be written as a ValueConv
-value for compatibility with non-conforming applications), <code>struct</code>
-indicates a structured tag, and <code>lang-alt</code> is a tag that supports alternate
-languages.</p>
+<p>Minden XMP-információ karaktersztringként tárolódik.  A <b>Writable</b> oszlop
+adja meg az információ formátumát:  a <code>string</code> formázatlan sztring, az
+<code>integer</code> számjegyek sztringje (esetleg &#39;+&#39; vagy &#39;-&#39; jellel kezdve), a
+<code>real</code> lebegőpontos szám, a <code>rational</code> lebegőpontos számként adható meg,
+de két &#39;/&#39; karakterrel elválasztott <code>integer</code> sztringként tárolódik, a
+<code>date</code> egy &quot;YYYY:mm:dd HH:MM:SS[.ss][+/-HH:MM]&quot; formátumban megadott
+dátum/idő sztring, de néhány részleges dátum/idő formátum is elfogadott (lásd
+<a href="../faq.html#Q5">faq.html#Q5</a>), a <code>boolean</code> vagy &quot;True&quot;, vagy &quot;False&quot; (de a &quot;true&quot; és
+&quot;false&quot; ValueConv értékként is írható a nem szabványkövető alkalmazásokkal
+való kompatibilitás érdekében), a <code>struct</code> strukturált taget jelöl, a
+<code>lang-alt</code> pedig olyan tag, amely alternatív nyelveket támogat.</p>
 
-<p>When reading, <code>struct</code> tags are extracted only if the <a href="../ExifTool.html#Struct">Struct</a> (-struct)
-option is used.  Otherwise the corresponding <i>Flattened</i> tags, indicated by
-an underline (<code>_</code>) after the <b>Writable</b> type, are extracted.  When
-copying, by default both structured and flattened tags are available, but
-the flattened tags are considered &quot;unsafe&quot; so they aren&#39;t copied unless
-specified explicitly.  The <a href="../ExifTool.html#Struct">Struct</a> option may be disabled by setting Struct
-to 0 via the API or with --struct on the command line to copy only flattened
-tags, or enabled by setting Struct to 1 via the API or with -struct on the
-command line to copy only as structures.  When writing, the <a href="../ExifTool.html#Struct">Struct</a> option
-has no effect, and both structured and flattened tags may be written.  See
-<a href="../struct.html">struct.html</a> for more details.</p>
+<p>Olvasáskor a <code>struct</code> tageket csak akkor nyeri ki, ha a <a href="../ExifTool.html#Struct">Struct</a>
+(-struct) opció használatban van.  Egyébként a megfelelő <i>lapított</i>
+(Flattened) tageket nyeri ki, amelyeket a <b>Writable</b> típus után álló
+aláhúzás (<code>_</code>) jelez.  Másoláskor alapból a strukturált és a lapított tagek
+is elérhetők, de a lapított tagek &quot;nem biztonságosnak&quot; számítanak, ezért nem
+másolódnak, hacsak nincsenek kifejezetten megadva.  A <a href="../ExifTool.html#Struct">Struct</a> opció
+kikapcsolható a Struct 0-ra állításával az API-n keresztül vagy a
+parancssori --struct kapcsolóval, hogy csak a lapított tagek másolódjanak,
+illetve bekapcsolható a Struct 1-re állításával az API-n keresztül vagy a
+parancssori -struct kapcsolóval, hogy csak struktúraként másoljon.  Íráskor a
+<a href="../ExifTool.html#Struct">Struct</a> opciónak nincs hatása, és a strukturált és a lapított tagek is
+írhatók.  Részletekért lásd a <a href="../struct.html">struct.html</a> oldalt.</p>
 
-<p>Individual languages for <code>lang-alt</code> tags are accessed by suffixing the tag
-name with a &#39;-&#39;, followed by an RFC 3066 language code (eg. &quot;XMP:Title-fr&quot;,
-or &quot;Rights-en-US&quot;).  (See <a href="http://www.ietf.org/rfc/rfc3066.txt">http://www.ietf.org/rfc/rfc3066.txt</a> for the RFC
-3066 specification.)  A <code>lang-alt</code> tag with no language code accesses the
-&quot;x-default&quot; language, but causes other languages for this tag to be deleted
-when writing.  The &quot;x-default&quot; language code may be specified when writing
-to preserve other existing languages (eg. &quot;XMP-dc:Description-x-default&quot;).
-When reading, &quot;x-default&quot; is not specified.</p>
+<p>A <code>lang-alt</code> tagek egyes nyelvei úgy érhetők el, hogy a tagnév végére egy
+&#39;-&#39; jelet, majd egy RFC 3066 nyelvkódot teszel (pl. &quot;XMP:Title-fr&quot; vagy
+&quot;Rights-en-US&quot;).  (Az RFC 3066 specifikációt lásd:
+<a href="http://www.ietf.org/rfc/rfc3066.txt">http://www.ietf.org/rfc/rfc3066.txt</a>.)  A nyelvkód nélküli <code>lang-alt</code> tag az
+&quot;x-default&quot; nyelvet éri el, de íráskor a tag többi nyelvének törlését
+okozza.  Az &quot;x-default&quot; nyelvkód íráskor megadható a többi meglévő nyelv
+megőrzése érdekében (pl. &quot;XMP-dc:Description-x-default&quot;).  Olvasáskor az
+&quot;x-default&quot; nincs megadva.</p>
 
-<p>The XMP tags are organized according to schema <b>Namespace</b> in the following
-tables.  The ExifTool family 1 group names are derived from the namespace
-prefixes by adding a leading &quot;XMP-&quot; (eg. &quot;XMP-dc&quot;).  A few of the longer
-prefixes have been shortened (as mentioned in the documentation below) to
-avoid excessively long ExifTool group names.  The tags of any namespace may
-be deleted as a group by specifying the family 1 group name (eg.
-&quot;-XMP-dc:all=&quot; on the command line).  This includes namespaces which are not
-pre-defined by ExifTool.</p>
+<p>Az XMP-tagek az alábbi táblázatokban a séma <b>Namespace</b> névtere szerint
+vannak rendezve.  Az ExifTool 1-es családbeli csoportnevei a
+névtér-előtagokból származnak, egy &quot;XMP-&quot; előtaggal kiegészítve (pl.
+&quot;XMP-dc&quot;).  Néhány hosszabb előtagot lerövidítettünk (ahogy az alábbi
+dokumentáció említi), hogy elkerüljük a túlzottan hosszú
+ExifTool-csoportneveket.  Bármely névtér tagjei csoportként törölhetők az
+1-es családbeli csoportnév megadásával (pl. &quot;-XMP-dc:all=&quot; a parancssorban).
+Ez azokra a névterekre is vonatkozik, amelyeket az ExifTool nem definiál
+előre.</p>
 
-<p>In cases where a tag name exists in more than one namespace, less common
-namespaces are avoided when writing.  However, a specific namespace may be
-written by providing a family 1 group name for the tag (eg. XMP-crs:Contrast
-or XMP-exif:Contrast).  When deciding on which tags to add to an image,
-using standard schemas such as <a href="#dc">dc</a>, <a href="#xmp">xmp</a>,
-<a href="#iptcCore">iptcCore</a> and <a href="#iptcExt">iptcExt</a> is
-recommended if possible.</p>
+<p>Azokban az esetekben, amikor egy tagnév egynél több névtérben létezik,
+íráskor a kevésbé gyakori névtereket kerüli.  Egy konkrét névtér azonban
+írható a taghez tartozó 1-es családbeli csoportnév megadásával (pl.
+XMP-crs:Contrast vagy XMP-exif:Contrast).  Amikor arról döntesz, mely
+tageket adod egy képhez, lehetőség szerint ajánlott a szabványos sémák
+használata, mint a <a href="#dc">dc</a>, <a href="#xmp">xmp</a>,
+<a href="#iptcCore">iptcCore</a> és <a href="#iptcExt">iptcExt</a>.</p>
 
-<p>For structures, the heading of the first column is <b>Field Name</b>.  Field
-names are very similar to tag names, except they are used to identify fields
-inside structures instead of stand-alone tags.  See
-<a href="../struct.html#Fields">the Field Name section of the Structured Information documentation</a> for more
-details.</p>
+<p>Struktúrák esetén az első oszlop fejléce a <b>Field Name</b>.  A mezőnevek
+nagyon hasonlítanak a tagnevekre, azzal a különbséggel, hogy önálló tagek
+helyett struktúrákon belüli mezők azonosítására szolgálnak.  Részletekért
+lásd <a href="../struct.html#Fields">a strukturált információ dokumentációjának Field Name szakaszát</a>.</p>
 
-<p>ExifTool will extract XMP information even if it is not listed in these
-tables, but other tags are not writable unless added as user-defined tags in
-the <a href="../config.html">ExifTool config file</a>.  For example, the <code>pdfx</code> namespace doesn&#39;t have a
-predefined set of tag names because it is used to store application-defined
-PDF information, so although this information will be extracted, it is only
-writable if the corresponding user-defined tags have been created.</p>
+<p>Az ExifTool akkor is kinyeri az XMP-információt, ha nincs felsorolva
+ezekben a táblázatokban, de más tagek nem írhatók, hacsak nincsenek
+felhasználó által definiált tagként hozzáadva az <a href="../config.html">ExifTool config fájljában</a>.
+Például a <code>pdfx</code> névtérnek nincs előre definiált tagnév-készlete, mert
+alkalmazás-specifikus PDF-információ tárolására szolgál, így bár ezt az
+információt kinyeri, csak akkor írható, ha létrehozták a megfelelő
+felhasználó által definiált tageket.</p>
 
-<p>The tables below list tags from the official XMP specification (with an
-underlined <b>Namespace</b> in the HTML version of this documentation), as well
-as extensions from various other sources.  See
-<a href="http://www.adobe.com/devnet/xmp/">http://www.adobe.com/devnet/xmp/</a> for the official XMP specification.
+<p>Az alábbi táblázatok a hivatalos XMP-specifikációból származó tageket
+sorolják fel (amelyek <b>Namespace</b> névtere alá van húzva ennek a
+dokumentációnak a HTML-változatában), valamint különféle más forrásokból
+származó bővítményeket.  A hivatalos XMP-specifikációt lásd:
+<a href="http://www.adobe.com/devnet/xmp/">http://www.adobe.com/devnet/xmp/</a>.
 </p>
 <blockquote>
 <table class=frame><tr><td>
@@ -414,10 +416,10 @@ as extensions from various other sources.  See
 <td>--&gt; <a href='XMP.html#xmpTPg'>XMP xmpTPg Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='aas'>XMP aas Tags</a></h2>
-<p>Apple Adjustment Settings used by iPhone/iPad.</p>
+<h2><a name='aas'>XMP aas tagek</a></h2>
+<p>Az iPhone/iPad által használt Apple-korrekcióbeállítások.</p>
 
-<p>These tags belong to the ExifTool XMP-aas family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-aas 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -533,16 +535,17 @@ as extensions from various other sources.  See
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='acdsee'>XMP acdsee Tags</a></h2>
-<p>ACD Systems ACDSee namespace tags.</p>
+<h2><a name='acdsee'>XMP acdsee tagek</a></h2>
+<p>Az ACD Systems ACDSee névterének tagjei.</p>
 
-<p>(A note to software developers: Re-inventing your own private tags instead
-of using the equivalent tags in standard XMP namespaces defeats one of the
-most valuable features of metadata: interoperability.  Your applications
-mumble to themselves instead of speaking out for the rest of the world to
-hear.)</p>
+<p>(Egy megjegyzés a szoftverfejlesztőknek: ha a szabványos XMP-névterek
+megfelelő tagjei helyett saját privát tageket találsz ki újra, azzal a
+metaadatok egyik legértékesebb tulajdonságát teszed tönkre: az
+együttműködési képességet.  Az alkalmazásaid ilyenkor csak magukban
+motyognak ahelyett, hogy a világ többi része számára is hallhatóan
+megszólalnának.)</p>
 
-<p>These tags belong to the ExifTool XMP-acdsee family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-acdsee 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -628,8 +631,8 @@ hear.)</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ACDSeeRegions'>XMP ACDSeeRegions Tags</a></h2>
-<p>These tags belong to the ExifTool XMP-acdsee-rs family 1 group.</p>
+<h2><a name='ACDSeeRegions'>XMP ACDSeeRegions tagek</a></h2>
+<p>Ezek a tagek az ExifTool XMP-acdsee-rs 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -746,7 +749,7 @@ hear.)</p>
 <td><span class=s><span class=n>(RegionsRegionListType)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ACDSeeRegionInfo'>XMP ACDSeeRegionInfo Struct</a></h2>
+<h2><a name='ACDSeeRegionInfo'>XMP ACDSeeRegionInfo struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -762,7 +765,7 @@ hear.)</p>
 <td>--&gt; <a href='XMP.html#ACDSeeRegion'>ACDSeeRegion Struct</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ACDSeeDimensions'>XMP ACDSeeDimensions Struct</a></h2>
+<h2><a name='ACDSeeDimensions'>XMP ACDSeeDimensions struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -782,7 +785,7 @@ hear.)</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ACDSeeRegion'>XMP ACDSeeRegion Struct</a></h2>
+<h2><a name='ACDSeeRegion'>XMP ACDSeeRegion struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -810,7 +813,7 @@ hear.)</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ACDSeeArea'>XMP ACDSeeArea Struct</a></h2>
+<h2><a name='ACDSeeArea'>XMP ACDSeeArea struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -834,10 +837,10 @@ hear.)</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Album'>XMP Album Tags</a></h2>
-<p>Adobe Album namespace tags.</p>
+<h2><a name='Album'>XMP Album tagek</a></h2>
+<p>Az Adobe Album névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-album family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-album 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -849,10 +852,10 @@ hear.)</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='apdi'>XMP apdi Tags</a></h2>
-<p>Used in Apple HDR GainMap images.</p>
+<h2><a name='apdi'>XMP apdi tagek</a></h2>
+<p>Az Apple HDR GainMap képeiben használatos.</p>
 
-<p>These tags belong to the ExifTool XMP-apdi family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-apdi 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -872,11 +875,11 @@ hear.)</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='apple_fi'>XMP apple_fi Tags</a></h2>
-<p>Face information tags written by the Apple iPhone 5 inside the mwg-rs
-RegionExtensions.</p>
+<h2><a name='apple_fi'>XMP apple_fi tagek</a></h2>
+<p>Az Apple iPhone 5 által a mwg-rs RegionExtensions belsejébe írt
+arcinformáció-tagek.</p>
 
-<p>These tags belong to the ExifTool XMP-apple-fi family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-apple-fi 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -904,14 +907,14 @@ RegionExtensions.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='aux'>XMP aux Tags</a></h2>
-<p>Adobe-defined auxiliary EXIF tags.  This namespace existed in the XMP
-specification until it was dropped in 2012, presumably due to the
-introduction of the EXIF 2.3 for XMP specification and the exifEX namespace
-at this time.  For this reason, tags below with equivalents in the
-<a href="#exifEX">exifEX namespace</a> are avoided when writing.</p>
+<h2><a name='aux'>XMP aux tagek</a></h2>
+<p>Az Adobe által definiált kiegészítő EXIF-tagek.  Ez a névtér létezett az
+XMP-specifikációban, amíg 2012-ben ki nem vették, feltehetően az EXIF 2.3 for
+XMP specifikáció és az exifEX névtér ekkori bevezetése miatt.  Ezért az
+alábbi tageket, amelyeknek van megfelelője az
+<a href="#exifEX">exifEX névtérben</a>, íráskor kerüli.</p>
 
-<p>These tags belong to the ExifTool XMP-aux family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-aux 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1023,12 +1026,13 @@ at this time.  For this reason, tags below with equivalents in the
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='cc'>XMP cc Tags</a></h2>
-<p>Creative Commons namespace tags.  Note that the CC specification for XMP is
-non-existent, so ExifTool must make some assumptions about the format of the
-specific properties in XMP (see <a href="http://creativecommons.org/ns">http://creativecommons.org/ns</a>).</p>
+<h2><a name='cc'>XMP cc tagek</a></h2>
+<p>A Creative Commons névterének tagjei.  Vedd figyelembe, hogy a CC
+XMP-specifikációja nem létezik, ezért az ExifToolnak feltételeznie kell
+bizonyos dolgokat az egyes XMP-tulajdonságok formátumáról (lásd
+<a href="http://creativecommons.org/ns">http://creativecommons.org/ns</a>).</p>
 
-<p>These tags belong to the ExifTool XMP-cc family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-cc 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1091,10 +1095,10 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='cell'>XMP cell Tags</a></h2>
-<p>Location tags written by some Sony Ericsson phones.</p>
+<h2><a name='cell'>XMP cell tagek</a></h2>
+<p>Egyes Sony Ericsson telefonok által írt helymeghatározási tagek.</p>
 
-<p>These tags belong to the ExifTool XMP-cell family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-cell 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1126,10 +1130,10 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td><span class=s><span class=n>(tag ID is &#39;r&#39;)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='crd'>XMP crd Tags</a></h2>
-<p>Adobe Camera Raw Defaults tags.</p>
+<h2><a name='crd'>XMP crd tagek</a></h2>
+<p>Adobe Camera Raw alapértelmezés-tagek.</p>
 
-<p>These tags belong to the ExifTool XMP-crd family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-crd 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6587,7 +6591,7 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Correction'>XMP Correction Struct</a></h2>
+<h2><a name='Correction'>XMP Correction struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6716,7 +6720,7 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CorrectionMask'>XMP CorrectionMask Struct</a></h2>
+<h2><a name='CorrectionMask'>XMP CorrectionMask struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6889,8 +6893,8 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CorrRangeMask'>XMP CorrRangeMask Struct</a></h2>
-<p>Called CorrectionRangeMask by the spec.</p>
+<h2><a name='CorrRangeMask'>XMP CorrRangeMask struktúra</a></h2>
+<p>A specifikáció ezt CorrectionRangeMask néven nevezi.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6954,7 +6958,7 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='AreaModels'>XMP AreaModels Struct</a></h2>
+<h2><a name='AreaModels'>XMP AreaModels struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6970,7 +6974,7 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='DepthBasedCorr'>XMP DepthBasedCorr Struct</a></h2>
+<h2><a name='DepthBasedCorr'>XMP DepthBasedCorr struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7006,7 +7010,7 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='DepthMapInfo'>XMP DepthMapInfo Struct</a></h2>
+<h2><a name='DepthMapInfo'>XMP DepthMapInfo struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7054,7 +7058,7 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='LensBlur'>XMP LensBlur Struct</a></h2>
+<h2><a name='LensBlur'>XMP LensBlur struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7130,7 +7134,7 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Look'>XMP Look Struct</a></h2>
+<h2><a name='Look'>XMP Look struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7178,7 +7182,7 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='LookParms'>XMP LookParms Struct</a></h2>
+<h2><a name='LookParms'>XMP LookParms struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7234,11 +7238,11 @@ specific properties in XMP (see <a href="http://creativecommons.org/ns">http://c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='RangeMask'>XMP RangeMask Struct</a></h2>
-<p>This structure is actually called RangeMaskMapInfo, but it only contains one
-element which is a RangeMaskMapInfo structure (Yes, really!).  So these are
-renamed to RangeMask and MapInfo respectively to avoid confusion and
-redundancy in the tag names.</p>
+<h2><a name='RangeMask'>XMP RangeMask struktúra</a></h2>
+<p>Ezt a struktúrát valójában RangeMaskMapInfo-nak hívják, de mindössze egy
+elemet tartalmaz, amely egy RangeMaskMapInfo struktúra (igen, tényleg!).
+Ezért ezeket RangeMask-re, illetve MapInfo-ra neveztük át, hogy elkerüljük a
+zavart és a redundanciát a tagnevekben.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7250,9 +7254,9 @@ redundancy in the tag names.</p>
 <td>--&gt; <a href='XMP.html#MapInfo'>MapInfo Struct</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MapInfo'>XMP MapInfo Struct</a></h2>
-<p>Called RangeMaskMapInfo by the specification, the same as the containing
-structure.</p>
+<h2><a name='MapInfo'>XMP MapInfo struktúra</a></h2>
+<p>A specifikáció ezt RangeMaskMapInfo-nak nevezi, ugyanúgy, mint a
+tartalmazó struktúrát.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7280,7 +7284,7 @@ structure.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='RetouchArea'>XMP RetouchArea Struct</a></h2>
+<h2><a name='RetouchArea'>XMP RetouchArea struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7324,10 +7328,10 @@ structure.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='creatorAtom'>XMP creatorAtom Tags</a></h2>
-<p>Adobe creatorAtom tags, written by After Effects.</p>
+<h2><a name='creatorAtom'>XMP creatorAtom tagek</a></h2>
+<p>Adobe creatorAtom tagek, amelyeket az After Effects ír.</p>
 
-<p>These tags belong to the ExifTool XMP-creatorAtom family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-creatorAtom 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7391,7 +7395,7 @@ structure.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='AEProjectLink'>XMP AEProjectLink Struct</a></h2>
+<h2><a name='AEProjectLink'>XMP AEProjectLink struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7419,7 +7423,7 @@ structure.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MacAtom'>XMP MacAtom Struct</a></h2>
+<h2><a name='MacAtom'>XMP MacAtom struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7439,7 +7443,7 @@ structure.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='WindowsAtom'>XMP WindowsAtom Struct</a></h2>
+<h2><a name='WindowsAtom'>XMP WindowsAtom struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7459,11 +7463,12 @@ structure.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='crs'>XMP crs Tags</a></h2>
-<p>Photoshop Camera Raw namespace tags.  It is a shame that Adobe pollutes the
-metadata space with these incredibly bulky image editing parameters.</p>
+<h2><a name='crs'>XMP crs tagek</a></h2>
+<p>A Photoshop Camera Raw névterének tagjei.  Kár, hogy az Adobe
+teleszemeteli a metaadat-teret ezekkel a hihetetlenül terjedelmes
+képszerkesztési paraméterekkel.</p>
 
-<p>These tags belong to the ExifTool XMP-crs family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-crs 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12113,10 +12118,10 @@ metadata space with these incredibly bulky image editing parameters.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='dc'>XMP dc Tags</a></h2>
-<p>Dublin Core namespace tags.</p>
+<h2><a name='dc'>XMP dc tagek</a></h2>
+<p>A Dublin Core névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-dc family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-dc 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12184,12 +12189,12 @@ metadata space with these incredibly bulky image editing parameters.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='dex'>XMP dex Tags</a></h2>
-<p>Description Explorer namespace tags.  These tags are not very common.  The
-Source and Rating tags are avoided when writing due to name conflicts with
-other XMP tags.  (see <a href="http://www.optimasc.com/products/fileid/">http://www.optimasc.com/products/fileid/</a>)</p>
+<h2><a name='dex'>XMP dex tagek</a></h2>
+<p>A Description Explorer névterének tagjei.  Ezek a tagek nem túl gyakoriak.
+A Source és a Rating taget íráskor kerüli a más XMP-tagekkel való
+névütközések miatt.  (lásd <a href="http://www.optimasc.com/products/fileid/">http://www.optimasc.com/products/fileid/</a>)</p>
 
-<p>These tags belong to the ExifTool XMP-dex family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-dex 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12238,13 +12243,13 @@ other XMP tags.  (see <a href="http://www.optimasc.com/products/fileid/">http://
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='DICOM'>XMP DICOM Tags</a></h2>
-<p>DICOM namespace tags.  These XMP tags allow some DICOM information to be
-stored in files of other than DICOM format.  See the
-<a href="DICOM.html">DICOM Tags documentation</a> for a list
-of tags available in DICOM-format files.</p>
+<h2><a name='DICOM'>XMP DICOM tagek</a></h2>
+<p>A DICOM névterének tagjei.  Ezek az XMP-tagek lehetővé teszik, hogy egyes
+DICOM-információk DICOM-formátumtól eltérő fájlokban is tárolódjanak.  A
+DICOM-formátumú fájlokban elérhető tagek listáját lásd a
+<a href="DICOM.html">DICOM tagek dokumentációjában</a>.</p>
 
-<p>These tags belong to the ExifTool XMP-DICOM family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-DICOM 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12308,10 +12313,10 @@ of tags available in DICOM-format files.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='digiKam'>XMP digiKam Tags</a></h2>
-<p>DigiKam namespace tags.</p>
+<h2><a name='digiKam'>XMP digiKam tagek</a></h2>
+<p>A DigiKam névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-digiKam family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-digiKam 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12355,8 +12360,8 @@ of tags available in DICOM-format files.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ExifTool'>XMP ExifTool Tags</a></h2>
-<p>These tags belong to the ExifTool XMP-et family 1 group.</p>
+<h2><a name='ExifTool'>XMP ExifTool tagek</a></h2>
+<p>Ezek a tagek az ExifTool XMP-et 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12376,12 +12381,11 @@ of tags available in DICOM-format files.</p>
 <td><span class=s><span class=n>(deprecated)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='exif'>XMP exif Tags</a></h2>
-<p>EXIF namespace for EXIF tags.  See
-<a href="https://web.archive.org/web/20180921145139if_/http://www.cipa.jp:80/std/documents/e/DC-010-2017_E.pdf">https://web.archive.org/web/20180921145139if_/http://www.cipa.jp:80/std/documents/e/DC-010-2017_E.pdf</a>
-for the specification.</p>
+<h2><a name='exif'>XMP exif tagek</a></h2>
+<p>Az EXIF-tagek EXIF-névtere.  A specifikációt lásd:
+<a href="https://web.archive.org/web/20180921145139if_/http://www.cipa.jp:80/std/documents/e/DC-010-2017_E.pdf">https://web.archive.org/web/20180921145139if_/http://www.cipa.jp:80/std/documents/e/DC-010-2017_E.pdf</a>.</p>
 
-<p>These tags belong to the ExifTool XMP-exif family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-exif 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12882,7 +12886,7 @@ Composite:GPSDateTime when copying from EXIF)</span></span></td></tr>
   <br>1 = Manual</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CFAPattern'>XMP CFAPattern Struct</a></h2>
+<h2><a name='CFAPattern'>XMP CFAPattern struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12902,7 +12906,7 @@ Composite:GPSDateTime when copying from EXIF)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='DeviceSettings'>XMP DeviceSettings Struct</a></h2>
+<h2><a name='DeviceSettings'>XMP DeviceSettings struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12922,7 +12926,7 @@ Composite:GPSDateTime when copying from EXIF)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Flash'>XMP Flash Struct</a></h2>
+<h2><a name='Flash'>XMP Flash struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12958,7 +12962,7 @@ Composite:GPSDateTime when copying from EXIF)</span></span></td></tr>
   <br>3 = Return detected</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='OECF'>XMP OECF Struct</a></h2>
+<h2><a name='OECF'>XMP OECF struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -12982,11 +12986,11 @@ Composite:GPSDateTime when copying from EXIF)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='exifEX'>XMP exifEX Tags</a></h2>
-<p>EXIF tags added by the EXIF 2.32 for XMP specification (see
+<h2><a name='exifEX'>XMP exifEX tagek</a></h2>
+<p>Az EXIF 2.32 for XMP specifikáció által hozzáadott EXIF-tagek (lásd
 <a href="https://cipa.jp/std/documents/download_e.html?DC-010-2020_E">https://cipa.jp/std/documents/download_e.html?DC-010-2020_E</a>).</p>
 
-<p>These tags belong to the ExifTool XMP-exifEX family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-exifEX 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13177,7 +13181,7 @@ instead of using the existing XMP-aux:LensInfo)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CompImageExp'>XMP CompImageExp Struct</a></h2>
+<h2><a name='CompImageExp'>XMP CompImageExp struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13225,11 +13229,11 @@ instead of using the existing XMP-aux:LensInfo)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ExpressionMedia'>XMP ExpressionMedia Tags</a></h2>
-<p>Microsoft Expression Media namespace tags.  These tags are avoided when
-writing due to name conflicts with tags in other schemas.</p>
+<h2><a name='ExpressionMedia'>XMP ExpressionMedia tagek</a></h2>
+<p>A Microsoft Expression Media névterének tagjei.  Ezeket a tageket íráskor
+kerüli a más sémákbeli tagekkel való névütközések miatt.</p>
 
-<p>These tags belong to the ExifTool XMP-expressionmedia family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-expressionmedia 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13255,10 +13259,10 @@ writing due to name conflicts with tags in other schemas.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='extensis'>XMP extensis Tags</a></h2>
-<p>Tags used by Extensis Portfolio.</p>
+<h2><a name='extensis'>XMP extensis tagek</a></h2>
+<p>Az Extensis Portfolio által használt tagek.</p>
 
-<p>These tags belong to the ExifTool XMP-extensis family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-extensis 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13298,11 +13302,11 @@ writing due to name conflicts with tags in other schemas.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='fpv'>XMP fpv Tags</a></h2>
-<p>Fast Picture Viewer tags (see
+<h2><a name='fpv'>XMP fpv tagek</a></h2>
+<p>Fast Picture Viewer tagek (lásd
 <a href="http://www.fastpictureviewer.com/help/#rtfcomments">http://www.fastpictureviewer.com/help/#rtfcomments</a>).</p>
 
-<p>These tags belong to the ExifTool XMP-fpv family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-fpv 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13314,12 +13318,12 @@ writing due to name conflicts with tags in other schemas.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='GettyImages'>XMP GettyImages Tags</a></h2>
-<p>The actual Getty Images namespace prefix is &quot;GettyImagesGIFT&quot;, which is the
-prefix recorded in the file, but ExifTool shortens this for the family 1
-group name.</p>
+<h2><a name='GettyImages'>XMP GettyImages tagek</a></h2>
+<p>A tényleges Getty Images névtér-előtag a &quot;GettyImagesGIFT&quot;, amely a
+fájlban rögzített előtag, de az ExifTool ezt lerövidíti az 1-es családbeli
+csoportnévhez.</p>
 
-<p>These tags belong to the ExifTool XMP-getty family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-getty 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13407,12 +13411,12 @@ group name.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='hdr'>XMP hdr Tags</a></h2>
-<p>HDR metadata namespace tags written by ACR 15.1.  The actual namespace
-prefix is &quot;hdr_metadata&quot;, which is the prefix recorded in the file, but
-ExifTool shortens this for the family 1 group name.</p>
+<h2><a name='hdr'>XMP hdr tagek</a></h2>
+<p>Az ACR 15.1 által írt HDR-metaadat-névtér tagjei.  A tényleges
+névtér-előtag a &quot;hdr_metadata&quot;, amely a fájlban rögzített előtag, de az
+ExifTool ezt lerövidíti az 1-es családbeli csoportnévhez.</p>
 
-<p>These tags belong to the ExifTool XMP-hdr family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-hdr 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13444,10 +13448,10 @@ ExifTool shortens this for the family 1 group name.</p>
 <td><span class=s><span class=n>(tag ID is &#39;scene_referred&#39;)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='HDRGainMap'>XMP HDRGainMap Tags</a></h2>
-<p>Used in Apple HDR GainMap images.</p>
+<h2><a name='HDRGainMap'>XMP HDRGainMap tagek</a></h2>
+<p>Az Apple HDR GainMap képeiben használatos.</p>
 
-<p>These tags belong to the ExifTool XMP-HDRGainMap family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-HDRGainMap 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13459,10 +13463,10 @@ ExifTool shortens this for the family 1 group name.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='hdrgm'>XMP hdrgm Tags</a></h2>
-<p>Tags used in Adobe gain map images.</p>
+<h2><a name='hdrgm'>XMP hdrgm tagek</a></h2>
+<p>Adobe gain map képeiben használt tagek.</p>
 
-<p>These tags belong to the ExifTool XMP-hdrgm family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-hdrgm 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13507,11 +13511,12 @@ ExifTool shortens this for the family 1 group name.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ics'>XMP ics Tags</a></h2>
-<p>Tags used by IDimager.  Nested TagStructure structures are unrolled to an
-arbitrary depth of 6 to avoid infinite recursion.</p>
+<h2><a name='ics'>XMP ics tagek</a></h2>
+<p>Az IDimager által használt tagek.  A beágyazott TagStructure struktúrák
+egy tetszőlegesen megválasztott, 6-os mélységig vannak kibontva a végtelen
+rekurzió elkerülése érdekében.</p>
 
-<p>These tags belong to the ExifTool XMP-ics family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-ics 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13669,7 +13674,7 @@ arbitrary depth of 6 to avoid infinite recursion.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SubVersion'>XMP SubVersion Struct</a></h2>
+<h2><a name='SubVersion'>XMP SubVersion struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13685,7 +13690,7 @@ arbitrary depth of 6 to avoid infinite recursion.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TagStructure'>XMP TagStructure Struct</a></h2>
+<h2><a name='TagStructure'>XMP TagStructure struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13709,13 +13714,13 @@ arbitrary depth of 6 to avoid infinite recursion.</p>
 <td>--&gt; <a href='XMP.html#TagStructure'>TagStructure Struct</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='iptcCore'>XMP iptcCore Tags</a></h2>
-<p>IPTC Core namespace tags.  The actual IPTC Core namespace prefix is
-&quot;Iptc4xmpCore&quot;, which is the prefix recorded in the file, but ExifTool
-shortens this for the family 1 group name. (see
+<h2><a name='iptcCore'>XMP iptcCore tagek</a></h2>
+<p>Az IPTC Core névterének tagjei.  A tényleges IPTC Core névtér-előtag az
+&quot;Iptc4xmpCore&quot;, amely a fájlban rögzített előtag, de az ExifTool ezt
+lerövidíti az 1-es családbeli csoportnévhez. (lásd
 <a href="http://www.iptc.org/IPTC4XMP/">http://www.iptc.org/IPTC4XMP/</a>)</p>
 
-<p>These tags belong to the ExifTool XMP-iptcCore family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-iptcCore 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13787,7 +13792,7 @@ shortens this for the family 1 group name. (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ContactInfo'>XMP ContactInfo Struct</a></h2>
+<h2><a name='ContactInfo'>XMP ContactInfo struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -13827,15 +13832,15 @@ shortens this for the family 1 group name. (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='iptcExt'>XMP iptcExt Tags</a></h2>
-<p>This table contains tags defined by the IPTC Extension schema version 1.7
-and IPTC Video Metadata version 1.3, plus the AI additions.  The actual
-namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the family
-1 group name. (See
-<a href="http://www.iptc.org/standards/photo-metadata/iptc-standard/">http://www.iptc.org/standards/photo-metadata/iptc-standard/</a> and
+<h2><a name='iptcExt'>XMP iptcExt tagek</a></h2>
+<p>Ez a tábla az IPTC Extension séma 1.7-es verziója és az IPTC Video
+Metadata 1.3-as verziója által definiált tageket tartalmazza, plusz az
+AI-bővítéseket.  A tényleges névtér-előtag az &quot;Iptc4xmpExt&quot;, de az ExifTool
+ezt lerövidíti az 1-es családbeli csoportnévhez. (Lásd
+<a href="http://www.iptc.org/standards/photo-metadata/iptc-standard/">http://www.iptc.org/standards/photo-metadata/iptc-standard/</a> és
 <a href="https://iptc.org/standards/video-metadata-hub/">https://iptc.org/standards/video-metadata-hub/</a>.)</p>
 
-<p>These tags belong to the ExifTool XMP-iptcExt family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-iptcExt 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15038,7 +15043,7 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CVTermDetails'>XMP CVTermDetails Struct</a></h2>
+<h2><a name='CVTermDetails'>XMP CVTermDetails struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15062,7 +15067,7 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ArtworkOrObjectDetails'>XMP ArtworkOrObjectDetails Struct</a></h2>
+<h2><a name='ArtworkOrObjectDetails'>XMP ArtworkOrObjectDetails struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15138,7 +15143,7 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Entity'>XMP Entity Struct</a></h2>
+<h2><a name='Entity'>XMP Entity struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15154,7 +15159,7 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='EntityWithRole'>XMP EntityWithRole Struct</a></h2>
+<h2><a name='EntityWithRole'>XMP EntityWithRole struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15174,7 +15179,7 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TextRegion'>XMP TextRegion Struct</a></h2>
+<h2><a name='TextRegion'>XMP TextRegion struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15190,7 +15195,7 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Area'>XMP Area Struct</a></h2>
+<h2><a name='Area'>XMP Area struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15222,7 +15227,7 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='QualifiedLink'>XMP QualifiedLink Struct</a></h2>
+<h2><a name='QualifiedLink'>XMP QualifiedLink struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15238,7 +15243,7 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='EEREDetails'>XMP EEREDetails Struct</a></h2>
+<h2><a name='EEREDetails'>XMP EEREDetails struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15258,7 +15263,7 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='EpisodeOrSeason'>XMP EpisodeOrSeason Struct</a></h2>
+<h2><a name='EpisodeOrSeason'>XMP EpisodeOrSeason struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15278,11 +15283,12 @@ namespace prefix is &quot;Iptc4xmpExt&quot;, but ExifTool shortens this for the 
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ImageRegion'>XMP ImageRegion Struct</a></h2>
-<p>This structure is new in the IPTC Extension version 1.5 specification.  As
-well as the fields defined below, this structure may contain any top-level
-XMP tags, but since they aren&#39;t pre-defined the only way to add these tags
-is to write ImageRegion as a structure with these tags as new fields.</p>
+<h2><a name='ImageRegion'>XMP ImageRegion struktúra</a></h2>
+<p>Ez a struktúra új az IPTC Extension 1.5-ös verziójú specifikációjában.  Az
+alább definiált mezőkön kívül ez a struktúra bármilyen felső szintű
+XMP-taget tartalmazhat, de mivel ezek nincsenek előre definiálva, egyetlen
+módja ezek hozzáadásának, ha az ImageRegion-t struktúraként írod, ezekkel a
+tagekkel mint új mezőkkel.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15310,7 +15316,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>--&gt; <a href='XMP.html#Entity'>Entity Struct</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='RegionBoundary'>XMP RegionBoundary Struct</a></h2>
+<h2><a name='RegionBoundary'>XMP RegionBoundary struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15353,7 +15359,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='BoundaryPoint'>XMP BoundaryPoint Struct</a></h2>
+<h2><a name='BoundaryPoint'>XMP BoundaryPoint struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15369,7 +15375,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='LEREDetails'>XMP LEREDetails Struct</a></h2>
+<h2><a name='LEREDetails'>XMP LEREDetails struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15389,8 +15395,8 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='LocationDetails'>XMP LocationDetails Struct</a></h2>
-<p>Note that the GPS elements of this structure are in the &quot;exif&quot; namespace.</p>
+<h2><a name='LocationDetails'>XMP LocationDetails struktúra</a></h2>
+<p>Vedd figyelembe, hogy ennek a struktúrának a GPS-elemei az &quot;exif&quot; névtérben vannak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15451,7 +15457,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PersonDetails'>XMP PersonDetails Struct</a></h2>
+<h2><a name='PersonDetails'>XMP PersonDetails struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15475,7 +15481,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ProductDetails'>XMP ProductDetails Struct</a></h2>
+<h2><a name='ProductDetails'>XMP ProductDetails struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15499,7 +15505,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PublicationEvent'>XMP PublicationEvent Struct</a></h2>
+<h2><a name='PublicationEvent'>XMP PublicationEvent struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15519,7 +15525,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Rating'>XMP Rating Struct</a></h2>
+<h2><a name='Rating'>XMP Rating struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15551,7 +15557,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Device'>XMP Device Struct</a></h2>
+<h2><a name='Device'>XMP Device struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15579,7 +15585,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='RegistryEntryDetails'>XMP RegistryEntryDetails Struct</a></h2>
+<h2><a name='RegistryEntryDetails'>XMP RegistryEntryDetails struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15599,7 +15605,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Series'>XMP Series Struct</a></h2>
+<h2><a name='Series'>XMP Series struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15615,7 +15621,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='LinkedImage'>XMP LinkedImage Struct</a></h2>
+<h2><a name='LinkedImage'>XMP LinkedImage struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15651,7 +15657,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Timecode'>XMP Timecode Struct</a></h2>
+<h2><a name='Timecode'>XMP Timecode struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15680,7 +15686,7 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td><span class=s><span class=n>(only in XMP 2008 spec; an error?)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TemporalCoverage'>XMP TemporalCoverage Struct</a></h2>
+<h2><a name='TemporalCoverage'>XMP TemporalCoverage struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15696,10 +15702,10 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='LImage'>XMP LImage Tags</a></h2>
-<p>Tags written by RED smartphones.</p>
+<h2><a name='LImage'>XMP LImage tagek</a></h2>
+<p>RED okostelefonok által írt tagek.</p>
 
-<p>These tags belong to the ExifTool XMP-LImage family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-LImage 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15719,10 +15725,10 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td><span class=s><span class=n>(Right stereoscopic image)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Lightroom'>XMP Lightroom Tags</a></h2>
-<p>Adobe Lightroom &quot;lr&quot; namespace tags.</p>
+<h2><a name='Lightroom'>XMP Lightroom tagek</a></h2>
+<p>Az Adobe Lightroom &quot;lr&quot; névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-lr family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-lr 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15742,10 +15748,10 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MediaPro'>XMP MediaPro Tags</a></h2>
-<p>iView MediaPro namespace tags.</p>
+<h2><a name='MediaPro'>XMP MediaPro tagek</a></h2>
+<p>Az iView MediaPro névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-mediapro family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-mediapro 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15777,10 +15783,10 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='panorama'>XMP panorama Tags</a></h2>
-<p>Adobe Photoshop Panorama-profile tags.</p>
+<h2><a name='panorama'>XMP panorama tagek</a></h2>
+<p>Adobe Photoshop panorámaprofil-tagek.</p>
 
-<p>These tags belong to the ExifTool XMP-panorama family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-panorama 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15804,13 +15810,13 @@ is to write ImageRegion as a structure with these tags as new fields.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='pdf'>XMP pdf Tags</a></h2>
-<p>Adobe PDF namespace tags.  The official XMP specification defines only
-Keywords, PDFVersion, Producer and Trapped.  The other tags are included
-because they have been observed in PDF files, but some are avoided when
-writing due to name conflicts with other XMP namespaces.</p>
+<h2><a name='pdf'>XMP pdf tagek</a></h2>
+<p>Az Adobe PDF névterének tagjei.  A hivatalos XMP-specifikáció csak a
+Keywords, PDFVersion, Producer és Trapped tageket definiálja.  A többi tag
+azért van felvéve, mert megfigyelték őket PDF-fájlokban, de néhányat íráskor
+kerül a más XMP-névterekkel való névütközések miatt.</p>
 
-<p>These tags belong to the ExifTool XMP-pdf family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-pdf 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15868,12 +15874,13 @@ writing due to name conflicts with other XMP namespaces.</p>
   <br>&#39;Unknown&#39; = Unknown</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='pdfx'>XMP pdfx Tags</a></h2>
-<p>PDF extension tags.  This namespace is used to store application-defined PDF
-information, so there are few pre-defined tags.  User-defined tags must be
-created to enable writing of other XMP-pdfx information.</p>
+<h2><a name='pdfx'>XMP pdfx tagek</a></h2>
+<p>PDF-bővítmény-tagek.  Ez a névtér alkalmazás-specifikus PDF-információ
+tárolására szolgál, így kevés előre definiált tag van.  Más XMP-pdfx
+információ írásának engedélyezéséhez felhasználó által definiált tageket kell
+létrehozni.</p>
 
-<p>These tags belong to the ExifTool XMP-pdfx family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-pdfx 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -15885,10 +15892,10 @@ created to enable writing of other XMP-pdfx information.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='photoshop'>XMP photoshop Tags</a></h2>
-<p>Adobe Photoshop namespace tags.</p>
+<h2><a name='photoshop'>XMP photoshop tagek</a></h2>
+<p>Az Adobe Photoshop névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-photoshop family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-photoshop 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -16157,7 +16164,7 @@ created to enable writing of other XMP-pdfx information.</p>
 </td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Camera'>XMP Camera Struct</a></h2>
+<h2><a name='Camera'>XMP Camera struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -16225,7 +16232,7 @@ created to enable writing of other XMP-pdfx information.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PerspectiveModel'>XMP PerspectiveModel Struct</a></h2>
+<h2><a name='PerspectiveModel'>XMP PerspectiveModel struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -16265,7 +16272,7 @@ created to enable writing of other XMP-pdfx information.</p>
 <td>--&gt; <a href='XMP.html#VignetteModel'>VignetteModel Struct</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='VignetteModel'>XMP VignetteModel Struct</a></h2>
+<h2><a name='VignetteModel'>XMP VignetteModel struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -16289,7 +16296,7 @@ created to enable writing of other XMP-pdfx information.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Layer'>XMP Layer Struct</a></h2>
+<h2><a name='Layer'>XMP Layer struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -16305,12 +16312,12 @@ created to enable writing of other XMP-pdfx information.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PixelLive'>XMP PixelLive Tags</a></h2>
-<p>PixelLive namespace tags.  These tags are not writable because they are very
-uncommon and I haven&#39;t been able to locate a reference which gives the
-namespace URI.</p>
+<h2><a name='PixelLive'>XMP PixelLive tagek</a></h2>
+<p>A PixelLive névterének tagjei.  Ezek a tagek nem írhatók, mert nagyon
+ritkák, és nem sikerült olyan hivatkozást találni, amely megadja a névtér
+URI-jét.</p>
 
-<p>These tags belong to the ExifTool XMP-PixelLive family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-PixelLive 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -16342,11 +16349,11 @@ namespace URI.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='pmi'>XMP pmi Tags</a></h2>
-<p>PRISM Metadata for Images 3.0 namespace tags.  (see
+<h2><a name='pmi'>XMP pmi tagek</a></h2>
+<p>A PRISM Metadata for Images 3.0 névterének tagjei.  (lásd
 <a href="http://www.prismstandard.org/">http://www.prismstandard.org/</a>)</p>
 
-<p>These tags belong to the ExifTool XMP-pmi family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-pmi 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -16501,12 +16508,12 @@ namespace URI.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prism'>XMP prism Tags</a></h2>
-<p>Publishing Requirements for Industry Standard Metadata 3.0 namespace
-tags.  (see
+<h2><a name='prism'>XMP prism tagek</a></h2>
+<p>A Publishing Requirements for Industry Standard Metadata 3.0 névterének
+tagjei.  (lásd
 <a href="https://www.w3.org/Submission/2020/SUBM-prism-20200910/prism-basic.html">https://www.w3.org/Submission/2020/SUBM-prism-20200910/prism-basic.html</a>)</p>
 
-<p>These tags belong to the ExifTool XMP-prism family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-prism 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17037,7 +17044,7 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prismAlternateTitle'>XMP prismAlternateTitle Struct</a></h2>
+<h2><a name='prismAlternateTitle'>XMP prismAlternateTitle struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17057,7 +17064,7 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prismChannel'>XMP prismChannel Struct</a></h2>
+<h2><a name='prismChannel'>XMP prismChannel struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17089,7 +17096,7 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prismHasCorrection'>XMP prismHasCorrection Struct</a></h2>
+<h2><a name='prismHasCorrection'>XMP prismHasCorrection struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17109,7 +17116,7 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prismKillDate'>XMP prismKillDate Struct</a></h2>
+<h2><a name='prismKillDate'>XMP prismKillDate struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17125,7 +17132,7 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prismOffSaleDate'>XMP prismOffSaleDate Struct</a></h2>
+<h2><a name='prismOffSaleDate'>XMP prismOffSaleDate struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17141,7 +17148,7 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prismOnSaleDate'>XMP prismOnSaleDate Struct</a></h2>
+<h2><a name='prismOnSaleDate'>XMP prismOnSaleDate struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17157,7 +17164,7 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prismOnSaleDay'>XMP prismOnSaleDay Struct</a></h2>
+<h2><a name='prismOnSaleDay'>XMP prismOnSaleDay struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17173,7 +17180,7 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prismPublicationDate'>XMP prismPublicationDate Struct</a></h2>
+<h2><a name='prismPublicationDate'>XMP prismPublicationDate struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17189,7 +17196,7 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prismUrl'>XMP prismUrl Struct</a></h2>
+<h2><a name='prismUrl'>XMP prismUrl struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17205,12 +17212,12 @@ tags.  (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prl'>XMP prl Tags</a></h2>
-<p>PRISM Rights Language 2.1 namespace tags.  These tags have been deprecated
-since the release of the PRISM Usage Rights 3.0. (see
+<h2><a name='prl'>XMP prl tagek</a></h2>
+<p>A PRISM Rights Language 2.1 névterének tagjei.  Ezek a tagek a PRISM Usage
+Rights 3.0 megjelenése óta elavultak. (lásd
 <a href="https://www.w3.org/submissions/2020/SUBM-prism-20200910/prism-image.html">https://www.w3.org/submissions/2020/SUBM-prism-20200910/prism-image.html</a>)</p>
 
-<p>These tags belong to the ExifTool XMP-prl family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-prl 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17233,11 +17240,11 @@ since the release of the PRISM Usage Rights 3.0. (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prm'>XMP prm Tags</a></h2>
-<p>PRISM Recipe Metadata 3.0 namespace tags.  (see
+<h2><a name='prm'>XMP prm tagek</a></h2>
+<p>A PRISM Recipe Metadata 3.0 névterének tagjei.  (lásd
 <a href="http://www.prismstandard.org/">http://www.prismstandard.org/</a>)</p>
 
-<p>These tags belong to the ExifTool XMP-prm family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-prm 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17321,11 +17328,11 @@ since the release of the PRISM Usage Rights 3.0. (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='pur'>XMP pur Tags</a></h2>
-<p>PRISM Usage Rights 3.0 namespace tags.  (see
+<h2><a name='pur'>XMP pur tagek</a></h2>
+<p>A PRISM Usage Rights 3.0 névterének tagjei.  (lásd
 <a href="http://www.prismstandard.org/">http://www.prismstandard.org/</a>)</p>
 
-<p>These tags belong to the ExifTool XMP-pur family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-pur 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17398,11 +17405,11 @@ since the release of the PRISM Usage Rights 3.0. (see
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='rdf'>XMP rdf Tags</a></h2>
-<p>Most RDF attributes are handled internally, but the &quot;about&quot; attribute is
-treated specially to allow it to be set to a specific value if required.</p>
+<h2><a name='rdf'>XMP rdf tagek</a></h2>
+<p>A legtöbb RDF-attribútumot belsőleg kezeli, de az &quot;about&quot; attribútumot
+külön kezeli, hogy szükség esetén konkrét értékre lehessen állítani.</p>
 
-<p>These tags belong to the ExifTool XMP-rdf family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-rdf 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17414,10 +17421,10 @@ treated specially to allow it to be set to a specific value if required.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='seal'>XMP seal Tags</a></h2>
-<p>SEAL embedded in XMP.</p>
+<h2><a name='seal'>XMP seal tagek</a></h2>
+<p>XMP-be ágyazott SEAL.</p>
 
-<p>These tags belong to the ExifTool XMP-seal family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-seal 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17429,13 +17436,15 @@ treated specially to allow it to be set to a specific value if required.</p>
 <td>--&gt; <a href='XMP.html#SEAL'>XMP SEAL Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SEAL'>XMP SEAL Tags</a></h2>
-<p>These tags are used in SEAL (Secure Evidence Attribution Label) content
-authentification, which is actually XML format, not XMP.  ExifTool has
-read/delete support for SEAL information in JPG, TIFF, XMP, PNG, WEBP, HEIC,
-PPM, MOV and MP4 files, and read-only support in PDF, MKV and WAV.  Use
-<code>-seal:all=</code> on the command line to delete SEAL information in supported
-formats.  See <a href="https://github.com/hackerfactor/SEAL">https://github.com/hackerfactor/SEAL</a> for the specification.</p>
+<h2><a name='SEAL'>XMP SEAL tagek</a></h2>
+<p>Ezeket a tageket a SEAL (Secure Evidence Attribution Label) tartalom-
+hitelesítésben használják, amely valójában XML formátum, nem XMP.  Az
+ExifTool olvasási/törlési támogatással rendelkezik a SEAL-információhoz JPG-,
+TIFF-, XMP-, PNG-, WEBP-, HEIC-, PPM-, MOV- és MP4-fájlokban, és csak
+olvasási támogatással PDF-, MKV- és WAV-fájlokban.  A támogatott
+formátumokban a SEAL-információ törléséhez használd a <code>-seal:all=</code>
+kapcsolót a parancssorban.  A specifikációt lásd:
+<a href="https://github.com/hackerfactor/SEAL">https://github.com/hackerfactor/SEAL</a>.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17508,10 +17517,10 @@ formats.  See <a href="https://github.com/hackerfactor/SEAL">https://github.com/
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='swf'>XMP swf Tags</a></h2>
-<p>Adobe SWF namespace tags.</p>
+<h2><a name='swf'>XMP swf tagek</a></h2>
+<p>Az Adobe SWF névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-swf family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-swf 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17535,12 +17544,11 @@ formats.  See <a href="https://github.com/hackerfactor/SEAL">https://github.com/
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='tiff'>XMP tiff Tags</a></h2>
-<p>EXIF namespace for TIFF tags.  See
-<a href="https://web.archive.org/web/20180921145139if_/http://www.cipa.jp:80/std/documents/e/DC-010-2017_E.pdf">https://web.archive.org/web/20180921145139if_/http://www.cipa.jp:80/std/documents/e/DC-010-2017_E.pdf</a>
-for the specification.</p>
+<h2><a name='tiff'>XMP tiff tagek</a></h2>
+<p>A TIFF-tagek EXIF-névtere.  A specifikációt lásd:
+<a href="https://web.archive.org/web/20180921145139if_/http://www.cipa.jp:80/std/documents/e/DC-010-2017_E.pdf">https://web.archive.org/web/20180921145139if_/http://www.cipa.jp:80/std/documents/e/DC-010-2017_E.pdf</a>.</p>
 
-<p>These tags belong to the ExifTool XMP-tiff family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-tiff 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17694,13 +17702,13 @@ counterpart it is written and read as a simple string)</span></span><table class
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='x'>XMP x Tags</a></h2>
-<p>The &quot;x&quot; namespace is used for the &quot;xmpmeta&quot; wrapper, and may contain an
-&quot;xmptk&quot; attribute that is extracted as the XMPToolkit tag.  When writing,
-the XMPToolkit tag is generated automatically by ExifTool unless
-specifically set to another value.</p>
+<h2><a name='x'>XMP x tagek</a></h2>
+<p>Az &quot;x&quot; névteret az &quot;xmpmeta&quot; burkolóhoz használják, és tartalmazhat egy
+&quot;xmptk&quot; attribútumot, amelyet XMPToolkit tagként nyer ki.  Íráskor az
+XMPToolkit taget az ExifTool automatikusan generálja, hacsak nincs
+kifejezetten más értékre állítva.</p>
 
-<p>These tags belong to the ExifTool XMP-x family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-x 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17712,12 +17720,13 @@ specifically set to another value.</p>
 <td><span class=s><span class=n>(tag ID is &#39;xmptk&#39;)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='xmp'>XMP xmp Tags</a></h2>
-<p>XMP namespace tags.  If the older &quot;xap&quot;, &quot;xapBJ&quot;, &quot;xapMM&quot; or &quot;xapRights&quot;
-namespace prefixes are found, they are translated to the newer &quot;xmp&quot;,
-&quot;xmpBJ&quot;, &quot;xmpMM&quot; and &quot;xmpRights&quot; prefixes for use in family 1 group names.</p>
+<h2><a name='xmp'>XMP xmp tagek</a></h2>
+<p>Az XMP névterének tagjei.  Ha a régebbi &quot;xap&quot;, &quot;xapBJ&quot;, &quot;xapMM&quot; vagy
+&quot;xapRights&quot; névtér-előtagokat találja, azokat az újabb &quot;xmp&quot;, &quot;xmpBJ&quot;,
+&quot;xmpMM&quot; és &quot;xmpRights&quot; előtagokra fordítja az 1-es családbeli csoportnevekben
+való használathoz.</p>
 
-<p>These tags belong to the ExifTool XMP-xmp family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-xmp 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17844,7 +17853,7 @@ namespace prefixes are found, they are translated to the newer &quot;xmp&quot;,
 <td><span class=s><span class=n>(non-standard)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PageInfo'>XMP PageInfo Struct</a></h2>
+<h2><a name='PageInfo'>XMP PageInfo struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17872,7 +17881,7 @@ namespace prefixes are found, they are translated to the newer &quot;xmp&quot;,
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Thumbnail'>XMP Thumbnail Struct</a></h2>
+<h2><a name='Thumbnail'>XMP Thumbnail struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17896,10 +17905,10 @@ namespace prefixes are found, they are translated to the newer &quot;xmp&quot;,
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='xmpBJ'>XMP xmpBJ Tags</a></h2>
-<p>XMP Basic Job Ticket namespace tags.</p>
+<h2><a name='xmpBJ'>XMP xmpBJ tagek</a></h2>
+<p>Az XMP Basic Job Ticket névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-xmpBJ family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-xmpBJ 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17926,7 +17935,7 @@ namespace prefixes are found, they are translated to the newer &quot;xmp&quot;,
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='JobRef'>XMP JobRef Struct</a></h2>
+<h2><a name='JobRef'>XMP JobRef struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -17946,12 +17955,11 @@ namespace prefixes are found, they are translated to the newer &quot;xmp&quot;,
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='xmpDM'>XMP xmpDM Tags</a></h2>
-<p>XMP Dynamic Media namespace tags.  See
-<a href="https://developer.adobe.com/xmp/docs/XMPNamespaces/xmpDM/">https://developer.adobe.com/xmp/docs/XMPNamespaces/xmpDM/</a> for the
-specification.</p>
+<h2><a name='xmpDM'>XMP xmpDM tagek</a></h2>
+<p>Az XMP Dynamic Media névterének tagjei.  A specifikációt lásd:
+<a href="https://developer.adobe.com/xmp/docs/XMPNamespaces/xmpDM/">https://developer.adobe.com/xmp/docs/XMPNamespaces/xmpDM/</a>.</p>
 
-<p>These tags belong to the ExifTool XMP-xmpDM family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-xmpDM 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18744,7 +18752,7 @@ specification.</p>
 </td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='BeatSpliceStretch'>XMP BeatSpliceStretch Struct</a></h2>
+<h2><a name='BeatSpliceStretch'>XMP BeatSpliceStretch struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18764,7 +18772,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Time'>XMP Time Struct</a></h2>
+<h2><a name='Time'>XMP Time struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18780,7 +18788,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Media'>XMP Media Struct</a></h2>
+<h2><a name='Media'>XMP Media struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18812,7 +18820,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Marker'>XMP Marker Struct</a></h2>
+<h2><a name='Marker'>XMP Marker struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18864,7 +18872,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CuePointParam'>XMP CuePointParam Struct</a></h2>
+<h2><a name='CuePointParam'>XMP CuePointParam struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18880,7 +18888,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ProjectLink'>XMP ProjectLink Struct</a></h2>
+<h2><a name='ProjectLink'>XMP ProjectLink struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18899,7 +18907,7 @@ specification.</p>
   <br>still = Still Image</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ResampleStretch'>XMP ResampleStretch Struct</a></h2>
+<h2><a name='ResampleStretch'>XMP ResampleStretch struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18913,7 +18921,7 @@ specification.</p>
   <br>Medium = Medium</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TimeScaleStretch'>XMP TimeScaleStretch Struct</a></h2>
+<h2><a name='TimeScaleStretch'>XMP TimeScaleStretch struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18935,7 +18943,7 @@ specification.</p>
   <br>Medium = Medium</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Track'>XMP Track Struct</a></h2>
+<h2><a name='Track'>XMP Track struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -18959,7 +18967,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Colorant'>XMP Colorant Struct</a></h2>
+<h2><a name='Colorant'>XMP Colorant struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -19029,7 +19037,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Dimensions'>XMP Dimensions Struct</a></h2>
+<h2><a name='Dimensions'>XMP Dimensions struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -19049,10 +19057,10 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='xmpMM'>XMP xmpMM Tags</a></h2>
-<p>XMP Media Management namespace tags.</p>
+<h2><a name='xmpMM'>XMP xmpMM tagek</a></h2>
+<p>Az XMP Media Management névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-xmpMM family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-xmpMM 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -19777,7 +19785,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ResourceRef'>XMP ResourceRef Struct</a></h2>
+<h2><a name='ResourceRef'>XMP ResourceRef struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -19878,7 +19886,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ResourceEvent'>XMP ResourceEvent Struct</a></h2>
+<h2><a name='ResourceEvent'>XMP ResourceEvent struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -19910,7 +19918,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ManifestItem'>XMP ManifestItem Struct</a></h2>
+<h2><a name='ManifestItem'>XMP ManifestItem struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -19938,9 +19946,9 @@ specification.</p>
 <td>--&gt; <a href='XMP.html#ResourceRef'>ResourceRef Struct</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PantryItem'>XMP PantryItem Struct</a></h2>
-<p>This structure must have an InstanceID field, but may also contain any other
-XMP properties.</p>
+<h2><a name='PantryItem'>XMP PantryItem struktúra</a></h2>
+<p>Ennek a struktúrának kötelezően van InstanceID mezője, de bármilyen más
+XMP-tulajdonságot is tartalmazhat.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -19952,7 +19960,7 @@ XMP properties.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Version'>XMP Version Struct</a></h2>
+<h2><a name='Version'>XMP Version struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -19980,10 +19988,10 @@ XMP properties.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='xmpNote'>XMP xmpNote Tags</a></h2>
-<p>XMP Note namespace tags.</p>
+<h2><a name='xmpNote'>XMP xmpNote tagek</a></h2>
+<p>Az XMP Note névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-xmpNote family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-xmpNote 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -19997,12 +20005,12 @@ automatically to the GUID of the extended XMP when writing extended XMP to a
 JPEG image)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='xmpPLUS'>XMP xmpPLUS Tags</a></h2>
-<p>XMP Picture Licensing Universal System (PLUS) tags as written by some older
-Adobe applications.  See <a href="PLUS.html#XMP">PLUS XMP Tags</a>
-for the current PLUS tags.</p>
+<h2><a name='xmpPLUS'>XMP xmpPLUS tagek</a></h2>
+<p>XMP Picture Licensing Universal System (PLUS) tagek, ahogy azokat egyes
+régebbi Adobe-alkalmazások írták.  Az aktuális PLUS tageket lásd a
+<a href="PLUS.html#XMP">PLUS XMP Tags</a> oldalon.</p>
 
-<p>These tags belong to the ExifTool XMP-xmpPLUS family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-xmpPLUS 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20018,10 +20026,10 @@ for the current PLUS tags.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='xmpRights'>XMP xmpRights Tags</a></h2>
-<p>XMP Rights Management namespace tags.</p>
+<h2><a name='xmpRights'>XMP xmpRights tagek</a></h2>
+<p>Az XMP Rights Management névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-xmpRights family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-xmpRights 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20049,10 +20057,10 @@ for the current PLUS tags.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='xmpTPg'>XMP xmpTPg Tags</a></h2>
-<p>XMP Paged-Text namespace tags.</p>
+<h2><a name='xmpTPg'>XMP xmpTPg tagek</a></h2>
+<p>Az XMP Paged-Text névterének tagjei.</p>
 
-<p>These tags belong to the ExifTool XMP-xmpTPg family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-xmpTPg 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20315,7 +20323,7 @@ for the current PLUS tags.</p>
 <td><span class=s><span class=n>(SwatchGroupsGroupType)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Font'>XMP Font Struct</a></h2>
+<h2><a name='Font'>XMP Font struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20355,7 +20363,7 @@ for the current PLUS tags.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SwatchGroup'>XMP SwatchGroup Struct</a></h2>
+<h2><a name='SwatchGroup'>XMP SwatchGroup struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20375,7 +20383,7 @@ for the current PLUS tags.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='XML'>XMP XML Tags</a></h2>
+<h2><a name='XML'>XMP XML tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20393,14 +20401,14 @@ for the current PLUS tags.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SVG'>XMP SVG Tags</a></h2>
-<p>SVG (Scalable Vector Graphics) image tags.  By default, only the top-level
-SVG and Metadata tags are extracted from these images, but all graphics tags
-may be extracted by setting the Unknown option to 2 (-U on the command
-line).  The SVG tags are not part of XMP as such, but are included with the
-XMP module for convenience.  (see <a href="http://www.w3.org/TR/SVG11/">http://www.w3.org/TR/SVG11/</a>)</p>
+<h2><a name='SVG'>XMP SVG tagek</a></h2>
+<p>SVG (Scalable Vector Graphics) képtagek.  Alapból csak a felső szintű SVG-
+és Metadata tageket nyeri ki ezekből a képekből, de az összes grafikai tag
+kinyerhető, ha az Unknown opciót 2-re állítod (a parancssorban -U).  Az
+SVG-tagek önmagukban nem részei az XMP-nek, de kényelmi okokból az
+XMP-modullal együtt szerepelnek.  (lásd <a href="http://www.w3.org/TR/SVG11/">http://www.w3.org/TR/SVG11/</a>)</p>
 
-<p>These tags belong to the ExifTool XMP-svg family 1 group.</p>
+<p>Ezek a tagek az ExifTool XMP-svg 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20433,7 +20441,7 @@ XMP module for convenience.  (see <a href="http://www.w3.org/TR/SVG11/">http://w
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CopyrightOwner'>XMP CopyrightOwner Struct</a></h2>
+<h2><a name='CopyrightOwner'>XMP CopyrightOwner struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20449,7 +20457,7 @@ XMP module for convenience.  (see <a href="http://www.w3.org/TR/SVG11/">http://w
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='EndUser'>XMP EndUser Struct</a></h2>
+<h2><a name='EndUser'>XMP EndUser struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20465,7 +20473,7 @@ XMP module for convenience.  (see <a href="http://www.w3.org/TR/SVG11/">http://w
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ImageCreator'>XMP ImageCreator Struct</a></h2>
+<h2><a name='ImageCreator'>XMP ImageCreator struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20481,7 +20489,7 @@ XMP module for convenience.  (see <a href="http://www.w3.org/TR/SVG11/">http://w
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ImageSupplier'>XMP ImageSupplier Struct</a></h2>
+<h2><a name='ImageSupplier'>XMP ImageSupplier struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20497,7 +20505,7 @@ XMP module for convenience.  (see <a href="http://www.w3.org/TR/SVG11/">http://w
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Licensee'>XMP Licensee Struct</a></h2>
+<h2><a name='Licensee'>XMP Licensee struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20513,7 +20521,7 @@ XMP module for convenience.  (see <a href="http://www.w3.org/TR/SVG11/">http://w
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Licensor'>XMP Licensor Struct</a></h2>
+<h2><a name='Licensor'>XMP Licensor struktúra</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -20587,7 +20595,7 @@ XMP module for convenience.  (see <a href="http://www.w3.org/TR/SVG11/">http://w
 
 <hr>
 (This document generated automatically by Image::ExifTool::BuildTagLookup)
-<br><i>Last revised Feb 24, 2026</i>
-<p class=lf><a href='index.html'>&lt;-- ExifTool Tag Names</a></p>
+<br><i>Utoljára módosítva: 2026. február 24.</i>
+<p class=lf><a href='index.html'>&lt;-- ExifTool tagnevek</a></p>
 </body>
 </html>

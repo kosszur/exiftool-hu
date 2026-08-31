@@ -3,53 +3,54 @@
 <html>
 <!-- (this file generated automatically by Image::ExifTool::BuildTagLookup) -->
 <head>
-<title>IPTC Tags</title>
+<title>IPTC tagek</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 </head>
 <body>
-<h2 class=top>IPTC Tags</h2>
+<h2 class=top>IPTC tagek</h2>
 <p>
-The tags listed below are part of the International Press Telecommunications
-Council (IPTC) and the Newspaper Association of America (NAA) Information
-Interchange Model (IIM).  This is an older meta information format, slowly
-being phased out in favor of XMP -- the newer IPTCCore specification uses
-XMP format.  IPTC information may be found in JPG, TIFF, PNG, MIFF, PS, PDF,
-PSD, XCF and DNG images.</p>
+Az alábbi tagek az International Press Telecommunications Council (IPTC) és a
+Newspaper Association of America (NAA) Information Interchange Model (IIM)
+részei.  Ez egy régebbi metainformáció-formátum, amelyet lassan kivezetnek
+az XMP javára -- az újabb IPTCCore specifikáció XMP formátumot használ.  IPTC
+információ JPG-, TIFF-, PNG-, MIFF-, PS-, PDF-, PSD-, XCF- és DNG-képekben
+található.</p>
 
-<p>IPTC information is separated into different records, each of which has its
-own set of tags.  See
-<a href="http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf">http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf</a> for the
-official IPTC IIM specification.</p>
+<p>Az IPTC információ különböző rekordokra tagolódik, amelyeknek mindegyike
+saját tagkészlettel rendelkezik.  A hivatalos IPTC IIM specifikációt lásd:
+<a href="http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf">http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf</a>.</p>
 
-<p>This specification dictates a length for ASCII (<code>string</code> or <code>digits</code>) and
-binary (<code>undef</code>) values.  These lengths are given in square brackets after
-the <b>Writable</b> format name.  For tags where a range of lengths is allowed,
-the minimum and maximum lengths are separated by a comma within the
-brackets.  When writing, ExifTool issues a minor warning and truncates the
-value if it is longer than allowed by the IPTC specification.  Minor errors
-may be ignored with the <a href="../ExifTool.html#IgnoreMinorErrors">IgnoreMinorErrors</a> (-m) option, allowing longer
-values to be written, but beware that values like this may cause problems
-for some other IPTC readers. ExifTool will happily read IPTC values of any
-length.</p>
+<p>Ez a specifikáció hosszúságot ír elő az ASCII (<code>string</code> vagy <code>digits</code>) és
+a bináris (<code>undef</code>) értékekhez.  Ezek a hosszúságok a <b>Writable</b>
+formátumnév után, szögletes zárójelben szerepelnek.  Azoknál a tageknél,
+ahol egy hosszúságtartomány engedélyezett, a minimális és a maximális
+hosszúságot vessző választja el a zárójelen belül.  Íráskor az ExifTool
+kisebb figyelmeztetést ad, és levágja az értéket, ha az hosszabb, mint amit
+az IPTC-specifikáció megenged.  A kisebb hibák figyelmen kívül hagyhatók az
+<a href="../ExifTool.html#IgnoreMinorErrors">IgnoreMinorErrors</a> (-m) opcióval, ami lehetővé teszi hosszabb értékek
+írását, de vigyázz, mert az ilyen értékek gondot okozhatnak egyes más
+IPTC-olvasóknak. Az ExifTool készséggel olvas bármilyen hosszúságú
+IPTC-értéket.</p>
 
-<p>Separate IPTC date and time tags may be written with a combined date/time
-value and ExifTool automagically takes the appropriate part of the date/time
-string depending on whether a date or time tag is being written.  This is
-very useful when copying date/time values to IPTC from other metadata
-formats.</p>
+<p>A külön IPTC dátum- és időtagek egy összevont dátum/idő értékkel is
+írhatók, és az ExifTool automagikusan a dátum/idő sztring megfelelő részét
+veszi attól függően, hogy dátum- vagy időtaget írunk éppen.  Ez nagyon
+hasznos, amikor dátum/idő értékeket másolunk IPTC-be más metaadat-
+formátumokból.</p>
 
-<p>IPTC time values include a timezone offset.  If written with a value which
-doesn&#39;t include a timezone then the current local timezone offset is used
-(unless written with a combined date/time, in which case the local timezone
-offset at the specified date/time is used, which may be different due to
-changes in daylight savings time).</p>
+<p>Az IPTC időértékek tartalmaznak egy időzóna-eltolást.  Ha olyan értékkel
+írjuk, amely nem tartalmaz időzónát, akkor a jelenlegi helyi időzóna-eltolást
+használja (kivéve, ha összevont dátum/idő értékkel írjuk, amely esetben a
+megadott dátum/időponthoz tartozó helyi időzóna-eltolást használja, ami a
+nyári időszámítás változásai miatt eltérő lehet).</p>
 
-<p>Note that it is not uncommon for IPTC to be found in non-standard locations
-in JPEG and TIFF-based images.  When reading, the family 1 group name has a
-number added for non-standard IPTC (&quot;IPTC2&quot;, &quot;IPTC3&quot;, etc), but when writing
-only &quot;IPTC&quot; may be specified as the group.  To keep the IPTC consistent,
-ExifTool updates tags in all existing IPTC locations, but will create a new
-IPTC group only in the standard location.
+<p>Vedd figyelembe, hogy az IPTC nem ritkán nem szabványos helyeken is
+megtalálható JPEG- és TIFF-alapú képekben.  Olvasáskor a nem szabványos
+IPTC-hez az 1-es családbeli csoportnév egy számot kap (&quot;IPTC2&quot;, &quot;IPTC3&quot;
+stb.), de íráskor csak az &quot;IPTC&quot; adható meg csoportként.  Az IPTC
+konzisztenciájának megőrzése érdekében az ExifTool az összes meglévő
+IPTC-helyen frissíti a tageket, de új IPTC-csoportot csak a szabványos
+helyen hoz létre.
 </p>
 <blockquote>
 <table class=frame><tr><td>
@@ -93,7 +94,7 @@ IPTC group only in the standard location.
 <td>--&gt; <a href='IPTC.html#FotoStation'>IPTC FotoStation Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='EnvelopeRecord'>IPTC EnvelopeRecord Tags</a></h2>
+<h2><a name='EnvelopeRecord'>IPTC EnvelopeRecord tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -219,7 +220,7 @@ possibility)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ApplicationRecord'>IPTC ApplicationRecord Tags</a></h2>
+<h2><a name='ApplicationRecord'>IPTC ApplicationRecord tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -645,7 +646,7 @@ may not be able to read these tags as written by ExifTool)</span></span></td></t
 <td><span class=s><span class=n>(written by iView MediaPro)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='NewsPhoto'>IPTC NewsPhoto Tags</a></h2>
+<h2><a name='NewsPhoto'>IPTC NewsPhoto tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -832,7 +833,7 @@ may not be able to read these tags as written by ExifTool)</span></span></td></t
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PreObjectData'>IPTC PreObjectData Tags</a></h2>
+<h2><a name='PreObjectData'>IPTC PreObjectData tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -861,7 +862,7 @@ may not be able to read these tags as written by ExifTool)</span></span></td></t
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ObjectData'>IPTC ObjectData Tags</a></h2>
+<h2><a name='ObjectData'>IPTC ObjectData tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -874,7 +875,7 @@ may not be able to read these tags as written by ExifTool)</span></span></td></t
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PostObjectData'>IPTC PostObjectData Tags</a></h2>
+<h2><a name='PostObjectData'>IPTC PostObjectData tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -887,7 +888,7 @@ may not be able to read these tags as written by ExifTool)</span></span></td></t
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='FotoStation'>IPTC FotoStation Tags</a></h2>
+<h2><a name='FotoStation'>IPTC FotoStation tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -898,7 +899,7 @@ may not be able to read these tags as written by ExifTool)</span></span></td></t
 
 <hr>
 (This document generated automatically by Image::ExifTool::BuildTagLookup)
-<br><i>Last revised Oct 2, 2020</i>
-<p class=lf><a href='index.html'>&lt;-- ExifTool Tag Names</a></p>
+<br><i>Utoljára módosítva: 2020. október 2.</i>
+<p class=lf><a href='index.html'>&lt;-- ExifTool tagnevek</a></p>
 </body>
 </html>

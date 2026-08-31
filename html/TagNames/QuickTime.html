@@ -3,76 +3,74 @@
 <html>
 <!-- (this file generated automatically by Image::ExifTool::BuildTagLookup) -->
 <head>
-<title>QuickTime Tags</title>
+<title>QuickTime tagek</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 </head>
 <body>
-<h2 class=top>QuickTime Tags</h2>
+<h2 class=top>QuickTime tagek</h2>
 <p>
-The QuickTime format is used for many different types of audio, video and
-image files (most notably, MOV/MP4 videos and HEIC/CR3 images).  ExifTool
-extracts standard meta information and a variety of audio, video and image
-parameters, as well as proprietary information written by many camera
-models.  Tags with a question mark after their name are not extracted unless
-the <a href="../ExifTool.html#Unknown">Unknown</a> option is set.</p>
+A QuickTime formátumot sokféle hang-, videó- és képfájlhoz használják
+(legfőképpen MOV/MP4 videókhoz és HEIC/CR3 képekhez).  Az ExifTool kinyeri a
+szabványos metainformációt és számos hang-, videó- és képparamétert, valamint
+sok fényképezőgép-modell által írt tulajdonosi információt.  A nevük után
+kérdőjelet viselő tageket csak akkor nyeri ki, ha az <a href="../ExifTool.html#Unknown">Unknown</a> opció be van
+állítva.</p>
 
-<p>When writing video files, ExifTool creates both QuickTime and XMP tags by
-default, but the group may be specified to write one or the other
-separately.  If no location is specified, newly created QuickTime tags are
-added in the <a href="QuickTime.html#ItemList">ItemList</a>
-location if possible, otherwise in
-<a href="QuickTime.html#UserData">UserData</a>, and
-finally in <a href="QuickTime.html#Keys">Keys</a>,
-but this order may be changed by setting the PREFERRED level of the
-appropriate table in the config file (see
-<a href="../config.html#PREF">example.config</a> in the full distribution for an
-example).  Note that some tags with the same name but different ID&#39;s may
-exist in the same location, but the family 7 group names may be used to
-differentiate these.</p>
+<p>Videofájlok írásakor az ExifTool alapból QuickTime- és XMP-tageket is
+létrehoz, de a csoport megadható, hogy külön az egyiket vagy a másikat írja.
+Ha nincs hely megadva, az újonnan létrehozott QuickTime-tagek lehetőség
+szerint az <a href="QuickTime.html#ItemList">ItemList</a>
+helyre kerülnek, egyébként a
+<a href="QuickTime.html#UserData">UserData</a> helyre, végül
+pedig a <a href="QuickTime.html#Keys">Keys</a> helyre,
+de ez a sorrend megváltoztatható a config fájlban a megfelelő tábla
+PREFERRED szintjének beállításával (példáért lásd az
+<a href="../config.html#PREF">example.config</a> fájlt a teljes disztribúcióban).
+Vedd figyelembe, hogy azonos nevű, de eltérő ID-jű tagek is létezhetnek
+ugyanazon a helyen, de a 7-es családbeli csoportnevekkel ezek
+megkülönböztethetők.</p>
 
-<p>ExifTool currently writes
-<a href="QuickTime.html#ItemList">ItemList</a> and
-<a href="QuickTime.html#UserData">UserData</a> only as
-top-level metadata, but select Keys tags are may be written to the audio or
-video track.  See the
-<a href="QuickTime.html#AudioKeys">AudioKeys</a> and
-<a href="QuickTime.html#VideoKeys">VideoKeys</a> tags for
-more information.</p>
+<p>Az ExifTool jelenleg az
+<a href="QuickTime.html#ItemList">ItemList</a> és a
+<a href="QuickTime.html#UserData">UserData</a> tageket csak
+felső szintű metaadatként írja, de bizonyos Keys tagek a hang- vagy
+videosávba is írhatók.  További információért lásd az
+<a href="QuickTime.html#AudioKeys">AudioKeys</a> és a
+<a href="QuickTime.html#VideoKeys">VideoKeys</a> tageket.</p>
 
-<p>Alternate language tags may be accessed for
-<a href="QuickTime.html#ItemList">ItemList</a> and
-<a href="QuickTime.html#Keys">Keys</a> tags by adding
-a 3-character ISO 639-2 language code and an optional ISO 3166-1 alpha 2
-country code to the tag name (eg. &quot;ItemList:Artist-deu&quot; or
-&quot;ItemList::Artist-deu-DE&quot;).  Most
-<a href="QuickTime.html#UserData">UserData</a> tags support a
-language code, but without a country code.  If no language code is specified
-when writing, the default language is written and alternate languages for
-the tag are deleted.  Use the &quot;und&quot; language code to write the default
-language without deleting alternate languages.  Note that when reading,
-&quot;eng&quot; is also treated as the default language if there is no country code.</p>
+<p>Az alternatív nyelvű tagek az
+<a href="QuickTime.html#ItemList">ItemList</a> és a
+<a href="QuickTime.html#Keys">Keys</a> tagekhez úgy
+érhetők el, hogy a tagnévhez hozzáadsz egy 3 karakteres ISO 639-2 nyelvkódot
+és egy opcionális ISO 3166-1 alfa-2 országkódot (pl. &quot;ItemList:Artist-deu&quot;
+vagy &quot;ItemList::Artist-deu-DE&quot;).  A legtöbb
+<a href="QuickTime.html#UserData">UserData</a> tag támogat
+nyelvkódot, de országkód nélkül.  Ha íráskor nincs nyelvkód megadva, az
+alapértelmezett nyelv íródik, és a tag alternatív nyelvei törlődnek.  Az
+&quot;und&quot; nyelvkóddal az alapértelmezett nyelvet az alternatív nyelvek törlése
+nélkül írhatod.  Vedd figyelembe, hogy olvasáskor az &quot;eng&quot; is
+alapértelmezett nyelvnek számít, ha nincs országkód.</p>
 
-<p>According to the specification, integer-format QuickTime date/time tags
-should be stored as UTC.  Unfortunately, digital cameras often store local
-time values instead (presumably because they don&#39;t know the time zone).  For
-this reason, by default ExifTool does not assume a time zone for these
-values.  However, if the API <a href="../ExifTool.html#QuickTimeUTC">QuickTimeUTC</a> option is set, then ExifTool will
-assume these values are properly stored as UTC, and will convert them to
-local time when extracting.</p>
+<p>A specifikáció szerint az egész szám formátumú QuickTime dátum/idő
+tageket UTC-ként kell tárolni.  Sajnos a digitális fényképezőgépek gyakran
+helyi idő szerinti értékeket tárolnak helyette (feltehetően azért, mert nem
+ismerik az időzónát).  Ezért az ExifTool alapból nem feltételez időzónát
+ezekhez az értékekhez.  Ha azonban az API <a href="../ExifTool.html#QuickTimeUTC">QuickTimeUTC</a> opciója be van
+állítva, az ExifTool feltételezi, hogy ezek az értékek helyesen, UTC-ként
+vannak tárolva, és kinyeréskor helyi időre alakítja őket.</p>
 
-<p>When writing string-based date/time tags, the system time zone is added if
-the <a href="../ExifTool.html#PrintConv">PrintConv</a> option is enabled and no time zone is specified.  This is
-because Apple software may display crazy values if the time zone is missing
-for some tags.</p>
+<p>Sztringalapú dátum/idő tagek írásakor a rendszer időzónája hozzáadódik,
+ha a <a href="../ExifTool.html#PrintConv">PrintConv</a> opció engedélyezve van, és nincs időzóna megadva.  Ez azért
+van, mert az Apple szoftverei őrült értékeket jeleníthetnek meg, ha egyes
+tageknél hiányzik az időzóna.</p>
 
-<p>By default ExifTool will remove null padding from some QuickTime containers
-in Canon CR3 files when writing, but the
-<a href="../ExifTool.html#QuickTimePad">QuickTimePad</a> option may be used to preserve
-the original size by padding with nulls if necessary.</p>
+<p>Az ExifTool alapból eltávolítja a null kitöltést egyes QuickTime
+konténerekből a Canon CR3 fájlokban íráskor, de a
+<a href="../ExifTool.html#QuickTimePad">QuickTimePad</a> opcióval megőrizhető az
+eredeti méret úgy, hogy szükség esetén nullákkal tölti ki.</p>
 
-<p>See
-<a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/">https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/</a>
-for the official QuickTime specification.
+<p>A hivatalos QuickTime specifikációt lásd:
+<a href="https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/">https://developer.apple.com/library/archive/documentation/QuickTime/QTFF/</a>.
 </p>
 <blockquote>
 <table class=frame><tr><td>
@@ -311,11 +309,12 @@ roll, yaw, speed, altitude)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Stream'>QuickTime Stream Tags</a></h2>
-<p>The tags below are extracted from timed metadata in QuickTime and other
-formats of video files when the ExtractEmbedded option is used.  Although
-most of these tags are combined into the single table below, ExifTool
-currently reads 124 different types of timed GPS metadata.</p>
+<h2><a name='Stream'>QuickTime Stream tagek</a></h2>
+<p>Az alábbi tagek a QuickTime és más videofájl-formátumok időzített
+metaadataiból kerülnek kinyerésre, amikor az ExtractEmbedded opció
+használatban van.  Bár ezeknek a tageknek a többsége az alábbi egyetlen
+táblázatba van összevonva, az ExifTool jelenleg 124 különböző típusú
+időzített GPS-metaadatot olvas.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -648,7 +647,7 @@ currently reads 124 different types of timed GPS metadata.</p>
 <td>--&gt; <a href='QuickTime.html#tx3g'>QuickTime tx3g Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='INSV_MakerNotes'>QuickTime INSV_MakerNotes Tags</a></h2>
+<h2><a name='INSV_MakerNotes'>QuickTime INSV_MakerNotes tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -676,8 +675,8 @@ currently reads 124 different types of timed GPS metadata.</p>
 <td><span class=s><span class=n>(number of lenses, 6-axis orientation of each lens, raw resolution)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='RVMI_gReV'>QuickTime RVMI_gReV Tags</a></h2>
-<p>GPS information extracted from the RVMI box of MOV videos.</p>
+<h2><a name='RVMI_gReV'>QuickTime RVMI_gReV tagek</a></h2>
+<p>MOV-videók RVMI dobozából kinyert GPS-információ.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -705,8 +704,8 @@ currently reads 124 different types of timed GPS metadata.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='RVMI_sReV'>QuickTime RVMI_sReV Tags</a></h2>
-<p>G-sensor information extracted from the RVMI box of MOV videos.</p>
+<h2><a name='RVMI_sReV'>QuickTime RVMI_sReV tagek</a></h2>
+<p>MOV-videók RVMI dobozából kinyert G-szenzor-információ.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -719,11 +718,11 @@ currently reads 124 different types of timed GPS metadata.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='camm0'>QuickTime camm0 Tags</a></h2>
-<p>The camm0 through camm7 tables define tags extracted from the Google Street
-View Camera Motion Metadata of MP4 videos.  See
-<a href="https://developers.google.com/streetview/publish/camm-spec">https://developers.google.com/streetview/publish/camm-spec</a> for the
-specification.</p>
+<h2><a name='camm0'>QuickTime camm0 tagek</a></h2>
+<p>A camm0-tól camm7-ig terjedő táblák az MP4-videók Google Street View
+Camera Motion Metadata részéből kinyert tageket definiálják.  A
+specifikációt lásd:
+<a href="https://developers.google.com/streetview/publish/camm-spec">https://developers.google.com/streetview/publish/camm-spec</a>.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -736,7 +735,7 @@ specification.</p>
 <td><span class=s><span class=n>(angle axis orientation in radians in local coordinate system)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='camm1'>QuickTime camm1 Tags</a></h2>
+<h2><a name='camm1'>QuickTime camm1 tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -754,7 +753,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='camm2'>QuickTime camm2 Tags</a></h2>
+<h2><a name='camm2'>QuickTime camm2 tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -767,7 +766,7 @@ specification.</p>
 <td><span class=s><span class=n>(gyro angular velocity about X, Y and Z axes in rad/s)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='camm3'>QuickTime camm3 Tags</a></h2>
+<h2><a name='camm3'>QuickTime camm3 tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -780,7 +779,7 @@ specification.</p>
 <td><span class=s><span class=n>(acceleration in the X, Y and Z directions in m/s^2)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='camm4'>QuickTime camm4 Tags</a></h2>
+<h2><a name='camm4'>QuickTime camm4 tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -793,7 +792,7 @@ specification.</p>
 <td><span class=s><span class=n>(X, Y, Z position in local coordinate system)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='camm5'>QuickTime camm5 Tags</a></h2>
+<h2><a name='camm5'>QuickTime camm5 tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -816,7 +815,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='camm6'>QuickTime camm6 Tags</a></h2>
+<h2><a name='camm6'>QuickTime camm6 tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -881,7 +880,7 @@ specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='camm7'>QuickTime camm7 Tags</a></h2>
+<h2><a name='camm7'>QuickTime camm7 tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -894,20 +893,21 @@ specification.</p>
 <td><span class=s><span class=n>(microtesla)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Keys'>QuickTime Keys Tags</a></h2>
-<p>This directory contains a list of key names which are used to decode tags
-written by the &quot;mdta&quot; handler.  Also in this table are a few tags found in
-timed metadata that are not yet writable by ExifTool.  The prefix of
-&quot;com.apple.quicktime.&quot; has been removed from most TagID&#39;s below.  These tags
-support alternate languages in the same way as the
-<a href="QuickTime.html#ItemList">ItemList</a> tags.  Note
-that by default,
-<a href="QuickTime.html#ItemList">ItemList</a> and
-<a href="QuickTime.html#UserData">UserData</a> tags are
-preferred when writing, so to create a tag when a same-named tag exists in
-either of these tables, either the &quot;Keys&quot; location must be specified (eg.
-<code>-Keys:Author=Phil</code> on the command line), or the PREFERRED level must be
-changed via <a href="../config.html#PREF">the config file</a>.</p>
+<h2><a name='Keys'>QuickTime Keys tagek</a></h2>
+<p>Ez a könyvtár olyan kulcsnevek listáját tartalmazza, amelyek az &quot;mdta&quot;
+handler által írt tagek dekódolására szolgálnak.  Ebben a táblában van
+néhány olyan tag is, amely időzített metaadatban található, és amelyet az
+ExifTool még nem tud írni.  A &quot;com.apple.quicktime.&quot; előtag az alábbi
+TagID-k többségéről el lett távolítva.  Ezek a tagek ugyanúgy támogatják az
+alternatív nyelveket, mint az
+<a href="QuickTime.html#ItemList">ItemList</a> tagek.  Vedd
+figyelembe, hogy alapból az
+<a href="QuickTime.html#ItemList">ItemList</a> és a
+<a href="QuickTime.html#UserData">UserData</a> tagek
+élveznek elsőbbséget íráskor, ezért ha e táblák valamelyikében létezik
+azonos nevű tag, akkor egy tag létrehozásához vagy a &quot;Keys&quot; helyet kell
+megadni (pl. <code>-Keys:Author=Phil</code> a parancssorban), vagy a PREFERRED szintet
+kell megváltoztatni <a href="../config.html#PREF">a config fájlban</a>.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1334,9 +1334,9 @@ from the associated SampleTime)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='AudioKeys'>QuickTime AudioKeys Tags</a></h2>
-<p>Keys tags written in the audio track by some Apple devices.  These tags
-belong to the ExifTool AudioKeys family 1 gorup.</p>
+<h2><a name='AudioKeys'>QuickTime AudioKeys tagek</a></h2>
+<p>Egyes Apple-eszközök által a hangsávba írt Keys tagek.  Ezek a tagek az
+ExifTool AudioKeys 1-es családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1375,9 +1375,9 @@ belong to the ExifTool AudioKeys family 1 gorup.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='VideoKeys'>QuickTime VideoKeys Tags</a></h2>
-<p>Keys tags written in the video track.  These tags belong to the ExifTool
-VideoKeys family 1 gorup.</p>
+<h2><a name='VideoKeys'>QuickTime VideoKeys tagek</a></h2>
+<p>A videosávba írt Keys tagek.  Ezek a tagek az ExifTool VideoKeys 1-es
+családbeli csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1410,7 +1410,7 @@ VideoKeys family 1 gorup.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='FaceInfo'>QuickTime FaceInfo Tags</a></h2>
+<h2><a name='FaceInfo'>QuickTime FaceInfo tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1423,7 +1423,7 @@ VideoKeys family 1 gorup.</p>
 <td>--&gt; <a href='QuickTime.html#FaceRec'>QuickTime FaceRec Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='FaceRec'>QuickTime FaceRec Tags</a></h2>
+<h2><a name='FaceRec'>QuickTime FaceRec tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1436,7 +1436,7 @@ VideoKeys family 1 gorup.</p>
 <td>--&gt; <a href='QuickTime.html#Keys'>QuickTime Keys Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='sdpd'>QuickTime sdpd Tags</a></h2>
+<h2><a name='sdpd'>QuickTime sdpd tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1449,7 +1449,7 @@ VideoKeys family 1 gorup.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='setu'>QuickTime setu Tags</a></h2>
+<h2><a name='setu'>QuickTime setu tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1467,7 +1467,7 @@ VideoKeys family 1 gorup.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='RoveGPS'>QuickTime RoveGPS Tags</a></h2>
+<h2><a name='RoveGPS'>QuickTime RoveGPS tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1495,8 +1495,8 @@ VideoKeys family 1 gorup.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PreviewInfo'>QuickTime PreviewInfo Tags</a></h2>
-<p>Preview stored by TomTom Bandit ActionCam.</p>
+<h2><a name='PreviewInfo'>QuickTime PreviewInfo tagek</a></h2>
+<p>A TomTom Bandit ActionCam által tárolt előnézeti kép.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1509,9 +1509,9 @@ VideoKeys family 1 gorup.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='tx3g'>QuickTime tx3g Tags</a></h2>
-<p>Tags extracted from the tx3g sbtl timed metadata of Yuneec and Autel drones,
-and subtitle text in some other videos.</p>
+<h2><a name='tx3g'>QuickTime tx3g tagek</a></h2>
+<p>A Yuneec és Autel drónok tx3g sbtl időzített metaadatából, valamint egyes
+más videók felirat-szövegéből kinyert tagek.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1609,8 +1609,8 @@ and subtitle text in some other videos.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='HTCInfo'>QuickTime HTCInfo Tags</a></h2>
-<p>Tags written by some HTC camera phones.</p>
+<h2><a name='HTCInfo'>QuickTime HTCInfo tagek</a></h2>
+<p>Egyes HTC kamerás telefonok által írt tagek.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1623,8 +1623,8 @@ and subtitle text in some other videos.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Pittasoft'>QuickTime Pittasoft Tags</a></h2>
-<p>Tags found in Pittasoft Blackvue dashcam &quot;free&quot; data.</p>
+<h2><a name='Pittasoft'>QuickTime Pittasoft tagek</a></h2>
+<p>A Pittasoft Blackvue fedélzeti kamera &quot;free&quot; adataiban található tagek.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1667,7 +1667,7 @@ and subtitle text in some other videos.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='FileType'>QuickTime FileType Tags</a></h2>
+<h2><a name='FileType'>QuickTime FileType tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1792,7 +1792,7 @@ and subtitle text in some other videos.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='OtherMeta'>QuickTime OtherMeta Tags</a></h2>
+<h2><a name='OtherMeta'>QuickTime OtherMeta tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1810,7 +1810,7 @@ and subtitle text in some other videos.</p>
 <td>--&gt; <a href='QuickTime.html#Meta'>QuickTime Meta Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MetaRelation'>QuickTime MetaRelation Tags</a></h2>
+<h2><a name='MetaRelation'>QuickTime MetaRelation tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1819,7 +1819,7 @@ and subtitle text in some other videos.</p>
 <tr><td colspan=4 class=c><i>[no tags known]</i></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Meta'>QuickTime Meta Tags</a></h2>
+<h2><a name='Meta'>QuickTime Meta tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1918,8 +1918,8 @@ and subtitle text in some other videos.</p>
 <td>--&gt; <a href='XMP.html#XML'>XMP XML Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='DataInfo'>QuickTime DataInfo Tags</a></h2>
-<p>MP4 data information box.</p>
+<h2><a name='DataInfo'>QuickTime DataInfo tagek</a></h2>
+<p>MP4 adatinformációs doboz.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1932,8 +1932,8 @@ and subtitle text in some other videos.</p>
 <td>--&gt; <a href='QuickTime.html#DataRef'>QuickTime DataRef Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='DataRef'>QuickTime DataRef Tags</a></h2>
-<p>MP4 data reference box.</p>
+<h2><a name='DataRef'>QuickTime DataRef tagek</a></h2>
+<p>MP4 adathivatkozási doboz.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1956,7 +1956,7 @@ and subtitle text in some other videos.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='grpl'>QuickTime grpl Tags</a></h2>
+<h2><a name='grpl'>QuickTime grpl tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1965,7 +1965,7 @@ and subtitle text in some other videos.</p>
 <tr><td colspan=4 class=c><i>[no tags known]</i></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Handler'>QuickTime Handler Tags</a></h2>
+<h2><a name='Handler'>QuickTime Handler tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -2020,7 +2020,7 @@ and subtitle text in some other videos.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='VendorID'>QuickTime VendorID Values</a></h2>
+<h2><a name='VendorID'>QuickTime VendorID értékek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class='inner sep' cellspacing=1>
@@ -2048,7 +2048,7 @@ and subtitle text in some other videos.</p>
 <td>&nbsp;</td><td>&nbsp;</td>
 </tr></table></td></tr></table></blockquote>
 
-<h2><a name='ItemInfo'>QuickTime ItemInfo Tags</a></h2>
+<h2><a name='ItemInfo'>QuickTime ItemInfo tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -2061,15 +2061,16 @@ and subtitle text in some other videos.</p>
 <td><span class=s><span class=n>(parsed, but not extracted as a tag)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ItemList'>QuickTime ItemList Tags</a></h2>
-<p>This is the preferred location for creating new QuickTime tags.  Tags in
-this table support alternate languages which are accessed by adding a
-3-character ISO 639-2 language code and an optional ISO 3166-1 alpha 2
-country code to the tag name (eg. &quot;ItemList:Title-fra&quot; or
-&quot;ItemList::Title-fra-FR&quot;).  When creating a new Meta box to contain the
-ItemList directory, by default ExifTool adds an &#39;mdir&#39; (Metadata) Handler
-box because Apple software may ignore ItemList tags otherwise, but the API
-<a href="../ExifTool.html#QuickTimeHandler">QuickTimeHandler</a> option may be set to 0 to avoid this.</p>
+<h2><a name='ItemList'>QuickTime ItemList tagek</a></h2>
+<p>Ez a preferált hely új QuickTime-tagek létrehozásához.  Az ebben a
+táblában lévő tagek támogatják az alternatív nyelveket, amelyek úgy érhetők
+el, hogy a tagnévhez hozzáadsz egy 3 karakteres ISO 639-2 nyelvkódot és egy
+opcionális ISO 3166-1 alfa-2 országkódot (pl. &quot;ItemList:Title-fra&quot; vagy
+&quot;ItemList::Title-fra-FR&quot;).  Amikor új Meta dobozt hozol létre az ItemList
+könyvtár tárolására, az ExifTool alapból hozzáad egy &#39;mdir&#39; (Metadata)
+Handler dobozt, mert az Apple szoftverei egyébként figyelmen kívül
+hagyhatják az ItemList tageket, de ez elkerülhető az API
+<a href="../ExifTool.html#QuickTimeHandler">QuickTimeHandler</a> opciójának 0-ra állításával.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -2624,7 +2625,7 @@ box because Apple software may ignore ItemList tags otherwise, but the API
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='GenreID'>QuickTime GenreID Values</a></h2>
+<h2><a name='GenreID'>QuickTime GenreID értékek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class='inner sep' cellspacing=1>
@@ -5273,7 +5274,7 @@ box because Apple software may ignore ItemList tags otherwise, but the API
 </tr><tr><td class=r>50000093</td><td>= Audiobooks|Light Novels</td>
 </tr></table></td></tr></table></blockquote>
 
-<h2><a name='AppleStoreCountry'>QuickTime AppleStoreCountry Values</a></h2>
+<h2><a name='AppleStoreCountry'>QuickTime AppleStoreCountry értékek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class='inner sep' cellspacing=1>
@@ -5436,10 +5437,10 @@ box because Apple software may ignore ItemList tags otherwise, but the API
 <td class='r b'>&nbsp;</td><td class=b>&nbsp;</td>
 </tr></table></td></tr></table></blockquote>
 
-<h2><a name='iTunesInfo'>QuickTime iTunesInfo Tags</a></h2>
-<p>ExifTool will extract any iTunesInfo tags that exist, even if they are not
-defined in this table.  These tags belong to the family 1 &quot;iTunes&quot; group,
-and are not currently writable.</p>
+<h2><a name='iTunesInfo'>QuickTime iTunesInfo tagek</a></h2>
+<p>Az ExifTool minden létező iTunesInfo taget kinyer, még akkor is, ha nincs
+definiálva ebben a táblában.  Ezek a tagek az 1-es családbeli &quot;iTunes&quot;
+csoporthoz tartoznak, és jelenleg nem írhatók.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -5657,7 +5658,7 @@ and are not currently writable.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='EncodingParams'>QuickTime EncodingParams Tags</a></h2>
+<h2><a name='EncodingParams'>QuickTime EncodingParams tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -5785,7 +5786,7 @@ and are not currently writable.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ItemProp'>QuickTime ItemProp Tags</a></h2>
+<h2><a name='ItemProp'>QuickTime ItemProp tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -5803,7 +5804,7 @@ and are not currently writable.</p>
 <td><span class=s><span class=n>(parsed, but not extracted as a tag)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ItemPropCont'>QuickTime ItemPropCont Tags</a></h2>
+<h2><a name='ItemPropCont'>QuickTime ItemPropCont tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -5877,7 +5878,7 @@ and are not currently writable.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='AV1Config'>QuickTime AV1Config Tags</a></h2>
+<h2><a name='AV1Config'>QuickTime AV1Config tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -5939,7 +5940,7 @@ and are not currently writable.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ContentLightLevel'>QuickTime ContentLightLevel Tags</a></h2>
+<h2><a name='ContentLightLevel'>QuickTime ContentLightLevel tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -5957,7 +5958,7 @@ and are not currently writable.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ColorRep'>QuickTime ColorRep Tags</a></h2>
+<h2><a name='ColorRep'>QuickTime ColorRep tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6037,7 +6038,7 @@ and are not currently writable.</p>
   <br>1 = Full</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='HEVCConfig'>QuickTime HEVCConfig Tags</a></h2>
+<h2><a name='HEVCConfig'>QuickTime HEVCConfig tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6160,10 +6161,10 @@ and are not currently writable.</p>
   <br>1 = Yes</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ItemRef'>QuickTime ItemRef Tags</a></h2>
-<p>The Item reference entries listed in the table below contain information about
-the associations between items in the file.  This information is used by
-ExifTool, but these entries are not extracted as tags.</p>
+<h2><a name='ItemRef'>QuickTime ItemRef tagek</a></h2>
+<p>Az alábbi táblázatban felsorolt Item-hivatkozási bejegyzések a fájlban lévő
+elemek közötti társításokról tartalmaznak információt.  Ezt az információt az
+ExifTool használja, de ezek a bejegyzések nem kerülnek kinyerésre tagként.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6191,7 +6192,7 @@ ExifTool, but these entries are not extracted as tags.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MovieFragment'>QuickTime MovieFragment Tags</a></h2>
+<h2><a name='MovieFragment'>QuickTime MovieFragment tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6214,7 +6215,7 @@ ExifTool, but these entries are not extracted as tags.</p>
 <td>--&gt; <a href='QuickTime.html#TrackFragment'>QuickTime TrackFragment Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MovieFragHdr'>QuickTime MovieFragHdr Tags</a></h2>
+<h2><a name='MovieFragHdr'>QuickTime MovieFragHdr tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6227,7 +6228,7 @@ ExifTool, but these entries are not extracted as tags.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TrackFragment'>QuickTime TrackFragment Tags</a></h2>
+<h2><a name='TrackFragment'>QuickTime TrackFragment tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6240,7 +6241,7 @@ ExifTool, but these entries are not extracted as tags.</p>
 <td>--&gt; <a href='QuickTime.html#Meta'>QuickTime Meta Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Movie'>QuickTime Movie Tags</a></h2>
+<h2><a name='Movie'>QuickTime Movie tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6305,7 +6306,7 @@ ExifTool, but these entries are not extracted as tags.</p>
   <br><span class=n>(Garmin GPS sensor data)</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CMovie'>QuickTime CMovie Tags</a></h2>
+<h2><a name='CMovie'>QuickTime CMovie tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6318,7 +6319,7 @@ ExifTool, but these entries are not extracted as tags.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Track'>QuickTime Track Tags</a></h2>
+<h2><a name='Track'>QuickTime Track tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6369,8 +6370,8 @@ ExifTool, but these entries are not extracted as tags.</p>
   <br>--&gt; <a href='XMP.html'>XMP Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Media'>QuickTime Media Tags</a></h2>
-<p>MP4 media box.</p>
+<h2><a name='Media'>QuickTime Media tagek</a></h2>
+<p>MP4 média doboz.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6398,7 +6399,7 @@ ExifTool, but these entries are not extracted as tags.</p>
 <td>--&gt; <a href='QuickTime.html#MediaInfo'>QuickTime MediaInfo Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MediaHeader'>QuickTime MediaHeader Tags</a></h2>
+<h2><a name='MediaHeader'>QuickTime MediaHeader tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6440,8 +6441,8 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MediaInfo'>QuickTime MediaInfo Tags</a></h2>
-<p>MP4 media info box.</p>
+<h2><a name='MediaInfo'>QuickTime MediaInfo tagek</a></h2>
+<p>MP4 médiainformációs doboz.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6489,7 +6490,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>--&gt; <a href='QuickTime.html#VideoHeader'>QuickTime VideoHeader Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='GenMediaHeader'>QuickTime GenMediaHeader Tags</a></h2>
+<h2><a name='GenMediaHeader'>QuickTime GenMediaHeader tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6512,7 +6513,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>--&gt; <a href='QuickTime.html#TimeCode'>QuickTime TimeCode Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='GenMediaInfo'>QuickTime GenMediaInfo Tags</a></h2>
+<h2><a name='GenMediaInfo'>QuickTime GenMediaInfo tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6545,7 +6546,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='GraphicsMode'>QuickTime GraphicsMode Values</a></h2>
+<h2><a name='GraphicsMode'>QuickTime GraphicsMode értékek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class='inner sep' cellspacing=1>
@@ -6585,7 +6586,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td class=r>&nbsp;</td><td>&nbsp;</td>
 </tr></table></td></tr></table></blockquote>
 
-<h2><a name='TimeCode'>QuickTime TimeCode Tags</a></h2>
+<h2><a name='TimeCode'>QuickTime TimeCode tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6598,7 +6599,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>--&gt; <a href='QuickTime.html#TCMediaInfo'>QuickTime TCMediaInfo Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TCMediaInfo'>QuickTime TCMediaInfo Tags</a></h2>
+<h2><a name='TCMediaInfo'>QuickTime TCMediaInfo tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6645,8 +6646,8 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='HintHeader'>QuickTime HintHeader Tags</a></h2>
-<p>MP4 hint media header.</p>
+<h2><a name='HintHeader'>QuickTime HintHeader tagek</a></h2>
+<p>MP4 hint média fejléc.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6674,8 +6675,8 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='AudioHeader'>QuickTime AudioHeader Tags</a></h2>
-<p>MP4 audio media header.</p>
+<h2><a name='AudioHeader'>QuickTime AudioHeader tagek</a></h2>
+<p>MP4 hang média fejléc.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6688,8 +6689,8 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SampleTable'>QuickTime SampleTable Tags</a></h2>
-<p>MP4 sample table box.</p>
+<h2><a name='SampleTable'>QuickTime SampleTable tagek</a></h2>
+<p>MP4 mintatábla doboz.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6796,9 +6797,9 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='AudioSampleDesc'>QuickTime AudioSampleDesc Tags</a></h2>
-<p>MP4 audio sample description.  This hybrid atom contains both data and child
-atoms.</p>
+<h2><a name='AudioSampleDesc'>QuickTime AudioSampleDesc tagek</a></h2>
+<p>MP4 hangminta-leírás.  Ez a hibrid atom adatot és gyermekatomokat is
+tartalmaz.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6866,8 +6867,8 @@ atoms.</p>
 <td>--&gt; <a href='QuickTime.html#Wave'>QuickTime Wave Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SpatialAudio'>QuickTime SpatialAudio Tags</a></h2>
-<p>Spatial Audio tags.</p>
+<h2><a name='SpatialAudio'>QuickTime SpatialAudio tagek</a></h2>
+<p>Térbeli hang (Spatial Audio) tagek.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6910,7 +6911,7 @@ atoms.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Bitrate'>QuickTime Bitrate Tags</a></h2>
+<h2><a name='Bitrate'>QuickTime Bitrate tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -6933,8 +6934,8 @@ atoms.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ChannelLayout'>QuickTime ChannelLayout Tags</a></h2>
-<p>Audio channel layout.</p>
+<h2><a name='ChannelLayout'>QuickTime ChannelLayout tagek</a></h2>
+<p>Hangcsatorna-elrendezés.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7206,7 +7207,7 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ChannelLabel'>QuickTime ChannelLabel Values</a></h2>
+<h2><a name='ChannelLabel'>QuickTime ChannelLabel értékek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class='inner sep' cellspacing=1>
@@ -7279,7 +7280,7 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td class=r>&nbsp;</td><td>&nbsp;</td>
 </tr></table></td></tr></table></blockquote>
 
-<h2><a name='DecodeConfig'>QuickTime DecodeConfig Tags</a></h2>
+<h2><a name='DecodeConfig'>QuickTime DecodeConfig tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7297,8 +7298,8 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ProtectionInfo'>QuickTime ProtectionInfo Tags</a></h2>
-<p>Child atoms found in &quot;sinf&quot; and/or &quot;pinf&quot; atoms.</p>
+<h2><a name='ProtectionInfo'>QuickTime ProtectionInfo tagek</a></h2>
+<p>A &quot;sinf&quot; és/vagy &quot;pinf&quot; atomokban található gyermekatomok.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7327,7 +7328,7 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td>--&gt; <a href='QuickTime.html#SchemeType'>QuickTime SchemeType Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SchemeInfo'>QuickTime SchemeInfo Tags</a></h2>
+<h2><a name='SchemeInfo'>QuickTime SchemeInfo tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7365,7 +7366,7 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Rights'>QuickTime Rights Tags</a></h2>
+<h2><a name='Rights'>QuickTime Rights tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7413,7 +7414,7 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SchemeType'>QuickTime SchemeType Tags</a></h2>
+<h2><a name='SchemeType'>QuickTime SchemeType tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7436,7 +7437,7 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Wave'>QuickTime Wave Tags</a></h2>
+<h2><a name='Wave'>QuickTime Wave tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7455,7 +7456,7 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='VisualSampleDesc'>QuickTime VisualSampleDesc Tags</a></h2>
+<h2><a name='VisualSampleDesc'>QuickTime VisualSampleDesc tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7569,7 +7570,7 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td>--&gt; <a href='QuickTime.html#sv3d'>QuickTime sv3d Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CleanAperture'>QuickTime CleanAperture Tags</a></h2>
+<h2><a name='CleanAperture'>QuickTime CleanAperture tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7597,10 +7598,10 @@ spherical coordinates left/right degrees, down/up degrees, distance)</span></spa
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='sv3d'>QuickTime sv3d Tags</a></h2>
-<p>Tags defined by the Spherical Video V2 specification.  See
-<a href="https://github.com/google/spatial-media/blob/master/docs/spherical-video-v2-rfc.md">https://github.com/google/spatial-media/blob/master/docs/spherical-video-v2-rfc.md</a>
-for the specification.</p>
+<h2><a name='sv3d'>QuickTime sv3d tagek</a></h2>
+<p>A Spherical Video V2 specifikáció által definiált tagek.  A
+specifikációt lásd:
+<a href="https://github.com/google/spatial-media/blob/master/docs/spherical-video-v2-rfc.md">https://github.com/google/spatial-media/blob/master/docs/spherical-video-v2-rfc.md</a>.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7618,7 +7619,7 @@ for the specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='proj'>QuickTime proj Tags</a></h2>
+<h2><a name='proj'>QuickTime proj tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7641,7 +7642,7 @@ for the specification.</p>
 <td>--&gt; <a href='QuickTime.html#prhd'>QuickTime prhd Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='cbmp'>QuickTime cbmp Tags</a></h2>
+<h2><a name='cbmp'>QuickTime cbmp tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7659,7 +7660,7 @@ for the specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='equi'>QuickTime equi Tags</a></h2>
+<h2><a name='equi'>QuickTime equi tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7687,7 +7688,7 @@ for the specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='prhd'>QuickTime prhd Tags</a></h2>
+<h2><a name='prhd'>QuickTime prhd tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7710,8 +7711,8 @@ for the specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='HintSampleDesc'>QuickTime HintSampleDesc Tags</a></h2>
-<p>MP4 hint sample description.</p>
+<h2><a name='HintSampleDesc'>QuickTime HintSampleDesc tagek</a></h2>
+<p>MP4 hint minta-leírás.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7749,8 +7750,8 @@ for the specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MetaSampleDesc'>QuickTime MetaSampleDesc Tags</a></h2>
-<p>MP4 metadata sample description.</p>
+<h2><a name='MetaSampleDesc'>QuickTime MetaSampleDesc tagek</a></h2>
+<p>MP4 metaadat minta-leírás.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7778,7 +7779,7 @@ for the specification.</p>
 <td>--&gt; <a href='QuickTime.html#Keys'>QuickTime Keys Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='OtherSampleDesc'>QuickTime OtherSampleDesc Tags</a></h2>
+<h2><a name='OtherSampleDesc'>QuickTime OtherSampleDesc tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7821,8 +7822,8 @@ for the specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='VideoHeader'>QuickTime VideoHeader Tags</a></h2>
-<p>MP4 video media header.</p>
+<h2><a name='VideoHeader'>QuickTime VideoHeader tagek</a></h2>
+<p>MP4 videó média fejléc.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7840,7 +7841,7 @@ for the specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TrackAperture'>QuickTime TrackAperture Tags</a></h2>
+<h2><a name='TrackAperture'>QuickTime TrackAperture tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7863,7 +7864,7 @@ for the specification.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TrackHeader'>QuickTime TrackHeader Tags</a></h2>
+<h2><a name='TrackHeader'>QuickTime TrackHeader tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7925,7 +7926,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TrackRef'>QuickTime TrackRef Tags</a></h2>
+<h2><a name='TrackRef'>QuickTime TrackRef tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -7988,17 +7989,18 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='UserData'>QuickTime UserData Tags</a></h2>
-<p>Tag ID&#39;s beginning with the copyright symbol (hex 0xa9) are multi-language
-text.  Alternate language tags are accessed by adding a dash followed by a
-3-character ISO 639-2 language code to the tag name.  ExifTool will extract
-any multi-language user data tags found, even if they aren&#39;t in this table.
-Note when creating new tags,
-<a href="QuickTime.html#ItemList">ItemList</a> tags are
-preferred over these, so to create the tag when a same-named ItemList tag
-exists, either &quot;UserData&quot; must be specified (eg. <code>-UserData:Artist=Monet</code>
-on the command line), or the PREFERRED level must be changed via
-<a href="../config.html#PREF">the config file</a>.</p>
+<h2><a name='UserData'>QuickTime UserData tagek</a></h2>
+<p>A szerzői jogi szimbólummal (hex 0xa9) kezdődő tag ID-k többnyelvű
+szöveget jelölnek.  Az alternatív nyelvű tagek úgy érhetők el, hogy a
+tagnévhez hozzáadsz egy kötőjelet, majd egy 3 karakteres ISO 639-2
+nyelvkódot.  Az ExifTool minden megtalált többnyelvű user data taget kinyer,
+még akkor is, ha nincs ebben a táblában.  Vedd figyelembe, hogy új tagek
+létrehozásakor az
+<a href="QuickTime.html#ItemList">ItemList</a> tagek
+élveznek elsőbbséget ezekkel szemben, ezért ha létezik azonos nevű ItemList
+tag, akkor a tag létrehozásához vagy a &quot;UserData&quot; helyet kell megadni (pl.
+<code>-UserData:Artist=Monet</code> a parancssorban), vagy a PREFERRED szintet kell
+megváltoztatni <a href="../config.html#PREF">a config fájlban</a>.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -8961,8 +8963,8 @@ yaw, pitch and roll angles in degrees)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TomTom'>QuickTime TomTom Tags</a></h2>
-<p>Tags found in TomTom Bandit Action Cam MP4 videos.</p>
+<h2><a name='TomTom'>QuickTime TomTom tagek</a></h2>
+<p>A TomTom Bandit Action Cam MP4-videóiban található tagek.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -8995,7 +8997,7 @@ yaw, pitch and roll angles in degrees)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='HintTrackInfo'>QuickTime HintTrackInfo Tags</a></h2>
+<h2><a name='HintTrackInfo'>QuickTime HintTrackInfo tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9088,7 +9090,7 @@ yaw, pitch and roll angles in degrees)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='HintInfo'>QuickTime HintInfo Tags</a></h2>
+<h2><a name='HintInfo'>QuickTime HintInfo tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9106,7 +9108,7 @@ yaw, pitch and roll angles in degrees)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='HTCBinary'>QuickTime HTCBinary Tags</a></h2>
+<h2><a name='HTCBinary'>QuickTime HTCBinary tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9115,10 +9117,10 @@ yaw, pitch and roll angles in degrees)</span></span></td></tr>
 <tr><td colspan=4 class=c><i>[no tags known]</i></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Nextbase'>QuickTime Nextbase Tags</a></h2>
-<p>Tags found in &#39;infi&#39; atom from some Nextbase videos.  As well as these tags,
-other existing tags are also extracted.  These tags are not currently
-writable but they may all be removed by deleting the Nextbase group.</p>
+<h2><a name='Nextbase'>QuickTime Nextbase tagek</a></h2>
+<p>Egyes Nextbase-videók &#39;infi&#39; atomjában található tagek.  Ezeken a tageken
+kívül más létező tagek is kinyerésre kerülnek.  Ezek a tagek jelenleg nem
+írhatók, de mind eltávolíthatók a Nextbase csoport törlésével.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9451,7 +9453,7 @@ writable but they may all be removed by deleting the Nextbase group.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Video'>QuickTime Video Tags</a></h2>
+<h2><a name='Video'>QuickTime Video tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9474,7 +9476,7 @@ writable but they may all be removed by deleting the Nextbase group.</p>
   <br>1 = Yes</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='UserMedia'>QuickTime UserMedia Tags</a></h2>
+<h2><a name='UserMedia'>QuickTime UserMedia tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9487,7 +9489,7 @@ writable but they may all be removed by deleting the Nextbase group.</p>
 <td>--&gt; <a href='QuickTime.html#MetaData'>QuickTime MetaData Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MetaData'>QuickTime MetaData Tags</a></h2>
+<h2><a name='MetaData'>QuickTime MetaData tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9535,7 +9537,7 @@ writable but they may all be removed by deleting the Nextbase group.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MovieHeader'>QuickTime MovieHeader Tags</a></h2>
+<h2><a name='MovieHeader'>QuickTime MovieHeader tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9622,7 +9624,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Preview'>QuickTime Preview Tags</a></h2>
+<h2><a name='Preview'>QuickTime Preview tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9652,7 +9654,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SkipInfo'>QuickTime SkipInfo Tags</a></h2>
+<h2><a name='SkipInfo'>QuickTime SkipInfo tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9670,7 +9672,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Profile'>QuickTime Profile Tags</a></h2>
+<h2><a name='Profile'>QuickTime Profile tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9698,7 +9700,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>--&gt; <a href='QuickTime.html#VideoProf'>QuickTime VideoProf Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='AudioProf'>QuickTime AudioProf Tags</a></h2>
+<h2><a name='AudioProf'>QuickTime AudioProf tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9753,7 +9755,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='FileProf'>QuickTime FileProf Tags</a></h2>
+<h2><a name='FileProf'>QuickTime FileProf tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9773,7 +9775,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
   <br>Bit 30 = Edited</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='VideoProf'>QuickTime VideoProf Tags</a></h2>
+<h2><a name='VideoProf'>QuickTime VideoProf tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9839,8 +9841,8 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Flip'>QuickTime Flip Tags</a></h2>
-<p>Found in MP4 files from Flip Video cameras.</p>
+<h2><a name='Flip'>QuickTime Flip tagek</a></h2>
+<p>Flip Video kamerák MP4-fájljaiban található.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9873,8 +9875,8 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Tags360Fly'>QuickTime Tags360Fly Tags</a></h2>
-<p>Timed metadata found in MP4 videos from the 360Fly.</p>
+<h2><a name='Tags360Fly'>QuickTime Tags360Fly tagek</a></h2>
+<p>A 360Fly MP4-videóiban található időzített metaadat.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9912,7 +9914,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>--&gt; <a href='QuickTime.html#Fusion360Fly'>QuickTime Fusion360Fly Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Accel360Fly'>QuickTime Accel360Fly Tags</a></h2>
+<h2><a name='Accel360Fly'>QuickTime Accel360Fly tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9935,7 +9937,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Gyro360Fly'>QuickTime Gyro360Fly Tags</a></h2>
+<h2><a name='Gyro360Fly'>QuickTime Gyro360Fly tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9958,7 +9960,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Mag360Fly'>QuickTime Mag360Fly Tags</a></h2>
+<h2><a name='Mag360Fly'>QuickTime Mag360Fly tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -9981,7 +9983,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='GPS360Fly'>QuickTime GPS360Fly Tags</a></h2>
+<h2><a name='GPS360Fly'>QuickTime GPS360Fly tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -10029,7 +10031,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Rot360Fly'>QuickTime Rot360Fly Tags</a></h2>
+<h2><a name='Rot360Fly'>QuickTime Rot360Fly tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -10052,7 +10054,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Fusion360Fly'>QuickTime Fusion360Fly Tags</a></h2>
+<h2><a name='Fusion360Fly'>QuickTime Fusion360Fly tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -10075,8 +10077,8 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ImageFile'>QuickTime ImageFile Tags</a></h2>
-<p>Tags used in QTIF QuickTime Image Files.</p>
+<h2><a name='ImageFile'>QuickTime ImageFile tagek</a></h2>
+<p>A QTIF QuickTime képfájlokban használt tagek.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -10101,7 +10103,7 @@ the value is set to zero if the tag is deleted individually)</span></span></td><
 
 <hr>
 (This document generated automatically by Image::ExifTool::BuildTagLookup)
-<br><i>Last revised May 1, 2026</i>
-<p class=lf><a href='index.html'>&lt;-- ExifTool Tag Names</a></p>
+<br><i>Utoljára módosítva: 2026. május 1.</i>
+<p class=lf><a href='index.html'>&lt;-- ExifTool tagnevek</a></p>
 </body>
 </html>
