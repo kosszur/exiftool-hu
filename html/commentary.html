@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
 <head>
-<title>Commentary on Meta Information Formats</title>
+<title>Kommentár a metainformáció-formátumokról</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 <style type="text/css">
 <!--
@@ -14,9 +14,9 @@ a.ref   { text-decoration: none; font-size: x-small;
 </head>
 <body>
 <div class='index'>
-<b>What sucks:</b>
+<b>Ami rossz:</b>
 <br><a href="#EXIF">EXIF / TIFF</a>
-<br><a href="#Maker">EXIF Maker notes</a>
+<br><a href="#Maker">EXIF maker note-ok</a>
 <br><a href="#JPEG">JPEG</a>
 <br><a href="#IPTC">IPTC IIM</a>
 <br><a href="#XMP">XMP</a>
@@ -27,310 +27,313 @@ a.ref   { text-decoration: none; font-size: x-small;
 <br><a href="#DICOM">DICOM</a>
 <br><a href="#AVCHD">AVCHD</a>
 <br><a href="#ISO">ISO</a>
-<br><b>What doesn't:</b>
+<br><b>Ami nem:</b>
 <br><a href="#CRW">CRW (CIFF)</a>
 <br><a href="#QuickTime">QuickTime</a>
 <br><a href="#MIE">MIE</a>
 </div>
 
-<h2 class='up'>Commentary on Meta Information Formats<br>
-<span class='sm'>(or <i>"Why this or that Format Sucks"</i>)</span></h2>
+<h2 class='up'>Kommentár a metainformáció-formátumokról<br>
+<span class='sm'>(avagy <i>„Miért rossz ez vagy az a formátum"</i>)</span></h2>
 
 <a name='EXIF'></a>
 <h3>EXIF / TIFF</h3>
-<p>EXIF uses the TIFF format to store information.  The biggest problem with
-this format is that all pointers are absolute (ie. relative to the start of
-the file).  This means that the pointers need fixing up if the position of
-any information changes.  This is significant because pointers are often
-hidden inside proprietary structures which should remain opaque (such as
-maker notes).  The result is that some EXIF information is easily corrupted
-when editing a file.  This problem is ignored by many software packages.
-Much effort was required in the development of ExifTool to avoid the loss of
-information such as this.</p>
+<p>Az EXIF a TIFF formátumot használja az információk tárolására. Ennek a
+formátumnak a legnagyobb problémája, hogy minden mutató abszolút (azaz a fájl
+elejéhez viszonyított). Ez azt jelenti, hogy a mutatókat helyre kell igazítani,
+ha bármely információ pozíciója megváltozik. Ez azért jelentős, mert a mutatók
+gyakran olyan gyártói struktúrákban rejtőznek, amelyeknek átlátszatlannak
+kellene maradniuk (mint például a maker note-ok). Az eredmény az, hogy némely
+EXIF-információ könnyen sérül egy fájl szerkesztésekor. Ezt a problémát sok
+szoftvercsomag figyelmen kívül hagyja. Az ExifTool fejlesztése során sok
+erőfeszítésbe került, hogy elkerüljük az ilyesféle információvesztést.</p>
 
-<p>A significant problem is that an IFD (image file directory) pointer has
-the same format code as a long integer, so information in any non-recognized
-IFD is lost when the image is rewritten.  There is a seldom-used format
-code of 13 that has been proposed to indicate an IFD, but this is not part
-of the EXIF/TIFF specification and is not in common usage.  <i class=lt>[Hey!
-Olympus has just started using this code for the IFD's in the maker notes of
-their new Camera models! - 2007/03/08]</i></p>
+<p>Jelentős probléma, hogy egy IFD-mutatónak (image file directory) ugyanaz a
+formátumkódja, mint egy long integernek, így minden fel nem ismert IFD
+információja elvész, amikor a képet újraírják. Létezik egy ritkán használt,
+13-as formátumkód, amelyet az IFD jelölésére javasoltak, de ez nem része az
+EXIF/TIFF-specifikációnak, és nincs elterjedt használatban. <i class=lt>[Hé!
+Az Olympus most kezdte el ezt a kódot használni az új fényképezőgép-modelljeik
+maker note-jaiban lévő IFD-khez! - 2007/03/08]</i></p>
 
-<p>Also, it was wrong to specify a count instead of a size for each
-directory entry because this makes it impossible to add new format types
-without requiring that older readers simply discard data of unknown type
-(since the data size isn't known, the old readers don't know how to copy the
-data).</p>
+<p>Az is hiba volt, hogy minden könyvtárbejegyzéshez darabszámot adtak meg
+méret helyett, mert emiatt lehetetlen új formátumtípusokat hozzáadni anélkül,
+hogy a régebbi olvasók egyszerűen el ne dobnák az ismeretlen típusú adatokat
+(mivel az adatméret nem ismert, a régi olvasók nem tudják, hogyan másolják át
+az adatot).</p>
 
-<p>All these shortcomings make TIFF a very non-extensible format which by
-design will result in the loss of non-standard information.</p>
+<p>Mindezek a hiányosságok a TIFF-et nagyon nem bővíthető formátummá teszik,
+amely tervezésénél fogva a nem szabványos információ elvesztéséhez vezet.</p>
 
-<p>And we don't learn from our mistakes (OK, maybe some of us can, but
-apparently not big corporations like Adobe or Microsoft), because the new
-DNG and WDP formats are TIFF-based too.</p>
+<p>És nem tanulunk a hibáinkból (jó, talán néhányan igen, de a nagy cégek,
+mint az Adobe vagy a Microsoft, láthatóan nem), mert az új DNG- és WDP-formátum
+szintén TIFF-alapú.</p>
 
-<p>The EXIF specification also has some significant shortcomings to add to the
-TIFF problems, like minimal special character abilities, no language support,
-and no way to specify time zone.</p>
+<p>Az EXIF-specifikációnak is van néhány jelentős hiányossága a
+TIFF-problémákon felül, mint például a minimális speciáliskarakter-kezelés, a
+nyelvi támogatás hiánya és az, hogy nincs mód az időzóna megadására.</p>
 
 <a name='Maker'></a>
-<h3>EXIF Maker Notes</h3>
-<p>Maker notes are a can of worms.  The EXIF specification unfortunately
-made no mention about the information format of the maker notes.  If
-properly designed, the specification would have provided a maker note IFD
-tag to allow IFD-style maker notes to be used.  Many manufacturers
-implemented it this way, but each with a different technique and many with
-<a href="idiosyncracies.html">odd quirks</a>. This deficiency combined with
-problems in the TIFF (EXIF) format mean that most software will quite
-unknowingly scramble your maker notes when an image is rewritten.  To
-prevent this, specific knowledge about files written by individual
-manufacturers is necessary, and of course the manufacturers are not prone to
-divulging this information to the public so it must all be reverse
-engineered.</p>
+<h3>EXIF maker note-ok</h3>
+<p>A maker note-ok egy darázsfészek. Az EXIF-specifikáció sajnos semmit sem
+mondott a maker note-ok információformátumáról. Ha megfelelően tervezték volna,
+a specifikáció biztosított volna egy maker note IFD-taget, amely lehetővé tette
+volna IFD-stílusú maker note-ok használatát. Sok gyártó így is valósította meg,
+de mindegyik más technikával, és sokan <a href="idiosyncracies.html">furcsa
+sajátosságokkal</a>. Ez a hiányosság a TIFF (EXIF) formátum problémáival
+kombinálva azt jelenti, hogy a legtöbb szoftver egészen öntudatlanul
+összezavarja a maker note-jaidat, amikor egy képet újraír. Ennek megelőzéséhez
+az egyes gyártók által írt fájlokról szóló konkrét ismeretek szükségesek, és a
+gyártók természetesen nem hajlamosak ezt az információt a nyilvánossággal
+megosztani, így az egészet visszafejtéssel kell kideríteni.</p>
 
-<p>The official TIFF recommendation is to delete unknown information when
-rewriting an image<a class=ref href="#ref1">[1]</a>, and this irresponsible
-strategy has been adopted by some applications such as Adobe Photoshop,
-resulting in a total loss of maker note information. This is very
-unfortunate because even corrupted maker notes contain useful information,
-and smart utilities (like ExifTool) are often able to recover the
-information from damaged maker notes.</p>
+<p>A hivatalos TIFF-ajánlás az, hogy az ismeretlen információt egy kép
+újraírásakor törölni kell<a class=ref href="#ref1">[1]</a>, és ezt a
+felelőtlen stratégiát egyes alkalmazások, például az Adobe Photoshop, át is
+vették, ami a maker note-információ teljes elvesztéséhez vezet. Ez nagyon
+sajnálatos, mert még a sérült maker note-ok is hasznos információt
+tartalmaznak, és az okos segédeszközök (mint az ExifTool) gyakran képesek
+visszanyerni az információt a sérült maker note-okból.</p>
 
 <a name='JPEG'></a>
 <h3>JPEG</h3>
-<p>The JPEG format acts only as a container for meta information, and
-defines no meta information format itself.  But it sucks just a as a
-container format because it limits the maximum contiguous block size to
-64kB.  This causes problems because many cameras store more than 64kB of
-additional information in their JPEG images.  Usually, this is due to the
-medium-sized JPEG image that many cameras embed for preview purposes. It
-would have been nice if there was a standard way to embed this preview in
-JPEG images (without the 64kB limitation).  <i class=lt>[Update: In February
-2009 CIPA released the MPF format specification which allows storage of
-preview images larger than 64kB, but unfortunately this specification
-<a href="standards.html#MPF">has problems of its own</a>.]</i></p>
+<p>A JPEG-formátum csak konténerként működik a metainformáció számára, és maga
+nem definiál metainformáció-formátumot. De konténerformátumként is rossz, mert
+a maximális összefüggő blokkméretet 64 kB-ra korlátozza. Ez problémákat okoz,
+mert sok fényképezőgép 64 kB-nál több kiegészítő információt tárol a
+JPEG-képeiben. Ez általában a közepes méretű JPEG-képnek köszönhető, amelyet
+sok fényképezőgép előnézeti célból ágyaz be. Jó lett volna, ha lett volna
+szabványos mód ennek az előnézetnek a beágyazására a JPEG-képekbe (a 64 kB-os
+korlátozás nélkül). <i class=lt>[Frissítés: 2009 februárjában a CIPA kiadta az
+MPF formátumspecifikációt, amely lehetővé teszi a 64 kB-nál nagyobb előnézeti
+képek tárolását, de sajnos ennek a specifikációnak
+<a href="standards.html#MPF">megvannak a maga problémái</a>.]</i></p>
 
-<p>Aside:  The EXIF specification could have easily allowed the information
-to span multiple JPEG segments, which would have been smart, but still wouldn't
-have solved the problem entirely since it could result in a non-contiguous
-preview image (this would be a problem for cameras since they typically want to
-use this image for quick review of pictures, and re-mapping the image into a
-contiguous memory space would be costly). <i class=lt>[According to the November
-2014 XMP specification (part 3, page 13), Adobe allows multi-segment EXIF, and
-this is supported by ExifTool 10.97 and later.]</i></p>
+<p>Megjegyzés: az EXIF-specifikáció könnyen megengedhette volna, hogy az
+információ több JPEG-szegmensen átnyúljon, ami okos lett volna, de még így sem
+oldotta volna meg teljesen a problémát, mivel nem összefüggő előnézeti képet
+eredményezhetett volna (ez gond lenne a fényképezőgépeknél, mivel általában ezt
+a képet szeretnék használni a képek gyors áttekintéséhez, és a kép összefüggő
+memóriaterületre való átleképezése költséges lenne). <i class=lt>[A 2014.
+novemberi XMP-specifikáció (3. rész, 13. o.) szerint az Adobe megengedi a
+többszegmenses EXIF-et, és ezt az ExifTool 10.97-től kezdve támogatja.]</i></p>
 
 <a name='IPTC'></a>
 <h3>IPTC IIM</h3>
-<p>IPTC IIM earns a few points because it is the easiest to process of the
-common meta information formats.  However, the format is overly restrictive
-and not very extensible.  Format information and human-readable tag names
-are not part of the specification, so it is not possible to meaningfully
-interpret unknown values.  Also, there are many interdependencies between
-tags that make it very annoying for writing, and the special character
-support is ill-conceived.</p>
+<p>Az IPTC IIM szerez néhány pontot, mert a gyakori metainformáció-formátumok
+közül ezt a legkönnyebb feldolgozni. A formátum azonban túlzottan korlátozó és
+nem túl bővíthető. A formátuminformáció és az ember által olvasható tagnevek
+nem részei a specifikációnak, így nem lehet értelmesen értelmezni az ismeretlen
+értékeket. Ezenkívül sok kölcsönös függőség van a tagek között, ami az írást
+nagyon idegesítővé teszi, a speciáliskarakter-támogatás pedig elhibázott.</p>
 
 <a name='XMP'></a>
 <h3>XMP</h3>
-<p>The XMP format is a good example of a designed-by-committee
-specification. It is based on XML, which is much more complicated than
-necessary and tries to make everyone happy by providing a multitude of
-format styles and features (shorthand format, etc, etc).  This makes it very
-difficult to properly implement the complete specification.  Not even the
-Adobe software supports all of the format options of their own XMP
-specification.  And the format is exceedingly verbose, wasting disk space,
-bandwidth and time.</p>
+<p>Az XMP-formátum jó példa a bizottság által tervezett specifikációra. Az
+XML-en alapul, ami sokkal bonyolultabb a szükségesnél, és a formátumstílusok és
+szolgáltatások sokaságával (rövidített formátum stb., stb.) próbál mindenkinek
+kedvében járni. Emiatt nagyon nehéz a teljes specifikációt megfelelően
+megvalósítani. Még az Adobe szoftvere sem támogatja a saját
+XMP-specifikációjuk összes formátumopcióját. A formátum ráadásul rendkívül
+bőbeszédű, lemezterületet, sávszélességet és időt pazarol.</p>
 
-<p>Also, XMP only supports textual information.  Binary information must be
-text-encoded if stored in XMP.  This makes it very bulky, slow and
-completely unsuitable for storage of binary information.</p>
+<p>Ezenkívül az XMP csak szöveges információt támogat. A bináris információt
+szövegként kell kódolni, ha XMP-ben tárolják. Ettől nagyon terjedelmessé,
+lassúvá és a bináris információ tárolására teljesen alkalmatlanná válik.</p>
 
-<p>Mainly because of the complexity of the specification, and despite
-Adobe's best efforts, XMP still isn't very well supported by meta
-information editing tools.  The best hope for small application developers
-is to link against an off-the-shelf XMP or XML library.  Apparently Adobe
-realizes this and is now providing an XMP development kit, but this solution
-is only useful for those platforms and computer languages that they choose
-to support.</p>
+<p>Főleg a specifikáció összetettsége miatt, és az Adobe legjobb erőfeszítései
+ellenére az XMP-t a metainformáció-szerkesztő eszközök még mindig nem
+támogatják túl jól. A legjobb remény a kis alkalmazásfejlesztők számára az, ha
+egy kész XMP- vagy XML-könyvtárhoz linkelnek. Az Adobe láthatóan felismeri ezt,
+és most már biztosít egy XMP-fejlesztőkészletet, de ez a megoldás csak azokon a
+platformokon és számítógépes nyelveken hasznos, amelyeket ők úgy döntenek, hogy
+támogatnak.</p>
 
 <a name='PDF'></a>
 <h3>PDF</h3>
-<p>...and I thought XMP was too complicated.  PDF is just insane.  Because
-of this, it is unlikely that ExifTool will ever support this format for
-writing. <i class=lt>[Dec. 18, 2007 Update: I have just added PDF write support
-using the incremental update feature of PDF.  It was still a bit of work, but
-somewhat simpler (and MUCH faster!) than rewriting the entire PDF.  But there
-are disadvantages: The resulting PDF is not "linearized", and there are privacy
-and security issues with leaving old metadata in the file.]</i></p>
+<p>...és én még azt hittem, az XMP túl bonyolult. A PDF egyszerűen őrület.
+Emiatt nem valószínű, hogy az ExifTool valaha is támogatni fogja ezt a
+formátumot íráshoz. <i class=lt>[2007. december 18-i frissítés: Épp most adtam
+hozzá a PDF-írás támogatását a PDF inkrementális frissítés funkciójával. Ez így
+is némi munka volt, de valamivel egyszerűbb (és SOKKAL gyorsabb!), mint a teljes
+PDF újraírása. De vannak hátrányai: az így kapott PDF nem „linearizált", és
+adatvédelmi és biztonsági problémák merülnek fel, ha régi metaadatokat hagyunk
+a fájlban.]</i></p>
 
 <a name='PNG'></a>
 <h3>PNG</h3>
-<p>PNG sucks because meta information can be stored only in text format.
-This was a huge mistake, and as a work-around software (eg. ImageMagick)
-must encode binary information in ASCII-hex, then compress it to offset the
-increase in size, and store it as a compressed text block.  This adds
-unnecessary complexity, greatly slows down processing, and makes it much
-harder to develop software which supports PNG meta information.
-<i class=lt>[July 2017: PNG adopts eXIf chunk to allow EXIF metadata to be
-stored in native binary format.  This is useful, but still doesn't allow storage
-of arbitrary binary metadata.]</i></p>
+<p>A PNG azért rossz, mert a metainformáció csak szöveges formátumban
+tárolható. Ez hatalmas hiba volt, és megkerülő megoldásként a szoftvernek (pl.
+ImageMagick) a bináris információt ASCII-hexben kell kódolnia, majd tömörítenie,
+hogy ellensúlyozza a méretnövekedést, és tömörített szövegblokként kell
+tárolnia. Ez felesleges bonyolultságot ad hozzá, jelentősen lelassítja a
+feldolgozást, és sokkal nehezebbé teszi a PNG-metainformációt támogató
+szoftverek fejlesztését. <i class=lt>[2017. július: a PNG átveszi az eXIf
+darabot, hogy az EXIF-metaadatokat natív bináris formátumban lehessen tárolni.
+Ez hasznos, de továbbra sem teszi lehetővé tetszőleges bináris metaadatok
+tárolását.]</i></p>
 
 <a name='PICT'></a>
 <h3>PICT</h3>
-<p>The PICT format just plain sucks.  It is one of the worst-designed image
-formats in existence, second only to FlashPix.  I don't believe that it was
-originally designed as a file format.  Instead it appears to have emerged
-from the internal Apple QuickDraw structures.  The files are not designed to
-be processed by any software other than the Mac OS.  Intimate knowledge of
-the QuickDraw structures is required just to parse the PICT image, even if
-the reader doesn't care about the contained information.  Because of this,
-PICT images are very fragile and a simple data error or programming bug will
-invalidate an entire image.  Possibly for these reasons the PICT format
-never gained popularity outside the Apple world.  Also, the concept of meta
-information is all but ignored in the PICT design.</p>
+<p>A PICT-formátum egészen egyszerűen rossz. Ez az egyik legrosszabbul
+megtervezett képformátum, amely létezik, csak a FlashPix előzi meg. Nem hiszem,
+hogy eredetileg fájlformátumnak tervezték volna. Ehelyett úgy tűnik, a belső
+Apple QuickDraw-struktúrákból bukkant elő. A fájlokat nem arra tervezték, hogy
+a Mac OS-en kívül bármilyen szoftver feldolgozza őket. A PICT-kép
+értelmezéséhez a QuickDraw-struktúrák beható ismerete szükséges, még akkor is,
+ha az olvasót nem érdekli a benne foglalt információ. Emiatt a PICT-képek
+nagyon törékenyek, és egy egyszerű adathiba vagy programozási hiba egy teljes
+képet érvénytelenít. Valószínűleg ezen okok miatt a PICT-formátum sosem lett
+népszerű az Apple világán kívül. Ráadásul a metainformáció fogalmát a
+PICT-tervezés szinte teljesen figyelmen kívül hagyja.</p>
 
 <a name='FlashPix'></a>
 <h3>FlashPix</h3>
-<p>Oh. My. God.  Don't get me started on this one.  Let's just say that basing
-an image file format on the File Allocation Table (FAT) structure of a floppy
-disk with fixed 512-byte sectors is monumentally idiotic.  Microsoft Word,
-Excel and PowerPoint documents also use this insane format.</p>
+<p>Te. Jó. Ég. Erről jobb, ha nem is beszélek. Mondjuk csak annyit, hogy egy
+képfájlformátumot egy floppylemez fájlallokációs táblájának (FAT) szerkezetére
+építeni, fix 512 bájtos szektorokkal, monumentálisan idióta ötlet. A Microsoft
+Word-, Excel- és PowerPoint-dokumentumok szintén ezt az őrült formátumot
+használják.</p>
 
 <a name='DICOM'></a>
-<h3>DICOM Medical Images</h3>
-<p>The DICOM format is reasonably well designed.  The UID's are cumbersome,
-but achieve their purpose.  The biggest bungle in the design is the implicit
-VR syntax, which presumably exists for historical reasons to provide
-backward compatibility with pre-existing ACR-NEMA images.  The DICOM
-specification document is horrible and obviously written by committee, and
-was possibly the single largest impediment to implementing support for this
-format.</p>
+<h3>DICOM orvosi képek</h3>
+<p>A DICOM-formátum meglehetősen jól megtervezett. Az UID-k nehézkesek, de
+betöltik a szerepüket. A tervezés legnagyobb baklövése az implicit VR-szintaxis,
+amely feltehetően történelmi okokból létezik, hogy visszamenőleges
+kompatibilitást biztosítson a korábbi ACR-NEMA-képekkel. A
+DICOM-specifikációdokumentum borzalmas, és nyilvánvalóan bizottság írta, és
+talán ez volt a legnagyobb egyes akadálya annak, hogy ehhez a formátumhoz
+támogatást valósítsak meg.</p>
 
-<p>Technical: The files would be easier to parse if the transfer syntax
-became effective immediately after the transfer syntax data element instead
-of at the end of the meta information group.  Also, the deflated data should
-have contained the zlib header, as in PNG and PDF images.  This would make
-it easier to read and allow CRC validation of the datastream. -- Can you
-tell I wrote this just after adding DICOM support to ExifTool?</p>
+<p>Technikai: a fájlokat könnyebb lenne értelmezni, ha az átviteli szintaxis
+közvetlenül az átviteli szintaxis adatelem után lépne életbe, nem pedig a
+metainformáció-csoport végén. Ráadásul a deflate-elt adatnak tartalmaznia
+kellett volna a zlib-fejlécet, ahogy a PNG- és PDF-képekben. Ettől könnyebb
+lenne olvasni, és lehetővé tenné az adatfolyam CRC-ellenőrzését. -- Meg tudod
+mondani, hogy ezt épp azután írtam, hogy hozzáadtam a DICOM-támogatást az
+ExifToolhoz?</p>
 
 <a name='AVCHD'></a>
-<h3>AVCHD (.M2TS) <span class='sm norm'><i class=lt>(added 2009-10-29)</i></span></h3>
-<p>This format is used in .M2TS video files (and Blu-Ray HD DVD's).  It is
-painfully obvious that this was never designed as a storage format.  It uses
-MPEG-2 transport stream (M2TS) container, which is a communications protocol
-and never should have been used for storage.  The M2TS format is based on a
-188-byte packet size which makes no sense for modern filesystems.  And to
-make things worse, metadata in AVCHD files is stored in the H.264 video
-stream (!!) which uses insane and convoluted data structures such as the
-variable-bit-length exponential-Golomb which are painful and inefficient to
-parse in software, and as far as I can tell the format for the metadata
-stored in these streams is proprietary and undocumented.</p>
+<h3>AVCHD (.M2TS) <span class='sm norm'><i class=lt>(hozzáadva 2009-10-29)</i></span></h3>
+<p>Ezt a formátumot .M2TS videofájlokban (és Blu-Ray HD DVD-ken) használják.
+Fájdalmasan nyilvánvaló, hogy ezt sosem tárolóformátumnak tervezték. MPEG-2
+transport stream (M2TS) konténert használ, ami egy kommunikációs protokoll, és
+sosem lett volna szabad tárolásra használni. Az M2TS-formátum 188 bájtos
+csomagméretre épül, aminek a modern fájlrendszerekben semmi értelme. És ami még
+rosszabb, az AVCHD-fájlokban a metaadatok a H.264 videofolyamban vannak tárolva
+(!!), amely olyan őrült és zavaros adatszerkezeteket használ, mint a
+változó bithosszúságú exponenciális Golomb, amelyeket fájdalmas és nem
+hatékony szoftverben értelmezni, és amennyire meg tudom állapítani, az ezekben
+a folyamokban tárolt metaadatok formátuma zárt és dokumentálatlan.</p>
 
 <a name='ISO'></a>
-<h3>ISO Considered Harmless</h3>
-<p>This is not a meta information format, but since many format
-specifications are imprisoned by the ISO it deserves mentioning...</p>
+<h3>Az ISO ártalmatlannak tekintve</h3>
+<p>Ez nem metainformáció-formátum, de mivel sok formátumspecifikáció az ISO
+fogságában van, megérdemli az említést...</p>
 
-<p>In my experience, the International Standards Organization is extremely
-counter-productive.  Their goal is to promote standardization, but by
-charging too much money for copies of the standards documents they defeat
-their own purpose.  The effect is that small companies and individuals
-developing software (including open source software such as ExifTool) do not
-have access to the official standard.  Instead, software is often based on
-old, obsolete documents or drafts which are sometimes publicly available, or
-on 3rd party descriptions which are often incomplete.  To sum things up: ISO
-sucks.</p>
+<p>Tapasztalatom szerint a Nemzetközi Szabványügyi Szervezet rendkívül
+ellenkontraproduktív. A céljuk a szabványosítás előmozdítása, de azzal, hogy
+túl sok pénzt kérnek a szabványdokumentumok másolataiért, meghiúsítják a saját
+céljukat. Ennek az a hatása, hogy a szoftvert fejlesztő kisvállalatoknak és
+magánszemélyeknek (beleértve az olyan nyílt forráskódú szoftvereket is, mint az
+ExifTool) nincs hozzáférésük a hivatalos szabványhoz. Ehelyett a szoftverek
+gyakran régi, elavult dokumentumokra vagy tervezetekre épülnek, amelyek
+időnként nyilvánosan elérhetők, vagy harmadik felek leírásaira, amelyek gyakran
+hiányosak. Összefoglalva: az ISO rossz.</p>
 
 <hr>
-<h2>OK.  So all those formats suck.  What doesn't?</h2>
+<h2>Rendben. Szóval mindezek a formátumok rosszak. Melyik nem?</h2>
 
 <a name='CRW'></a>
-<h3>Canon CRW Images (CIFF format)</h3>
-<p>This format uses a directory structure similar to TIFF, but all offsets
-are relative and unknown information can handled properly when rewriting.
-Because of this, it is much more extensible than TIFF, but the format is
-still limited by 16-bit integer tag ID's among other TIFF weaknesses. It
-isn't great, but at least it doesn't suck.</p>
+<h3>Canon CRW képek (CIFF-formátum)</h3>
+<p>Ez a formátum a TIFF-hez hasonló könyvtárszerkezetet használ, de minden
+eltolás relatív, és az ismeretlen információt megfelelően lehet kezelni
+újraíráskor. Emiatt sokkal bővíthetőbb, mint a TIFF, de a formátumot a többi
+TIFF-gyengeség mellett még mindig korlátozzák a 16 bites egész tag-ID-k. Nem
+nagyszerű, de legalább nem rossz.</p>
 
 <a name='QuickTime'></a>
-<h3>QuickTime Videos</h3>
-<p>The Apple QuickTime MOV format is very nice format.  (Which is a breath
-of fresh air after the Apple PICT travesty.)  It was a smart move to use
-this format for the MP4 specification.  I would only change 2 things about
-this format: 1) Use longer tag names instead of the current 4 characters (I
-know that 4 characters is convenient because it can be used as an integer in
-lookup tables, but it would be nice if the tag names were a bit more
-meaningful). 2) Add a format code to the Atom definition so simple unknown
-information could be decoded properly.  These changes would allow some
-unknown information to be interpreted, which would make it possible for
-information added by 3rd parties to be useful.</p>
+<h3>QuickTime videók</h3>
+<p>Az Apple QuickTime MOV-formátum nagyon szép formátum. (Ami friss
+levegő az Apple PICT-paródia után.) Okos húzás volt ezt a formátumot használni
+az MP4-specifikációhoz. Csak 2 dolgot változtatnék meg ezen a formátumon: 1)
+Hosszabb tagneveket használnék a jelenlegi 4 karakter helyett (tudom, hogy a 4
+karakter kényelmes, mert egészként használható a kikeresési táblákban, de jó
+lenne, ha a tagnevek egy kicsit értelmesebbek lennének). 2) Hozzáadnék egy
+formátumkódot az Atom definíciójához, hogy az egyszerű ismeretlen információt
+megfelelően lehessen dekódolni. Ezek a változtatások lehetővé tennék némely
+ismeretlen információ értelmezését, ami lehetővé tenné, hogy a harmadik felek
+által hozzáadott információ hasznos legyen.</p>
 
-<p>... but there are some significant problems with the QuickTime specification:</p>
+<p>... de van néhány jelentős probléma a QuickTime-specifikációval:</p>
 
-<p>0) The biggest problem with some QuickTime-based files (ie. MOV, MP4,
-HEIC) is that atoms may store absolute offsets into the media data, and
-these pointers are easily invalidated by editing the file.  This puts a huge
-burdon on the editing application to update all necessary pointers, and
-makes it much, much harder than it should be to edit these files (it takes
-significant effort to just determine which atoms may containing pointers).</p>
+<p>0) Néhány QuickTime-alapú fájl (azaz MOV, MP4, HEIC) legnagyobb problémája
+az, hogy az atomok abszolút eltolásokat tárolhatnak a médiaadatokba, és ezek a
+mutatók könnyen érvénytelenné válnak a fájl szerkesztésével. Ez hatalmas terhet
+ró a szerkesztőalkalmazásra, hogy minden szükséges mutatót frissítsen, és
+sokkal, de sokkal nehezebbé teszi ezeknek a fájloknak a szerkesztését, mint
+amilyennek lennie kellene (jelentős erőfeszítésbe kerül már csak annak
+megállapítása is, mely atomok tartalmazhatnak mutatókat).</p>
 
-<p>1) The metadata organization is a mess because tags may be stored in more
-than one location (eg. UserData vs. InfoList), and conflicting metadata
-directories may exist, even in the same location (as written by iTunes).</p>
+<p>1) A metaadatok szervezése zűrzavaros, mert a tagek több helyen is
+tárolhatók (pl. UserData vs. InfoList), és egymásnak ellentmondó
+metaadat-könyvtárak létezhetnek, akár ugyanazon a helyen is (ahogy az iTunes
+írja).</p>
 
-<p>2) The length of 'udta' text strings with language codes is written
-incorrectly by many (most?) utilities, including Apple iTunes.  The language
-strings are supposed to use a "small integer atom format" where the first
-two bytes give the size of the string including the length word and language
-codes.  But often the size doesn't include these 4 bytes, which sort of
-defeats the purpose of the multiple languages because it is difficult to
-parse past the first entry if you don't know the size.</p>
+<p>2) A nyelvi kódokkal ellátott 'udta' szöveges sztringek hosszát sok (a
+legtöbb?) segédeszköz helytelenül írja, beleértve az Apple iTunes-t is. A
+nyelvi sztringeknek egy „small integer atom format"-ot kellene használniuk,
+ahol az első két bájt megadja a sztring méretét, beleértve a hosszúságszót és a
+nyelvi kódokat is. De a méret gyakran nem tartalmazza ezt a 4 bájtot, ami
+mintegy meghiúsítja a több nyelv célját, mert nehéz az első bejegyzésen túl
+értelmezni, ha nem ismered a méretet.</p>
 
-<p>3) Cameras without time zone information are forced to write date/time
-tags as local time, even though the specification says these should be UTC.
-This leads to an unresolvable inconsistency in the time offset because
-one can not distinguish between these two cases.</p>
+<p>3) Az időzóna-információ nélküli fényképezőgépek kénytelenek a dátum/idő
+tageket helyi időként írni, még akkor is, ha a specifikáció szerint ezeknek
+UTC-nek kellene lenniük. Ez feloldhatatlan következetlenséghez vezet az
+időeltolásban, mert nem lehet megkülönböztetni ezt a két esetet.</p>
 
 <a name='MIE'></a>
-<h3>My Format (Meta Information Encapsulation, or "MIE")</h3>
-<p>Now it is time to put my money where my mouth is:  I have designed a
-format which doesn't suck.  It is called "MIE", which stands for Meta
-Information Encapsulation.</p>
+<h3>A saját formátumom (Meta Information Encapsulation, avagy „MIE")</h3>
+<p>Most eljött az ideje, hogy tettekkel is bizonyítsak: terveztem egy
+formátumot, amely nem rossz. „MIE"-nek hívják, ami a Meta Information
+Encapsulation rövidítése.</p>
 
-<p>The MIE format is hierarchical like QuickTime, but it uses meaningful tag
-names and specifies a data format for all values.  As well, this format
-offers a number of other features:</p>
+<p>A MIE-formátum hierarchikus, mint a QuickTime, de értelmes tagneveket
+használ, és minden értékhez adatformátumot ad meg. Ezenkívül ez a formátum
+számos további szolgáltatást kínál:</p>
 
 <ul>
-<li>Can be used as a wrapper around any type of file, as a trailer appended
-    to other formats, or as a stand-alone meta information format
-<li>Extensible
-<li>Compact
-<li>Meaningful tag ID's
-<li>Streamable (and single-pass writing possible)
-<li>Relocatable data elements (ie. no fixed offsets)
-<li>Relatively simple to implement reader/writer
-<li>Supports large data lengths (up to 4GB*4GB)
-<li>Localized text feature
-<li>Built-in support for numerical units of measure
-<li>Multiple documents in a single file
+<li>Használható bármilyen típusú fájl köré wrapperként, más formátumokhoz
+    fűzött trailerként, vagy önálló metainformáció-formátumként
+<li>Bővíthető
+<li>Kompakt
+<li>Értelmes tag-ID-k
+<li>Streamelhető (és lehetséges az egymenetes írás)
+<li>Áthelyezhető adatelemek (azaz nincsenek fix eltolások)
+<li>Az olvasó/író viszonylag egyszerűen megvalósítható
+<li>Nagy adathosszokat támogat (egészen 4 GB*4 GB-ig)
+<li>Lokalizált szöveg funkció
+<li>Beépített támogatás a numerikus mértékegységekhez
+<li>Több dokumentum egyetlen fájlban
 </ul>
 
-<p>The specification for this format can be found
-<a href="MIE1.1-20070121.pdf">here</a>, and is implemented in
-<a href="http://search.cpan.org/dist/Image-ExifTool/lib/Image/ExifTool/MIE.pm">Image::ExifTool::MIE.pm</a></p>
+<p>Ennek a formátumnak a specifikációja
+<a href="MIE1.1-20070121.pdf">itt</a> található, és megvalósítása az
+<a href="http://search.cpan.org/dist/Image-ExifTool/lib/Image/ExifTool/MIE.pm">Image::ExifTool::MIE.pm</a>-ben van</p>
 
-<p>OK.  Flame away.  I can take it.</p>
+<p>Rendben. Támadjatok csak. Kibírom.</p>
 
 <a name="refs"></a>
-<h3>References</h3>
+<h3>Hivatkozások</h3>
 
 <ol>
-<li><a name="ref1" href="http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf">http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf</a>, page 26</li>
+<li><a name="ref1" href="http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf">http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf</a>, 26. o.</li>
 </ol>
 
 <hr>
-<i>Created Nov 15, 2005</i><br>
-<i>Last revised Feb 4, 2020</i>
-<p class='lf'><a href="index.html">&lt;-- Back to ExifTool home page</a></p>
+<i>Létrehozva: 2005. november 15.</i><br>
+<i>Utoljára módosítva: 2020. február 4.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool kezdőlapjára</a></p>
 </body>
 </html>

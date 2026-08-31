@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
 <head>
-  <title>ExifTool For Dummies</title>
+  <title>ExifTool kezdőknek</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 <style type="text/css">
 <!--
@@ -18,45 +18,45 @@ pre  { color: #800; margin-left: 2em }
 <br><a href="#Linux">Linux</a>
 </div>
 
-<h1 class='up'>ExifTool For Dummies</h1>
+<h1 class='up'>ExifTool kezdőknek</h1>
 
-<p class=red><i>NOTE: THIS DOCUMENT IS A WORK IN PROGRESS</i></p>
+<p class=red><i>MEGJEGYZÉS: EZ A DOKUMENTUM MÉG KÉSZÜLŐBEN VAN</i></p>
 
-<p>First you must install ExifTool.  If you have not done so already, follow the
-<a href="install.html">installation instructions</a> for your platform before
-proceeding, then refer to the appropriate section below to get started using
-ExifTool.</p>
+<p>Először telepítened kell az ExifToolt. Ha ezt még nem tetted meg, kövesd a
+platformodhoz tartozó <a href="install.html">telepítési utasításokat</a>, mielőtt
+továbblépsz, majd az alábbi megfelelő szakasz alapján kezdd el használni az
+ExifToolt.</p>
 
 <a name="Windows"></a>
 <h2>Windows</h2>
 
-<p>After the basic ExifTool installation, you should now have a copy of the
-ExifTool application on your desktop. <span class=lt>(The name of the
-application is <code>exiftool(-k).exe</code>, but whether or not you see the
-<code>.exe</code> extension depends on your system settings.)</span></p>
+<p>Az alapszintű ExifTool-telepítés után mostanra az ExifTool alkalmazás egy
+példányának az asztalodon kell lennie. <span class=lt>(Az alkalmazás neve
+<code>exiftool(-k).exe</code>, de az, hogy látod-e a <code>.exe</code>
+kiterjesztést, a rendszerbeállításaidtól függ.)</span></p>
 
-<p class=red>Note that if you are running an antivirus scanner, you may need
-to add an exception for the ExifTool app to be able to run it.</p>
+<p class=red>Vedd figyelembe, hogy ha víruskeresőt futtatsz, előfordulhat, hogy
+kivételt kell hozzáadnod az ExifTool alkalmazáshoz, hogy futtatni tudd.</p>
 
-<h3>Extracting Metadata</h3>
+<h3>Metaadatok kinyerése</h3>
 
-<p><b>Windows Drag and Drop</b></p>
+<p><b>Windows fogd és vidd</b></p>
 
 <ol>
-<li>Drag and drop a file or folder onto the <code>exiftool(-k)</code> icon on
-your desktop.</li>
+<li>Húzz egy fájlt vagy mappát az asztalodon lévő <code>exiftool(-k)</code>
+ikonra.</li>
 </ol>
 
-<p>After doing this, a black window will open with a list of all metadata in the
-image.  Make the window larger or use the scroll bar on the right side to see
-any information which may have scrolled out of the window.</p>
+<p>Ezután egy fekete ablak nyílik meg, benne a kép összes metaadatának
+listájával. Nagyítsd meg az ablakot, vagy használd a jobb oldali görgetősávot,
+hogy lásd azokat az információkat is, amelyek esetleg kigörögtek az ablakból.</p>
 
-<p>The "<code>(-k)</code>" in the exiftool file name causes exiftool to pause
-with the message "<code>-- press any key --</code>" after extracting metadata
-from the file.  When you are done viewing the metadata, press any key to close
-the window.</p>
+<p>Az exiftool fájlnévben lévő „<code>(-k)</code>" hatására az exiftool a fájl
+metaadatainak kinyerése után megáll a „<code>-- press any key --</code>"
+üzenettel. Amikor végeztél a metaadatok megtekintésével, nyomj meg egy
+tetszőleges billentyűt az ablak bezárásához.</p>
 
-<p class=red><i>EXPLAIN ABOUT EXIFTOOL OPTIONS AND WINDOWS SHORTCUTS, AND SHOW SOME PICTURES</i></p>
+<p class=red><i>MAGYARÁZAT AZ EXIFTOOL-OPCIÓKRÓL ÉS A WINDOWS-PARANCSIKONOKRÓL, ÉS NÉHÁNY KÉP</i></p>
 <!--Windows 7:
 1) Right click.  Select "Create shortcut"
 2) Right click on newly created "exiftool(-k) - Shortcut" shortcut
@@ -84,70 +84,70 @@ Running from command line (Windows 7):
 - temp dir was c:\Users\USER\AppData\Local\Temp
 -->
 
-<p><b>Windows Command Line</b></p>
+<p><b>Windows parancssor</b></p>
 
-<p>Before following the steps below, you must first install exiftool for use
-from the command line by following steps 1 through 4 in the
-<a href="install.html#Windows">installation instructions for the Windows
-Stand-Alone version</a>.</p>
+<p>Az alábbi lépések követése előtt először telepítened kell az exiftoolt a
+parancssorból való használathoz, a
+<a href="install.html#Windows">Windows önálló (Stand-Alone) verzió telepítési
+utasításainak</a> 1–4. lépését követve.</p>
 
-<p>Steps to run exiftool from the command line:</p>
+<p>Az exiftool parancssorból való futtatásának lépései:</p>
 
 <ol>
-<li>Click the Windows "Start" menu and run the "cmd" application:
-<ul><li>In Windows XP, select "Run..." from the start menu, then type "cmd" and
-press ENTER.</li>
-<li>In Windows 7, search for "cmd" from the "Start" menu, then press
-ENTER.</li>
-<li>In Windows 8, move the pointer to one of the right side corners to bring up
-the side bar, select "Search", and type "cmd" into the search box.  Then click
-on the command-line icon that should appear.</li>
+<li>Kattints a Windows „Start" menüjére, és futtasd a „cmd" alkalmazást:
+<ul><li>Windows XP-ben válaszd a „Futtatás…" lehetőséget a start menüből, majd
+írd be, hogy „cmd", és nyomj ENTER-t.</li>
+<li>Windows 7-ben keress rá a „cmd"-re a „Start" menüből, majd nyomj
+ENTER-t.</li>
+<li>Windows 8-ban vidd az egérmutatót az egyik jobb oldali sarokba az oldalsáv
+előhívásához, válaszd a „Keresés" lehetőséget, és írd be a „cmd"-t a
+keresőmezőbe. Majd kattints a megjelenő parancssori ikonra.</li>
 </ul></li>
-<li>Type "exiftool" followed by a SPACE on the cmd window.</li>
-<li>Drag and drop files and folders on the cmd window.
-<br><span class=lt>(This saves you typing the full path names of the files/folders.)</span></li>
-<li>Press ENTER to view the metadata from the files you dropped.</li>
+<li>Írd be a „exiftool"-t, majd egy SZÓKÖZT a cmd-ablakban.</li>
+<li>Húzz fájlokat és mappákat a cmd-ablakba.
+<br><span class=lt>(Ez megkíméli attól, hogy begépeld a fájlok/mappák teljes elérési útját.)</span></li>
+<li>Nyomj ENTER-t a ledobott fájlok metaadatainak megtekintéséhez.</li>
 </ol>
 
-<p class=red><i>GIVE SOME EXAMPLES AND PICTURES HERE</i></p>
+<p class=red><i>ITT NÉHÁNY PÉLDA ÉS KÉP</i></p>
 
-<h3>Writing Metadata</h3>
+<h3>Metaadatok írása</h3>
 
-<p class=red><i>MORE STUFF HERE (also explain shell quoting rules, path names, etc)</i></p>
+<p class=red><i>ITT TOVÁBBI TARTALOM (a shell idézőjelezési szabályait, az elérési utakat stb. is elmagyarázni)</i></p>
 
 <hr>
 <a name="Mac"></a>
 <h2>Mac OS X</h2>
 
-<p>After following the OS X installation instructions, ExifTool is ready
-for command-line use.</p>
+<p>Az OS X telepítési utasításainak követése után az ExifTool készen áll a
+parancssori használatra.</p>
 
-<h3>Extracting Metadata</h3>
+<h3>Metaadatok kinyerése</h3>
 
-<p>Follow these instructions to run ExifTool:</p>
+<p>Kövesd ezeket az utasításokat az ExifTool futtatásához:</p>
 
 <ol>
-<li>Launch the Terminal application from your /Applications/Utilities folder.</li>
-<li>Type "exiftool" followed by a SPACE in the Terminal window.</li>
-<li>Drag and drop files and folders on the Terminal window.
-<br><span class=lt>(This saves you typing the full path names of the files/folders.)</span></li>
-<li>Press RETURN to view the metadata from the files you dropped.</li>
+<li>Indítsd el a Terminal alkalmazást a /Applications/Utilities mappádból.</li>
+<li>Írd be a „exiftool"-t, majd egy SZÓKÖZT a Terminal ablakban.</li>
+<li>Húzz fájlokat és mappákat a Terminal ablakba.
+<br><span class=lt>(Ez megkíméli attól, hogy begépeld a fájlok/mappák teljes elérési útját.)</span></li>
+<li>Nyomj RETURN-t a ledobott fájlok metaadatainak megtekintéséhez.</li>
 </ol>
 
-<p class=red><i>GIVE SOME EXAMPLES AND PICTURES HERE</i></p>
+<p class=red><i>ITT NÉHÁNY PÉLDA ÉS KÉP</i></p>
 
-<h3>Writing Metadata</h3>
+<h3>Metaadatok írása</h3>
 
-<p class=red><i>MORE STUFF HERE (also explain shell quoting rules, path names, etc)</i></p>
+<p class=red><i>ITT TOVÁBBI TARTALOM (a shell idézőjelezési szabályait, az elérési utakat stb. is elmagyarázni)</i></p>
 
 <hr>
 <a name="Linux"></a>
 <h2>Linux</h2>
 
-<p>What?  A dummy running Linux?  I don't believe it.</p>
+<p>Mi? Egy kezdő, aki Linuxot használ? Nem hiszem el.</p>
 
 <hr>
-<i>Last revised Nov 17, 2017</i>
-<p class='lf'><a href="index.html">&lt;-- Back to ExifTool home page</a></p>
+<i>Utoljára módosítva: 2017. november 17.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool kezdőlapjára</a></p>
 </body>
 </html>
