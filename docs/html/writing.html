@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Metainformáció írása</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+pre  { color: #800; margin-left: 4em }
+-->
+</style>
+</head>
+<body>
+<div class='index'>
+<a href="#Abstract">Kivonat</a>
+<br><a href="#Background">Háttér</a>
+<br><a href="#Implementation">Jelenlegi megvalósítás</a>
+<br><a href="#Mandatory">Kötelező tagek</a>
+<br><a href="#JPEG">A JPEG szegmensméret-korlátja</a>
+<br><a href="#Preview">Az előnézeti kép problémája</a> (<i>frissítve: 2009-06-12</i>)
+<br><a href="#IFD0">IFD0/ExifIFD kétértelműség</a>
+</div>
+<h1 class='up'>Metainformáció írása</h1>
+<a name='Abstract'></a>
+<h3>Kivonat</h3>
+<p>A metainformáció írása bonyolultabb, mint elsőre látszik, ami az egyik oka
+lehet annak, hogy nagyon kevés segédprogram csinálja.  Az ExifTool tagneveket
+használ a fájlból kinyerhető különböző metainformáció-darabok azonosítására.  Az
+ExifTool több ezer különböző taget ismer fel, és ezen tagnevek közül sok közös a
+különböző metaadat-formátumok között (a WhiteBalance tag a legrosszabb: 65
+különböző helyen megtalálható [ExifTool 10.64]), és néha az információ akár egy
+formátumon belül is különböző helyeken tárolható.  Ezt párosítsd azzal, hogy sok
+gyártó dokumentálatlan formátumokban tárolja a metainformációt, amelyeket
+visszafejtéssel kell felderíteni (és mindegyiknek megvannak a maga
+sajátosságai), és máris nagyon összetett a helyzet.</p>
+
+<p>Az ExifTool megpróbálja a lehető legjobban leegyszerűsíteni ezt a helyzetet
+azzal, hogy ésszerű döntéseket hoz arról, hová írja az általad megadott
+információt, ugyanakkor rugalmas marad azzal, hogy szükség esetén lehetővé teszi a
+prioritásainak konfigurálását, vagy akár a döntéshozatali folyamat teljes
+felülbírálását.</p>
+
+<a name='Background'></a>
+<h3>Háttér</h3>
+<p>Sokáig ellenálltam annak, hogy írási képességeket adjak az ExifToolhoz, pedig
+gyakran kért szolgáltatás volt.  Az aggályaim ezzel a szolgáltatással
+kapcsolatban a következők voltak:</p>
+<ol>
+<li>Bonyolítaná az ExifTool felületét, és túl zavarossá tenné a szokásos
+felhasználók számára.</li>
+<li>Eléggé bonyolítaná a kódot ahhoz, hogy lassítsa a feldolgozást a szokásos
+használatnál.</li>
+<li>NAGYON sok munka lenne megvalósítani.</li>
+</ol>
+<p>Miután egy ideig gondolkodtam ezen, végül sikerült néhány megoldást
+kitalálnom:</p>
+
+<p>1. Terveztem egy felületet, amely szerintem könnyen használható azok számára,
+akik nem akarják ismerni a fájlszerkezet részleteit, ugyanakkor elég erős azok
+számára, akik nagyon konkrét dolgokat akarnak csinálni az információval.</p>
+
+<p>2. Az összes írási kódot a lehető legjobban különálló fájlokba izoláltam,
+amelyek szükség szerint automatikusan betöltődnek.  Ez gyorsan tartja a
+fordítást azok számára, akiknek nem kell az írási szolgáltatás.  Emellett az
+olvasási rutinokat változatlanul hagytam, így azokat nem lassítja az
+információíráshoz szükséges extra kód.  Sajnos ez azt jelentette, hogy nem
+kölcsönözhettem sok kódot az olvasási rutinokból (még több munka nekem!), de
+megvolt az az előnye, hogy olyan további optimalizálásokat végezhettem az írási
+rutinokban, amelyeket egyébként nem tudtam volna.  Bár ennek a megvalósításnak az
+indítási költségei elég magasak (csak íráshoz), több fájl kötegelt írásához
+elég gyorsnak kell lennie.</p>
+
+<p>3. Úgy döntöttem, hogy összeszorítom a fogam, és belefektetem a szükséges időt
+(...találd ki, mit csináltam a karácsonyi szabadságomon!).  Bár azt gondoltam,
+hogy egy ilyen nagy projekt jobban illene C++-ba (gyorsabb végrehajtás és
+szélesebb potenciális felhasználói bázis), miután eddig Perlben programoztam ezt,
+igazán megszerettem az automatikus memóriakezelést és a Perl más nagyszerű
+tulajdonságait, például a hash-kikereséseket és a reguláris kifejezések által
+nyújtott hihetetlen rugalmasságot a szövegmanipulációkban.</p>
+
+<a name='Implementation'></a>
+<h3>Jelenlegi megvalósítás</h3>
+<p>Jelenleg az ExifTool a legtöbb olyan EXIF taget meg tudja írni, amelyet bárki
+ésszerűen meg szeretne változtatni (de néhány tag védett, mert a kép olyan fizikai
+jellemzőit írja le, amelyeket az ExifToollal nem lehet megváltoztatni, pl.
+Compression).  Emellett az összes GPS, IPTC és XMP információ, valamint a
+MakerNotes információ nagy része szerkeszthető.  Ez nagy hatalmat ad neked, de a
+nagy hatalommal nagy felelősség is jár...</p>
+
+<p>Előfordulhat, hogy értelmetlenséget írsz egy fájlba, ami miatt más
+képolvasók kétségbeesetten széttárják a kezüket, és nem hajlandók beolvasni a
+képet.  Ezért a legjobb, ha mindig megőrzöd a képfájlod eredeti másolatát.  Az
+„exiftool" szkript ezt automatikusan megteszi helyetted azzal, hogy átnevezi az
+eredeti fájlt, és mindig egy másolaton dolgozik.</p>
+
+<p>Az ExifTool írási logikája az olvasási logika fordítottja.  Te emberi olvasásra
+alkalmas értékeket adsz meg, az ExifTool pedig elvégzi helyetted a konverziókat.
+Például beállíthatod a „WhiteBalance"-t „Daylight"-ra, és az ExifTool megváltoztatja
+a WhiteBalance értékét a képben mindenütt, ahol a tag megtalálható, feltéve, hogy a
+„Daylight" érvényes érték az adott helyen.  Az ExifTool még némi egyszerű
+illesztést is végez, így akár csak „day"-re is állíthatnád, és az ExifTool
+átnézi az érvényes értékeket, és azt választja, amelyik tartalmazza a „day"
+sztringet.  Ha az érték kétértelmű, a tag nem lesz beállítva.  Ha a megadott
+értékkel egyetlen tag sem állítható be, az ExifTool hibaüzenetet ad.</p>
+
+<p>A tagértékek numerikus szinten is megadhatók a normál esetben alkalmazott
+kiírási konverziók kikapcsolásával.  Ez tagenként vagy globálisan is elvégezhető,
+akár az alkalmazáson, akár az API-n keresztül.</p>
+
+<p>Amellett, hogy a tagértékeket megváltoztatja mindenütt, ahol a képben
+megtalálja őket, az exiftool a preferált csoportban létre is hozza a taget, ha az
+korábban nem létezett ott.  Alapértelmezés szerint a preferált csoport a
+következők közül az első, ahol a tag megtalálható: 1) EXIF, 2) IPTC, 3) XMP.
+Alternatívaként megadható a kívánt csoport (a 0. vagy 1. családban), így az
+ExifTool csak egyetlen helyre írja a taget. Például a parancssori felületen ez egy
+olyan argumentummal történik, mint a „<code>-EXIF:WhiteBalance=Manual</code>".</p>
+
+<p>Ha egy taget olyan csoporthoz adsz hozzá, amely nem létezik, a fájlban létrejön
+az új csoport, és szükséges kötelező tagek is létrejöhetnek.  Ezzel szemben, ha egy
+csoportból az utolsó nem kötelező taget törlöd, a csoport eltávolításra kerül a
+fájlból.</p>
+
+<a name='Mandatory'></a>
+<h3>Kötelező tagek</h3>
+
+<p>Az EXIF és az IPTC szabvány is megad néhány kötelező taget.  Az ExifTool ezen
+kötelező tagek közül sokat automatikusan létrehoz, szükség szerint, új információ
+írásakor (és eltávolítja őket ismét információ törlésekor, ha csak kötelező tagek
+maradnak).  Néhány kötelező taget azonban (különösen az IPTC információban) nem
+lehet egyszerűen, automatikusan hozzáadni, így a felhasználóra van bízva, hogy
+szükség esetén hozzáadja ezeket a tageket.  Vedd figyelembe, hogy az ExifTool
+12.71 hozzáad egy API <a href="ExifTool.html#NoMandatory">NoMandatory</a> opciót,
+amely íráskor megkerüli a kötelező tagek létrehozását/törlését az EXIF-ben.</p>
+
+<blockquote class='aside'>
+<b>Kirohanás:</b> hadd mondjam el, hogy a kötelező tagek egész koncepciója hibás.
+Kötelező tagek helyett a szabványnak alapértelmezett értékeket kellene megadnia,
+amelyeket feltételezni kell, ha a tagek nem léteznek.  Egy robusztus olvasónak
+egyébként is ezt kell tennie, tehát fölösleges megkövetelni, hogy ezt az
+információt meg kelljen írni.  Abban az esetben, amikor nincs egyszerű
+alapértelmezett érték, az olvasónak tudnia kell kezelni a hiányzó taget, egyébként
+a terhet az íróra hárítja, hogy varázsütésre ésszerű értéket rántson elő a
+semmiből.  Persze mondhatod, hogy az író megszerezhetné ezt az információt a
+felhasználótól, de az ilyen feltételek szükségtelen szintű bonyolultságot adnak a
+felhasználói felülethez.
+</blockquote>
+
+<p><b>2025-03-03</b>: hogy tovább rontsuk a helyzetet, néhány EXIF taget, amely
+korábban kötelezőként volt felsorolva, opcionálisra változtattak az EXIF 3.0
+specifikációban. Egy verziófüggőség bevezetése csak bonyolítja a helyzetet.
+Az ExifTool 13.23 és újabb leegyszerűsíti ezt a problémát azzal, hogy ezeket az
+újonnan átkategorizált tageket minden EXIF-verzióhoz opcionálisként kezeli.</p>
+
+<a name='JPEG'></a>
+<h3>A JPEG szegmensméret-korlátja</h3>
+
+<p>A JPEG formátum egyik szerencsétlen vonása, hogy egyetlen szegmens mérete 64
+kB-nál kisebbre van korlátozva.  Az egyes szegmensek elején lévő 2 bájtos
+méretszóval ez 65533 bájtot hagy az adatnak.  Az EXIF specifikáció kimondja, hogy
+az adatnak egyetlen <b>APP1</b> szegmensen belül kell elférnie (ami az alább
+tárgyalt előnézeti kép problémájához vezet), azonban az <b>APP13</b> Photoshop,
+valamint az <b>APP2</b> ICC-profil és FPXR információ több szegmensre is
+kiterjedhet.  Ezt a több szegmensre kiterjedő információt az ExifTool megfelelően
+kezeli.</p>
+
+<p>A JPEG-megjegyzések is meghaladhatják egyetlen <b>COM</b> szegmens méretét. Ha
+szükséges, íráskor a megjegyzések automatikusan külön szegmensekre bomlanak.
+Olvasáskor azonban nem fűzi őket össze, mert egyes segédprogramok markánsan
+különböző megjegyzéseket tárolnak külön szegmensekben.  Az összes JPEG-megjegyzés
+egyetlen fájlba való kinyeréséhez, valamint a több szegmensre bontott megjegyzések
+egyesítéséhez használd az „<code>exiftool -a -b -comment src.jpg &gt;
+comment.out</code>" parancsot.</p>
+
+<a name='Preview'></a>
+<h3>Az előnézeti kép problémája</h3>
+
+<p>Az előnézeti kép JPEG-fájlokba írása sok saját problémát vet fel.  Ezek a
+problémák abból erednek, hogy a JPEG szabvány alkalmatlan nagy előnézeti képek
+tárolására a szegmensméret fent említett 64 kB-os korlátja miatt.
+(Vedd figyelembe, hogy a TIFF képeknek nincs ilyen problémájuk, mivel 4 GB-os
+korlátjuk van.)  Egyes gyártók ezt úgy kerülik meg, hogy az előnézetet a
+JPEG-fájl normál vége (JPEG EOI) után fűzik hozzá, de ez bonyodalmakat okoz, mert
+azt jelenti, hogy az EXIF információban lévő előnézetikép-mutatók most az EXIF
+szegmensen kívülre mutatnak.  Ez igazán szerencsétlen, mert nagyon megbonyolítja a
+dolgokat a képíró szoftver számára.  A legtöbb más szoftver nem tud mit kezdeni az
+előnézeti képpel, és egyszerűen eltávolít egy ilyen előnézetet a fájl
+újraírásakor.</p>
+
+<p>Az ExifTool 5-ös verziójától kezdve azonban az előnézeti képeket megfelelően
+kezeli az EXIF információ JPEG-fájlokba írásakor.  A hatékonyság érdekében azonban
+az EXIF szegmens nem szerkesztődik információ írásakor, ha nem változik egyetlen
+EXIF tag sem (pl. ha csak XMP vagy IPTC információt szerkesztünk).  Ebben az
+esetben az előnézetikép-mutatók érvénytelenné válhatnak, mert az EXIF szegmens (amely
+a fájl eleje közelében van) és az előnézeti kép (a fájl végén) közötti adat hossza
+valószínűleg megváltozik.  Az ExifTool ezt JPEG képek olvasásakor úgy kerüli meg,
+hogy a fájl végén keresi az előnézetet, és szükség esetén frissíti a mutatókat, de
+az előnézeti kép lehet, hogy más szoftver számára nem olvasható (megjegyzendő
+azonban, hogy nagyon kevés képolvasó tud egyáltalán az előnézeti kép létezéséről).
+Az ilyen fájlban lévő előnézeti mutatók azonban szükség esetén egyszerűen úgy
+javíthatók, hogy az ExifToollal szerkesztesz bármilyen EXIF információt.</p>
+
+<p><b>2009-05-26</b>: az új Samsung fényképezőgépek nemrég elkezdtek 64 kB-nál
+nagyobb előnézeti képeket beágyazni, és persze új technikát alkottak ehhez.
+Ha okosak lettek volna, olyan egyszerű technikát fejlesztettek volna ki, amelyet a
+jövőben mások is használhatnának, de persze buták voltak, és nem gondolkodtak
+ilyen előre. (Ez a buta fényképezőgép-gyártók szokásos útja, ha metaadatról van
+szó.)</p>
+
+<p>Az új Samsung modellek egyszerűen szétvágják az előnézetet, és fejléc nélküli,
+külön APP2 szegmensekbe írják.  Ha írtak volna fejlécet (például „PREVIEW\0"),
+akkor a technika hordozható és hasznos lehetne. De nem tették.
+Fejléc nélkül az adat nem különböztethető meg könnyen más, véletlenszerű APP2
+adattól, így ez a technika általánosságban nem hasznos.  Persze vannak hátrányai
+annak, ha egy előnézetet külön JPEG-szegmensekre bontunk, így ez a technika
+általában nem ideális.</p>
+
+<p><b>2009-06-12</b>:
+a <a href="http://www.cipa.jp/std/std-sec_e.html">CIPA</a>
+nemrég kiadott egy „<b>Multi-Picture Format</b>" szabványt nagy képek
+JPEG-fájlokban való tárolására.  Ezzel a szabvánnyal is nagy probléma van:  az
+MPF-fejléc kezdetéhez (az új MPF APP2 szegmensben) viszonyított eltolásokat
+használ a JPEG EOI utáni képekre való hivatkozáshoz.  Ezek az eltolások gyorsan
+elromlanak, ha az MPF szegmens után bármely adat hossza megváltozik.  Ez a
+probléma elkerülhető lett volna, ha az eltolásokat a fájl végéhez viszonyítva
+adták volna meg, de ez már késő, mivel a specifikáció nyilvános.</p>
+
+<p>Az egyetlen működőképes alternatíva, amit látok, az a szabály kikényszerítése,
+hogy az MPF APP2 szegmensnek minden más APP szegmens után kell jönnie.  (Okos lett
+volna, ha ezt megadták volna a CIPA szabványban, de sajnos nem ez a helyzet.)  Ha
+ez megtörténik, akkor a többi APP szegmensben (EXIF, IPTC, XMP stb.) lévő
+metaadat biztonságosan szerkeszthető az MPF-eltolások elrontása nélkül.  Azt
+javaslom, hogy minden metaadat-szerkesztő alkalmazza ezt a stratégiát, függetlenül
+a szabványban megadott szegmenssorrendtől (amely szerint az MPF APP2 szegmensnek
+közvetlenül az EXIF APP1 szegmens után kell jönnie).</p>
+
+<a name='IFD0'></a>
+<h3>IFD0/ExifIFD kétértelműség</h3>
+
+<p>Az ExifToolnak van egy preferált helye (IFD), ahová az összes EXIF taget írja.
+Néhány taget azonban különböző digitális fényképezőgépek vagy képszerkesztők
+különböző helyekre írnak.  Konkrétan a következő tageket figyelték meg mind
+IFD0-ban, mind ExifIFD-ben: Make, Model, Software, Artist, DateTimeOriginal,
+SensingMethod, CustomRendered, ExposureMode, WhiteBalance, DigitalZoomRatio és
+SceneCaptureType.  E kétértelműség kezelésére az ExifTool törli a taget, ha az
+IFD0-ban létezik, amikor ExifIFD-be íródik, és fordítva.</p>
+
+<hr>
+<i>Létrehozva: 2004. december 30.</i><br>
+<i>Utoljára módosítva: 2025. március 3.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
+</body>
+</html>

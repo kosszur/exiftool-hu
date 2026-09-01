@@ -1,0 +1,2153 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>exiftool alkalmazás dokumentáció</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@66b96.p1s.plx.sd.apple.com" />
+<style type='text/css'><!-- code { color: #800 } pre { margin-left: 2em } --></style></head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="_podblock_" style="background-color: #cccccc; color: #000" valign="middle">
+<big><strong><span class="_podblock_">&nbsp;exiftool alkalmazás dokumentáció</span></strong></big>
+</td></tr>
+</table>
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a>
+    <ul>
+      <li><a href="#Reading">Olvasás</a></li>
+      <li><a href="#Writing">Írás</a></li>
+      <li><a href="#Copying">Másolás</a></li>
+      <li><a href="#Other">Egyéb</a></li>
+    </ul>
+  </li>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#OPTIONS">OPTIONS</a>
+    <ul>
+      <li><a href="#Option-Overview">Opciók áttekintése</a></li>
+      <li><a href="#Option-Details">Opciók részletei</a>
+        <ul>
+          <li><a href="#Tag-operations">Tag-műveletek</a></li>
+          <li><a href="#Input-output-text-formatting">Be- és kimeneti szövegformázás</a></li>
+          <li><a href="#Processing-control">Feldolgozásvezérlés</a></li>
+          <li><a href="#Other-options">Egyéb opciók</a></li>
+          <li><a href="#Special-features">Speciális szolgáltatások</a></li>
+          <li><a href="#Utilities">Segédeszközök</a></li>
+          <li><a href="#Advanced-options">Haladó opciók</a></li>
+          <li><a href="#Advanced-formatting-feature">Haladó formázási szolgáltatás</a>
+            <ul>
+              <li><a href="#Helper-functions">Segédfüggvények</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#WINDOWS-UNICODE-FILE-NAMES">WINDOWS UNICODE FÁJLNEVEK</a></li>
+  <li><a href="#WRITING-READ-ONLY-FILES">CSAK OLVASHATÓ FÁJLOK ÍRÁSA</a></li>
+  <li><a href="#READING-EXAMPLES">OLVASÁSI PÉLDÁK</a></li>
+  <li><a href="#WRITING-EXAMPLES">ÍRÁSI PÉLDÁK</a></li>
+  <li><a href="#COPYING-EXAMPLES">MÁSOLÁSI PÉLDÁK</a></li>
+  <li><a href="#RENAMING-EXAMPLES">ÁTNEVEZÉSI PÉLDÁK</a></li>
+  <li><a href="#GEOTAGGING-EXAMPLES">GEOTAGGELÉSI PÉLDÁK</a></li>
+  <li><a href="#PIPING-EXAMPLES">CSŐVEZETÉKES (PIPE) PÉLDÁK</a></li>
+  <li><a href="#INTERRUPTING-EXIFTOOL">AZ EXIFTOOL MEGSZAKÍTÁSA</a></li>
+  <li><a href="#EXIT-STATUS">KILÉPÉSI STÁTUSZ</a></li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+  <li><a href="#SEE-ALSO">SEE ALSO</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>exiftool - Metainformáció olvasása és írása fájlokban</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<h2 id="Reading">Olvasás</h2>
+
+<p><b>exiftool</b> [<i>OPTIONS</i>] [-<i>TAG</i>...] [--<i>TAG</i>...] <i>FILE</i>...</p>
+
+<h2 id="Writing">Írás</h2>
+
+<p><b>exiftool</b> [<i>OPTIONS</i>] -<i>TAG</i>[+-^&lt;]=[<i>VALUE</i>]... <i>FILE</i>...</p>
+
+<h2 id="Copying">Másolás</h2>
+
+<p><b>exiftool</b> [<i>OPTIONS</i>] <b>-tagsFromFile</b> <i>SRCFILE</i> [-[<i>DSTTAG</i>&lt;]<i>SRCTAG</i>...] <i>FILE</i>...</p>
+
+<h2 id="Other">Egyéb</h2>
+
+<p><b>exiftool</b> [ <b>-ver</b> | <b>-list</b>[<b>w</b>|<b>f</b>|<b>r</b>|<b>wf</b>|<b>g</b>[<i>NUM</i>]|<b>d</b>|<b>x</b>|<b>geo</b>] ]</p>
+
+<p>Konkrét példákért lásd az alábbi <a href="#READING-EXAMPLES">PÉLDÁK</a> szakaszokat.</p>
+
+<p>Ez a dokumentáció jelenik meg, ha az exiftoolt bemeneti <i>FILE</i> nélkül futtatják, amikor egy fájl elvárt.</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>Parancssori felület az <a>Image::ExifTool</a>-hoz, amely sokféle fájltípusban lévő metainformáció olvasására és írására szolgál. A <i>FILE</i> egy vagy több forrásfájlnév, könyvtárnév, vagy <code>-</code> a szabványos bemenethez. A metaadatokat a program a forrásfájlokból olvassa be, és olvasható formában írja ki a konzolra (vagy a <b>-w</b> opcióval kimeneti szövegfájlokba).</p>
+
+<p>Metaadatok írásához vagy törléséhez a tag-értékeket a -<i>TAG</i>=[<i>VALUE</i>] szintaxissal és/vagy a <b>-geotag</b>, <b>-csv=</b> vagy <b>-json=</b> opciókkal adjuk meg. Metaadatok másolásához vagy áthelyezéséhez a <b>-tagsFromFile</b> szolgáltatást használjuk. Alapértelmezésben az eredeti fájlok megőrződnek úgy, hogy a nevükhöz <code>_original</code> fűződik -- feltétlenül ellenőrizd, hogy az új fájlok rendben vannak-e, mielőtt törölnéd az eredetieket. Ha egyszer írási módba került, az exiftool figyelmen kívül hagy minden olvasásspecifikus opciót.</p>
+
+<p>Megjegyzés: Ha a <i>FILE</i> egy könyvtárnév, akkor csak a könyvtárban lévő támogatott fájltípusok kerülnek feldolgozásra (írási módban csak az írható típusok). A fájlok azonban név szerint is megadhatók, vagy a <b>-ext</b> opció használható bármilyen kiterjesztésű fájl feldolgozásának kikényszerítésére. A könyvtárban lévő rejtett fájlok is feldolgozásra kerülnek. A <b>-r</b> opció hozzáadása az alkönyvtárak rekurzív feldolgozását eredményezi, de a &quot;.&quot; karakterrel kezdődő nevű alkönyvtárak kimaradnak, hacsak nem a <b>-r.</b> alakot használják.</p>
+
+<p>Az alábbiakban az ExifTool által jelenleg támogatott fájltípusok és metainformáció-formátumok listája következik (r = olvasás, w = írás, c = létrehozás):</p>
+
+<pre><code>File Types
+------------+-------------+-------------+-------------+------------
+360   r/w   | DR4   r/w/c | JNG   r/w   | ODP   r     | RTF   r
+3FR   r     | DSF   r     | JP2   r/w   | ODS   r     | RW2   r/w
+3G2   r/w   | DSS   r     | JPEG  r/w   | ODT   r     | RWL   r/w
+3GP   r/w   | DV    r     | JSON  r     | OFR   r     | RWZ   r
+7Z    r     | DVB   r/w   | JXL   r/w   | OGG   r     | RM    r
+A     r     | DVR-MS r    | K25   r     | OGV   r     | SEQ   r
+AA    r     | DYLIB r     | KDC   r     | ONP   r     | SKETCH r
+AAC   r     | EIP   r     | KEY   r     | OPUS  r     | SO    r
+AAE   r     | EPS   r/w   | KVAR  r     | ORF   r/w   | SR2   r/w
+AAX   r/w   | EPUB  r     | LA    r     | ORI   r/w   | SRF   r
+ACR   r     | ERF   r/w   | LFP   r     | OTF   r     | SRW   r/w
+AFM   r     | EXE   r     | LIF   r     | PAC   r     | SVG   r
+AI    r/w   | EXIF  r/w/c | LNK   r     | PAGES r     | SWF   r
+AIFF  r     | EXR   r     | LRV   r/w   | PBM   r/w   | THM   r/w
+APE   r     | EXV   r/w/c | M2TS  r     | PCAP  r     | TIFF  r/w
+ARQ   r/w   | F4A/V r/w   | M4A/V r/w   | PCAPNG r    | TNEF  r
+ARW   r/w   | FFF   r/w   | MACOS r     | PCD   r     | TORRENT r
+ASF   r     | FIT   r     | MAX   r     | PCX   r     | TTC   r
+AVI   r     | FITS  r     | MEF   r/w   | PDB   r     | TTF   r
+AVIF  r/w   | FLA   r     | MIE   r/w/c | PDF   r/w   | TXT   r
+AZW   r     | FLAC  r     | MIFF  r     | PEF   r/w   | URL   r
+BMP   r     | FLIF  r/w   | MKA   r     | PFA   r     | VCF   r
+BPG   r     | FLV   r     | MKS   r     | PFB   r     | VNT   r
+BTF   r     | FPF   r     | MKV   r     | PFM   r     | VRD   r/w/c
+C2PA  r     | FPX   r     | MNG   r/w   | PGF   r     | VSD   r
+CHM   r     | GIF   r/w   | MOBI  r     | PGM   r/w   | VSDX  r
+COS   r     | GLV   r/w   | MODD  r     | PLIST r     | WAV   r
+CR2   r/w   | GPR   r/w   | MOI   r     | PICT  r     | WDP   r/w
+CR3   r/w   | GZ    r     | MOS   r/w   | PMP   r     | WEBP  r/w
+CRM   r/w   | HDP   r/w   | MOV   r/w   | PNG   r/w   | WEBM  r
+CRW   r/w   | HDR   r     | MP3   r     | PPM   r/w   | WMA   r
+CS1   r/w   | HEIC  r/w   | MP4   r/w   | PPT   r     | WMV   r
+CSV   r     | HEIF  r/w   | MPC   r     | PPTX  r     | WOFF  r
+CUR   r     | HTML  r     | MPG   r     | PS    r/w   | WOFF2 r
+CZI   r     | ICC   r/w/c | MPO   r/w   | PSB   r/w   | WPG   r
+DCM   r     | ICO   r     | MQV   r/w   | PSD   r/w   | WTV   r
+DCP   r/w   | ICS   r     | MRC   r     | PSP   r     | WV    r
+DCR   r     | IDML  r     | MRW   r/w   | QTIF  r/w   | X3F   r/w
+DFONT r     | IIQ   r/w   | MXF   r     | R3D   r     | XCF   r
+DIVX  r     | IND   r/w   | NEF   r/w   | RA    r     | XISF  r
+DJVU  r     | INSP  r/w   | NKA   r     | RAF   r/w   | XLS   r
+DLL   r     | INSV  r     | NKSC  r/w   | RAM   r     | XLSX  r
+DNG   r/w   | INX   r     | NRW   r/w   | RAR   r     | XMP   r/w/c
+DOC   r     | ISO   r     | NUMBERS r   | RAW   r/w   | ZIP   r
+DOCX  r     | ITC   r     | NXD   r     | RIFF  r     |
+DPX   r     | J2C   r     | O     r     | RSRC  r     |
+
+Meta Information
+----------------------+----------------------+---------------------
+EXIF           r/w/c  |  CIFF           r/w  |  Ricoh RMETA    r
+GPS            r/w/c  |  AFCP           r/w  |  Picture Info   r
+IPTC           r/w/c  |  Kodak Meta     r/w  |  Adobe APP14    r
+XMP            r/w/c  |  FotoStation    r/w  |  MPF            r
+MakerNotes     r/w/c  |  PhotoMechanic  r/w  |  Stim           r
+Photoshop IRB  r/w/c  |  JPEG 2000      r    |  DPX            r
+ICC Profile    r/w/c  |  DICOM          r    |  APE            r
+MIE            r/w/c  |  Flash          r    |  Vorbis         r
+JFIF           r/w/c  |  FlashPix       r    |  SPIFF          r
+Ducky APP12    r/w/c  |  QuickTime      r    |  DjVu           r
+PDF            r/w/c  |  Matroska       r    |  M2TS           r
+PNG            r/w/c  |  MXF            r    |  PE/COFF        r
+Canon VRD      r/w/c  |  PrintIM        r    |  AVCHD          r
+Nikon Capture  r/w/c  |  FLAC           r    |  ZIP            r
+GeoTIFF        r/w/c  |  ID3            r    |  (and more)</code></pre>
+
+<h1 id="OPTIONS">OPTIONS</h1>
+
+<p>A kis- és nagybetűk egyetlen parancssori opciónál sem számítanak (a tag- és csoportneveket is beleértve), kivéve az egykarakteres opciókat, amikor létezik a megfelelő nagybetűs opció. Sok egykarakteres opciónak van egyenértékű, hosszú nevű változata (zárójelben feltüntetve), és néhány opciónak van inverze, amelyet bevezető dupla kötőjellel lehet meghívni. A fel nem ismert opciók tagnévként értelmeződnek (emiatt több egykarakteres opció NEM vonható össze egyetlen argumentumba). A szokásos gyakorlattal ellentétben az opciók az exiftool parancssorában a forrásfájlnevek után is állhatnak.</p>
+
+<h2 id="Option-Overview">Opciók áttekintése</h2>
+
+<p><a href="#Tag-operations">Tag-műveletek</a></p>
+
+<pre><code>-TAG or --TAG                    Extract or exclude specified tag
+-TAG[+-^]=[VALUE]                Write new value for tag
+-TAG[+-]&lt;=DATFILE                Write tag value from contents of file
+-[+]TAG[+-]&lt;SRCTAG               Copy tag value (see -tagsFromFile)
+
+-tagsFromFile SRCFILE            Copy tag values from file
+-x TAG      (-exclude)           Exclude specified tag</code></pre>
+
+<p><a href="#Input-output-text-formatting">Input-output text formatting</a></p>
+
+<pre><code>-args       (-argFormat)         Format metadata as exiftool arguments
+-b          (-binary)            Output metadata in binary format
+-c FMT      (-coordFormat)       Set format for GPS coordinates
+-charset [[TYPE=]CHARSET]        Specify encoding for special characters
+-csv[[+]=CSVFILE]                Export/import tags in CSV format
+-csvDelim STR                    Set delimiter for CSV file
+-d FMT      (-dateFormat)        Set format for date/time values
+-D          (-decimal)           Show tag ID numbers in decimal
+-E,-ex,-ec  (-escape(HTML|XML|C))Escape tag values for HTML, XML or C
+-f          (-forcePrint)        Force printing of all specified tags
+-g[NUM...]  (-groupHeadings)     Organize output by tag group
+-G[NUM...]  (-groupNames)        Print group name for each tag
+-h          (-htmlFormat)        Use HTML formatting for output
+-H          (-hex)               Show tag ID numbers in hexadecimal
+-htmlDump[OFFSET]                Generate HTML-format binary dump
+-j[[+]=JSONFILE] (-json)         Export/import tags in JSON format
+-l          (-long)              Use long 2-line output format
+-L          (-latin)             Use Windows Latin1 encoding
+-lang [LANG]                     Set current language
+-listItem INDEX                  Extract specific item from a list
+-n          (--printConv)        No print conversion
+-p[-] STR   (-printFormat)       Print output in specified format
+-php                             Export tags as a PHP Array
+-plot                            Output tags as SVG plot file
+-s[NUM]     (-short)             Short output format (-s for tag names)
+-S          (-veryShort)         Very short output format
+-sep STR    (-separator)         Set separator string for list items
+-sort                            Sort output alphabetically
+-struct                          Enable output of structured information
+-t          (-tab)               Output in tab-delimited list format
+-T          (-table)             Output in tabular format
+-v[NUM]     (-verbose)           Print verbose messages
+-w[+|!] EXT (-textOut)           Write (or overwrite!) output text files
+-W[+|!] FMT (-tagOut)            Write output text file for each tag
+-Wext EXT   (-tagOutExt)         Write only specified file types with -W
+-X          (-xmlFormat)         Use RDF/XML output format</code></pre>
+
+<p><a href="#Processing-control">Processing control</a></p>
+
+<pre><code>-a          (-duplicates)        Allow duplicate tags to be extracted
+-e          (--composite)        Do not generate composite tags
+-ee[NUM]    (-extractEmbedded)   Extract information from embedded files
+-ext[+] EXT (-extension)         Process files with specified extension
+-F[OFFSET]  (-fixBase)           Fix the base for maker notes offsets
+-fast[NUM]                       Increase speed when extracting metadata
+-fileOrder[NUM] [-]TAG           Set file processing order
+-i DIR      (-ignore)            Ignore specified directory name
+-if[NUM] EXPR                    Conditionally process files
+-m          (-ignoreMinorErrors) Ignore minor errors and warnings
+-o OUTFILE  (-out)               Set output file or directory name
+-overwrite_original              Overwrite original by renaming tmp file
+-overwrite_original_in_place     Overwrite original by copying tmp file
+-P          (-preserve)          Preserve file modification date/time
+-password PASSWD                 Password for processing protected files
+-progress[NUM][:[TITLE]]         Show file progress count
+-q          (-quiet)             Quiet processing
+-r[.]       (-recurse)           Recursively process subdirectories
+-scanForXMP                      Brute force XMP scan
+-u          (-unknown)           Extract unknown tags
+-U          (-unknown2)          Extract unknown binary tags too
+-wm MODE    (-writeMode)         Set mode for writing/creating tags
+-z          (-zip)               Read/write compressed information</code></pre>
+
+<p><a href="#Other-options">Egyéb opciók</a></p>
+
+<pre><code>-@ ARGFILE                       Read command-line arguments from file
+-k          (-pause)             Pause before terminating
+-list[w|f|r|wf|g[NUM]|d|x|geo]   List various exiftool capabilities
+-ver                             Print exiftool version number
+--                               End of options</code></pre>
+
+<p><a href="#Special-features">Speciális szolgáltatások</a></p>
+
+<pre><code>-diff FILE2                      Compare metadata with another file
+-geotag TRKFILE                  Geotag images from specified GPS log
+-globalTimeShift SHIFT           Shift all formatted date/time values
+-use MODULE                      Add features from plug-in module</code></pre>
+
+<p><a href="#Utilities">Segédeszközök</a></p>
+
+<pre><code>-delete_original[!]              Delete &quot;_original&quot; backups
+-restore_original                Restore from &quot;_original&quot; backups</code></pre>
+
+<p><a href="#Advanced-options">Haladó opciók</a></p>
+
+<pre><code>-api [OPT[[^]=[VAL]]]            Set ExifTool API option
+-common_args                     Define common arguments
+-config CFGFILE                  Specify configuration file name
+-echo[NUM] TEXT                  Echo text to stdout or stderr
+-efile[NUM][!] TXTFILE           Save names of files with errors
+-execute[NUM]                    Execute multiple commands on one line
+-fileNUM ALTFILE                 Load tags from alternate file
+-list_dir                        List directories, not their contents
+-srcfile FMT                     Process a different source file
+-stay_open FLAG                  Keep reading -@ argfile even after EOF
+-userParam PARAM[[^]=[VAL]]      Set user parameter (API UserParam opt)</code></pre>
+
+<h2 id="Option-Details">Opciók részletei</h2>
+
+<h3 id="Tag-operations">Tag-műveletek</h3>
+
+<dl>
+
+<dt id="TAG"><b>-</b><i>TAG</i></dt>
+<dd>
+
+<p>Információ kinyerése a megadott taghez (pl. <code>-CreateDate</code>). Egyetlen parancsban több tag is megadható. A tagnév az a fogantyú, amellyel egy információdarabra hivatkozunk. Az elérhető tagnevek dokumentációját lásd az <a>Image::ExifTool::TagNames</a> alatt. Egy tagnév tartalmazhat kettősponttal elválasztott, bevezető csoportneveket (pl. <code>-EXIF:CreateDate</code> vagy <code>-Doc1:XMP:Creator</code>), és minden csoportnevet meg lehet előzni egy számjeggyel a családszám megadására (pl. <code>-1IPTC:City</code>). (Vedd figyelembe, hogy az 5-ös, illetve 6-os családbeli csoportok elérhetőségéhez az API SavePath, illetve SaveFormat opcióit kell használni.) Használd a <b>-listg</b> opciót az elérhető csoportnevek családonkénti felsorolásához.</p>
+
+<p>Az <code>All</code> speciális tagnév használható az összes metainformáció jelölésére (azaz <b>-All</b>). Ez különösen hasznos, amikor egy csoportnevet adnak meg egy csoport összes információjának kinyeréséhez (de vigyázz, hacsak a <b>-a</b> opciót is nem használják, a csoport némely tagjét elnyomhatják más csoportok azonos nevű tagjei). A <code>?</code> és <code>*</code> helyettesítő karakterek használhatók egy tagnévben, hogy tetszőleges egyetlen karakterre, illetve nulla vagy több karakterre illeszkedjenek. Ezek csoportnévben nem használhatók, azzal a kivétellel, hogy egy <code>*</code> (vagy <code>All</code>) csoportnév használható egy tag összes előfordulásának kinyerésére (mintha a <b>-a</b>-t használták volna). Vedd figyelembe, hogy a helyettesítő karaktereket tartalmazó argumentumokat a legtöbb rendszer parancssorában idézőjelbe kell tenni a shell-globbing megakadályozásához.</p>
+
+<p>A tagnévhez <code>#</code> fűzhető a kiírási konverzió tagenkénti letiltásához (lásd a <b>-n</b> opciót). Ez tagek írásakor vagy másolásakor is használható.</p>
+
+<p>Ha nincsenek tagek megadva, az összes elérhető információ kinyerésre kerül (mintha az <code>-All</code>-t adták volna meg).</p>
+
+<p>Megjegyzés: információ kinyerésekor alapértelmezésben a leírások jelennek meg, nem a tagnevek. Használd a <b>-s</b> opciót, hogy helyette a tagneveket lásd.</p>
+
+</dd>
+<dt id="TAG1"><b>--</b><i>TAG</i></dt>
+<dd>
+
+<p>A megadott tag kizárása a kinyert információból. Ugyanaz, mint a <b>-x</b> opció. A csoportnevek és a helyettesítő karakterek a fentebb a <b>-</b><i>TAG</i>-nél leírtak szerint megengedettek. Ha egy tag egyszer ki lett zárva a kimenetből, egy későbbi opció nem tudja újra bevonni. Vedd figyelembe azt is, hogy ez kizárja a taget abból, hogy egy <code>-if</code> feltételben használják. Használható egy <b>-tagsFromFile</b> opció után, hogy kizárjon tageket a másolásból (amikor egy másik tagbe irányítunk át, a forrás-taget kell kizárni), vagy hogy kizárjon csoportokat a törlésből az összes információ törlésekor (pl. az <code>-all= --exif:all</code> az EXIF kivételével mindent töröl). De vedd figyelembe, hogy ez nem zár ki egyes tageket egy csoporttörlésből (hacsak nem egy 2-es családbeli csoportot adnak meg, lásd a lenti 4. megjegyzést). Ehelyett az egyes tagek visszanyerhetők a <b>-tagsFromFile</b> opcióval (pl. <code>-all= -tagsfromfile @ -artist</code>).</p>
+
+<p>Az XMP olvasásakor a feldolgozás gyorsítása érdekében az XMP-csoportokban lévő kizárások megkerülik a megfelelő XMP-tulajdonság és az abban foglalt tulajdonságok feldolgozását is. Például az <code>--xmp-crs:all</code> jelentősen felgyorsíthatja a feldolgozást olyan esetekben, amikor nagyszámú XMP-crs tag létezik. Ahhoz, hogy ezt a szolgáltatást egy konkrét XMP-tulajdonság feldolgozásának megkerülésére használd, az ExifTool-tagnév helyett a tulajdonság nevét kell használni (pl. <code>--xmp-crs:dabs</code>). Ezenkívül az <code>XMP-all</code> használható bármely XMP-névtér jelölésére (pl. <code>--xmp-all:dabs</code>).</p>
+
+</dd>
+<dt id="TAG---VALUE"><b>-</b><i>TAG</i>[+-^]<b>=</b>[<i>VALUE</i>]</dt>
+<dd>
+
+<p>Új érték írása a megadott taghez (pl. <code>-comment=wow</code>), vagy a tag törlése, ha nincs <i>VALUE</i> megadva (pl. <code>-comment=</code>). A <code>+=</code> és a <code>-=</code> meglévő bejegyzések listához adására vagy listából eltávolítására, illetve dátum/idő értékek eltolására szolgál (bővebben lásd az <a>Image::ExifTool::Shift.pl</a>-t, valamint a lenti 6. és 7. megjegyzést). A <code>+=</code> numerikus értékek növelésére is használható (vagy csökkentésére, ha a <i>VALUE</i> negatív), a <code>-=</code> pedig egy tag feltételes törlésére vagy cseréjére (példákért lásd az <a href="#WRITING-EXAMPLES">&quot;ÍRÁSI PÉLDÁK&quot;</a> szakaszt). A <code>^=</code> arra szolgál, hogy a tag törlése helyett üres sztringet írjunk, amikor nincs <i>VALUE</i> megadva, egyébként viszont egyenértékű a <code>=</code>-vel. (Vedd figyelembe, hogy a kalapot a Windows CMD shellben idézőjelbe kell tenni.)</p>
+
+<p>A <i>TAG</i> tartalmazhat egy vagy több bevezető, 0-s, 1-es, 2-es vagy 7-es családbeli csoportnevet, opcionális családszámokkal megelőzve, kettősponttal elválasztva. Ha nincs csoportnév megadva, a tag a preferált csoportban jön létre, és minden más helyen frissül, ahol már létezik azonos nevű tag. A preferált csoport a JPEG- és TIFF-formátumú képekben a következő lista első olyan csoportja, ahol a <i>TAG</i> érvényes: 1) EXIF, 2) IPTC, 3) XMP.</p>
+
+<p>A <code>*</code> és <code>?</code> helyettesítő karakterek használhatók a tagnevekben, hogy ugyanazt az értéket több taghez rendeljük. Helyettesítő karakterekkel megadva a „nem biztonságos" (Unsafe) tagek nem íródnak. Az <code>All</code> tagnév egyenértékű a <code>*</code>-gal (kivéve, hogy nem igényel idézőjelet, míg a helyettesítő karaktereket tartalmazó argumentumok igen a shell-globbinget használó rendszereken), és gyakran használják az összes metaadat (azaz <code>-All=</code>) vagy egy egész csoport (pl. <code>-XMP-dc:All=</code>, lásd a lenti 4. megjegyzést) törlésekor. Vedd figyelembe, hogy nem minden csoport törölhető, és hogy a JPEG APP14 „Adobe" csoportot az <code>-All=</code> alapértelmezésben nem távolítja el, mert az befolyásolhatja a kép megjelenését. A színtér-információ azonban eltávolításra kerül, így a színek megváltozhatnak (de ez elkerülhető a ColorSpaceTags rövidítés által definiált tagek visszamásolásával). A törölhető csoportok teljes listájához használd a <b>-listd</b> opciót, az „APP" csoportokról pedig lásd a lenti 5. megjegyzést. Ezenkívül egy képen belül némely csoport másokban lehet foglalva, és ezek a csoportok eltávolításra kerülnek, ha a tartalmazó csoportot törlik:</p>
+
+<pre><code>JPEG Image:
+- Deleting EXIF or IFD0 also deletes ExifIFD, GlobParamIFD,
+  GPS, IFD1, InteropIFD, MakerNotes, PrintIM and SubIFD.
+- Deleting ExifIFD also deletes InteropIFD and MakerNotes.
+- Deleting Photoshop also deletes IPTC.
+
+TIFF Image:
+- Deleting EXIF only removes ExifIFD which also deletes
+  InteropIFD and MakerNotes.
+
+MOV/MP4 Video:
+- Deleting ItemList also deletes Keys tags.</code></pre>
+
+<p>Megjegyzések:</p>
+
+<p>1) <b>Egyetlen parancsban sok tag-érték rendelhető hozzá</b>. Ha két hozzárendelés ugyanazt a taget érinti, az utóbbié az elsőbbség (kivéve a lista típusú tageket, amelyeknél mindkét érték beíródik).</p>
+
+<p>2) Általában a MakerNotes tagek „állandónak" (Permanent) számítanak, és szerkeszthetők, de egyesével nem hozhatók létre és nem törölhetők. Ez sok lehetséges problémát elkerül, beleértve az OEM-szoftverekkel való elkerülhetetlen kompatibilitási problémákat, amelyek nagyon rugalmatlanok lehetnek azzal kapcsolatban, milyen információt várnak a maker note-okban.</p>
+
+<p>3) Az ExifTool által a PDF-fájlokon végzett módosítások visszafordíthatók (a frissítés törlésével a <code>-PDF-update:all=</code> paranccsal), mert az eredeti információt valójában soha nem törli a fájlból. Így az ExifTool önmagában nem használható PDF-fájlok metaadatainak biztonságos szerkesztésére.</p>
+
+<p>4) A <code>-GROUP:all=</code> megadása csak akkor törli az egész csoportot blokként, ha egyetlen 0-s vagy 1-es családbeli csoportot adnak meg. Egyébként a megadott csoport(ok) összes törölhető tagje egyesével kerül eltávolításra, és ebben az esetben lehetséges egyes tageket kizárni a tömeges törlésből. Például a <code>-time:all --Exif:Time:All</code> minden törölhető Time taget eltávolít, kivéve az EXIF-ben lévőket. Ez a különbség akkor is érvényes, ha a 2-es családot adják meg az összes csoport törlésekor. Például a <code>-2all:all=</code> egyesével törli a tageket, míg az <code>-all:all=</code> egész blokkokat töröl.</p>
+
+<p>5) Az „APP" csoportnevek („APP0"-tól „APP15"-ig) olyan JPEG-alkalmazásszegmensek törlésére szolgálnak, amelyek nem tartoznak egy másik törölhető csoporthoz. Például az <code>-APP14:All=</code> megadása NEM törli az APP14 „Adobe" szegmenst, mert ezt az <code>-Adobe:All</code> végzi el. De vedd figyelembe, hogy ezek a névtelen APP-szegmensek nem zárhatók ki az <code>--APPxx:all</code> alakkal az összes információ törlésekor.</p>
+
+<p>6) Egy érték eltolásakor az eltolás a tag eredeti értékére alkalmazódik, felülírva minden más értéket, amelyet korábban ugyanabban a parancssorban a taghez rendeltek. Ha egy dátum/idő értéket el akarsz tolni és ugyanabban a műveletben átmásolni egy másik tagbe, használd a <b>-globalTimeShift</b> opciót.</p>
+
+<p>7) A <code>+=</code> operátor nem használható egy lista típusú dátum/idő tag (pl. XMP-dc:Date) eltolására, mert a <code>+=</code> elemek listához adására szolgál. Ehelyett a <b>-globalTimeShift</b> opciót kell használni.</p>
+
+<p>Speciális szolgáltatás: az egész értékek hexadecimálisan is megadhatók bevezető <code>0x</code>-szel, az egyszerű racionális értékek pedig törtként.</p>
+
+</dd>
+<dt id="TAG-DATFILE-or--TAG-FMT"><b>-</b><i>TAG</i>&lt;=<i>DATFILE</i> or <b>-</b><i>TAG</i>&lt;=<i>FMT</i></dt>
+<dd>
+
+<p>Egy tag értékének beállítása a <i>DATFILE</i> fájl tartalmából. A fájlnév megadható egy <i>FMT</i> sztringgel is, ahol a %d, %f és %e az eredeti <i>FILE</i> könyvtárát, fájlnevét és kiterjesztését jelöli (bővebben lásd a <b>-w</b> opciót). Vedd figyelembe, hogy ezt az argumentumot idézőjelbe kell tenni a shell-átirányítás megakadályozásához, mivel egy <code>&lt;</code> szimbólumot tartalmaz. Ha a <i>DATFILE</i>/<i>FMT</i> nincs megadva, a hatás ugyanaz, mint a <code>-TAG=</code>-é, és a tag egyszerűen törlődik. A <code>+&lt;=</code> vagy <code>-&lt;=</code> szintén használható konkrét listabejegyzések hozzáadására vagy törlésére, tagek feltételes törlésére/cseréjére, vagy dátum/idő értékek eltolására.</p>
+
+</dd>
+<dt id="tagsFromFile-SRCFILE-or-FMT"><b>-tagsFromFile</b> <i>SRCFILE</i> or <i>FMT</i></dt>
+<dd>
+
+<p>Tag-értékek másolása a <i>SRCFILE</i>-ból a <i>FILE</i>-ba. Az ezen opció utáni parancssori tagnevek adják meg a másolandó vagy a másolásból kizárandó tageket. Ezekben a tagnevekben helyettesítő karakterek megengedettek. Ha nincsenek tagek megadva, akkor a forrásfájl összes lehetséges tagje (lásd a lenti 1. megjegyzést) a kimeneti fájl preferált helyén lévő azonos nevű tagekbe másolódik (ugyanaz, mint az <code>-all</code> megadása). Több <b>-tagsFromFile</b> opció is használható tagek több fájlból való másolására.</p>
+
+<p>Alapértelmezésben ez az opció frissíti a kimeneti <i>FILE</i>-ban lévő bármely meglévő és írható azonos nevű taget, de új tageket csak a preferált csoportjukban hoz létre. Ez lehetővé teszi, hogy némely információ automatikusan a megfelelő csoportba kerüljön, amikor különböző formátumú képek között másolunk. Ha azonban egy taghez csoportnevet adnak meg, akkor az információ csak ebbe a csoportba íródik (hacsak nincs átirányítva egy másik csoportba, lásd lentebb). Ha csoportnévként az <code>All</code>-t használják, akkor a megadott tag(ek) ugyanabba az 1-es családbeli csoportba íródnak, amelyben a forrásfájlban voltak (azaz ugyanarra a konkrét helyre, mint az ExifIFD vagy az XMP-dc). Például az a gyakori művelet, hogy az összes írható taget a kimeneti <i>FILE</i> ugyanazokra a konkrét helyeire másoljuk, az <code>-all:all</code> hozzáadásával valósítható meg. Egy másik család a csoportnév elé írt családszámmal adható meg (pl. a <code>-0all:all</code> ugyanazt az általános helyet őrzi meg, mint az EXIF vagy az XMP).</p>
+
+<p>A <i>SRCFILE</i> lehet ugyanaz, mint a <i>FILE</i>, hogy egyetlen fájlon belül mozgassunk információt. Ebben az esetben a <code>@</code> használható a forrásfájl jelölésére (azaz <code>-tagsFromFile @</code>), ami lehetővé teszi ennek a szolgáltatásnak a használatát több fájl kötegelt feldolgozásához. A megadott tagek ekkor minden fájlból egymás után másolódnak, ahogy az újraíródik. Haladó kötegelt használathoz a forrásfájlnév megadható egy <i>FMT</i> sztringgel is, amelyben a %d, %f és %e a <i>FILE</i> könyvtárát, fájlnevét és kiterjesztését jelöli. (pl. az aktuális <i>FILE</i>-t a <code>%d%f.%e</code> jelölné, ugyanazzal a hatással, mint a <code>@</code>). <i>FMT</i>-sztringpéldákért lásd a <b>-w</b> opciót.</p>
+
+<p>Egy erőteljes átirányítási szolgáltatás lehetővé teszi, hogy minden másolt taghez cél-taget adjunk meg. Ezzel a szolgáltatással az információ más nevű vagy csoportú tagbe írható. Ez a &quot;&#39;-<i>DSTTAG</i>&lt;<i>SRCTAG</i>&#39;&quot; vagy &quot;&#39;-<i>SRCTAG</i>&gt;<i>DSTTAG</i>&#39;&quot; alakkal történik a parancssorban a <b>-tagsFromFile</b> után, és hatására a <i>SRCTAG</i> értéke a <i>SRCFILE</i>-ból másolódik és a <i>FILE</i> <i>DSTTAG</i>-jébe íródik. Nincs hatása, hacsak a <i>SRCTAG</i> nem létezik a <i>SRCFILE</i>-ban. Vedd figyelembe, hogy ezt az argumentumot idézőjelbe kell tenni a shell-átirányítás megakadályozásához, és nincs <code>=</code> jel, mint új értékek hozzárendelésekor. A forrás- és/vagy cél-tagek elé csoportnév írható, és/vagy utánuk <code>#</code> fűzhető. Helyettesítő karakterek mind a forrás-, mind a cél-tagnevekben megengedettek. Az <code>All</code> vagy <code>*</code> cél-csoport és/vagy tagnév ugyanabba az 1-es családbeli csoportba és/vagy tagnévbe ír, mint a forrás (de a család a csoportnév elé írt számmal megadható, pl. a <code>0All</code> ugyanabba a 0-s családbeli csoportba ír, mint a forrás). Ha nincs cél-csoport megadva, az információ a preferált csoportba íródik. A <code>&gt;</code> vagy <code>&lt;</code> körüli szóközök figyelmen kívül maradnak. Kényelmi okból a <code>-tagsFromFile @</code> feltételeződik minden olyan átirányított taghez, amelyet előzetes <b>-tagsFromFile</b> opció nélkül adnak meg. A másolt tagek listához is adhatók vagy listából törölhetők, illetve feltételesen törölhetők/cserélhetők a &quot;&#39;-<i>SRCTAG</i>+&lt;<i>DSTTAG</i>&#39;&quot; vagy &quot;&#39;-<i>SRCTAG</i>-&lt;<i>DSTTAG</i>&#39;&quot; alakú argumentumokkal (de lásd a lenti 5. megjegyzést).</p>
+
+<p>Az átirányítási szolgáltatás egy bővítése lehetővé teszi, hogy tagneveket tartalmazó sztringeket használjunk a <code>&lt;</code> szimbólum jobb oldalán a &quot;&#39;-<i>DSTTAG</i>&lt;<i>STR</i>&#39;&quot; szintaxissal, ahol a <i>STR</i>-ben lévő tagneveket egy <code>$</code> szimbólum előzi meg. Erről a szintaxisról bővebben lásd a <b>-p</b> opciót és a <a href="#Advanced-formatting-feature">&quot;Haladó formázási szolgáltatás&quot;</a> szakaszt. A <code>=</code> jellel kezdődő sztringeknek egyetlen szóközt kell beszúrniuk a <code>&lt;</code> után, hogy elkerüljék az összetévesztést a <code>&lt;=</code> operátorral, amely a tag értékét egy fájl tartalmából állítja be. A sztring elején lévő egyetlen szóköz eltávolításra kerül, ha létezik, de a sztringben lévő minden más szóköz megőrződik. Az átirányítási szolgáltatás lista típusú tagekkel, rövidítésekkel vagy a tagnevekben helyettesítő karakterek használatakor való alkalmazásáról lásd a lenti 8. megjegyzést.</p>
+
+<p>A <b>-tagsFromFile</b> használatára vonatkozó példákért lásd a <a href="#COPYING-EXAMPLES">&quot;MÁSOLÁSI PÉLDÁK&quot;</a> szakaszt.</p>
+
+<p>Megjegyzések:</p>
+
+<p>1) Némely tag (általában olyan tagek, amelyek befolyásolhatják a kép megjelenését) „nem biztonságosnak" (Unsafe) számít az íráshoz, és csak akkor másolódik, ha kifejezetten megadják (azaz helyettesítő karakterek nélkül). A „nem biztonságos" tagekről bővebben lásd a <a>tagnév-dokumentációt</a>.</p>
+
+<p>2) Legyél tisztában a különbséggel egy tag másolásból való kizárása (--<i>TAG</i>) és egy tag törlése (-<i>TAG</i>=) között. Egy tag kizárása megakadályozza, hogy a cél-képbe másolódjon, a törlés viszont eltávolít egy már meglévő taget a képből.</p>
+
+<p>3) A maker note információ blokként másolódik, így a más információval ellentétben nem befolyásolják a parancssorban utána következő tag-hozzárendelések, és az egyes makernote-tagek nem zárhatók ki egy blokkmásolásból. Ezenkívül, mivel a maker note-okból hivatkozott PreviewImage meglehetősen nagy lehet, az nem másolódik, és ha kívánatos, külön kell átvinni.</p>
+
+<p>4) A műveletek sorrendje az, hogy az összes megadott tag a parancssorban a <b>-tagsFromFile</b> opció helyén másolódik. A <b>-tagsFromFile</b> opciótól jobbra lévő bármely tag-hozzárendelés az összes tag másolása után történik. Például az új tag-értékek az One, Two, Three, majd Four sorrendben állítódnak be ezzel a paranccsal:</p>
+
+<pre><code>exiftool -One=1 -tagsFromFile s.jpg -Two -Four=4 -Three d.jpg</code></pre>
+
+<p>Ez jelentős abban az esetben, amikor átfedés van a másolt és a hozzárendelt tagek között, mert a későbbi műveletek felülírhatják a korábbiakat.</p>
+
+<p>5) A másolt tagek normál viselkedése eltér a hozzárendelt tagekétől a lista típusú tageknél és a feltételes cseréknél, mert egy tagre végzett minden másolási művelet felülír minden korábbi műveletet. Bár ez elkerüli a duplikált listaelemeket, amikor redundáns információt tartalmazó fájlból másolunk tag-csoportokat, meg is akadályozza, hogy különböző tagek értékei ugyanabba a listába másolódjanak, amikor ez a szándék. Ahhoz, hogy különböző műveletek értékeit ugyanabba a listába gyűjtsd, adj egy <code>+</code>-t az argumentum kezdő <code>-</code> jele után, vagy használd a <b>-addTagsFromFile</b> opciót. Például:</p>
+
+<pre><code>exiftool -tagsfromfile @ &#39;-subject&lt;make&#39; &#39;-+subject&lt;model&#39; ...</code></pre>
+
+<p>vagy</p>
+
+<pre><code>exiftool -addtagsfromfile @ &#39;-subject&lt;make&#39; &#39;-subject&lt;model&#39; ...</code></pre>
+
+<p>Hasonlóképpen, a <code>-+DSTTAG</code> vagy a <b>-addTagsFromFile</b> használandó egy tag feltételes cseréjekor, hogy elkerüljük a korábbi feltételek felülírását.</p>
+
+<p>Ezeken a különbségeken kívül a <b>-tagsFromFile</b> és a <b>-addTagsFromFile</b> opció egyenértékű.</p>
+
+<p>6) A <b>-a</b> opció (duplikált tagek engedélyezése) mindig érvényben van, amikor tageket másolunk a <i>SRCFILE</i>-ból, de a legmagasabb prioritású tag mindig utoljára másolódik, így az élvez elsőbbséget.</p>
+
+<p>7) A strukturált tagek alapértelmezésben másolódnak tagek másolásakor. Részletekért lásd a <b>-struct</b> opciót.</p>
+
+<p>8) Az átirányítási szolgáltatásnál egy tag közvetlen másolása (azaz &quot;&#39;-<i>DSTTAG</i>&lt;<i>SRCTAG</i>&#39;&quot;) nem ugyanaz, mint az értékének egy sztringen belüli interpolálása (azaz &quot;&#39;-<i>DSTTAG</i>&lt;$<i>SRCTAG</i>&#39;&quot;) olyan forrás-tagek esetén, amelyek lista típusú tagek, <a>rövidítés-tagek</a>, vagy helyettesítő karaktereket tartalmazó tagnevek. Közvetlen másoláskor minden illeszkedő forrás-tag értékei egyesével másolódnak a cél-tagbe (mintha külön hozzárendelések lennének). Egy sztringen belül interpolálva viszont a listaelemek és a rövidítés-tagek értékei összefűződnek (a <b>-sep</b> opcióval beállított elválasztóval), és helyettesítő karakterek nem megengedettek. További különbség, hogy egy apró figyelmeztetés keletkezik, ha egy tag nem létezik, amikor az értékét egy sztringben interpoláljuk (a <code>$</code> jellel), de nem keletkezik, amikor a taget közvetlenül másoljuk.</p>
+
+<p>Végül a viselkedés eltérő, amikor <code>All</code> cél-taget vagy -csoportot használnak. Közvetlen másoláskor az <code>All</code> cél-csoport és/vagy tagnév ugyanabba az 1-es családbeli csoportba és/vagy tagnévbe ír, mint a forrás. Egy sztringben interpolálva viszont a forrás-tagek identitása elvész, és az érték minden lehetséges csoportba/tagbe beíródik. Például a következő parancsban a sztringes alakot kell használni, mivel a szándék az, hogy az összes meglévő dátum/idő tag értékét a <code>CreateDate</code>-ből állítsuk be:</p>
+
+<pre><code>exiftool &#39;-time:all&lt;$createdate&#39; -wm w FILE</code></pre>
+
+</dd>
+<dt id="x-TAG--exclude"><b>-x</b> <i>TAG</i> (<b>-exclude</b>)</dt>
+<dd>
+
+<p>A megadott tag kizárása. Több <b>-x</b> opció is lehet. Ennek ugyanaz a hatása, mint a --<i>TAG</i>-nek a parancssorban. Teljes leírásért lásd a fenti --<i>TAG</i> dokumentációt.</p>
+
+</dd>
+</dl>
+
+<h3 id="Input-output-text-formatting">Be- és kimeneti szövegformázás</h3>
+
+<p>Vedd figyelembe, hogy a legtöbb kimeneti szövegformátumnál a kinyert értékekből eltávolítjuk a záró szóközöket. A kivételek a <b>-b</b>, <b>-csv</b>, <b>-j</b> és <b>-X</b>.</p>
+
+<dl>
+
+<dt id="args--argFormat"><b>-args</b> (<b>-argFormat</b>)</dt>
+<dd>
+
+<p>Az információ kiírása exiftool-argumentumok formájában, amely alkalmas a <b>-@</b> opcióval való használatra íráskor. Kombinálható a <b>-G</b> opcióval a csoportnevek belefoglalásához. Ez a szolgáltatás használható tagek hatékony másolására képek között, de lehetővé teszi a metaadatok megváltoztatását a köztes fájl (ebben a példában <code>out.args</code>) szerkesztésével:</p>
+
+<pre><code>exiftool -args -G1 --filename --directory src.jpg &gt; out.args
+exiftool -@ out.args -sep &#39;, &#39; dst.jpg</code></pre>
+
+<p>Megjegyzés: Légy óvatos, amikor ezzel a technikával másolsz információt, mert könnyű olyan tageket írni, amelyek normál esetben „nem biztonságosnak" (Unsafe) számítanak. Például a FileName és Directory tagek ki vannak zárva a fenti példában, hogy elkerüljük a cél-fájl átnevezését és áthelyezését. Vedd figyelembe azt is, hogy a fenti második parancs figyelmeztető üzeneteket ad minden nem írható taghez.</p>
+
+<p>Emellett a <b>-sep</b> opciót használni kell, ahogy a fenti második parancsban, hogy megőrizzük a különálló listaelemeket, amikor a metaadatokat visszaírjuk a képfájlokba, a <b>-struct</b> opció pedig kinyeréskor használható a strukturált XMP-információ megőrzésére.</p>
+
+</dd>
+<dt id="b---b--binary---binary"><b>-b</b>, <b>--b</b> (<b>-binary</b>, <b>--binary</b>)</dt>
+<dd>
+
+<p>A kért metaadatok kiírása bináris formátumban, tagnevek és leírások nélkül (<b>-b</b> vagy <b>-binary</b>). Ezt az opciót főleg beágyazott képek vagy más bináris adatok kinyerésére használják, de némely szöveges sztringnél is hasznos lehet, mivel a vezérlőkarakterek (például a sortörések) nem cserélődnek le „."-ra, mint az alapértelmezett kimenetben. Alapértelmezésben a listaelemeket sortörés választja el, amikor a <b>-b</b> opcióval nyerik ki őket, és nem kerül lezáró karakter minden tag-érték után, de a listaelválasztó megváltoztatható egy <b>-sep</b> opcióval, és lezáró karakter állítható be egy második <b>-sep</b> opció hozzáadásával (részletekért lásd a <b>-sep</b> opciót). Kombinálható a <b>-j</b>, <b>-php</b> vagy <b>-X</b> opcióval bináris adatok JSON-, PHP- vagy XML-formátumban való kinyeréséhez, de vedd figyelembe, hogy a „nem biztonságos" tagek nem nyerhetők ki binárisan, hacsak nincsenek kifejezetten megadva, vagy az API RequestAll opció nincs 3-ra vagy magasabbra állítva.</p>
+
+<p>Bevezető dupla kötőjellel (<b>--b</b> vagy <b>--binary</b>) a bináris adatot tartalmazó tagek elnyomódnak a kimenetben olvasáskor.</p>
+
+</dd>
+<dt id="c-FMT--coordFormat"><b>-c</b> <i>FMT</i> (<b>-coordFormat</b>)</dt>
+<dd>
+
+<p>A GPS-koordináták kiírási formátumának beállítása. A <i>FMT</i> ugyanazt a szintaxist használja, mint egy <code>printf</code> formátumsztring. A specifikátorok a fokoknak, perceknek és másodperceknek felelnek meg ebben a sorrendben, de a percek és másodpercek opcionálisak. Például a következő táblázat megadja ugyanannak a koordinátának a kimenetét különféle formátumokkal:</p>
+
+<pre><code>        FMT                  Output
+-------------------    ------------------
+&quot;%d deg %d&#39; %.2f&quot;\&quot;    54 deg 59&#39; 22.80&quot;  (alapértelmezett olvasáshoz)
+&quot;%d %d %.8f&quot;           54 59 22.80000000  (alapértelmezett másoláshoz)
+&quot;%d deg %.4f min&quot;      54 deg 59.3800 min
+&quot;%.6f degrees&quot;         54.989667 degrees</code></pre>
+
+<p>Megjegyzések:</p>
+
+<p>1) A pontosságvesztés elkerülése érdekében az alapértelmezett koordinátaformátum más, amikor a <b>-tagsFromFile</b> opcióval másolunk tageket.</p>
+
+<p>2) Ha a félteke ismert, egy irányjelző (N, S, E vagy W) fűződik minden kiírt koordinátához, de a formátumspecifikátorhoz adott <code>+</code> vagy <code>-</code> (pl. <code>%+.6f</code> vagy <code>%-.6f</code>) helyette előjeles koordinátát ír ki. (A <code>+</code> bevezető „+"-t ad a pozitív koordinátákhoz, a <code>-</code> viszont nem.)</p>
+
+<p>3) Ez a kiírási formázás letiltható a <b>-n</b> opcióval, hogy a koordinátákat előjeles decimális fokként nyerjük ki.</p>
+
+</dd>
+<dt id="charset-TYPE-CHARSET"><b>-charset</b> [[<i>TYPE</i>=]<i>CHARSET</i>]</dt>
+<dd>
+
+<p>Ha a <i>TYPE</i> értéke <code>ExifTool</code> vagy nincs megadva, ez az opció beállítja az ExifTool karakterkódolását a kimeneti tag-értékekhez olvasáskor és a bemeneti értékekhez íráskor, <code>UTF8</code> alapértelmezéssel. Ha nincs <i>CHARSET</i> megadva, a program az elérhető karakterkészletek listáját adja vissza. Az érvényes <i>CHARSET</i> értékek:</p>
+
+<pre><code>CHARSET     Alias(es)        Description
+----------  ---------------  ----------------------------------
+UTF8        cp65001, UTF-8   UTF-8 characters (default)
+Latin       cp1252, Latin1   Windows Latin1 (West European)
+Latin2      cp1250           Windows Latin2 (Central European)
+Cyrillic    cp1251, Russian  Windows Cyrillic
+Greek       cp1253           Windows Greek
+Turkish     cp1254           Windows Turkish
+Hebrew      cp1255           Windows Hebrew
+Arabic      cp1256           Windows Arabic
+Baltic      cp1257           Windows Baltic
+Vietnam     cp1258           Windows Vietnamese
+Thai        cp874            Windows Thai
+DOSLatinUS  cp437            DOS Latin US
+DOSLatin1   cp850            DOS Latin1
+DOSCyrillic cp866            DOS Cyrillic
+MacRoman    cp10000, Roman   Macintosh Roman
+MacLatin2   cp10029          Macintosh Latin2 (Central Europe)
+MacCyrillic cp10007          Macintosh Cyrillic
+MacGreek    cp10006          Macintosh Greek
+MacTurkish  cp10081          Macintosh Turkish
+MacRomanian cp10010          Macintosh Romanian
+MacIceland  cp10079          Macintosh Icelandic
+MacCroatian cp10082          Macintosh Croatian</code></pre>
+
+<p>A <i>TYPE</i> lehet <code>FileName</code> a parancssorban lévő fájlnevek (azaz a <i>FILE</i> argumentumok) kódolásának megadására. Windowson ez a széles karakteres I/O-rutinok használatát váltja ki, így támogatást nyújt a Unicode-fájlnevekhez. Részletekért lásd az alábbi <a href="#WINDOWS-UNICODE-FILE-NAMES">&quot;WINDOWS UNICODE FÁJLNEVEK&quot;</a> szakaszt.</p>
+
+<p>A <i>TYPE</i> alább felsorolt egyéb értékei a különféle metainformáció-formátumok belső kódolásának megadására szolgálnak.</p>
+
+<pre><code>TYPE       Description                                  Default
+---------  -------------------------------------------  -------
+EXIF       Internal encoding of EXIF &quot;ASCII&quot; strings    (none)
+ID3        Internal encoding of ID3v1 information       Latin
+IPTC       Internal IPTC encoding to assume when        Latin
+            IPTC:CodedCharacterSet is not defined
+Photoshop  Internal encoding of Photoshop IRB strings   Latin
+QuickTime  Internal encoding of QuickTime strings       MacRoman
+RIFF       Internal encoding of RIFF strings            0</code></pre>
+
+<p>A kódolt karakterkészletekről bővebben lásd a <a href="https://exiftool.org/faq.html#Q10">https://exiftool.org/faq.html#Q10</a> oldalt, a <b>-charset</b> beállításokról pedig az <a>Image::ExifTool Options</a>-t.</p>
+
+</dd>
+<dt id="csv-CSVFILE"><b>-csv</b>[[+]=<i>CSVFILE</i>]</dt>
+<dd>
+
+<p>Információ exportálása CSV-formátumban, vagy információ importálása, ha a <i>CSVFILE</i> meg van adva. Importáláskor a CSV-fájlnak pontosan ugyanolyan formátumúnak kell lennie, mint az exportált fájl. A <i>CSVFILE</i> első sorának a fájl minden oszlopához az ExifTool-tagneveket kell tartalmaznia (opcionális csoportnevekkel), és az értékeket vesszővel kell elválasztani. Egy speciális „SourceFile" oszlop adja meg az egyes információsorokhoz tartozó fájlokat (és egy „*" értékű SourceFile használható az összes fájlhoz importálandó alapértelmezett tagek definiálására, amelyek aztán a feldolgozott konkrét SourceFile-hoz megadott tagekkel kombinálódnak). Világosan fogalmazva: az importált CSV-fájl kikeresési táblaként működik, amelyből a parancssorban megadott fájlok/könyvtárak és tagek alapján megkapjuk az importálandó tageket. A <b>-csvDelim</b> opció használható a be-/kimeneti mezőelválasztó megváltoztatására, ha a vesszőtől eltérőre van szükség.</p>
+
+<p>A következő példák a <b>-csv</b> opció alapvető használatát mutatják be:</p>
+
+<pre><code># CSV-fájl generálása egy könyvtár összes képének közös tagjeivel
+exiftool -common -csv dir &gt; out.csv
+
+# egy könyvtár összes képének metaadatai frissítése CSV-fájlból
+exiftool -csv=a.csv dir</code></pre>
+
+<p>Importáláskor az üres értékek figyelmen kívül maradnak, hacsak nem használják a <b>-f</b> opciót, és az API MissingTagValue nincs üres sztringre állítva (amely esetben a tag törlődik). Ezenkívül a FileName és Directory oszlopok figyelmen kívül maradnak, ha léteznek (azaz az ExifTool nem próbálja meg beírni ezeket a tageket CSV-importáláskor), de minden más oszlop importálódik. Egy tag törlésének kikényszerítéséhez használd a <b>-f</b> opciót, és állítsd az értéket „-"-ra a CSV-fájlban (vagy a MissingTagValue-ra, ha ezt az API-opciót használták). Egyetlen parancsban több adatbázis is importálható.</p>
+
+<p>Konkrét tagek importálhatók a CSV-adatbázisból <b>-</b><i>TAG</i> opciók hozzáadásával a parancshoz a <b>-csv=</b><i>CSVFILE</i> után, vagy kizárhatók a <b>--</b><i>TAG</i>-gel, a kizárások élveznek elsőbbséget. A csoportnevek és a helyettesítő karakterek a tagnevekben megengedettek, de a csoportnévnek pontosan illeszkednie kell a CSV-fájlban lévő csoportra (pl. egy <code>XMP-dc:Subject</code> oszlop a CSV-fájlban nem illeszkedik a parancssorban lévő <code>-XMP:Subject</code>-re). Ezenkívül a CSV-ből származó tagek átirányíthatók és a cél-fájlban más tagekbe írhatók, a haladó formázási kifejezések támogatásával, ugyanazzal a szintaxissal, mint a <b>-tagsFromFile</b> szolgáltatás. Ha nincsenek tagek megadva, akkor a FileName, Directory és a kizárt tagek kivételével minden tag importálódik (az adatbázis-bejegyzésekkel azonos sorrendben).</p>
+
+<p>CSV-fájl exportálásakor a <b>-g</b> vagy <b>-G</b> opció csoportneveket ad a tag-fejlécekhez. Ha a <b>-a</b> opciót használják a duplikált tagnevek engedélyezésére, a duplikált tagek csak akkor kerülnek be a CSV-kimenetbe, ha az oszlopfejlécek egyediek. A <b>-G4</b> opció hozzáadása minden taghez egyedi oszlopfejlécet biztosít. A <b>-b</b> opció hozzáadható bináris adatok kiírásához, szükség esetén base64-kódolással (amit az érték első 7 bájtjaként szereplő ASCII „base64:" jelez). Az értékek base64-kódolással is kódolhatók, ha a <b>-charset</b> opciót használják, és az érték érvénytelen karaktereket tartalmaz.</p>
+
+<p>Konkrét tagek exportálásakor a CSV-oszlopok a megadott tagekkel azonos sorrendben rendeződnek el, feltéve, hogy az oszlopfejlécek pontosan illeszkednek a megadott tagnevekre, egyébként az oszlopok ábécésorrendbe rendeződnek.</p>
+
+<p>CSV-fájlból való importáláskor csak a parancssorban megadott fájlok kerülnek feldolgozásra. A CSV-fájlban lévő minden extra bejegyzés figyelmen kívül marad.</p>
+
+<p>A lista típusú tagek egyszerű sztringként tárolódnak egy CSV-fájlban, de a <b>-sep</b> opció használható arra, hogy importáláskor visszabontsuk őket különálló elemekre.</p>
+
+<p>Speciális szolgáltatás: a <b>-csv</b>+=<i>CSVFILE</i> használható arra, hogy elemeket adjunk a fájlban lévő meglévő listákhoz. Ez csak a lista típusú tageket érinti. A <b>-j</b> opcióra is vonatkozik.</p>
+
+<p>Vedd figyelembe, hogy ez és a <b>-plot</b> opció alapvetően más, mint az összes többi kimeneti formátum opció, mert megkövetelik, hogy az összes bemeneti fájlból származó információ a memóriában pufferelődjön, mielőtt a kimenet kiíródik. Ez túlzott memóriahasználatot eredményezhet, amikor egyetlen paranccsal nagyon sok fájlt dolgozunk fel. Ezenkívül a <b>-csv</b>-vel használva a <b>-w</b> opció úgy változik, hogy teljes fájlnevet kell megadni, fájlnév-formázókódok vagy hozzáfűző mód nélkül, és a <b>-W</b> nem használható. Nagyszámú fájl feldolgozásakor ajánlott vagy a JSON (<b>-j</b>) vagy az XML (<b>-X</b>) kimeneti formátumot használni, vagy a <b>-p</b>-t egy fix oszlopos CSV-fájl generálásához a <b>-csv</b> opció helyett.</p>
+
+</dd>
+<dt id="csvDelim-STR"><b>-csvDelim</b> <i>STR</i></dt>
+<dd>
+
+<p>A CSV-bejegyzéseket elválasztó határoló beállítása a <b>-csv</b> opción keresztüli CSV-fájl be-/kimenethez. A <i>STR</i> tartalmazhat „\t", „\n", „\r" és „\\" karaktereket a TAB, LF, CR, illetve „\" jelölésére. Kettős idézőjel nem megengedett a határolóban. Az alapértelmezés a „,".</p>
+
+</dd>
+<dt id="d-FMT--dateFormat"><b>-d</b> <i>FMT</i> (<b>-dateFormat</b>)</dt>
+<dd>
+
+<p>A dátum/idő tag-értékek formátumának beállítása. A <i>FMT</i> sztring tartalmazhat százalékjellel (<code>%</code>) kezdődő formázókódokat egy dátum/idő érték különféle összetevőinek jelölésére. Az ExifTool 3 formátumkódot valósít meg belsőleg (lásd lentebb), de a többi formátumkód rendszerfüggő -- részletekért nézd meg a <code>strftime</code> man oldalt a rendszereden. Az alapértelmezett formátum a „%Y:%m:%d %H:%M:%S"-sel egyenértékű. Ennek az opciónak nincs hatása a csak dátumot vagy csak időt tartalmazó tagekre. Az inverz konverzióhoz íráskor POSIX::strptime vagy Time::Piece szükséges. Parancsonként csak egy <b>-d</b> opció használható.</p>
+
+<p>Az ExifTool által belsőleg megvalósított további formátumkódok:</p>
+
+<p>1) A <code>%z</code> az időzónát jelöli „+/-HHMM" formátumban. Kettőspont hozzáadása (azaz <code>%:z</code>) kettőspont-elválasztót ad (pl. „-05:00"). Ha a dátum/idő érték nem tartalmaz időzónát, akkor a <code>%z</code> a megadott dátum/idő értékhez a rendszer időzónáját adja.</p>
+
+<p>2) A <code>%f</code> a törtmásodperceket jelöli, és támogat egy opcionális szélességet a tizedespont utáni számjegyek számának megadására (pl. a <code>%3f</code> valami olyat adna, mint „.437"). Mínuszjel hozzáadása elhagyja a tizedespontot (pl. a <code>%-3f</code> „437"-et adna).</p>
+
+<p>3) A <code>%s</code> az 1970. január 1. 00:00 UTC óta eltelt másodpercek számát jelöli, figyelembe véve a megadott időzónát (vagy a rendszer időzónáját, ha nincs megadva).</p>
+
+</dd>
+<dt id="D--decimal"><b>-D</b> (<b>-decimal</b>)</dt>
+<dd>
+
+<p>A tag-ID szám megjelenítése decimálisan információ kinyerésekor.</p>
+
+</dd>
+<dt id="E--ex--ec--escapeHTML--escapeXML--escapeC"><b>-E</b>, <b>-ex</b>, <b>-ec</b> (<b>-escapeHTML</b>, <b>-escapeXML</b>, <b>-escapeC</b>)</dt>
+<dd>
+
+<p>Karakterek escape-elése a kimeneti tag-értékekben HTML (<b>-E</b>), XML (<b>-ex</b>) vagy C (<b>-ec</b>) számára. HTML esetén minden U+007F feletti Unicode-kódpontú karakter escape-elődik, valamint a következő 5 karakter: &amp; (&amp;amp;) &#39; (&amp;#39;) &quot; (&amp;quot;) &gt; (&amp;gt;) és &lt; (&amp;lt;). XML esetén csak ez az 5 karakter escape-elődik. A <b>-E</b> opció beleértődik a <b>-h</b>-ba, a <b>-ex</b> a <b>-X</b>-be, a <b>-ec</b> a <b>-json</b>-ba, és ezen opciók egyike sem vonatkozik a <b>-csv</b> kimenetre. C esetén minden vezérlőkarakter és a fordított perjel escape-elődik. Az inverz konverzió alkalmazódik tagek írásakor.</p>
+
+</dd>
+<dt id="f--forcePrint"><b>-f</b> (<b>-forcePrint</b>)</dt>
+<dd>
+
+<p>A tagek kiírásának kikényszerítése akkor is, ha nem léteznek. Ez az opció a parancssorban megadott tagekre vonatkozik, vagy a <b>-p</b>, <b>-if</b> (hacsak nincs beállítva az API UndefTags opció), <b>-fileNUM</b> vagy <b>-tagsFromFile</b> opciókkal megadottakra. Amikor a <b>-f</b>-et használják, minden hiányzó tag értéke alapértelmezésben kötőjelre (<code>-</code>) áll, de ez az API MissingTagValue opcióval konfigurálható. A <b>-f</b> arra is szolgál, hogy egy „flags" attribútumot adjon a <b>-listx</b> kimenethez, vagy hogy lehetővé tegye tagek törlését a <b>-csv</b>=<i>CSVFILE</i> szolgáltatással való íráskor.</p>
+
+</dd>
+<dt id="g-NUM-:NUM...--groupHeadings"><b>-g</b>[<i>NUM</i>][:<i>NUM</i>...] (<b>-groupHeadings</b>)</dt>
+<dd>
+
+<p>A kimenet rendezése tag-csoport szerint. A <i>NUM</i> egy csoportcsalád-számot ad meg, és lehet 0 (általános hely), 1 (konkrét hely), 2 (kategória), 3 (dokumentumszám), 4 (példányszám), 5 (metaadat-útvonal), 6 (EXIF/TIFF-formátum), 7 (tag-ID) vagy 8 (fájlszám). A <b>-g0</b> feltételeződik, ha nincs családszám megadva. Kombinálható más opciókkal, hogy csoportneveket adjunk a kimenethez. Több család is megadható kettősponttal elválasztva. Alapértelmezésben az eredményül kapott csoportnév leegyszerűsödik minden bevezető <code>Main:</code> eltávolításával és a szomszédos azonos csoportnevek összevonásával, de ez elkerülhető, ha az első családszám elé kettőspontot teszünk (pl. <b>-g:3:1</b>). Használd a <b>-listg</b> opciót egy adott család csoportneveinek felsorolásához. Az API SavePath és SaveFormat opciók automatikusan engedélyeződnek, ha a megfelelő 5-ös vagy 6-os családbeli csoportneveket kérik. Bővebben lásd az <a>API GetGroup dokumentációt</a>.</p>
+
+</dd>
+<dt id="G-NUM-:NUM...--groupNames"><b>-G</b>[<i>NUM</i>][:<i>NUM</i>...] (<b>-groupNames</b>)</dt>
+<dd>
+
+<p>Ugyanaz, mint a <b>-g</b>, de minden taghez kiírja a csoportnevet. A <b>-G0</b> feltételeződik, ha a <i>NUM</i> nincs megadva. Számos más opcióval kombinálható, hogy csoportneveket adjunk a kimenethez. Vedd figyelembe, hogy a <i>NUM</i> bárhol hozzáadható, ahol a dokumentáció a <b>-G</b>-t említi. Részletekért lásd a fenti <b>-g</b> opciót.</p>
+
+</dd>
+<dt id="h--htmlFormat"><b>-h</b> (<b>-htmlFormat</b>)</dt>
+<dd>
+
+<p>HTML-táblázatos formázás használata a kimenethez. Beleérti a <b>-E</b> opciót. A <b>-D</b>, <b>-H</b>, <b>-g</b>, <b>-G</b>, <b>-l</b> és <b>-s</b> formázóopciók a <b>-h</b>-val kombinálva használhatók a HTML-formátum befolyásolására.</p>
+
+</dd>
+<dt id="H--hex"><b>-H</b> (<b>-hex</b>)</dt>
+<dd>
+
+<p>A tag-ID szám megjelenítése hexadecimálisan információ kinyerésekor.</p>
+
+</dd>
+<dt id="htmlDump-OFFSET"><b>-htmlDump</b>[<i>OFFSET</i>]</dt>
+<dd>
+
+<p>Az EXIF-információ hexdumpját tartalmazó dinamikus weboldal generálása. Ez nagyon hatékony eszköz lehet az EXIF-információ alacsony szintű elemzéséhez. A <b>-htmlDump</b> opció akkor is meghívódik, ha a <b>-v</b> és a <b>-h</b> opciót együtt használják. A részletességi szint szabályozza a kidumpolt blokkok maximális hosszát. Megadható egy <i>OFFSET</i> a megjelenített eltolások bázisának megadására. Ha nincs megadva, az EXIF/TIFF bázis-eltolás használatos. Abszolút eltolásokhoz használd a <b>-htmlDump0</b>-t. Jelenleg csak az EXIF/TIFF- és JPEG-információ kerül kidumpolásra, de a -u opció használható más fájlformátumok nyers hexdumpjának megadására.</p>
+
+</dd>
+<dt id="j-JSONFILE--json"><b>-j</b>[[+]=<i>JSONFILE</i>] (<b>-json</b>)</dt>
+<dd>
+
+<p>JSON (JavaScript Object Notation) formázás használata a konzolkimenethez, vagy JSON-fájl importálása, ha a <i>JSONFILE</i> meg van adva. Ez az opció kombinálható a <b>-g</b>-vel a kimenet csoportonkénti objektumokba rendezéséhez, vagy a <b>-G</b>-vel csoportnevek hozzáadásához minden taghez. A több elemet tartalmazó lista típusú tagek JSON-tömbként íródnak ki, hacsak nem használják a <b>-sep</b>-et. Alapértelmezésben az XMP-struktúrák egyes tagekre lapítódnak a JSON-kimenetben, de az eredeti struktúra megőrizhető a <b>-struct</b> opcióval (ez azt is eredményezi, hogy minden lista típusú XMP-tag JSON-tömbként íródik ki, egyébként az egyelemes listák egyszerű sztringként íródnának ki). A <b>-a</b> opció beleértődik a <b>-json</b> használatakor, de az azonos JSON-nevű bejegyzések elnyomódnak a kimenetben. (A <b>-G4</b> használható annak biztosítására, hogy minden tagnek egyedi JSON-neve legyen.)</p>
+
+<p>A <b>-D</b> vagy <b>-H</b> opció hozzáadása a tag-értékeket „val" és „id" mezőkkel rendelkező JSON-objektumokká változtatja. A <b>-l</b> hozzáadása „desc" mezőt ad, valamint „num" mezőt, ha a numerikus érték eltér a konvertált „val"-tól, és „fmt" és „hex" mezőket az EXIF-metaadatokhoz, ha az API SaveFormat, illetve SaveBin opció be van állítva. A „hex" kimenet hosszát az API LimitLongValues beállítás korlátozza. A SaveBin opció beállítása azt is eredményezi, hogy a Rational tagek eredeti értékei sztring alakban, extra „rat" mezőként adódnak vissza. A <b>-b</b> opció hozzáadható bináris adatok kiírásához, szükség esetén base64-kódolással (amit az érték első 7 bájtjaként szereplő ASCII „base64:" jelez), és a <b>-t</b> hozzáadható a tag-táblázat információinak belefoglalásához (részletekért lásd a <b>-t</b>-t). A JSON-kimenet UTF-8, függetlenül bármely <b>-L</b> vagy <b>-charset</b> opcióbeállítástól, de az UTF-8-ellenőrzés letiltódik, ha az UTF-8-tól eltérő karakterkészletet adnak meg.</p>
+
+<p>Vedd figyelembe, hogy az ExifTool csak akkor teszi idézőjelbe a JSON-értékeket, ha nem néznek ki számoknak (függetlenül az eredeti tárolási formátumtól vagy a vonatkozó metaadat-specifikációtól). Ez problémát okozhat, amikor a JSON-t egy erősen típusos nyelvvel olvassuk. Az API StructFormat opció azonban „JSONQ"-ra állítható a számok idézőjelezésének kikényszerítéséhez. Emellett a <b>-sep</b> opció használható a tömbök sztringgé alakítására. Például:</p>
+
+<pre><code>exiftool -j -api structformat=jsonq -sep &quot;, &quot; ...</code></pre>
+
+<p>Ha a <i>JSONFILE</i> meg van adva, a JSON-fájl importálódik, és a JSON-ból származó tag-definíciók a parancssorban megadott minden fájlhoz fájlonkénti alapon állítanak be tag-értékeket. Minden JSON-objektumban egy speciális „SourceFile" bejegyzés társítja az információt egy konkrét cél-fájlhoz. A hiányzó SourceFile-lal vagy „*" SourceFile-lal rendelkező objektum alapértelmezett tageket definiál minden cél-fájlhoz, amelyek a feldolgozott konkrét SourceFile-hoz megadott tagekkel kombinálódnak. Az importált JSON-fájlnak ugyanolyan formátumúnak kell lennie, mint az exportált JSON-fájloknak, azzal a kivétellel, hogy az egyszerű értékek helyett JSON-objektumokat exportáló opciók nem kompatibilisek az importfájl-formátummal (azaz a <b>-D</b>, <b>-H</b>, <b>-l</b> vagy <b>-T</b> opcióval való export nem kompatibilis, és a <b>-g</b> helyett a <b>-G</b>-t használd). Ezenkívül a bemeneti JSON-fájlban a tagnevekhez <code>#</code> fűzhető a kiírási konverzió letiltásához.</p>
+
+<p>Konkrét tagek importálhatók a JSON-adatbázisból <b>-</b><i>TAG</i> opciók hozzáadásával a parancshoz a <b>-j=</b><i>JSONFILE</i> után, vagy kizárhatók a <b>--</b><i>TAG</i>-gel, a kizárások élveznek elsőbbséget. A csoportnevek és a helyettesítő karakterek a tagnevekben megengedettek, de a csoportnévnek pontosan illeszkednie kell a JSON-fájlban lévő csoportra (pl. egy <code>XMP-dc:Subject</code> bejegyzés a JSON-fájlban nem illeszkedik a parancssorban lévő <code>-XMP:Subject</code>-re). Ezenkívül a JSON-ból származó tagek átirányíthatók és a cél-fájlban más tagekbe írhatók, a haladó formázási kifejezések támogatásával, ugyanazzal a szintaxissal, mint a <b>-tagsFromFile</b> szolgáltatás. Ha nincsenek tagek megadva, akkor a FileName, Directory és a kizárt tagek kivételével minden tag importálódik (az adatbázis-bejegyzésekkel azonos sorrendben).</p>
+
+<p>A CSV-importálással ellentétben az üres értékek nem maradnak figyelmen kívül, és üres érték beírását okozzák, ha az adott metaadattípus támogatja. A tageket a <b>-f</b> opció használatával és a tag-érték „-"-ra állításával törlik (vagy a MissingTagValue beállításra, ha ezt az API-opciót használták). A <b>-j</b>+=<i>JSONFILE</i>-lal való importálás azt eredményezi, hogy az új értékek a cél-fájlban lévő meglévő listákhoz adódnak.</p>
+
+</dd>
+<dt id="l--long"><b>-l</b> (<b>-long</b>)</dt>
+<dd>
+
+<p>Hosszú, 2 soros, Canon-stílusú kimeneti formátum használata. Leírást és nem konvertált értéket (ha eltér a konvertált értéktől) ad az XML-, JSON- vagy PHP-kimenethez, amikor a <b>-X</b>, <b>-j</b> vagy <b>-php</b> opciót használják. Kombinálható a <b>-listf</b>, <b>-listr</b> vagy <b>-listwf</b> opcióval is a fájltípusok leírásainak hozzáadásához.</p>
+
+</dd>
+<dt id="L--latin"><b>-L</b> (<b>-latin</b>)</dt>
+<dd>
+
+<p>Windows Latin1 kódolás (cp1252) használata a kimeneti tag-értékekhez az alapértelmezett UTF-8 helyett. Íráskor a <b>-L</b> azt adja meg, hogy a bemeneti szöveges értékek Latin1-ek UTF-8 helyett. Egyenértékű a <code>-charset latin</code>-nal.</p>
+
+</dd>
+<dt id="lang-LANG"><b>-lang</b> [<i>LANG</i>]</dt>
+<dd>
+
+<p>Az aktuális nyelv beállítása a tagleírásokhoz és a konvertált értékekhez. A <i>LANG</i> lehet <code>de</code>, <code>fr</code>, <code>ja</code> stb. Használd a <b>-lang</b>-ot egyéb argumentumok nélkül az elérhető nyelvek listájának megszerzéséhez. Az alapértelmezett nyelv <code>en</code>, ha a <b>-lang</b> nincs megadva. Vedd figyelembe, hogy a tag-/csoportnevek mindig angolok, függetlenül a <b>-lang</b> beállítástól, és a figyelmeztető/hibaüzenetek fordítása még nincs megvalósítva. Kombinálható a <b>-listx</b>-szel is, hogy a leírások csak egy nyelven íródjanak ki.</p>
+
+<p>Alapértelmezésben az ExifTool UTF-8 kódolást használ a speciális karakterekhez, de a <b>-L</b> vagy <b>-charset</b> opció használható más kódolások meghívására. Vedd figyelembe, hogy az ExifTool a Unicode::LineBreak-et használja, ha elérhető, hogy segítsen megőrizni a sima szöveges kimenet oszlopigazítását a változó szélességű karakterkészletű nyelveknél.</p>
+
+<p>Jelenleg a nyelvi támogatás nem teljes, de a felhasználók szívesen látott segítsége, ha saját fordításaik beküldésével javítanak ezen. Fordítás beküldéséhez kövesd ezeket a lépéseket (ehhez telepített Perl szükséges):</p>
+
+<p>1. Töltsd le és csomagold ki a legújabb Image-ExifTool teljes disztribúciót.</p>
+
+<p>2. Lépj be (&#39;cd&#39;) az Image-ExifTool könyvtárba.</p>
+
+<p>3. Futtasd ezt a parancsot a kívánt tagek (pl. EXIF) XML-fájljának elkészítéséhez:</p>
+
+<pre><code>./exiftool -listx -exif:all &gt; out.xml</code></pre>
+
+<p>4. Másold ezt a szöveget egy &#39;import.pl&#39; nevű fájlba az exiftool könyvtárban:</p>
+
+<pre><code>push @INC, &#39;lib&#39;;
+require Image::ExifTool::TagInfoXML;
+my $file = shift or die &quot;Expected XML file name\n&quot;;
+$Image::ExifTool::TagInfoXML::makeMissing = shift;
+Image::ExifTool::TagInfoXML::BuildLangModules($file,8);</code></pre>
+
+<p>5. Futtasd az &#39;import.pl&#39; szkriptet az XML-fájl importálásához, amely legenerálja a &#39;MISSING&#39; bejegyzéseket a nyelvedhez (pl. orosz):</p>
+
+<pre><code>perl import.pl out.xml ru</code></pre>
+
+<p>6. Szerkeszd a legenerált nyelvi modult, a lib/Image/ExifTool/Lang/ru.pm-et, és keresd meg és cseréld le a fájlban lévő összes &#39;MISSING&#39; sztringet a fordításaiddal.</p>
+
+<p>7. Küldd el a modult (ebben a példában &#39;ru.pm&#39;) e-mailben az exiftool@gmail.com címre</p>
+
+<p>8. Köszönjük!!</p>
+
+</dd>
+<dt id="listItem-INDEX"><b>-listItem</b> <i>INDEX</i></dt>
+<dd>
+
+<p>A lista típusú tagek esetén ennek hatására csak a megadott indexű elem kerül kinyerésre. Az <i>INDEX</i> értéke 0 a lista első eleméhez. Negatív indexek is használhatók a lista végéről való hivatkozáshoz. Nincs hatása az egyértékű tagekre. A tagből való másoláskori tag-értékekre is vonatkozik, valamint a <b>-if</b>, <b>-p</b> és <b>-fileNUM</b> argumentumokban.</p>
+
+</dd>
+<dt id="n---printConv"><b>-n</b> (<b>--printConv</b>)</dt>
+<dd>
+
+<p>A kiírási konverzió letiltása minden taghez. Alapértelmezésben a kinyert értékek egy ember számára olvashatóbb formátumra konvertálódnak, de a <b>-n</b> opció letiltja ezt a konverziót, feltárva a gép által olvasható értékeket. Például:</p>
+
+<pre><code>&gt; exiftool -Orientation -S a.jpg
+Orientation: Rotate 90 CW
+&gt; exiftool -Orientation -S -n a.jpg
+Orientation: 6</code></pre>
+
+<p>A kiírási konverzió tagenkénti alapon is letiltható a tagnévhez fűzött <code>#</code> karakterrel:</p>
+
+<pre><code>&gt; exiftool -Orientation# -Orientation -S a.jpg
+Orientation: 6
+Orientation: Rotate 90 CW</code></pre>
+
+<p>Ezek a technikák az inverz kiírási konverzió letiltására is használhatók íráskor. Például a következő parancsoknak mind ugyanaz a hatásuk:</p>
+
+<pre><code>&gt; exiftool -Orientation=&#39;Rotate 90 CW&#39; a.jpg
+&gt; exiftool -Orientation=6 -n a.jpg
+&gt; exiftool -Orientation#=6 a.jpg</code></pre>
+
+</dd>
+<dt id="p---STR-or-FMTFILE--printFormat"><b>-p</b>[-] <i>STR</i> or <i>FMTFILE</i> (<b>-printFormat</b>)</dt>
+<dd>
+
+<p>A kimenet kiírása a megadott sztring vagy fájl által meghatározott formátumban. Az argumentum sztringként értelmeződik, hacsak nem létezik ilyen nevű fájl, amely esetben a sztring a fájl tartalmából töltődik be. A formátumsztringben vagy -fájlban a tagnevek egy <code>$</code> szimbólummal kezdődnek, és tartalmazhatnak bevezető csoportneveket és/vagy záró <code>#</code>-t (a kiírási konverzió letiltásához). A kis- és nagybetűk nem számítanak. Kapcsos zárójelek <code>{}</code> használhatók a tagnév körül, hogy elválasszák a rákövetkező szövegtől (és használni kell őket, ha a rákövetkező szöveg alfanumerikus karakterrel, kötőjellel, alulvonással, kettősponttal vagy számjellel kezdődik). Használd a <code>$$</code>-t egy <code>$</code> szimbólum jelölésére, és a <code>$/</code>-t sortöréshez. Amikor a sztring argumentumot használják (azaz <i>STR</i>), egy sortörés kerül a sztring végére, hacsak nem adják meg a <b>-p-</b>-t, vagy nem használják a <b>-b</b> opciót.</p>
+
+<p>Több <b>-p</b> opció is használható. A <code>#[HEAD]</code>-del és <code>#[TAIL]</code>-lal kezdődő sorok az első feldolgozott fájl előtt, illetve az utolsó feldolgozott fájl után íródnak ki. A <code>#[SECT]</code>-tel és <code>#[ENDS]</code>-szel kezdődő sorok a fájlok minden szakasza előtt és után íródnak ki. Egy szakasz egymást követő fájlok azonos szakaszfejléccel rendelkező csoportjaként van definiálva (pl. a fájlok könyvtár szerint csoportosulnak, ha a <code>#[SECT]</code> tartalmazza a <code>$directory</code>-t). A <code>#[BODY]</code>-val kezdődő sorok és a nem <code>#</code>-tel kezdődő sorok minden feldolgozott fájlhoz kiíródnak. A <code>#[IF]</code>-fel kezdődő sorok nem íródnak ki, de az összes BODY-sor kimarad, ha egy IF-soron lévő bármely tag nem létezik. Az egyéb, <code>#</code>-tel kezdődő sorok figyelmen kívül maradnak. (Egy <code>#</code>-tel kezdődő sor kiírásához használd a <code>#[BODY]#</code>-t.) Például ez a formátumfájl:</p>
+
+<pre><code># ez egy kommentsor
+#[HEAD]-- Generated by ExifTool $exifToolVersion --
+File: $FileName - $DateTimeOriginal
+(f/$Aperture, ${ShutterSpeed}s, ISO $EXIF:ISO)
+#[TAIL]-- end --</code></pre>
+
+<p>ezzel a paranccsal:</p>
+
+<pre><code>exiftool -p test.fmt a.jpg b.jpg</code></pre>
+
+<p>ilyen kimenetet állít elő:</p>
+
+<pre><code>-- Generated by ExifTool 13.59 --
+File: a.jpg - 2003:10:31 15:44:19
+(f/5.6, 1/60s, ISO 100)
+File: b.jpg - 2006:05:23 11:57:38
+(f/8.0, 1/13s, ISO 100)
+-- end --</code></pre>
+
+<p>A több elemet tartalmazó lista típusú tagek, a több taget képviselő rövidítés-tagek, és az <code>All</code> csoport megadásakor illeszkedő tagek értékei a <b>-sep</b> opcióbeállítás szerint fűződnek össze, amikor a sztringben interpolálódnak. (Vedd figyelembe, hogy amikor az <code>All</code>-t csoportnévként használják, a duplikált tagek belekerülnek, függetlenül a Duplicates opcióbeállítástól.) Amikor az <code>All</code>-t tagnévként használják, 1 érték adódik vissza, ha bármely tag létezik a megadott csoportban, egyébként 0 (hacsak nem adják meg az <code>All</code> csoportot is, amely esetben az összes illeszkedő tag értéke összefűződik).</p>
+
+<p>A <b>-p</b> kimenet végigmegy a 3-as családbeli csoportneveken, és minden aldokumentum további kimenetet állít elő, amikor a <b>-ee</b> (ExtractEmbedded) opcióval kombinálják.</p>
+
+<p>Ha egy megadott tag nem létezik, apró figyelmeztetés keletkezik, és a hiányzó taget tartalmazó sor nem íródik ki. A <b>-f</b> opció azonban használható a hiányzó tagek értékének „-"-ra állítására (de ez az API MissingTagValue opcióval konfigurálható), vagy a <b>-m</b> opció használható az apró figyelmeztetések figyelmen kívül hagyására és a hiányzó értékek üresen hagyására. Alternatívaként a <b>-q -q</b> használható a figyelmeztető üzenetek egyszerű elnyomására.</p>
+
+<p>A <a href="#Advanced-formatting-feature">&quot;Haladó formázási szolgáltatás&quot;</a> használható az egyes tagek értékeinek módosítására a <b>-p</b> opciósztringen belül.</p>
+
+<p>Vedd figyelembe, hogy az API RequestTags opció automatikusan beáll a <i>FMTFILE</i>-ban vagy <i>STR</i>-ben használt összes taghez. Ez lehetővé teszi, hogy az összes többi taget figyelmen kívül hagyjuk az <b>-API IgnoreTags=all</b>-lal, ami csökkentett memóriahasználatot és nagyobb sebességet eredményez.</p>
+
+</dd>
+<dt id="php"><b>-php</b></dt>
+<dd>
+
+<p>A kimenet formázása PHP-tömbként. A <b>-g</b>, <b>-G</b>, <b>-D</b>, <b>-H</b>, <b>-l</b>, <b>-sep</b> és <b>-struct</b> opciók kombinálódnak a <b>-php</b>-val, és a duplikált tagek ugyanúgy kezelődnek, mint a <b>-json</b> opciónál. Emellett a <b>-b</b> opció hozzáadható bináris adatok kiírásához, és a <b>-t</b> hozzáadható a tag-táblázat információinak belefoglalásához (részletekért lásd a <b>-t</b>-t). Íme egy egyszerű példa, amely megmutatja, hogyan lehetne ezt egy PHP-szkriptben használni:</p>
+
+<pre><code>&lt;?php
+eval(&#39;$array=&#39; . `exiftool -php -q image.jpg`);
+print_r($array);
+?&gt;</code></pre>
+
+</dd>
+<dt id="plot"><b>-plot</b></dt>
+<dd>
+
+<p>Az összes megadott tag és az összes bemeneti fájl kimenetének kiírása egyetlen SVG-formátumú ábraként. Ezzel a szolgáltatással kombinálva a <b>-w</b> opció argumentuma egy teljes fájlnév formátumkódok nélkül, és a hozzáfűző szolgáltatás nem használható. A parancssorban megadott minden tag egy adathalmazt képvisel az ábrán (vagy többet tömbértékeknél, vagy ha a Split ábrabeállítást használják). A nem numerikus értékek figyelmen kívül maradnak. Minden bemeneti fájl több pontot is adhat egy adathalmazhoz, ha aldokumentumokat tartalmaz és a <b>-ee</b> opciót használják, vagy ha a tag-érték számok határolt sztringje (az érvényes határolók: szóköz, vessző, pontosvessző, tab és sortörés). Line, Scatter és Histogram ábratípusok érhetők el. Bővebb részletekért és az ábrabeállításokról szóló információért lásd az API Plot opciót és a <a href="https://exiftool.org/plot.html">https://exiftool.org/plot.html</a> oldalt.</p>
+
+</dd>
+<dt id="s-NUM--short"><b>-s</b>[<i>NUM</i>] (<b>-short</b>)</dt>
+<dd>
+
+<p>Rövid kimeneti formátum. Tagneveket ír ki leírások helyett. Adj <i>NUM</i>-ot vagy legfeljebb 3 <b>-s</b> opciót még rövidebb formátumokhoz:</p>
+
+<pre><code>-s1 or -s        - tagnevek kiírása leírások helyett
+-s2 or -s -s     - nincs extra szóköz az értékek oszlopigazításához
+-s3 or -s -s -s  - csak értékek kiírása (tagnevek nélkül)</code></pre>
+
+<p>A <b>-t</b>, <b>-h</b>, <b>-X</b> vagy <b>-listx</b> opciókkal kombinálva is hatásos.</p>
+
+</dd>
+<dt id="S--veryShort"><b>-S</b> (<b>-veryShort</b>)</dt>
+<dd>
+
+<p>Nagyon rövid formátum. Ugyanaz, mint a <b>-s2</b> vagy két <b>-s</b> opció. A tagnevek íródnak ki leírások helyett, és nem kerül extra szóköz az értékek oszlopigazításához.</p>
+
+</dd>
+<dt id="sep-STR--separator"><b>-sep</b> <i>STR</i> (<b>-separator</b>)</dt>
+<dd>
+
+<p>Elválasztósztring megadása a lista típusú tagek elemeihez. Olvasáskor az alapértelmezés a listaelemek „, "-vel való összefűzése. Íráskor ez az opció azt eredményezi, hogy a lista típusú tagekhez rendelt értékek minden, a <i>STR</i>-re illeszkedő részsztringnél egyes elemekre bomlanak (egyébként alapértelmezésben nem bomlanak). A <i>STR</i>-ben lévő szóközkarakterek nulla vagy több szóközkarakterre illeszkednek az értékben.</p>
+
+<p>Vedd figyelembe, hogy az üres elválasztó („") megengedett, és olvasáskor elválasztó nélkül fűzi össze az elemeket, íráskor pedig egyes karakterekre bontja az értéket.</p>
+
+<p>Tiszta bináris kimenetnél (a <b>-b</b>-t a <b>-j</b>, <b>-php</b> vagy <b>-X</b> nélkül használva) az első <b>-sep</b> opció listaelem-elválasztót ad meg, egy második <b>-sep</b> opció pedig lezáró karaktert a lista végére (vagy minden érték után, ha nem lista). Ezekben a sztringekben a <code>\n</code>, <code>\r</code> és <code>\t</code> használható a sortörés, kocsivissza, illetve tab jelölésére. Alapértelmezésben a bináris listaelemeket sortörés választja el, és nem kerül lezáró karakter.</p>
+
+</dd>
+<dt id="sort---sort"><b>-sort</b>, <b>--sort</b></dt>
+<dd>
+
+<p>A kimenet rendezése tagleírás szerint, vagy tagnév szerint, ha a <b>-s</b> opciót használják. Leírás szerinti rendezéskor a rendezési sorrend a <b>-lang</b> opcióbeállítástól függ. A <b>-sort</b> opció nélkül a tagek abban a sorrendben jelennek meg, ahogy a parancssorban megadták őket, vagy ha nincs megadva, abban a sorrendben, ahogy a fájlból kinyerték őket. Alapértelmezésben a tagek csoportok szerint rendeződnek, amikor a <b>-g</b> vagy <b>-G</b> opcióval kombinálják, de ez a csoportosítás letiltható a <b>--sort</b>-tal.</p>
+
+</dd>
+<dt id="struct---struct"><b>-struct</b>, <b>--struct</b></dt>
+<dd>
+
+<p>Strukturált XMP-információ kiírása ahelyett, hogy egyes tagekre lapítanánk. Ez az opció jól működik az XML (<b>-X</b>) és JSON (<b>-j</b>) kimeneti formátumokkal kombinálva. Más kimeneti formátumoknál az XMP-struktúrák és -listák ugyanabba a formátumba szerializálódnak, mint strukturált információ írásakor (részletekért lásd a <a href="https://exiftool.org/struct.html">https://exiftool.org/struct.html</a> oldalt). Másoláskor a strukturált tagek alapértelmezésben másolódnak, hacsak a <b>--struct</b>-ot nem használják e szolgáltatás letiltására (bár a lapított tagek ekkor is másolhatók egyesével megadva, hacsak nem használják a <b>-struct</b>-ot). Ezeknek az opcióknak nincs hatásuk új értékek hozzárendelésekor, mivel íráskor mindig használhatók mind a lapított, mind a strukturált tagek.</p>
+
+</dd>
+<dt id="t--tab"><b>-t</b> (<b>-tab</b>)</dt>
+<dd>
+
+<p>A leírások/értékek tabbal határolt listájának kiírása (hasznos adatbázis-importáláshoz). Kombinálható a <b>-s</b>-szel a tagnevek kiírásához leírások helyett, vagy a <b>-S</b>-szel, hogy csak a tag-értékeket írja ki, tabbal határolva egyetlen sorban. A <b>-t</b> opció kombinálható a <b>-j</b>, <b>-php</b> vagy <b>-X</b> opcióval a tag-táblázat információinak hozzáadásához (<code>table</code>, tag <code>id</code>, és <code>index</code> azokban az esetekben, amikor több feltételes tag létezik azonos ID-vel), ami lehetővé teszi, hogy a megfelelő taget megtaláljuk a <b>-listx</b> kimenetben.</p>
+
+</dd>
+<dt id="T--table"><b>-T</b> (<b>-table</b>)</dt>
+<dd>
+
+<p>A tag-értékek kiírása táblázatos formában. Egyenértékű a <b>-t -S -q -f</b>-fel.</p>
+
+</dd>
+<dt id="v-NUM--verbose"><b>-v</b>[<i>NUM</i>] (<b>-verbose</b>)</dt>
+<dd>
+
+<p>Részletes üzenetek kiírása. A <i>NUM</i> a részletesség szintjét adja meg a 0–5 tartományban, a nagyobb számok részletesebbek. Ha a <i>NUM</i> nincs megadva, akkor minden <b>-v</b> opció 1-gyel növeli a részletesség szintjét. Bármely 0-nál nagyobb szintnél a legtöbb más opció figyelmen kívül marad, és a normál konzolkimenet elnyomódik, hacsak nem nyernek ki konkrét tageket. A <b>-v0</b> használata azt eredményezi, hogy a konzolkimeneti puffer minden sor után ürül (ami hasznos lehet a késések elkerülésére, amikor az exiftool kimenetét csővezetéken továbbítjuk), és kiírja minden feldolgozott fájl nevét íráskor, és az új fájlnevet átnevezéskor, áthelyezéskor vagy másoláskor. A <b>-v0</b> feletti részletességi szintek nem ürítenek minden sor után. Lásd még a <b>-progress</b> opciót.</p>
+
+</dd>
+<dt id="w-EXT-or-FMT--textOut"><b>-w</b>[+][!] <i>EXT</i> or <i>FMT</i> (<b>-textOut</b>)</dt>
+<dd>
+
+<p>A konzolkimenet kiírása <i>EXT</i>-re végződő nevű fájlokba, egyet minden forrásfájlhoz. A kimeneti fájlnevet úgy kapjuk meg, hogy a forrásfájl kiterjesztését (a „."-tal együtt) lecseréljük a megadott kiterjesztésre (és egy „." kerül az <i>EXT</i> elejére, ha még nem tartalmaz ilyet). Alternatívaként egy <i>FMT</i> sztring használható, hogy nagyobb kontrollt adjon a kimeneti fájlnév és -könyvtár felett. A formátumsztringben a %d, %f és %e a forrásfájl könyvtárát, fájlnevét és kiterjesztését jelöli, a %c pedig egy másolatszámot, amely automatikusan növekszik, ha a fájl már létezik. A %d szükség esetén tartalmazza a záró „/"-t, de a %e nem tartalmazza a bevezető „."-t. Például:</p>
+
+<pre><code>-w %d%f.txt       # ugyanaz a hatás, mint a &quot;-w txt&quot;
+-w dir/%f_%e.out  # fájlok írása a &quot;dir&quot;-be &quot;FILE_EXT.out&quot; néven
+-w dir2/%d%f.txt  # írás a &quot;dir2&quot;-be, a könyvtárstruktúra megtartásával
+-w a%c.txt        # írás &quot;a.txt&quot; vagy &quot;a1.txt&quot; vagy &quot;a2.txt&quot; néven...</code></pre>
+
+<p>A meglévő fájlok nem változnak, hacsak az opció nevéhez felkiáltójelet nem adnak (azaz <b>-w!</b> vagy <b>-textOut!</b>) a fájl felülírásához, vagy pluszjelet (azaz <b>-w+</b> vagy <b>-textOut+</b>) a meglévő fájlhoz való hozzáfűzéshez. Mindkettő használható (azaz <b>-w+!</b> vagy <b>-textOut+!</b>), hogy felülírjuk azokat a kimeneti fájlokat, amelyek a parancs futtatása előtt nem léteztek, és hozzáfűzzük több forrásfájl kimenetét. Például egy kimeneti fájl írásához minden könyvtárban lévő összes forrásfájlhoz:</p>
+
+<pre><code>exiftool -filename -createdate -T -w+! %d/out.txt -r DIR</code></pre>
+
+<p>A nagybetűs %D, %F, %E és %C formátumkódok kissé eltérő alternatívát nyújtanak a kisbetűs változatokhoz. A %D nem tartalmazza a záró „/"-t, a %F a teljes fájlnév a kiterjesztéssel együtt, a %E tartalmazza a bevezető „."-t, a %C pedig minden feldolgozott fájlhoz növeli a számlálót (lásd lentebb).</p>
+
+<p>Megjegyzések:</p>
+
+<p>1) Egy Windows BAT-fájlban a <code>%</code> karaktert a <code>%%</code> jelöli, így egy olyan argumentum, mint a <code>%d%f.txt</code>, <code>%%d%%f.txt</code> alakban íródik.</p>
+
+<p>2) Ha a <b>-w</b> argumentuma nem tartalmaz érvényes formátumkódot (pl. %f), akkor fájlkiterjesztésként értelmeződik, de három különböző módon lehet egyetlen kimeneti fájlt létrehozni több forrásfájlból:</p>
+
+<pre><code># 1. Shell-átirányítás
+exiftool FILE1 FILE2 ... &gt; out.txt
+
+# 2. A -w opcióval és egy nulla szélességű formátumkóddal
+exiftool -w+! %0fout.txt FILE1 FILE2 ...
+
+# 3. A -W opcióval (lásd lentebb a -W opciót)
+exiftool -W+! out.txt FILE1 FILE2 ...</code></pre>
+
+<p>3) A <b>-w</b> opció megváltozik, amikor egy többfájlos kimeneti formátummal (<b>-csv</b> vagy <b>-plot</b>) használják. Ezeknél a <b>-w</b> argumentuma egy teljes fájlnév formázókódok nélkül, és a hozzáfűző szolgáltatás nem használható.</p>
+
+<p>Haladó szolgáltatások:</p>
+
+<p>Az eredeti fájlnév, könyvtár vagy kiterjesztés egy részsztringje kivehető úgy, hogy közvetlenül a „%" karakter után egy mezőszélességet adunk meg. Ha a szélesség negatív, a részsztring a végéről vétetik. A részsztring pozíciója (a sztring elején vagy végén figyelmen kívül hagyandó karakterek) egy második opcionális értékkel adható meg egy tizedespont után. Például:</p>
+
+<pre><code>Input File Name     Format Specifier    Output File Name
+----------------    ----------------    ----------------
+Picture-123.jpg     %7f.txt             Picture.txt
+Picture-123.jpg     %-.4f.out           Picture.out
+Picture-123.jpg     %7f.%-3f            Picture.123
+Picture-123a.jpg    Meta%-3.1f.txt      Meta123.txt</code></pre>
+
+<p>(Vedd figyelembe, hogy a speciális karakterek szélessége lehet egynél nagyobb.)</p>
+
+<p>A %d és %D esetén a mezőszélesség/pozíció specifikátorok a részsztring-pozíció helyett a könyvtárszintekre alkalmazhatók úgy, hogy a formátumspecifikátorban tizedespont helyett kettőspontot használunk. Például:</p>
+
+<pre><code>Source Dir     Format   Result       Notes
+------------   ------   ----------   ------------------
+pics/2012/02   %2:d     pics/2012/   take top 2 levels
+pics/2012/02   %-:1d    pics/2012/   up one directory level
+pics/2012/02   %:1d     2012/02/     ignore top level
+pics/2012/02   %1:1d    2012/        take 1 level after top
+pics/2012/02   %-1:D    02           bottom level folder name
+/Users/phil    %:2d     phil/        ignore top 2 levels</code></pre>
+
+<p>(Vedd figyelembe, hogy a gyökérkönyvtár egy szintnek számít, amikor abszolút útvonalat használunk, mint a fenti utolsó példában.)</p>
+
+<p>A %c esetén ezeknek a módosítóknak más a hatásuk. Ha mezőszélességet adnak meg, a másolatszám nullákkal töltődik ki a megadott szélességre. Egy bevezető „-" kötőjelet ad a másolatszám elé, egy „+" pedig alulvonást. Alapértelmezésben a másolatszám elmarad egy adott név első fájljából, de ez megváltoztatható a módosítóhoz adott tizedesponttal. Például:</p>
+
+<pre><code>-w A%-cZ.txt      # AZ.txt, A-1Z.txt, A-2Z.txt ...
+-w B%5c.txt       # B.txt, B00001.txt, B00002.txt ...
+-w C%.c.txt       # C0.txt, C1.txt, C2.txt ...
+-w D%-.c.txt      # D-0.txt, D-1.txt, D-2.txt ...
+-w E%-.4c.txt     # E-0000.txt, E-0001.txt, E-0002.txt ...
+-w F%-.4nc.txt    # F-0001.txt, F-0002.txt, F-0003.txt ...
+-w G%+c.txt       # G.txt, G_1.txt G_2.txt ...
+-w H%-lc.txt      # H.txt, H-b.txt, H-c.txt ...
+-w I.%.3uc.txt    # I.AAA.txt, I.AAB.txt, I.AAC.txt ...</code></pre>
+
+<p>Egy speciális szolgáltatás lehetővé teszi, hogy a másolatszám minden feldolgozott fájlhoz növekedjen, ha a %c helyett a %C-t (nagybetűs) használjuk. Ez lehetővé teszi, hogy sorszámot adjunk a kimeneti fájlnevekhez, még akkor is, ha a nevek különbözőek. A %C esetén a nulla másolatszám nem marad el, mint a %c-nél. Egy bevezető „-" hatására a szám minden új könyvtár elején nullázódik (az eredeti könyvtárstruktúrában, ha a fájlok áthelyezés alatt állnak), a „+"-nak pedig nincs hatása. A tizedespont előtti szám adja a kezdőindexet, a tizedespont utáni szám a mezőszélességet. A feldolgozott fájlszámmal való szinkronizáció megőrzése érdekében a másolatszám alapértelmezésben nem növekszik a fájlnév-ütközések elkerülésére, így minden meglévő azonos nevű fájl hibát okoz. A tizedespont helyett kettőspont használata azonban azt eredményezi, hogy a szám növekszik a meglévő fájlokkal való ütközések elkerülésére.</p>
+
+<p>A következő példák a kimeneti fájlneveket mutatják, amikor az <code>exiftool rose.jpg star.jpg jet.jpg ...</code> paranccsal használják:</p>
+
+<pre><code>-w %C%f.txt       # 0rose.txt, 1star.txt, 2jet.txt
+-w %f-%10C.txt    # rose-10.txt, star-11.txt, jet-12.txt
+-w %.3C-%f.txt    # 000-rose.txt, 001-star.txt, 002-jet.txt
+-w %57.4C%f.txt   # 0057rose.txt, 0058star.txt, 0059jet.txt</code></pre>
+
+<p>Minden formátumkód módosítható „l"-lel vagy „u"-val a kis-, illetve nagybetű megadására (azaz <code>%le</code> a kisbetűs fájlkiterjesztéshez). Amikor a %c vagy %C módosítására használják, a számok ábécésorrendű bázisra változnak (lásd a fenti H példát). Ezenkívül a %c és %C módosítható „n"-nel, hogy természetes számokkal számoljon 1-től kezdve, 0 helyett (lásd a fenti F példát).</p>
+
+<p>Ugyanezt a <i>FMT</i> szintaxist használják a <b>-o</b> és <b>-tagsFromFile</b> opcióknál is, bár a %c és %C csak a kimeneti fájlnevekre érvényes.</p>
+
+</dd>
+<dt id="W-FMT--tagOut"><b>-W</b>[+][!] <i>FMT</i> (<b>-tagOut</b>)</dt>
+<dd>
+
+<p>A <b>-w</b> opció ezen továbbfejlesztett változata lehetővé teszi, hogy minden kinyert taghez külön kimeneti fájl jöjjön létre. Az alapfunkció részleteiért lásd a fenti <b>-w</b> opció dokumentációját. Itt a <b>-W</b> és a <b>-w</b> közötti különbségek vannak felsorolva:</p>
+
+<p>1) A <b>-W</b>-vel minden kinyert taghez új kimeneti fájl jön létre.</p>
+
+<p>2) A <b>-W</b> négy további formátumkódot támogat: a %t, %g és %s a tagnevet, a csoportnevet és a kimeneti fájl javasolt kiterjesztését jelöli (az adat formátuma alapján), a %o pedig a bemeneti fájlból származó OriginalRawFileName vagy OriginalFileName tag értéke (könyvtárnév nélkül, de a kiterjesztéssel együtt). A %g kódot egyetlen számjegy követheti a csoportcsalád-szám megadására (pl. %g1), egyébként a 0-s család feltételeződik. A részsztring szélesség/pozíció/kisbetű-nagybetű specifikátorok ezekkel a formátumkódokkal pontosan ugyanúgy használhatók, mint a %f és %e esetén.</p>
+
+<p>3) A <b>-W</b> argumentuma fájlnévként értelmeződik, ha nem tartalmaz formátumkódokat. (A <b>-w</b>-nél ez fájlkiterjesztés lenne.) Ez a változás lehetővé teszi egy egyszerű fájlnév megadását, amely a hozzáfűző szolgáltatással kombinálva módszert nyújt arra, hogy több forrásfájl metaadatait egyetlen kimeneti fájlba írjuk shell-átirányítás nélkül. Például a következő parancspárok ugyanazt az eredményt adják:</p>
+
+<pre><code># meglévő szövegfájl felülírása
+exiftool test.jpg &gt; out.txt     # shell-átirányítás
+exiftool test.jpg -W+! out.txt  # egyenértékű -W opció
+
+# hozzáfűzés meglévő szövegfájlhoz
+exiftool test.jpg &gt;&gt; out.txt    # shell-átirányítás
+exiftool test.jpg -W+ out.txt   # egyenértékű -W opció</code></pre>
+
+<p>4) A <b>-v</b> opció hozzáadása a <b>-W</b>-hez a tagek és a kimeneti fájlnevek listáját küldi a konzolra ahelyett, hogy az egész fájl részletes dumpját adná. (Kivéve, ha minden kimenetet egyetlen fájlba fűzünk hozzá minden forrásfájlhoz a <b>-W+</b>-szal egy olyan kimeneti fájl-<i>FMT</i>-vel, amely nem tartalmaz %t, %g, %s vagy %o kódot.)</p>
+
+<p>5) Az egyes listaelemek külön fájlokban tárolódnak, amikor a <b>-W</b>-t a <b>-b</b>-vel kombinálják, de vedd figyelembe, hogy a külön fájlok létrehozásához a %c-t vagy %C-t kell használni a <i>FMT</i>-ben, hogy a fájlok egyedi nevet kapjanak.</p>
+
+</dd>
+<dt id="Wext-EXT---Wext-EXT--tagOutExt"><b>-Wext</b> <i>EXT</i>, <b>--Wext</b> <i>EXT</i> (<b>-tagOutExt</b>)</dt>
+<dd>
+
+<p>Ez az opció a <b>-W</b> opció által írt kimeneti fájl(ok) típusának megadására szolgál. Kimeneti fájl csak akkor íródik, ha a javasolt kiterjesztés illeszkedik az <i>EXT</i>-re. Több <b>-Wext</b> opció is használható egynél több fájltípus írásához. Használd a <b>--Wext</b>-et, hogy a megadott típus(ok) kivételével mindent írj.</p>
+
+</dd>
+<dt id="X--xmlFormat"><b>-X</b> (<b>-xmlFormat</b>)</dt>
+<dd>
+
+<p>ExifTool-specifikus RDF/XML formázás használata a konzolkimenethez. Beleérti a <b>-a</b> opciót, így a duplikált tagek kinyerésre kerülnek. A <b>-b</b>, <b>-D</b>, <b>-H</b>, <b>-l</b>, <b>-s</b>, <b>-sep</b>, <b>-struct</b> és <b>-t</b> formázóopciók a <b>-X</b>-szel kombinálva használhatók a kimenet befolyásolására, de vedd figyelembe, hogy a tag-ID (<b>-D</b>, <b>-H</b> és <b>-t</b>), a bináris adat (<b>-b</b>) és a strukturált kimenet (<b>-struct</b>) opciók nem hatásosak a rövid kimenetnél (<b>-s</b>). A <b>-s</b> másik korlátozása, hogy adott csoportú és nevű tagből csak egy jelenhet meg a kimenetben. Vedd figyelembe, hogy a tag-ID opciók (<b>-D</b>, <b>-H</b> és <b>-t</b>) nem szabványos RDF/XML-t állítanak elő, hacsak nem használják a <b>-l</b> opciót is.</p>
+
+<p>Alapértelmezésben a <b>-X</b> lapított tageket ír ki, így a <b>-struct</b>-ot hozzá kell adni, ha az XMP-struktúrákat meg kell őrizni. A több értékkel rendelkező lista típusú tagek RDF Bagként formázódnak, de egyetlen sztringgé fűződnek össze, amikor a <b>-s</b>-t vagy <b>-sep</b>-et használják. A <b>-L</b> használata az XML-kódolást „UTF-8"-ról „windows-1252"-re változtatja. Más <b>-charset</b> beállítások csak akkor változtatják a kódolást, ha van megfelelő szabványos XML-karakterkészlet. A <b>-b</b> opció hatására a bináris adatértékek beíródnak, szükség esetén base64-kódolással. A <b>-t</b> opció tag-táblázat információt ad a kimenethez (részletekért lásd a <b>-t</b>-t).</p>
+
+<p>Megjegyzés: Ez a kimenet NEM ugyanaz, mint az XMP, mert dinamikusan generált tulajdonságneveket használ, amelyek az ExifTool-tagneveknek felelnek meg, névtérként az ExifTool 1-es családbeli csoportneveivel, nem pedig a szabványos XMP-tulajdonságokat és -névtereket. Ha helyette XMP-t akarsz írni, használd a <b>-o</b> opciót XMP-kiterjesztéssel a kimeneti fájlhoz.</p>
+
+</dd>
+</dl>
+
+<h3 id="Processing-control">Feldolgozásvezérlés</h3>
+
+<dl>
+
+<dt id="a---a--duplicates---duplicates"><b>-a</b>, <b>--a</b> (<b>-duplicates</b>, <b>--duplicates</b>)</dt>
+<dd>
+
+<p>A duplikált tagnevek kinyerésének engedélyezése (<b>-a</b>) vagy elnyomása (<b>--a</b>). Alapértelmezésben a duplikált tagek elnyomódnak olvasáskor, hacsak nem használják a <b>-ee</b> vagy <b>-X</b> opciókat, vagy a Duplicates opció nincs engedélyezve a konfigurációs fájlban. Íráskor ez az opció lehetővé teszi több Warning üzenet megjelenítését. Másoláskor a duplikált tagek mindig kinyerésre kerülnek.</p>
+
+</dd>
+<dt id="e---composite"><b>-e</b> (<b>--composite</b>)</dt>
+<dd>
+
+<p>Csak a meglévő tagek kinyerése -- ne generáljon composite tageket.</p>
+
+</dd>
+<dt id="ee-NUM--extractEmbedded"><b>-ee</b>[<i>NUM</i>] (<b>-extractEmbedded</b>)</dt>
+<dd>
+
+<p>Információ kinyerése EPS-fájlokban lévő beágyazott dokumentumokból, PDF-fájlokban lévő beágyazott EPS-információból és JPEG- és Jpeg2000-képekből, JPEG- és MPO-fájlokban lévő beágyazott MPF-képekből, AVCHD-videókban lévő streamelő metaadatokból, és Mac OS fájlok resource forkjából. Beleérti a <b>-a</b> opciót. Használd a <b>-g3</b>-at vagy <b>-G3</b>-at a kinyert információ származási dokumentumának azonosítására. Az aldokumentumokat tartalmazó beágyazott dokumentumokat kötőjelek jelzik a 3-as családbeli csoportnévben. (pl. a <code>Doc2-3</code> a 2. beágyazott dokumentum 3. aldokumentuma.) Vedd figyelembe, hogy ez az opció jelentősen megnövelheti a feldolgozási időt, különösen a sok beágyazott képet tartalmazó PDF-fájloknál vagy a streamelő metaadatokkal rendelkező videóknál.</p>
+
+<p>A <b>-ee</b>-vel használva a <b>-p</b> opció minden beágyazott dokumentumra kiértékelődik, mintha az külön bemeneti fájl lenne. Ez lehetővé teszi például GPS-nyomvonalnaplók generálását videókban lévő időbélyeggel ellátott metaadatokból. Példákért lásd a <a href="https://exiftool.org/geotag.html#Inverse">https://exiftool.org/geotag.html#Inverse</a> oldalt.</p>
+
+<p>A <i>NUM</i> 2-re állítása azt eredményezi, hogy az MP4-videókban lévő H264 videofolyam az első Supplemental Enhancement Information (SEI) üzenet dekódolásáig elemződik, a 3 pedig, hogy az egész H624-folyam elemződjön és az összes SEI-információ dekódolódjon. Az M2TS-videóknál a 3-as beállítás hatására az egész fájl elemződik olyan nem listázott programok keresésére, amelyek időbélyeggel ellátott GPS-t tartalmazhatnak.</p>
+
+</dd>
+<dt id="ext-EXT---ext-EXT--extension"><b>-ext</b>[+] <i>EXT</i>, <b>--ext</b> <i>EXT</i> (<b>-extension</b>)</dt>
+<dd>
+
+<p>Csak a megadott kiterjesztéssel rendelkező (<b>-ext</b>) vagy nem rendelkező (<b>--ext</b>) fájlok feldolgozása. Több <b>-ext</b> és <b>--ext</b> opció is lehet. Pluszjel adható hozzá (azaz <b>-ext+</b>), hogy a megadott kiterjesztést a normál esetben feldolgozott fájlokhoz adjuk. Az EXT kezdődhet bevezető „."-tal, amely figyelmen kívül marad. A kis- és nagybetűk nem számítanak. A <code>&quot;*&quot;</code> használható bármilyen kiterjesztésű (vagy egyáltalán kiterjesztés nélküli) fájlok feldolgozására, mint az utolsó három példában:</p>
+
+<pre><code>exiftool -ext JPG DIR             # csak JPG-fájlok feldolgozása
+exiftool --ext cr2 --ext dng DIR  # támogatott fájlok, de a CR2/DNG kivételével
+exiftool -ext+ txt DIR            # támogatott fájlok, plusz a TXT
+exiftool -ext &quot;*&quot; DIR             # minden fájl feldolgozása
+exiftool -ext &quot;*&quot; --ext xml DIR   # minden feldolgozása az XML-fájlok kivételével
+exiftool -ext &quot;*&quot; --ext . DIR     # minden, a kiterjesztés nélküliek kivételével</code></pre>
+
+<p>Ennek az opciónak a használata két fő előnnyel jár a <code>*.<i>EXT</i></code> parancssorban való megadásához képest: 1) Az alkönyvtárakban lévő fájlokra is vonatkozik, amikor a <b>-r</b> opcióval kombinálják. 2) A <b>-ext</b> opció kis-/nagybetűre nem érzékeny, ami hasznos, amikor kis-/nagybetűérzékeny fájlrendszereken dolgozunk fel fájlokat.</p>
+
+<p>Vedd figyelembe, hogy a parancssorban megadott összes fájl feldolgozásra kerül a kiterjesztéstől függetlenül, hacsak nem használják a <b>-ext</b> opciót.</p>
+
+</dd>
+<dt id="F-OFFSET--fixBase"><b>-F</b>[<i>OFFSET</i>] (<b>-fixBase</b>)</dt>
+<dd>
+
+<p>A maker note eltolások bázisának javítása. Némely képszerkesztő gyakori problémája, hogy a maker note-okban lévő eltolások nem igazodnak megfelelően, amikor a fájlt módosítják. Ez azt okozhatja, hogy némely maker note bejegyzéshez rossz értékek kerülnek kinyerésre a szerkesztett fájl olvasásakor. Ez az opció lehetővé teszi egy egész <i>OFFSET</i> megadását a maker note-ok bázis-eltolásának igazítására. Ha nincs <i>OFFSET</i> megadva, az ExifTool a lehető legjobb tippet adja a helyes bázisra. Vedd figyelembe, hogy az exiftool automatikusan javítja az eltolásokat azoknál a képeknél, amelyek eredeti eltolásinformációt tárolnak (pl. újabb Canon-modellek). Az eltolások véglegesen javítódnak, ha a <b>-F</b>-et EXIF képbe írásakor használják. pl.)</p>
+
+<pre><code>exiftool -F -exif:resolutionunit=inches image.jpg</code></pre>
+
+</dd>
+<dt id="fast-NUM"><b>-fast</b>[<i>NUM</i>]</dt>
+<dd>
+
+<p>Az információ kinyerésének gyorsítása. A <b>-fast</b> (vagy <b>-fast1</b>) esetén az ExifTool nem olvassa be egy JPEG-kép végéig, hogy AFCP- vagy PreviewImage-trailert keressen, sem a GIF-képek első kommentjén vagy a WAV/AVI-fájlok hang-/videoadatain túl, hogy további metaadatokat keressen. Ezek a sebességelőnyök kicsik, amikor a képeket közvetlenül lemezről olvassuk, de jelentősek lehetnek, ha a képeket hálózati kapcsolaton keresztül továbbítjuk. Emellett megkerüli a CRC-ellenőrzést PNG-képek írásakor, ami nagyon lassú lehet. Jelentősebb sebességelőnyökért a <b>-fast2</b> azt is eredményezi, hogy az exiftool nem nyer ki semmilyen EXIF MakerNote információt, és a PNG-képek IDAT darabjánál és a QuickTime-formátumú fájlok mdat atomjánál abbahagyja a feldolgozást (de vedd figyelembe, hogy némely fájl tárolhat metaadatot ezután is). A <b>-fast3</b> nem nyer ki metaadatot a fájlból, és csak pszeudo System tageket ad vissza, de még beolvassa a fájlfejlécet, hogy megalapozott tippet adjon a FileType-ra. A <b>-fast4</b> még a fájlfejlécet sem olvassa be, és csak System tageket ad vissza, valamint egy FileType-ot a fájlkiterjesztés alapján. A <b>-fast5</b> a Composite tagek generálását is letiltja (mint a <b>-e</b>). Íráskor nincs hatása.</p>
+
+<p>Vedd figyelembe, hogy külön <b>-fast</b> beállítás használható egy <b>-if</b> feltétel kiértékeléséhez, vagy amikor a <b>-fileOrder</b> opcióval rendezünk fájlokat. Részletekért lásd a <b>-if</b> és <b>-fileOrder</b> opciókat.</p>
+
+</dd>
+<dt id="fileOrder-NUM---TAG"><b>-fileOrder</b>[<i>NUM</i>] [-]<i>TAG</i></dt>
+<dd>
+
+<p>A fájlfeldolgozási sorrend beállítása a megadott <i>TAG</i> rendezett értéke szerint. Ezen opció nélkül a fájlok abban a sorrendben dolgozódnak fel, ahogy a rendszer visszaadja őket, ami gyakran fájlnév szerint van, de ez fájlrendszerfüggő. Például a fájlok dátum szerinti feldolgozásához:</p>
+
+<pre><code>exiftool -fileOrder DateTimeOriginal DIR</code></pre>
+
+<p>További <b>-fileOrder</b> opciók adhatók hozzá másodlagos rendezési kulcsokként. A számok numerikusan, minden más érték ábécésorrendben rendeződik. A megadott taget nélkülöző fájlok kerülnek a végére. A rendezési sorrend megfordítható a tagnév elé írt <code>-</code>-szal (pl. <code>-fileOrder -createdate</code>). A rendezett értékek kiírási konverziója letiltható a <b>-n</b> opcióval, vagy a tagnévhez fűzött <code>#</code>-tel. Más formázóopcióknak (pl. <b>-d</b>) nincs hatásuk a rendezett értékekre. Vedd figyelembe, hogy a <b>-fileOrder</b> opció nagy teljesítménybüntetést vonhat maga után, mivel az összes fájl egy további kezdeti feldolgozási menetével jár, de ez a hatás csökkenthető egy <i>NUM</i> megadásával, amely lényegében beállítja a <b>-fast</b> szintet a kezdeti menethez. Például a <b>-fileOrder4</b> használható, ha a <i>TAG</i> egy pszeudo System tag. Ha több <b>-fileOrder</b> opciót használnak, a kinyerés a legalacsonyabb <b>-fast</b> szinten történik. Vedd figyelembe, hogy a fájlok könyvtárhatárokon átívelően rendeződnek, ha több bemeneti könyvtárat adnak meg.</p>
+
+</dd>
+<dt id="i-DIR--ignore"><b>-i</b> <i>DIR</i> (<b>-ignore</b>)</dt>
+<dd>
+
+<p>A megadott könyvtárnév figyelmen kívül hagyása. A <i>DIR</i> lehet egy önálló mappanév vagy egy teljes útvonal, és kis-/nagybetűérzékeny. Ha teljes útvonalat adnak meg, annak pontosan illeszkednie kell a Directory tagre, hogy figyelmen kívül maradjon. Használj több <b>-i</b> opciót egynél több könyvtárnév figyelmen kívül hagyásához. Megadható egy speciális <code>SYMLINKS</code> <i>DIR</i> érték, hogy elkerüljük a szimbolikus linkeket jelentő könyvtárakba való rekurziót a <b>-r</b> opció használatakor (vedd figyelembe, hogy ez jelenleg nem működik Windowson). Ezenkívül egy <code>HIDDEN</code> érték használható, hogy egy könyvtár beolvasásakor figyelmen kívül hagyjuk azokat a fájlokat, amelyek neve „."-tal kezdődik (azaz a rejtett fájlok Unix-rendszereken).</p>
+
+</dd>
+<dt id="if-NUM-EXPR"><b>-if</b>[<i>NUM</i>] <i>EXPR</i></dt>
+<dd>
+
+<p>Egy feltétel megadása, amely minden <i>FILE</i> feldolgozása előtt kiértékelődik. Az <i>EXPR</i> egy Perl-szerű logikai kifejezés, amely <code>$</code> szimbólumokkal előtagolt tagneveket tartalmaz. Minden <i>FILE</i> tagjeivel egymás után kiértékelődik, és a fájl csak akkor kerül feldolgozásra, ha a kifejezés igazat ad vissza. A Perl-változónevekkel ellentétben a tagnevek nem kis-/nagybetűérzékenyek, és tartalmazhatnak kötőjelet. Ezenkívül a tagnevek tartalmazhatnak kettősponttal elválasztott, bevezető csoportneveket és/vagy egy záró <code>#</code> karaktert a kiírási konverzió letiltásához. A <code>$GROUP:all</code> kifejezés 1-re értékelődik, ha bármely tag létezik a megadott <code>GROUP</code>-ban, egyébként 0-ra (lásd a lenti 2. megjegyzést). Amikor több <b>-if</b> opciót használnak, minden feltételnek teljesülnie kell a fájl feldolgozásához. 2-es kilépési státuszt ad vissza, ha minden fájl megbukik a feltételen. Az alábbiakban néhány példa:</p>
+
+<pre><code># záridő kinyerése egy könyvtár összes Canon-képéből
+exiftool -shutterspeed -if &#39;$make eq &quot;Canon&quot;&#39; dir
+
+# egy óra hozzáadása minden 2006. ápr. 2-án vagy után készült képhez
+exiftool -alldates+=1 -if &#39;$CreateDate ge &quot;2006:04:02&quot;&#39; dir
+
+# EXIF ISO-érték beállítása, ha lehetséges, hacsak már nincs beállítva
+exiftool &#39;-exif:iso&lt;iso&#39; -if &#39;not $exif:iso&#39; dir
+
+# adott kulcsszót tartalmazó képek keresése (kis-/nagybetűre nem érzékeny)
+exiftool -if &#39;$keywords =~ /harvey/i&#39; -filename dir</code></pre>
+
+<p>A <i>NUM</i> hozzáadása a <b>-if</b> opcióhoz azt eredményezi, hogy külön feldolgozási menet hajtódik végre az <i>EXPR</i> kiértékeléséhez a <i>NUM</i> által megadott <b>-fast</b> szinten (részletekért lásd a <b>-fast</b> opció dokumentációját). A <i>NUM</i> nélkül csak egy feldolgozási menet történik a <b>-fast</b> opció által megadott szinten. Például a <b>-if5</b> használata lehetséges, ha az <i>EXPR</i> csak pszeudo System tageket használ, és jelentősen felgyorsíthatja a feldolgozást, ha elég fájl bukik meg a feltételen.</p>
+
+<p>A kifejezés a <code>$self</code>-en keresztül hozzáfér az aktuális ExifTool-objektumhoz, és a következő speciális függvények érhetők el a fájlfeldolgozás rövidre zárásához. Mindkét függvény visszatérési értéke 1. A függvénynevek kis-/nagybetűérzékenyek.</p>
+
+<pre><code>End()    - a feldolgozás befejezése e fájl után
+EndDir() - az aktuális könyvtárban lévő fájlok feldolgozásának
+           befejezése e fájl után (nem kompatibilis a -fileOrder-rel)</code></pre>
+
+<p>Megjegyzések:</p>
+
+<p>1) A <b>-n</b> és <b>-b</b> opciók az <i>EXPR</i>-ben használt tagekre is vonatkoznak.</p>
+
+<p>2) Az API RequestTags opció automatikusan beáll a <b>-if</b> feltételben használt összes taghez.</p>
+
+<p>3) A sztringben lévő tagek a <b>-p</b>-hez hasonló módon interpolálódnak, mielőtt a kifejezés kiértékelődik. Ebben az interpolációban a <code>$/</code> sortöréssé alakul, a <code>$$</code> pedig egyetlen <code>$</code> szimbólumot jelöl. Így a Perl-változók, ha használják őket, dupla <code>$</code>-t igényelnek, és a <code>$/</code>-re végződő reguláris kifejezéseknek helyette <code>$$/</code>-t kell használniuk.</p>
+
+<p>4) A feltétel csak a feldolgozás alatt álló fájl tagjeihez fér hozzá, hacsak nem használják a <b>-fileNUM</b> opciót egy alternatív fájl olvasására, és a taghez a megfelelő 8-as családbeli csoportnevet meg nem adják. Bővebb információért lásd a <b>-fileNUM</b> opció részleteit.</p>
+
+<p>5) A <b>-a</b> (Duplicates) opció beleértődik, amikor a <b>-if</b>-et fast <i>NUM</i> nélkül használják, és a duplikált tagek értékei elérhetők egy csoportnév megadásával a kifejezésben (mint egy 4-es családbeli példányszám, pl. <code>$Copy1:TAG</code>, <code>$Copy2:TAG</code> stb.).</p>
+
+<p>6) Egy speciális „OK" UserParam áll rendelkezésre az előző parancs sikerének tesztelésére, amikor a <b>-execute</b>-ot használták, és a feltételben bármely más taghez hasonlóan használható (azaz „$OK").</p>
+
+<p>7) A kifejezésben lévő definiálatlan tagek értékeit a <b>-f</b> és <b>-m</b> opciók befolyásolják, hacsak nincs beállítva az API UndefTags opció is.</p>
+
+<p>8) A feltétel megbukik, ha Perl-hiba történik. Ez például akkor fordulhat elő, ha egy definiálatlan értéket (pl. egy hiányzó taget) helytelenül használnak.</p>
+
+</dd>
+<dt id="m--ignoreMinorErrors"><b>-m</b> (<b>-ignoreMinorErrors</b>)</dt>
+<dd>
+
+<p>Az apró hibák és figyelmeztetések figyelmen kívül hagyása. Ez lehetővé teszi az apró hibákkal rendelkező fájlokba írást, és letilt néhány ellenőrzést, amely apró figyelmeztetéseket eredményezhetne. Általában az apró hibák/figyelmeztetések olyan problémát jeleznek, amely figyelmen kívül hagyva általában nem vezet metaadatvesztéshez. Vannak azonban kivételek, így az ExifTool rád bízza a végső döntést. Az apró hibákat és figyelmeztetéseket az üzenet elején lévő „[minor]" jelzi. A figyelmen kívül hagyva a feldolgozást befolyásoló figyelmeztetéseket „[Minor]" jelzi (nagy „M"-mel). Vedd figyelembe, hogy ez azt eredményezi, hogy a <b>-tagsFromFile</b>, <b>-p</b>, <b>-if</b> és <b>-fileNUM</b> sztringekben lévő hiányzó értékek üres sztringre állnak, nem pedig definiálatlan értékre (de ez a <b>-if</b>-nél elkerülhető az API UndefTags opcióval).</p>
+
+</dd>
+<dt id="o-OUTFILE-or-FMT--out"><b>-o</b> <i>OUTFILE</i> or <i>FMT</i> (<b>-out</b>)</dt>
+<dd>
+
+<p>A kimeneti fájl vagy könyvtár nevének beállítása információ írásakor. Ezen opció nélkül, amikor bármilyen „valódi" taget írnak, az eredeti fájl <code>FILE_original</code>-ra nevezi át magát, és a kimenet a <i>FILE</i>-ba íródik. Amikor csak FileName és/vagy Directory „pszeudo" tageket írnak, a <b>-o</b> hatására a fájl másolódik áthelyezés helyett, de az ezen tagek bármelyikéhez megadott könyvtárak elsőbbséget élveznek a <b>-o</b> opció által megadottal szemben.</p>
+
+<p>Az <i>OUTFILE</i> lehet <code>-</code> a stdoutra íráshoz. A kimeneti fájlnév megadható egy <i>FMT</i> sztringgel is, amelyben a %d, %f és %e a <i>FILE</i> könyvtárát, fájlnevét és kiterjesztését jelöli. Ezenkívül a %c használható másolatszám hozzáadására. <i>FMT</i>-sztringpéldákért lásd a <b>-w</b> opciót.</p>
+
+<p>A kimeneti fájl könyvtárnévnek minősül, ha már létezik könyvtárként, vagy ha a név „/"-re végződik. A kimeneti könyvtárak szükség esetén létrejönnek. A meglévő fájlok nem íródnak felül. A <b>-overwrite_original</b> opció <b>-o</b>-val való kombinálása azt eredményezi, hogy az eredeti forrásfájl törlődik, miután a kimeneti fájl sikeresen kiíródott.</p>
+
+<p>Ennek az opciónak egy speciális szolgáltatása lehetővé teszi bizonyos típusú fájlok létrehozását a semmiből, vagy egy másik típusú fájlból származó metaadatokkal. A következő fájltípusok hozhatók létre ezzel a technikával:</p>
+
+<pre><code>XMP, EXIF, EXV, MIE, ICC/ICM, VRD, DR4</code></pre>
+
+<p>A kimeneti fájltípust az <i>OUTFILE</i> kiterjesztése határozza meg (a stdoutra íráskor <code>-.EXT</code> alakban megadva). A kimeneti fájl ezután a <i>FILE</i>-ban lévő információ (mintha a <b>-tagsFromFile</b> opciót használták volna) és a parancssorban hozzárendelt tag-értékek kombinációjából jön létre. Ha nincs <i>FILE</i> megadva, a kimeneti fájl a semmiből is létrehozható, csak a parancssorban hozzárendelt tagek felhasználásával.</p>
+
+</dd>
+<dt id="overwrite_original"><b>-overwrite_original</b></dt>
+<dd>
+
+<p>Az eredeti <i>FILE</i> felülírása (ahelyett, hogy megőriznénk a fájlnévhez adott <code>_original</code>-lal), amikor információt írunk egy képbe. Vigyázat: Ezt az opciót csak akkor szabad használni, ha már vannak külön biztonsági másolataid a képfájljaidról. A felülírás úgy van megvalósítva, hogy egy ideiglenes fájlt átnevezünk az eredeti helyére. Ez törli az eredeti fájlt, és egyetlen műveletben lecseréli a szerkesztett verzióval. A <b>-o</b>-val kombinálva ez az opció azt eredményezi, hogy az eredeti fájl törlődik, ha a kimeneti fájl sikeresen kiíródott (azaz a fájl áthelyeződik másolás helyett).</p>
+
+</dd>
+<dt id="overwrite_original_in_place"><b>-overwrite_original_in_place</b></dt>
+<dd>
+
+<p>Hasonló a <b>-overwrite_original</b>-hoz, azzal a különbséggel, hogy egy extra lépés adódik hozzá, amely lehetővé teszi az eredeti fájlattribútumok megőrzését. Például Macen ez azt eredményezi, hogy az eredeti fájl létrehozási dátuma, típusa, létrehozója, címkeszíne, ikonja, Finder-tagjei, más kiterjesztett attribútumai és a fájlra mutató hard linkek megőrződnek (de vedd figyelembe, hogy a Mac OS resource fork mindig megőrződik, hacsak kifejezetten nem törlik a <code>-rsrc:all=</code>-lal). Ez úgy van megvalósítva, hogy az eredeti fájlt frissítési módban megnyitjuk, és az adatait egy ideiglenes fájl másolatával lecseréljük az ideiglenes törlése előtt. Az extra lépés lassabb teljesítményt eredményez, így helyette a <b>-overwrite_original</b> opciót kell használni, hacsak nem szükséges.</p>
+
+<p>Vedd figyelembe, hogy ez az opció visszatér a <b>-overwrite_original</b> opció viselkedéséhez, amikor a FileName és/vagy Directory tageket is írjuk.</p>
+
+</dd>
+<dt id="P--preserve"><b>-P</b> (<b>-preserve</b>)</dt>
+<dd>
+
+<p>Az eredeti fájl fájlrendszerbeli módosítási dátumának/idejének (<code>FileModifyDate</code>) megőrzése íráskor. Vedd figyelembe, hogy némely fájlrendszer tárol egy létrehozási dátumot (azaz <code>FileCreateDate</code> Windows- és Mac-rendszereken), amelyet ez az opció nem érint. Ez a létrehozási dátum megőrződik azokon a Windows-rendszereken, ahol a Win32API::File és a Win32::API elérhető, függetlenül ettől a beállítástól. Más rendszereknél a <b>-overwrite_original_in_place</b> opció használható, ha szükséges a létrehozási dátum megőrzése. A <b>-P</b> opciót felülírja bármely, a FileModifyDate tagbe írt érték.</p>
+
+</dd>
+<dt id="password-PASSWD"><b>-password</b> <i>PASSWD</i></dt>
+<dd>
+
+<p>Jelszó megadása a jelszóval védett PDF-dokumentumok feldolgozásának engedélyezéséhez. Ha jelszó szükséges, de nincs megadva, figyelmeztetés keletkezik, és a dokumentum nem kerül feldolgozásra. Ez az opció figyelmen kívül marad, ha nincs szükség jelszóra.</p>
+
+</dd>
+<dt id="progress-NUM-:-TITLE"><b>-progress</b>[NUM][:[<i>TITLE</i>]]</dt>
+<dd>
+
+<p>A folyamat megjelenítése fájlok feldolgozásakor. Kettőspont nélkül a <b>-progress</b> opció egy folyamatszámlálót ad zárójelben minden feldolgozott fájl neve után, megadva az aktuális fájlszámot és a feldolgozandó fájlok teljes számát. Beleérti a <b>-v0</b> opciót, ami azt eredményezi, hogy a feldolgozott fájlok nevei íráskor is kiíródnak. A <b>-if</b> opcióval kombinálva a teljes szám a feltétel alkalmazása előtti összes fájlt tartalmazza, de a feltételen megbukott fájlok nevei nem íródnak ki. Ha a NUM meg van adva, a folyamat minden NUM bemeneti fájlonként jelenik meg.</p>
+
+<p>Ha kettőspont követi (azaz <b>-progress:</b>), a konzolablak címe a megadott <i>TITLE</i> sztring szerint áll be. Ha nincs <i>TITLE</i> megadva, egy alapértelmezett „ExifTool %p%%" <i>TITLE</i> sztring feltételeződik. A sztringben a %f a fájlnevet jelöli, a %p a folyamatot százalékban, a %r a folyamatot arányként, a %##b egy „##" szélességű folyamatjelző sáv (ahol a „##" egy egész szám, amely a sáv szélességét adja meg karakterekben, vagy alapértelmezésben 20 karakter, ha a „##" elmarad), a %% pedig egy % karakter. Kombinálható a normál <b>-progress</b> opcióval, hogy a folyamatszámláló a konzolüzenetekben is megjelenjen. (Megjegyzés: Ahhoz, hogy ez a szolgáltatás Mac/Linuxon helyesen működjön, a stderr-nek a konzolra kell mennie.)</p>
+
+</dd>
+<dt id="q--quiet"><b>-q</b> (<b>-quiet</b>)</dt>
+<dd>
+
+<p>Csendes feldolgozás. Egy <b>-q</b> elnyomja a normál tájékoztató üzeneteket, egy második <b>-q</b> pedig a figyelmeztetéseket is elnyomja. A hibaüzenetek nem nyomhatók el, bár az apró hibák figyelmeztetésekké minősíthetők vissza a <b>-m</b> opcióval, amelyek aztán elnyomhatók a <code>-q -q</code>-val.</p>
+
+</dd>
+<dt id="r-.--recurse"><b>-r</b>[.] (<b>-recurse</b>)</dt>
+<dd>
+
+<p>Az alkönyvtárakban lévő fájlok rekurzív feldolgozása. Csak akkor van értelme, ha a <i>FILE</i> egy könyvtárnév. A „."-tal kezdődő nevű alkönyvtárak nem kerülnek feldolgozásra, hacsak nem adnak „."-ot az opció nevéhez (azaz <b>-r.</b> vagy <b>-recurse.</b>). Alapértelmezésben az exiftool a könyvtárakra mutató szimbolikus linkeket is követi, ha a rendszer támogatja, de ez letiltható a <code>-i SYMLINKS</code>-szal (részletekért lásd a <b>-i</b> opciót). Kombináld ezt <b>-ext</b> opciókkal a feldolgozott fájltípusok szabályozásához.</p>
+
+</dd>
+<dt id="scanForXMP"><b>-scanForXMP</b></dt>
+<dd>
+
+<p>Minden fájl (még a nem támogatott formátumok is) átvizsgálása XMP-információért, hacsak már nem található. A <b>-fast</b> opcióval kombinálva csak a nem támogatott fájltípusok kerülnek átvizsgálásra. Figyelmeztetés: Nagy fájlok átvizsgálása időigényes lehet.</p>
+
+</dd>
+<dt id="u--unknown"><b>-u</b> (<b>-unknown</b>)</dt>
+<dd>
+
+<p>Az ismeretlen tagek értékeinek kinyerése. Adj egy újabb <b>-u</b>-t, hogy a bináris adatblokkokból is kinyerd az ismeretlen információt. Ez az opció a numerikus tag-ID-vel rendelkező tagekre vonatkozik, és az „Exif_0xc5d9"-hez hasonló tagnevek generálását okozza az ismeretlen információhoz. Nincs hatása azokra az információtípusokra, amelyeknek ember által olvasható tag-ID-jük van (mint az XMP), mivel ezekből a formátumokból az ismeretlen tagek automatikusan kinyerésre kerülnek.</p>
+
+</dd>
+<dt id="U--unknown2"><b>-U</b> (<b>-unknown2</b>)</dt>
+<dd>
+
+<p>Az ismeretlen tagek értékeinek, valamint némely bináris adatblokkból az ismeretlen információnak a kinyerése. Ez ugyanaz, mint két <b>-u</b> opció.</p>
+
+</dd>
+<dt id="wm-MODE--writeMode"><b>-wm</b> <i>MODE</i> (<b>-writeMode</b>)</dt>
+<dd>
+
+<p>A tagek írásának/létrehozásának módjának beállítása. A <i>MODE</i> egy vagy több karakterből álló sztring az alábbi listából. Az alapértelmezett írási mód a <code>wcg</code>.</p>
+
+<pre><code>w - Meglévő tagek írása
+c - Új tagek létrehozása
+g - Új csoportok (Groups) létrehozása, ha szükséges</code></pre>
+
+<p>Például a <code>-wm cg</code> csak új tageket hoz létre (és elkerüli a meglévők szerkesztését).</p>
+
+<p>A csoport szintje a SubDirectory szint a metaadat-struktúrában. XMP vagy IPTC esetén ez a teljes XMP/IPTC-blokk (a 0-s családbeli csoport), de EXIF esetén ez az egyes IFD (az 1-es családbeli csoport).</p>
+
+</dd>
+<dt id="z--zip"><b>-z</b> (<b>-zip</b>)</dt>
+<dd>
+
+<p>Olvasáskor azt eredményezi, hogy az információ .gz és .bz2 tömörített képekből kerül kinyerésre (archívumonként csak egy kép; a gzip és a bzip2 elérhetőségét igényli). Íráskor azt eredményezi, hogy tömörített információ íródik, ha a metaadat-formátum támogatja (pl. a PNG támogatja a tömörített szöveges metaadatokat, a JXL a tömörített EXIF-et és XML-t, a MIE pedig bármilyen tömörített metaadatot), letiltja az ajánlott kitöltést a beágyazott XMP-ben (2424 bájtot megtakarítva, amikor XMP-t írunk egy fájlba), és XMP-t ír rövidített formátumban -- ez egyenértékű az API Compress=1 és Compact=&quot;NoPadding,Shorthand&quot; beállításával.</p>
+
+</dd>
+</dl>
+
+<h3 id="Other-options">Egyéb opciók</h3>
+
+<dl>
+
+<dt id="ARGFILE"><b>-@</b> <i>ARGFILE</i></dt>
+<dd>
+
+<p>Parancssori argumentumok olvasása a megadott fájlból. A fájl soronként egy argumentumot tartalmaz (NEM soronként egy opciót -- némely opció további argumentumokat igényel, és minden argumentumot külön sorba kell tenni). Az üres sorok és a <code>#</code>-tel kezdődő sorok figyelmen kívül maradnak (hacsak nem <code>#[CSTR]</code>-rel kezdődnek, amely esetben a sor többi része C-sztringként kezelődik, lehetővé téve a szabványos C escape-szekvenciákat, mint a „\n" a sortöréshez). A sor elején lévő szóközök eltávolításra kerülnek. Az argumentumok normál shell-feldolgozása nem történik meg, ami többek között azt jelenti, hogy az argumentumokat nem szabad idézőjelezni, és a szóközök bármely más karakterként kezelődnek. Az <i>ARGFILE</i> létezhet vagy az aktuális könyvtárhoz, vagy az exiftool könyvtárához viszonyítva, hacsak nem adnak meg abszolút útvonalat.</p>
+
+<p>Például a következő <i>ARGFILE</i> a Copyright értékét „Copyright YYYY, Phil Harvey"-re állítja, ahol az „YYYY" a CreateDate éve:</p>
+
+<pre><code>-d
+%Y
+-copyright&lt;Copyright $createdate, Phil Harvey</code></pre>
+
+<p>Az <i>ARGFILE</i>-ban lévő argumentumok pontosan ugyanúgy viselkednek, mintha a parancssorban a <b>-@</b> opció helyén adták volna meg őket, azzal a kivétellel, hogy a <b>-config</b> és <b>-common_args</b> opciók nem használhatók egy <i>ARGFILE</i>-ban.</p>
+
+</dd>
+<dt id="k--pause"><b>-k</b> (<b>-pause</b>)</dt>
+<dd>
+
+<p>Megállás a <code>-- press any key --</code> vagy <code>-- press RETURN --</code> üzenettel (a rendszeredtől függően) a kilépés előtt. Ez az opció arra szolgál, hogy megakadályozza a parancsablak bezáródását, amikor Windows fogd és vidd alkalmazásként futtatják.</p>
+
+</dd>
+<dt id="list--listw--listf--listr--listwf--listg-NUM--listd--listx--listgeo"><b>-list</b>, <b>-listw</b>, <b>-listf</b>, <b>-listr</b>, <b>-listwf</b>, <b>-listg</b>[<i>NUM</i>], <b>-listd</b>, <b>-listx</b>, <b>-listgeo</b></dt>
+<dd>
+
+<p>Az összes érvényes tagnév (<b>-list</b>), az összes írható tagnév (<b>-listw</b>), az összes támogatott fájlkiterjesztés (<b>-listf</b>), az összes felismert fájlkiterjesztés (<b>-listr</b>), az összes írható fájlkiterjesztés (<b>-listwf</b>), az összes tag-csoport [egy megadott családban] (<b>-listg</b>[<i>NUM</i>]), az összes törölhető tag-csoport (<b>-listd</b>), a tag-részletek XML-adatbázisa a nyelvi fordításokkal együtt (<b>-listx</b>), vagy a Geolocation-adatbázis (<b>-listgeo</b>) kiírása. A <b>-list</b>, <b>-listw</b> és <b>-listx</b> opciókat egy <code>-GROUP:All</code> alakú további argumentum követheti, hogy csak egy adott csoportban lévő tageket soroljon fel, ahol a <code>GROUP</code> egy vagy több, kettősponttal elválasztott 0–2-es családbeli csoportnév (az EXIF IFD-csoportok kivételével). A <b>-listg</b>-nél megadható a <i>NUM</i> a csoportcsalád megadására, egyébként a 0-s család feltételeződik. A <b>-l</b> vagy <b>-v</b> opció kombinálható a <b>-listf</b>, <b>-listr</b> vagy <b>-listwf</b> opcióval a fájlleírások listához adásához. A <b>-lang</b> opció kombinálható a <b>-listx</b>-szel, hogy a leírások egyetlen nyelven íródjanak ki, a <b>-sort</b> és/vagy <b>-lang</b> opciók pedig kombinálhatók a <b>-listgeo</b>-val (a további nyelvekhez az alternatív adatbázis telepítése szükséges). Ezenkívül az API GeolocMinPop, GeolocFeature és GeolocAltNames opciók a <b>-listgeo</b> kimenetre vonatkoznak. Íme néhány példa:</p>
+
+<pre><code>-list               # az összes tagnév felsorolása
+-list -EXIF:All     # az összes EXIF-tag felsorolása
+-list -xmp:time:all # az idővel kapcsolatos összes XMP-tag felsorolása
+-listw -XMP-dc:All  # az összes írható XMP-dc tag felsorolása
+-listf              # az összes támogatott fájlkiterjesztés felsorolása
+-listr              # az összes felismert fájlkiterjesztés felsorolása
+-listwf             # az összes írható fájlkiterjesztés felsorolása
+-listg1             # az 1-es család összes csoportjának felsorolása
+-listd              # az összes törölhető csoport felsorolása
+-listx -EXIF:All    # az EXIF-tagek adatbázisának listája XML-formátumban
+-listx -XMP:All -s  # az XMP-tagek rövid XML-adatbázisának listája
+-listgeo -lang de   # a geolokációs adatbázis listája németül</code></pre>
+
+<p>A <b>-listx</b>-szel kombinálva a <b>-s</b> opció lerövidíti a kimenetet a leírások és értékek elhagyásával (mint a fenti utolsó példában), a <b>-f</b> pedig „flags" és „struct" attribútumokat ad hozzá, ha alkalmazható. A flag-ek a következő lehetséges értékek vesszővel elválasztott listájaként formázódnak: Avoid, Binary, List, Mandatory, Permanent, Protected, Unknown és Unsafe (lásd a <a>Tag Name dokumentációt</a>). Az XMP List tagek esetén a lista típusa (Alt, Bag vagy Seq) is meg van adva, a lapított struktúra-tageket pedig egy Flattened flag jelzi, a „struct" pedig megadja a szülőstruktúra ID-jét.</p>
+
+<p>Vedd figyelembe, hogy a <b>-list</b> opciók egyike sem igényel bemeneti <i>FILE</i>-t.</p>
+
+</dd>
+<dt id="ver"><b>-ver</b></dt>
+<dd>
+
+<p>Az exiftool verziószámának kiírása. A <b>-v</b> opció hozzáadható további rendszerinformáció kiírásához (az opcionális könyvtárakról bővebben lásd a teljes disztribúció README-fájlját), vagy a <b>-v2</b> a Perl include-könyvtárak felsorolásához is.</p>
+
+</dd>
+<dt id="pod"><b>--</b></dt>
+<dd>
+
+<p>Az opciók végét jelzi. Minden hátralévő argumentum fájlnévként kezelődik, még akkor is, ha kötőjellel (<code>-</code>) kezdődik.</p>
+
+</dd>
+</dl>
+
+<h3 id="Special-features">Speciális szolgáltatások</h3>
+
+<dl>
+
+<dt id="diff-FILE2"><b>-diff</b> <i>FILE2</i></dt>
+<dd>
+
+<p>A <i>FILE</i>-ban lévő metaadatok összehasonlítása a <i>FILE2</i>-vel. A <i>FILE2</i> neve tartalmazhat fájlnév-formázókódokat (lásd a <b>-w</b> opciót). A fájlokból kinyert összes tag összehasonlításra kerül, de a kinyert tagek szabályozhatók <b>-</b><i>TAG</i> vagy <b>--</b><i>TAG</i> opciók hozzáadásával. Például az alábbi parancs két különböző könyvtárban lévő összes azonos nevű fájlt hasonlítja össze, figyelmen kívül hagyva a System tageket:</p>
+
+<pre><code>exiftool DIR1 -diff DIR2/%f.%e --system:all</code></pre>
+
+<p>A <b>-g</b> és <b>-G</b> opciók használhatók a kimenet megadott csoportcsalád szerinti rendezésére, a <b>-G1</b> az alapértelmezés. A <b>-a</b> opció beleértődik. A <b>-v</b> hozzáadása belefoglalja az egyes csoportokban azonos tagek számát, a <b>-v2</b> pedig azt is jelzi, amikor nulla tag volt azonos. A következő szövegformázó opciók érvényesek a <b>-diff</b> használatakor: <b>-c</b>, <b>-charset</b>, <b>-d</b>, <b>-E</b>, <b>-ec</b>, <b>-ex</b>, <b>-L</b>, <b>-lang</b>, <b>-n</b>, <b>-s</b>, <b>-sep</b>, <b>-struct</b> és <b>-w</b>.</p>
+
+</dd>
+<dt id="geotag-TRKFILE"><b>-geotag</b> <i>TRKFILE</i></dt>
+<dd>
+
+<p>Képek geotaggelése a megadott GPS-nyomvonalnapló-fájlból. A <b>-geotag</b> opció használata egyenértékű egy érték <code>Geotag</code> tagbe írásával. A GPS-pozíció a nyomvonalból interpolálódik a <code>Geotime</code> tagbe írt érték által megadott időpontban. Ha a <code>Geotime</code> nincs megadva, az érték a <code>SubSecDateTimeOriginal#</code>-ból másolódik, ha létezik, egyébként a <code>DateTimeOriginal#</code>-ból (a <code>#</code> a formázatlan érték másolására szolgál, elkerülve a <b>-d</b> opcióval való esetleges ütközéseket). Például a következő két parancs egyenértékű, ha a SubSecDateTimeOriginal létezik a fájlban:</p>
+
+<pre><code>exiftool -geotag trk.log image.jpg
+exiftool -geotag trk.log &quot;-Geotime&lt;SubSecDateTimeOriginal#&quot; image.jpg</code></pre>
+
+<p>Ha a <code>Geotime</code> érték nem tartalmaz időzónát, akkor a helyi rendszeridőzóna feltételeződik. A <code>Geotime</code> írása azt eredményezi, hogy a következő tagek íródnak (feltéve, hogy kiszámíthatók a nyomvonalnaplóból, és a cél-metaadatformátum támogatja őket): GPSLatitude, GPSLatitudeRef, GPSLongitude, GPSLongitudeRef, GPSAltitude, GPSAltitudeRef, GPSDateStamp, GPSTimeStamp, GPSDateTime, GPSTrack, GPSTrackRef, GPSSpeed, GPSSpeedRef, GPSImgDirection, GPSImgDirectionRef, GPSMeasureMode, GPSDOP, GPSPitch, GPSRoll, GPSCoordinates, AmbientTemperature és CameraElevationAngle. Alapértelmezésben a képfájlokban a tagek az EXIF-ben jönnek létre, és az XMP-ben csak akkor frissülnek, ha már léteznek. A QuickTime-formátumú fájlokban a GPSCoordinates a preferált helyen (alapértelmezésben ItemList) jön létre, valamint az XMP-ben is. Az <code>EXIF:Geotime</code>, <code>XMP:Geotime</code> vagy <code>QuickTime:Geotime</code> megadható azonban, hogy csak egy csoportba írjunk. Ezenkívül az <code>ItemList:Geotime</code>, <code>Keys:Geotime</code> vagy <code>UserData:Geotime</code> használható egy konkrét helyre íráshoz a QuickTime-formátumú fájlokban. Vedd figyelembe, hogy a GPSPitch és a GPSRoll nem szabványos, és felhasználó által definiált tageket igényel az íráshoz.</p>
+
+<p>A <code>Geosync</code> tag használható egy időkorrekció megadására, amely minden <code>Geotime</code> értékre alkalmazódik a GPS-idővel való szinkronizáláshoz. Például a következő parancs kompenzálja a GPS-hez képest 1 perc 20 másodperccel elmaradt képidőket:</p>
+
+<pre><code>exiftool -geosync=+1:20 -geotag a.log DIR</code></pre>
+
+<p>A haladó <code>Geosync</code> szolgáltatások lehetővé teszik a szakaszonként lineáris időelcsúszás-korrekciót és a korábban geotaggelt képekből való szinkronizálást. Bővebb információért lásd a „geotag.html"-t a teljes ExifTool-disztribúcióban.</p>
+
+<p>Több <b>-geotag</b> opció is használható GPS-nyomvonalnapló-adatok összefűzésére. Ezenkívül egyetlen <b>-geotag</b> opció használható több nyomvonalnapló-fájl betöltésére a <i>TRKFILE</i> névben lévő helyettesítő karakterekkel, de vedd figyelembe, hogy ebben az esetben a <i>TRKFILE</i>-t a legtöbb rendszeren idézőjelbe kell tenni (a Windows kivételével) a fájlnév-kibontás megakadályozásához. Például:</p>
+
+<pre><code>exiftool -geotag &quot;TRACKDIR/*.log&quot; IMAGEDIR</code></pre>
+
+<p>A jelenleg támogatott nyomvonalfájl-formátumok: GPX, NMEA RMC/GGA/GLL, KML, IGC, Garmin XML és TCX, Magellan PMGNTRK, Honeywell PTNTHPR, Bramor gEO, Winplus Beacon TXT, és GPS/IMU CSV-fájlok. Példákért lásd a <a href="#GEOTAGGING-EXAMPLES">&quot;GEOTAGGELÉSI PÉLDÁK&quot;</a> szakaszt. Bővebb részletekért és a geotag-konfigurációs opciókról szóló információért lásd a „geotag.html"-t a teljes ExifTool-disztribúcióban, valamint az <a>Image::ExifTool Options</a>-t.</p>
+
+<p>Az API Geolocation opció beállítható a „geotag" értékre, hogy geotaggelés közben a legközelebbi város nevét, tartományát/államát és országát is beírja. Részletekért lásd a <a href="https://exiftool.org/geolocation.html">https://exiftool.org/geolocation.html</a> oldalt.</p>
+
+</dd>
+<dt id="globalTimeShift-SHIFT"><b>-globalTimeShift</b> <i>SHIFT</i></dt>
+<dd>
+
+<p>Az összes formázott dátum/idő érték eltolása a megadott mértékkel olvasáskor. Nem vonatkozik a formázatlan (<b>-n</b>) kimenetre. A <i>SHIFT</i> ugyanolyan alakú, mint a dátum/idő eltolás íráskor (részletekért lásd az <a>Image::ExifTool::Shift.pl</a>-t), a negatív eltolást a <i>SHIFT</i> sztring elején lévő mínuszjel (<code>-</code>) jelzi. Például:</p>
+
+<pre><code># az összes dátum/idő visszaadása, 1 órával visszatolva
+exiftool -globalTimeShift -1 -time:all a.jpg
+
+# a fájlnév beállítása az eltolt CreateDate-ből (-1 nap) egy
+# könyvtár összes képéhez
+exiftool &quot;-filename&lt;createdate&quot; -globaltimeshift &quot;-0:0:1 0:0:0&quot; \
+    -d %Y%m%d-%H%M%S.%%e dir</code></pre>
+
+</dd>
+<dt id="use-MODULE"><b>-use</b> <i>MODULE</i></dt>
+<dd>
+
+<p>Szolgáltatások hozzáadása a megadott plug-in <i>MODULE</i>-ból. Jelenleg az MWG modul az egyetlen plug-in modul, amelyet az exiftoollal együtt terjesztenek. Ez a modul olvasási/írási támogatást ad a tagekhez a Metadata Working Group ajánlása szerint. Kényelmi okból a <code>-use MWG</code> feltételeződik, ha a csoportnév-előtag pontosan <code>MWG:</code>-vel kezdődik bármely kért tagnél. Bővebb részletekért lásd az <a>MWG Tags dokumentációt</a>. Vedd figyelembe, hogy ez az opció nem visszafordítható, és az alkalmazás befejezéséig érvényben marad, még a <b>-execute</b> opción átívelően is.</p>
+
+</dd>
+</dl>
+
+<h3 id="Utilities">Segédeszközök</h3>
+
+<dl>
+
+<dt id="restore_original"><b>-restore_original</b></dt>
+<dd>
+
+</dd>
+<dt id="delete_original"><b>-delete_original</b>[!]</dt>
+<dd>
+
+<p>Ezek a segédeszköz-opciók automatizálják az exiftool által létrehozott <code>_original</code> fájlok karbantartását. Nincs hatásuk az <code>_original</code> másolat nélküli fájlokra. A <b>-restore_original</b> opció helyreállítja a megadott fájlokat az eredeti másolataikból úgy, hogy az <code>_original</code> fájlokat átnevezi a szerkesztett verziók helyére. Például a következő parancs helyreállítja az összes JPG-kép eredetijét a <code>DIR</code> könyvtárban:</p>
+
+<pre><code>exiftool -restore_original -ext jpg DIR</code></pre>
+
+<p>A <b>-delete_original</b> opció törli a parancssorban megadott összes fájl <code>_original</code> másolatát. Záró <code>!</code> nélkül ez az opció megerősítést kér a folytatás előtt. Például a következő parancs törli az <code>a.jpg_original</code>-t, ha létezik, miután megkérdezte, hogy „Are you sure?":</p>
+
+<pre><code>exiftool -delete_original a.jpg</code></pre>
+
+<p>Ezek az opciók nem használhatók más, tag-értékeket olvasó vagy író opciókkal ugyanabban a parancsban, de kombinálhatók olyan opciókkal, mint a <b>-ext</b>, <b>-if</b>, <b>-r</b>, <b>-q</b> és <b>-v</b>.</p>
+
+</dd>
+</dl>
+
+<h3 id="Advanced-options">Haladó opciók</h3>
+
+<p>A haladó opciók többek között lehetővé teszik összetett feldolgozás elvégzését egyetlen parancsból, további szkriptelés nélkül. Ez különösen hasznos lehet olyan megvalósításoknál, mint a Windows fogd és vidd alkalmazások. Ezek az opciók a többmenetes feldolgozás teljesítményének javítására is használhatók az exiftool minden meghíváskor való betöltéséhez szükséges többletköltség csökkentésével.</p>
+
+<dl>
+
+<dt id="api-OPT-VAL"><b>-api</b> [<i>OPT[[^]=[VAL]]</i>]</dt>
+<dd>
+
+<p>ExifTool API-opció beállítása. Az <i>OPT</i> egy API-opciónév. Az opció értéke 1-re áll, ha az <i>=VAL</i> elmarad. Ha csak a <i>VAL</i> marad el, az opció értéke undef-re áll, ha a <code>=</code>-t használják, vagy üres sztringre a <code>^=</code>-szal. Ha az <i>OPT</i> nincs megadva, az elérhető opciók listája adódik vissza. Az opciónév nem kis-/nagybetűérzékeny, de az opcióértékek igen. Az opciók részleteiért lásd az <a>Image::ExifTool Options</a>-t. Ez felülírja a konfigurációs fájlon keresztül beállított API-opciókat. Vedd figyelembe, hogy az exiftool alkalmazás némely API-opciót belsőleg állít be, és ezek parancssorból való megváltoztatására tett kísérleteknek nincs hatásuk.</p>
+
+</dd>
+<dt id="common_args"><b>-common_args</b></dt>
+<dd>
+
+<p>Azt adja meg, hogy az ezen opciót követő összes argumentum közös az összes végrehajtott parancshoz, amikor a <b>-execute</b>-ot használják. Ez és a <b>-config</b> opció az egyetlen opciók, amelyek nem használhatók egy <b>-@</b> <i>ARGFILE</i>-on belül. Vedd figyelembe, hogy ez az opció és az argumentumai definíció szerint MINDEN más opció után KELL, hogy jöjjenek a parancssorban.</p>
+
+</dd>
+<dt id="config-CFGFILE"><b>-config</b> <i>CFGFILE</i></dt>
+<dd>
+
+<p>A megadott konfigurációs fájl betöltése az alapértelmezett „.ExifTool_config" helyett. Ha használják, ennek az opciónak minden más argumentum előtt kell jönnie a parancssorban, és minden <b>-execute</b>-tal végrehajtott parancsra vonatkozik. Ez a fájl felhasználó által definiált tagek létrehozására és az alapértelmezett ExifTool-opciók beállítására szolgál. A <i>CFGFILE</i>-nak az aktuális munkakönyvtárhoz vagy az exiftool alkalmazás könyvtárához viszonyítva kell léteznie, hacsak nem adnak meg abszolút útvonalat. Az alapértelmezett konfigurációs fájl betöltése letiltható a <i>CFGFILE</i> üres sztringre (azaz „") állításával. A konfigurációs fájl szintaxisának részleteiért lásd a <a href="https://exiftool.org/config.html">https://exiftool.org/config.html</a> oldalt és a config_files/example.config fájlt a teljes ExifTool-disztribúcióban.</p>
+
+</dd>
+<dt id="echo-NUM-TEXT"><b>-echo</b>[<i>NUM</i>] <i>TEXT</i></dt>
+<dd>
+
+<p>A <i>TEXT</i> kiírása a stdoutra (<b>-echo</b> vagy <b>-echo1</b>) vagy a stderrre (<b>-echo2</b>). A szöveg a parancssor értelmezésekor íródik ki, bármely bemeneti fájl feldolgozása előtt. A <i>NUM</i> lehet 3 vagy 4 is, hogy a szöveg a feldolgozás befejezése után íródjon ki (a stdoutra, illetve a stderrre). A <b>-echo3</b> és <b>-echo4</b> esetén a „${status}" használható a <i>TEXT</i> sztringben a parancs numerikus kilépési státuszának jelölésére (lásd a <a href="#EXIT-STATUS">&quot;KILÉPÉSI STÁTUSZ&quot;</a> szakaszt).</p>
+
+</dd>
+<dt id="efile-NUM-TXTFILE"><b>-efile</b>[<i>NUM</i>][!] <i>TXTFILE</i></dt>
+<dd>
+
+<p>A hibát adó fájlok (a <i>NUM</i> hiányzik vagy 1), a változatlan fájlok (a <i>NUM</i> értéke 2), a <b>-if</b> feltételen megbukott fájlok (a <i>NUM</i> értéke 4), a frissített fájlok (a <i>NUM</i> értéke 8), a létrehozott fájlok (a <i>NUM</i> értéke 16), vagy ezek bármely kombinációjának neveinek mentése a <i>NUM</i> összeadásával (pl. a <b>-efile3</b> ugyanaz, mint ha lenne <b>-efile</b> és <b>-efile2</b> opció is ugyanazzal a <i>TXTFILE</i>-lal). Alapértelmezésben a fájlnevek hozzáfűződnek bármely meglévő <i>TXTFILE</i>-hoz, de a <i>TXTFILE</i> felülíródik, ha felkiáltójelet adnak az opcióhoz (pl. <b>-efile!</b>). Menti a <b>-srcfile</b> opcióval megadott fájl nevét, ha alkalmazható.</p>
+
+</dd>
+<dt id="execute-NUM"><b>-execute</b>[<i>NUM</i>]</dt>
+<dd>
+
+<p>A parancssorban eddig a pontig lévő összes argumentumhoz (plusz a <b>-common_args</b> által megadott bármely argumentumhoz) tartozó parancs végrehajtása. Az eredmény olyan, mintha a parancsokat külön parancssorokként hajtották volna végre (a <b>-config</b> és <b>-use</b> opciók kivételével, amelyek a további parancsokra is érvényben maradnak). Lehetővé teszi több parancs végrehajtását egyetlen parancssorból. A <i>NUM</i> egy opcionális szám, amelyet a program visszhangoz a „{ready}" üzenetben a <b>-stay_open</b> szolgáltatás használatakor. Ha <i>NUM</i>-ot adnak meg, a <b>-q</b> opció többé nem nyomja el a kiírt „{readyNUM}" üzenetet.</p>
+
+</dd>
+<dt id="fileNUM-ALTFILE"><b>-file</b><i>NUM</i> <i>ALTFILE</i></dt>
+<dd>
+
+<p>Tagek olvasása egy alternatív forrásfájlból. Ez többek között lehetővé teszi, hogy különböző fájlokból származó tageket összehasonlítsunk és kombináljunk a <b>-if</b> és <b>-p</b> opciókkal. A <i>NUM</i> bármilyen számjegysorozat. Az alternatív fájlokból származó tagek a megfelelő 8-as családbeli csoportnéven keresztül érhetők el (pl. <code>File1:TAG</code> a <b>-file1</b> opcióhoz, <code>File2:TAG</code> a <b>-file2</b>-höz stb.). Az <i>ALTFILE</i> tartalmazhat fájlnév-formázókódokat a <b>-w</b> opcióhoz hasonlóan (%d, %f stb.), és/vagy bevezető <code>$</code> szimbólummal ellátott tagneveket, hogy a forrásfájlból származó tageket a <b>-p</b> opcióhoz hasonló módon érje el (így a fájlnévben lévő bármely más dollárjelet meg kell duplázni, pl. <code>money$$.jpg</code>). Például, feltéve, hogy az OriginalFileName tag be van állítva a szerkesztett fájlban, egy parancs a Rights eredeti fájlból való másolására így nézhet ki:</p>
+
+<pre><code>exiftool -file1 &#39;$originalfilename&#39; &#39;-rights&lt;file1:rights&#39; edited.jpg</code></pre>
+
+<p>Finom megjegyzés: Ha <b>-tagsFromFile</b> opciót használnak, az <i>ALTFILE</i> argumentumban lévő tagek abból a <i>SRCFILE</i>-ból származnak, amely a megfelelő <code>FileNUM</code> csoportból tageket elérő első argumentumra vonatkozik.</p>
+
+<p>Az <i>ALTFILE</i> lehet <code>@</code> is a megadott <i>FILE</i>-ból származó tagek eléréséhez, ami hasznos lehet, amikor a <b>-srcfile</b> opciót egy másik forrásfájl feldolgozására használják.</p>
+
+<p>A felhasználó által definiált Composite tagek elérhetik az alternatív fájlokból származó tageket a megfelelő (kis-/nagybetűérzékeny) 8-as családbeli csoportnév használatával.</p>
+
+<p>A <b>-fast</b> opció, ha használják, az alternatív fájlok feldolgozására is vonatkozik.</p>
+
+</dd>
+<dt id="list_dir"><b>-list_dir</b></dt>
+<dd>
+
+<p>Maguknak a könyvtáraknak a felsorolása a tartalmuk helyett. Ez az opció lényegében azt eredményezi, hogy a könyvtárak normál fájlként kezelődnek olvasáskor és íráskor. Például ezzel az opcióval az <code>ls -la</code> parancs kimenete Mac/Linuxon megközelíthető ezzel az exiftool paranccsal:</p>
+
+<pre><code>exiftool -list_dir -T -ls-l -api systemtags -fast5 .* *</code></pre>
+
+<p>(A <b>-T</b> opció a kimenetet tabbal elválasztott oszlopokba formázza, a <b>-ls-l</b> egy <a>rövidítés-tag</a>, az API SystemTags opció szükséges némely tag kinyeréséhez, a <b>-fast5</b> opciót pedig a sebesség érdekében adjuk hozzá, mivel csak system tageket nyerünk ki.)</p>
+
+</dd>
+<dt id="srcfile-FMT"><b>-srcfile</b> <i>FMT</i></dt>
+<dd>
+
+<p>Egy másik feldolgozandó forrásfájl megadása az eredeti <i>FILE</i> neve alapján. Ez hasznos lehet néhány speciális helyzetben a kapcsolódó előnézeti képek vagy kísérőfájlok feldolgozásához. A <i>FMT</i> szintaxis leírásáért lásd a <b>-w</b> opciót. Vedd figyelembe, hogy az összes opció fájlnév-<i>FMT</i> sztringjei a parancssorból megadott eredeti <i>FILE</i>-on alapulnak, nem a <b>-srcfile</b> által megadott forrásfájl nevén.</p>
+
+<p>Például metaadatok másolásához NEF-fájlokból a megfelelő JPG-előnézetekbe egy olyan könyvtárban, ahol más JPG-képek is lehetnek:</p>
+
+<pre><code>exiftool -ext nef -tagsfromfile @ -srcfile %d%f.jpg dir</code></pre>
+
+<p>Ha egynél több <b>-srcfile</b> opciót adnak meg, a fájlok sorrendben tesztelődnek, és az első létező forrásfájl kerül feldolgozásra. Ha a forrásfájlok egyike sem létezik még, akkor az exiftool az elsőként megadott <b>-srcfile</b>-t használja.</p>
+
+<p>A <code>@</code> <i>FMT</i> használható az eredeti <i>FILE</i> jelölésére, ami hasznos lehet több <b>-srcfile</b> opció megadásakor (pl. hogy visszaessen az eredeti <i>FILE</i> feldolgozására, ha nincs kísérőfájl).</p>
+
+<p>Ennek az opciónak a használatakor két speciális UserParam tag (OriginalFileName és OriginalDirectory) generálódik, hogy hozzáférést biztosítson az eredeti <i>FILE</i> nevéhez és könyvtárához.</p>
+
+</dd>
+<dt id="stay_open-FLAG"><b>-stay_open</b> <i>FLAG</i></dt>
+<dd>
+
+<p>Ha a <i>FLAG</i> értéke <code>1</code> vagy <code>True</code> (kis-/nagybetűre nem érzékeny), az exiftool a fájl végének elérése után is folytatja az olvasást a <b>-@</b> <i>ARGFILE</i>-ból. Ez a szolgáltatás lehetővé teszi a hívó alkalmazások számára, hogy előre betöltsék az exiftoolt, így elkerülve az exiftool minden parancshoz való betöltésének többletköltségét. Az eljárás a következő:</p>
+
+<p>1) Futtasd az <code>exiftool -stay_open True -@ <i>ARGFILE</i></code>-t, ahol az <i>ARGFILE</i> egy létező (esetleg üres) argumentumfájl neve, vagy <code>-</code> az argumentumok szabványos bemenetről való továbbításához.</p>
+
+<p>2) Írd az exiftool parancssori argumentumait az <i>ARGFILE</i>-ba, soronként egy argumentumot (részletekért lásd a <b>-@</b> opciót).</p>
+
+<p>3) Írd a <code>-execute\n</code>-t az <i>ARGFILE</i>-ba, ahol a <code>\n</code> egy sortörés-szekvenciát jelöl. (Megjegyzés: Itt szükség lehet az írási pufferek ürítésére, ha pufferelt kimenetet használsz.) Az ExifTool ekkor végrehajtja a parancsot az eddig kapott argumentumokkal, egy „{ready}" üzenetet küld a stdoutra, amikor kész (hacsak nem a <b>-q</b> vagy <b>-T</b> opciót használják), és folytatja a következő parancshoz tartozó argumentumok olvasásának megkísérlését az <i>ARGFILE</i>-ból. A parancs/válasz szinkronizáció megkönnyítése érdekében a <b>-execute</b> opcióhoz fűzött bármely számot a program visszhangozza a „{ready}" üzenetben. Például a <code>-execute613</code> eredménye „{ready613}". Amikor ezt a számot hozzáadják, a <b>-q</b> többé nem nyomja el a „{ready}" üzenetet. (Lásd még a <b>-echo3</b> és <b>-echo4</b> opciókat a jelek alkalmazásodnak való visszaküldésének további módjaiért.)</p>
+
+<p>4) Ismételd a 2. és 3. lépést minden parancshoz.</p>
+
+<p>5) Írd a <code>-stay_open\nFalse\n</code>-t (vagy <code>-stay_open\n0\n</code>-t) az <i>ARGFILE</i>-ba, amikor kész vagy. Ez azt eredményezi, hogy az exiftool feldolgozza a hátralévő parancssori argumentumokat, majd normálisan kilép.</p>
+
+<p>A bemeneti <i>ARGFILE</i> a fenti 5. lépés előtt bármikor megváltoztatható a következő sorok jelenleg nyitott <i>ARGFILE</i>-ba írásával:</p>
+
+<pre><code>-stay_open
+True
+-@
+NEWARGFILE</code></pre>
+
+<p>Ez azt eredményezi, hogy az <i>ARGFILE</i> bezáródik, és a <i>NEWARGFILE</i> marad nyitva. (Az itteni <b>-stay_open</b> nélkül az exiftool visszatért volna az <i>ARGFILE</i>-ból való argumentumolvasáshoz a <i>NEWARGFILE</i> végének elérése után.)</p>
+
+<p>Megjegyzés: Amikor argumentumokat írunk egy lemezfájlba, a <code>-execute\n</code> beírása után legfeljebb 0,01 másodperces késés van, mielőtt az exiftool elkezdi a parancs feldolgozását. Ez a késés elkerülhető egy CONT jel elküldésével az exiftool folyamatnak közvetlenül a <code>-execute\n</code> beírása után. (Nincs kapcsolódó késés, amikor argumentumokat csővezetéken keresztül írunk a <code>-@ -</code>-szal, így a jel nem szükséges ennek a technikának a használatakor.)</p>
+
+</dd>
+<dt id="userParam-PARAM-VAL"><b>-userParam</b> <i>PARAM[[^]=[VAL]]</i></dt>
+<dd>
+
+<p>Felhasználói paraméter beállítása. A <i>PARAM</i> egy tetszőleges felhasználóiparaméter-név. Ez egy interfész az API UserParam opcióhoz (lásd az <a>Image::ExifTool Options</a> dokumentációt), és módszert nyújt a felhasználó által definiált paraméterek eléréséhez a <b>-if</b>, <b>-p</b> és <b>-fileNUM</b> opciók argumentumaiban, mintha bármely más tag lennének. Egy hash tag (<code>#</code>) fűzése a <i>PARAM</i>-hoz (pl. <code>-userParam MyTag#=yes</code>) azt is eredményezi, hogy a paraméter normál tagként kerül kinyerésre a UserParam csoportban. A <b>-api</b> opcióhoz hasonlóan a paraméter értéke 1-re áll, ha az <i>=VAL</i> elmarad, undef-re, ha csak a <i>VAL</i> marad el a <code>=</code>-szal, vagy üres sztringre, ha a <i>VAL</i> marad el a <code>^=</code>-szal. Példák:</p>
+
+<pre><code>exiftool -p &#39;$test from $filename&#39; -userparam test=Hello FILE
+
+exiftool &quot;-description&lt;mytag&quot; -userparam mytag#=&quot;test&quot; FILE</code></pre>
+
+</dd>
+</dl>
+
+<h3 id="Advanced-formatting-feature">Haladó formázási szolgáltatás</h3>
+
+<p>Egy haladó formázási szolgáltatás lehetővé teszi bármely, egy <b>-if</b>, <b>-p</b> vagy <b>-fileNUM</b> argumentumon belül, illetve egy <b>-tagsFromFile</b> átirányítási sztringen belül interpolált tag értékének módosítását. Az ezekben a sztringekben lévő tagneveket egy <code>$</code> szimbólum előzi meg, és egy tetszőleges Perl-kifejezés alkalmazható a tag értékére úgy, hogy kapcsos zárójeleket teszünk a tagnév köré, és a nevet követően, pontosvesszővel elválasztva, beszúrjuk a kifejezést (azaz <code>${TAG;EXPR}</code>). A kifejezés az alapértelmezett bemeneti változón (<code>$_</code>) keresztül hat a tag értékére, és a teljes ExifTool API-hoz hozzáfér az aktuális ExifTool-objektumon (<code>$self</code>) és a tag-kulcson (<code>$tag</code>) keresztül. Bármilyen érvényes Perl-kódot tartalmazhat, beleértve a fordítási (<code>tr///</code>) és helyettesítési (<code>s///</code>) műveleteket, de vedd figyelembe, hogy a kifejezésen belüli kapcsos zárójeleknek kiegyensúlyozottnak kell lenniük. Ha a kifejezés nem módosítja a <code>$_</code>-t, az eredeti tag-érték adódik vissza. Az alábbi példa kiírja a fényképezőgép Make értékét, a szóközöket alulvonásokra fordítva, és több egymást követő alulvonást egyetlen alulvonással helyettesítve:</p>
+
+<pre><code>exiftool -p &#39;${make;tr/ /_/;s/__+/_/g}&#39; image.jpg</code></pre>
+
+<p>Egy <code>@</code> adható a tagnév után, hogy a kifejezés a lista típusú tagek egyes listaelemeire hasson, egyszerűsítve a listafeldolgozást. Állítsd a <code>$_</code>-t undef-re egy elem listából való eltávolításához. Példaként a következő parancs minden olyan subjectet visszaad, amely nem tartalmazza az „xxx" sztringet:</p>
+
+<pre><code>exiftool -p &#39;${subject@;$_=undef if /xxx/}&#39; image.jpg</code></pre>
+
+<p>Egy alapértelmezett <code>tr(/\\?*:|&quot;&lt;&gt;\0)()d</code> kifejezés feltételeződik, ha a kifejezés üres (azaz <code>${TAG;}</code>). Ez eltávolítja a / \ ? * : | &lt; &gt; és null karaktereket a kiírt értékből. (Ezek a karakterek nem megengedettek a Windows-fájlnevekben, így ez a szolgáltatás hasznos, ha tag-értékeket használunk fájlnevekben.)</p>
+
+<p>Vedd figyelembe, hogy a kifejezés nem értékelődik ki a definiálatlan (nem létező) tagekhez, amelyeknek más értékük lehet, ha vagy a <b>-m</b> vagy a <b>-f</b> parancssori opciót, vagy az API MissingTagValue opciót használják.</p>
+
+<h4 id="Helper-functions">Segédfüggvények</h4>
+
+<p>Vedd figyelembe, hogy a függvénynevek kis-/nagybetűérzékenyek.</p>
+
+<p><b><code>DateFmt</code></b></p>
+
+<p>Egyszerűsíti az egyes dátum/idő értékek újraformázását. Ez a függvény egy szabványos EXIF-formátumú dátum/idő értékre hat a <code>$_</code>-ban, és a megadott formátumsztring szerint formázza (lásd a <b>-d</b> opciót). Annak elkerülésére, hogy egy már formázott dátum/idő értéket próbáljunk újraformázni, egy <code>#</code>-t kell adni a tagnévhez (mint az alábbi példában), ha a <b>-d</b> opciót is használják. Például:</p>
+
+<pre><code>exiftool -p &#39;${createdate#;DateFmt(&quot;%Y-%m-%d_%H%M%S&quot;)}&#39; a.jpg</code></pre>
+
+<p><b><code>ShiftTime</code></b></p>
+
+<p>Egy EXIF-formátumú dátum/idő sztringet eltol egy megadott mértékkel. Kezdd bevezető mínuszjellel az időben visszafelé toláshoz. Az eltolás szintaxisának részleteiért lásd az <a>Image::ExifTool::Shift.pl</a>-t. Például egy dátum/idő érték egy évvel visszatolásához:</p>
+
+<pre><code>exiftool -p &#39;${createdate;ShiftTime(&quot;-1:0:0 0&quot;)}&#39; a.jpg</code></pre>
+
+<p><b><code>NoDups</code></b></p>
+
+<p>Eltávolítja a duplikált elemeket egy listából, a <b>-sep</b> opcióval megadott elválasztóval. Ez a függvény lista típusú tagek másolásakor a leghasznosabb. Például a következő parancs használható a duplikált Keywords eltávolítására:</p>
+
+<pre><code>exiftool -sep &#39;##&#39; &#39;-keywords&lt;${keywords;NoDups}&#39; a.jpg</code></pre>
+
+<p>A <b>-sep</b> opció szükséges ahhoz, hogy a sztringet visszabontsuk egyes listaelemekre, amikor egy lista típusú tagbe írunk.</p>
+
+<p>Egy opcionális flag argumentum 1-re állítható, hogy a <code>NoDups</code> a <code>$_</code>-t undef-re állítsa, ha nem volt duplikátum, így megakadályozva a fájl szükségtelen újraírását:</p>
+
+<pre><code>exiftool -sep &#39;##&#39; &#39;-keywords&lt;${keywords;NoDups(1)}&#39; a.jpg</code></pre>
+
+<p>Az ExifTool 12.64 hozzáad egy API NoDups opciót, amely a NoDups segédfüggvényt nagyrészt feleslegessé teszi, minden funkcióval, kivéve a fájl újraírásának elkerülését, ha nincsenek duplikátumok, de azzal az előnnyel, hogy a duplikátumok eltávolíthatók, amikor több forrásból gyűjtünk listaelemeket. A fenti parancsokkal egyenértékű, ezt a szolgáltatást használó parancs a következő lenne:</p>
+
+<pre><code>exiftool -tagsfromfile @ -keywords -api nodups a.jpg</code></pre>
+
+<p><b><code>SetTags</code></b></p>
+
+<p>A kinyert képekben lévő tagek beállítására szolgál. Argumentumok nélkül minden taget átmásol a forrásfájlból a beágyazott képbe:</p>
+
+<pre><code>exiftool -p &#39;${previewimage;SetTags}&#39; -b a.arw &gt; preview.jpg</code></pre>
+
+<p>Argumentumok adhatók hozzá konkrét tagek másolására vagy beállítására. Az argumentumok pontosan ugyanolyan alakúak, mint a parancssorban tagek másolásakor vagy írásakor, de a bevezető kötőjel nélkül. Például:</p>
+
+<pre><code>exiftool -p &#39;${previewimage;SetTags(&quot;comment=test&quot;,&quot;title&lt;filename&quot;)}&#39; ...</code></pre>
+
+<h1 id="WINDOWS-UNICODE-FILE-NAMES">WINDOWS UNICODE FÁJLNEVEK</h1>
+
+<p>Windowson a parancssori argumentumokat az aktuális kódlappal adják meg, és automatikusan átkódolódnak a rendszer kódlapjára. Ez az átkódolás nem történik meg az ExifTool arg fájljaiban lévő argumentumoknál, így alapértelmezésben az arg fájlokban lévő fájlnevek a rendszer kódlapját használják. Sajnos ezek a kódlapok nem teljes karakterkészletek, így nem minden fájlnév ábrázolható.</p>
+
+<p>Az ExifTool 9.79-től kezdve lehetővé teszi a fájlnév-kódolás megadását a <code>-charset filename=CHARSET</code>-tel, ahol a <code>CHARSET</code> egy érvényes ExifTool-karakterkészlet neve, lehetőleg <code>UTF8</code> (a teljes listát lásd a <b>-charset</b> opciónál). Ennek beállítása kiváltja a Windows széles karakteres I/O-rutinjainak használatát, így támogatást nyújtva a legtöbb Unicode-fájlnévhez (lásd a 4. megjegyzést). De vedd figyelembe, hogy nem triviális helyesen kódolt fájlneveket átadni a Windows parancssorában (részletekért lásd a <a href="https://exiftool.org/faq.html#Q18">https://exiftool.org/faq.html#Q18</a> oldalt), így ha lehetséges, ajánlott őket egy UTF-8 kódolású <b>-@</b> argfájlba helyezni és a <code>-charset filename=utf8</code>-at használni.</p>
+
+<p>Figyelmeztetés keletkezik, ha egy megadott fájlnév speciális karaktereket tartalmaz, és a fájlnév-karakterkészlet nem lett megadva. A figyelmeztetés azonban letiltható a <code>-charset filename=&quot;&quot;</code> beállításával, és az ExifTool ekkor is helyesen működhet, ha a rendszer kódlapja megegyezik a fájlnevekhez használt karakterkészlettel.</p>
+
+<p>Amikor könyvtárnevet adnak meg, a fájlnév-kódolást nem kell megadni (hacsak a könyvtárnév nem tartalmaz speciális karaktereket), és az ExifTool automatikusan széles karakteres rutinokat használ a könyvtár beolvasásához.</p>
+
+<p>A fájlnév-karakterkészlet a <i>FILE</i> argumentumokra, valamint a <b>-@</b>, <b>-geotag</b>, <b>-o</b>, <b>-p</b>, <b>-srcfile</b>, <b>-tagsFromFile</b>, <b>-csv</b>=, <b>-j</b>= és <b>-</b><i>TAG</i>&lt;= fájlnév-argumentumaira vonatkozik. Nem vonatkozik azonban a <b>-config</b> fájlnévre, amely mindig a rendszer karakterkészletét használja. A <code>-charset filename=</code> opciónak a <b>-@</b> opció előtt kell jönnie, hogy hatásos legyen, de a többi opcióhoz képest a sorrend nem számít.</p>
+
+<p>Megjegyzések:</p>
+
+<p>1) A FileName és Directory tag-értékek továbbra is ugyanazt a kódolást használják, mint a többi tag-érték, és íráskor/olvasáskor a fájlnév-karakterkészletre/-készletről konvertálódnak, ha meg van adva.</p>
+
+<p>2) A Unicode-támogatás még nincs megvalósítva más Windows-alapú rendszerekhez, mint a Cygwin.</p>
+
+<p>3) A Unicode nevű, csak olvasható fájlok szerkesztéséről szóló megjegyzésért lásd az alábbi <a href="#WRITING-READ-ONLY-FILES">&quot;CSAK OLVASHATÓ FÁJLOK ÍRÁSA&quot;</a> szakaszt.</p>
+
+<p>4) A helyettesítő párokat (U+FFFF feletti kódpontok) tartalmazó Unicode-fájlnevek továbbra is problémákat okoznak.</p>
+
+<h1 id="WRITING-READ-ONLY-FILES">CSAK OLVASHATÓ FÁJLOK ÍRÁSA</h1>
+
+<p>Általában az ExifTool használható metaadatok csak olvasható fájlokba írására, feltéve, hogy a felhasználónak van írási joga a könyvtárban. Három esetben azonban fájlírási jog is szükséges:</p>
+
+<p>1) Amikor a <b>-overwrite_original_in_place</b> opciót használják.</p>
+
+<p>2) Amikor csak pszeudo System tageket írnak (pl. FileModifyDate).</p>
+
+<p>3) Windowson, ha a fájl nevében Unicode-karakterek vannak, és a) a <b>-overwrite_original</b> opciót használják, vagy b) az <code>_original</code> biztonsági másolat már létezik.</p>
+
+<p>A Windowson lévő rejtett fájlok csak olvasható fájlként viselkednek, amikor bármilyen valódi taget próbálunk a fájlba írni -- hiba keletkezik a <b>-overwrite_original_in_place</b> használatakor, egyébként az írásnak sikeresnek kell lennie, és a rejtett attribútum eltávolításra kerül. De a <b>-if</b> opció használható a rejtett fájlok feldolgozásának elkerülésére (feltéve, hogy a Win32API::File elérhető):</p>
+
+<pre><code>exiftool -if &quot;$fileattributes !~ /Hidden/&quot; ...</code></pre>
+
+<h1 id="READING-EXAMPLES">OLVASÁSI PÉLDÁK</h1>
+
+<p><b>Megjegyzés</b>: Légy óvatos, amikor ezeket a példákat kivágod és beilleszted a terminálodba! Némely karaktert, például az egyszeres és kettős idézőjeleket és a kötőjeleket, a dokumentáció megjelenítésére használt szövegformázó hasonló megjelenésű, de funkcionálisan eltérő karakterekre változtathatta. Vedd figyelembe azt is, hogy a Windows cmd shellben kettős idézőjeleket kell használni a példákban használt egyszeres idézőjelek helyett.</p>
+
+<dl>
+
+<dt id="exiftool--a--u--g1-a.jpg"><code>exiftool -a -u -g1 a.jpg</code></dt>
+<dd>
+
+<p>Egy kép összes metainformációjának kiírása, a duplikált és ismeretlen tageket is beleértve, csoport szerint rendezve (az 1-es családhoz). Teljesítménybeli okokból ez a parancs nem feltétlenül nyer ki minden elérhető metaadatot. (A beágyazott dokumentumokban lévő metaadatok, a külső segédeszközök által kinyert metaadatok és a túlzott feldolgozási időt igénylő metaadatok nem feltétlenül kerülnek kinyerésre.) Adj <code>-ee3</code>-at és <code>-api RequestAll=3</code>-at a parancshoz, hogy abszolút mindent kinyerj, ami elérhető.</p>
+
+</dd>
+<dt id="exiftool--common-dir"><code>exiftool -common dir</code></dt>
+<dd>
+
+<p>A <code>dir</code> könyvtárban lévő összes kép közös metainformációjának kiírása. A <code>-common</code> egy <a>rövidítés-tag</a>, amely a közös EXIF-metainformációt képviseli.</p>
+
+</dd>
+<dt id="exiftool--T--createdate--aperture--shutterspeed--iso-dir-out.txt"><code>exiftool -T -createdate -aperture -shutterspeed -iso dir &gt; out.txt</code></dt>
+<dd>
+
+<p>A megadott metainformáció felsorolása tabbal határolt oszlopos formában a <code>dir</code> könyvtárban lévő összes képhez egy „out.txt" nevű kimeneti szövegfájlba.</p>
+
+</dd>
+<dt id="exiftool--s--ImageSize--ExposureTime-b.jpg"><code>exiftool -s -ImageSize -ExposureTime b.jpg</code></dt>
+<dd>
+
+<p>Az ImageSize és ExposureTime tagnevek és -értékek kiírása.</p>
+
+</dd>
+<dt id="exiftool--l--canon-c.jpg-d.jpg"><code>exiftool -l -canon c.jpg d.jpg</code></dt>
+<dd>
+
+<p>A szabványos Canon-információ kiírása két képfájlból.</p>
+
+</dd>
+<dt id="exiftool--r--w-.txt--common-pictures"><code>exiftool -r -w .txt -common pictures</code></dt>
+<dd>
+
+<p>A közös metainformáció rekurzív kinyerése a <code>pictures</code> könyvtárban lévő fájlokból, a szöveges kimenetet azonos nevű <code>.txt</code> fájlokba írva.</p>
+
+</dd>
+<dt id="exiftool--b--ThumbnailImage-image.jpg-thumbnail.jpg"><code>exiftool -b -ThumbnailImage image.jpg &gt; thumbnail.jpg</code></dt>
+<dd>
+
+<p>A bélyegkép mentése az <code>image.jpg</code>-ből egy <code>thumbnail.jpg</code> nevű fájlba.</p>
+
+</dd>
+<dt id="exiftool--b--JpgFromRaw--w-_JFR.JPG--ext-NEF--r"><code>exiftool -b -JpgFromRaw -w _JFR.JPG -ext NEF -r .</code></dt>
+<dd>
+
+<p>JPG-kép rekurzív kinyerése az aktuális könyvtárban lévő összes Nikon NEF fájlból, a kimeneti JPG-fájlok nevéhez <code>_JFR.JPG</code>-t adva.</p>
+
+</dd>
+<dt id="exiftool--a--b--W-d-f_-t--c.-s--preview:all-dir"><code>exiftool -a -b -W %d%f_%t%-c.%s -preview:all dir</code></dt>
+<dd>
+
+<p>Minden típusú előnézeti kép (ThumbnailImage, PreviewImage, JpgFromRaw stb.) kinyerése a „dir" könyvtárban lévő fájlokból, a tagnevet a kimeneti előnézetikép-fájlnevekhez adva.</p>
+
+</dd>
+<dt id="exiftool--d-r-a-B-e-Y--DateTimeOriginal--S--s--ext-jpg"><code>exiftool -d &#39;%r %a, %B %e, %Y&#39; -DateTimeOriginal -S -s -ext jpg .</code></dt>
+<dd>
+
+<p>Formázott dátum/idő kiírása az aktuális könyvtárban lévő összes JPG-fájlhoz.</p>
+
+</dd>
+<dt id="exiftool--IFD1:XResolution--IFD1:YResolution-image.jpg"><code>exiftool -IFD1:XResolution -IFD1:YResolution image.jpg</code></dt>
+<dd>
+
+<p>A kép felbontásának kinyerése az EXIF IFD1 információból (a bélyegkép IFD-je).</p>
+
+</dd>
+<dt id="exiftool---resolution-image.jpg"><code>exiftool &#39;-*resolution*&#39; image.jpg</code></dt>
+<dd>
+
+<p>Minden olyan tag kinyerése egy képből, amelynek nevében szerepel a „Resolution" szó.</p>
+
+</dd>
+<dt id="exiftool--xmp:author:all--a-image.jpg"><code>exiftool -xmp:author:all -a image.jpg</code></dt>
+<dd>
+
+<p>Minden szerzővel kapcsolatos XMP-információ kinyerése egy képből.</p>
+
+</dd>
+<dt id="exiftool--xmp--b-a.jpg-out.xmp"><code>exiftool -xmp -b a.jpg &gt; out.xmp</code></dt>
+<dd>
+
+<p>A teljes XMP-adatrekord érintetlen kinyerése az <code>a.jpg</code>-ből és kiírása az <code>out.xmp</code>-be a speciális <code>XMP</code> tag használatával (lásd az Extra tageket az <a>Image::ExifTool::TagNames</a>-ben).</p>
+
+</dd>
+<dt id="exiftool--p-filename-has-date-dateTimeOriginal--q--f-dir"><code>exiftool -p &#39;$filename has date $dateTimeOriginal&#39; -q -f dir</code></dt>
+<dd>
+
+<p>Egy sornyi kimenet kiírása, amely a fájlnevet és a DateTimeOriginal-t tartalmazza a <code>dir</code> könyvtárban lévő minden képhez.</p>
+
+</dd>
+<dt id="exiftool--ee3--p-gpslatitude-gpslongitude-gpstimestamp-a.m2ts"><code>exiftool -ee3 -p &#39;$gpslatitude, $gpslongitude, $gpstimestamp&#39; a.m2ts</code></dt>
+<dd>
+
+<p>Az összes GPS-pozíció kinyerése egy AVCHD-videóból.</p>
+
+</dd>
+<dt id="exiftool--icc_profile--b--w-icc-image.jpg"><code>exiftool -icc_profile -b -w icc image.jpg</code></dt>
+<dd>
+
+<p>A teljes ICC_Profile mentése egy képből egy azonos nevű, <code>.icc</code> kiterjesztésű kimeneti fájlba.</p>
+
+</dd>
+<dt id="exiftool--htmldump--w-tmp-f_-e.html-t-images"><code>exiftool -htmldump -w tmp/%f_%e.html t/images</code></dt>
+<dd>
+
+<p>HTML-oldalak generálása az EXIF-információ hexdumpjából a <code>t/images</code> könyvtárban lévő összes képhez. A kimeneti HTML-fájlok a <code>tmp</code> könyvtárba íródnak (amely létrejön, ha nem létezett), „FILENAME_EXT.html" alakú nevekkel.</p>
+
+</dd>
+<dt id="exiftool--a--b--ee--embeddedimage--W-Image_-.3g3.-s-file.pdf"><code>exiftool -a -b -ee -embeddedimage -W Image_%.3g3.%s file.pdf</code></dt>
+<dd>
+
+<p>Beágyazott JPG- és JP2-képek kinyerése egy PDF-fájlból. A kimeneti képek fájlnevei „Image_#.jpg" vagy „Image_#.jp2" alakúak lesznek, ahol a „#" a képhez tartozó ExifTool 3-as családbeli beágyazott dokumentum száma.</p>
+
+</dd>
+</dl>
+
+<h1 id="WRITING-EXAMPLES">ÍRÁSI PÉLDÁK</h1>
+
+<p>Vedd figyelembe, hogy idézőjelekre van szükség bizonyos speciális karaktereket, például <code>&gt;</code>, <code>&lt;</code> vagy bármilyen szóközt tartalmazó argumentumok körül. Ezek az idézőjelezési technikák shell-függők, de az alábbi példák a legtöbb Unix-shellnél működnek. A Windows cmd shellben azonban kettős idézőjeleket kell használni (pl. -Comment=&quot;This is a new comment&quot;).</p>
+
+<dl>
+
+<dt id="exiftool--tagsfromfile-src.jpg--exif:all---subifd:all-dst.jpg"><code>exiftool -tagsfromfile src.jpg -exif:all --subifd:all dst.jpg</code></dt>
+<dd>
+
+<p>Új megjegyzés írása egy JPG-képbe (lecserél minden meglévő megjegyzést).</p>
+
+</dd>
+<dt id="exiftool--comment--o-newdir--ext-jpg"><code>exiftool -comment= -o newdir -ext jpg .</code></dt>
+<dd>
+
+<p>A megjegyzés eltávolítása az aktuális könyvtárban lévő összes JPG-képből, a módosított képeket egy új könyvtárba írva.</p>
+
+</dd>
+<dt id="exiftool--keywords-EXIF--keywords-editor-dst.jpg"><code>exiftool -keywords=EXIF -keywords=editor dst.jpg</code></dt>
+<dd>
+
+<p>A meglévő kulcsszólista lecserélése két új kulcsszóra (<code>EXIF</code> és <code>editor</code>).</p>
+
+</dd>
+<dt id="exiftool--Keywords-word--o-newfile.jpg-src.jpg"><code>exiftool -Keywords+=word -o newfile.jpg src.jpg</code></dt>
+<dd>
+
+<p>Egy forráskép átmásolása egy új fájlba, és egy kulcsszó (<code>word</code>) hozzáadása a kulcsszavak aktuális listájához.</p>
+
+</dd>
+<dt id="exiftool--exposurecompensation--0.5-a.jpg"><code>exiftool -exposurecompensation+=-0.5 a.jpg</code></dt>
+<dd>
+
+<p>Az ExposureCompensation értékének csökkentése 0,5 EV-vel. Vedd figyelembe, hogy a += negatív értékkel a csökkentésre szolgál, mert a -= operátor a feltételes törlésre szolgál (lásd a következő példát).</p>
+
+</dd>
+<dt id="exiftool--credit--xxx-dir"><code>exiftool -credit-=xxx dir</code></dt>
+<dd>
+
+<p>A Credit információ törlése egy könyvtár összes fájljából, ahol a Credit értéke <code>xxx</code> volt.</p>
+
+</dd>
+<dt id="exiftool--xmp:description-de-kuuml-hl--E-dst.jpg"><code>exiftool -xmp:description-de=&#39;k&amp;uuml;hl&#39; -E dst.jpg</code></dt>
+<dd>
+
+<p>Alternatív nyelv írása az XMP:Description-höz, HTML-karakter-escape-eléssel a speciális karakterek beviteléhez.</p>
+
+</dd>
+<dt id="exiftool--all-dst.jpg"><code>exiftool -all= dst.jpg</code></dt>
+<dd>
+
+<p>Az összes metainformáció törlése egy képből. Megjegyzés: Ezt NE tedd RAW-képekkel (a DNG kivételével), mivel a zárt RAW-képformátumok gyakran tartalmaznak a makernote-okban olyan információt, amely a kép konvertálásához szükséges.</p>
+
+</dd>
+<dt id="exiftool--all--comment-lonely-dst.jpg"><code>exiftool -all= -comment=&#39;lonely&#39; dst.jpg</code></dt>
+<dd>
+
+<p>Az összes metainformáció törlése egy képből, majd egy megjegyzés visszaadása. (Vedd figyelembe, hogy a sorrend fontos: a <code>-comment=&#39;lonely&#39; -all=</code> az új megjegyzést is törölné.)</p>
+
+</dd>
+<dt id="exiftool--all---jfif:all-dst.jpg"><code>exiftool -all= --jfif:all dst.jpg</code></dt>
+<dd>
+
+<p>Az összes metainformáció törlése egy képből a JFIF-csoport kivételével.</p>
+
+</dd>
+<dt id="exiftool--Photoshop:All-dst.jpg"><code>exiftool -Photoshop:All= dst.jpg</code></dt>
+<dd>
+
+<p>A Photoshop-metainformáció törlése egy képből (vedd figyelembe, hogy a Photoshop-információ az IPTC-t is magában foglalja).</p>
+
+</dd>
+<dt id="exiftool--r--XMP-crss:all-DIR"><code>exiftool -r -XMP-crss:all= DIR</code></dt>
+<dd>
+
+<p>Az összes XMP-crss információ rekurzív törlése egy könyvtárban lévő képekből.</p>
+
+</dd>
+<dt id="exiftool--ThumbnailImage-thumb.jpg-dst.jpg"><code>exiftool &#39;-ThumbnailImage&lt;=thumb.jpg&#39; dst.jpg</code></dt>
+<dd>
+
+<p>A bélyegkép beállítása a megadott fájlból (Megjegyzés: Az idézőjelek szükségesek a shell-átirányítás megakadályozásához).</p>
+
+</dd>
+<dt id="exiftool--JpgFromRaw-d-f_JFR.JPG--ext-NEF--r"><code>exiftool &#39;-JpgFromRaw&lt;=%d%f_JFR.JPG&#39; -ext NEF -r .</code></dt>
+<dd>
+
+<p>A <code>_JFR.JPG</code>-re végződő fájlnevű JPEG-képek rekurzív írása az aktuális könyvtárban lévő, hasonló nevű, <code>.NEF</code> kiterjesztésű fájlok JpgFromRaw tagjébe. (Ez a fenti <a href="#READING-EXAMPLES">&quot;OLVASÁSI PÉLDÁK&quot;</a> szakasz <code>-JpgFromRaw</code> parancsának inverze.)</p>
+
+</dd>
+<dt id="exiftool--DateTimeOriginal--0:0:0-1:30:0-dir"><code>exiftool -DateTimeOriginal-=&#39;0:0:0 1:30:0&#39; dir</code></dt>
+<dd>
+
+<p>A <code>dir</code> könyvtárban lévő összes kép eredeti dátumának/idejének igazítása egy óra 30 perc kivonásával. (Ez egyenértékű a <code>-DateTimeOriginal-=1.5</code>-tel. Részletekért lásd az <a>Image::ExifTool::Shift.pl</a>-t.)</p>
+
+</dd>
+<dt id="exiftool--createdate-3--modifydate-3-a.jpg-b.jpg"><code>exiftool -createdate+=3 -modifydate+=3 a.jpg b.jpg</code></dt>
+<dd>
+
+<p>3 óra hozzáadása két kép CreateDate és ModifyDate időbélyegeihez.</p>
+
+</dd>
+<dt id="exiftool--AllDates-1:30--if-make-eq-Canon-dir"><code>exiftool -AllDates+=1:30 -if &#39;$make eq &quot;Canon&quot;&#39; dir</code></dt>
+<dd>
+
+<p>A DateTimeOriginal, CreateDate és ModifyDate értékeinek eltolása előre 1 óra 30 perccel egy könyvtár összes Canon-képéhez. (Az AllDates tag rövidítésként áll rendelkezésre e három taghez, lehetővé téve az elérésüket egyetlen tagen keresztül.)</p>
+
+</dd>
+<dt id="exiftool--xmp:city-Kingston-image1.jpg-image2.nef"><code>exiftool -xmp:city=Kingston image1.jpg image2.nef</code></dt>
+<dd>
+
+<p>Egy tag írása két kép XMP-csoportjába. (Az <code>xmp:</code> nélkül ez a tag az IPTC-csoportba íródna, mivel a <code>City</code> mindkettőben létezik, és alapértelmezésben az IPTC a preferált.)</p>
+
+</dd>
+<dt id="exiftool--LightSource--Unknown-0-dst.tiff"><code>exiftool -LightSource-=&#39;Unknown (0)&#39; dst.tiff</code></dt>
+<dd>
+
+<p>A <code>LightSource</code> tag törlése csak akkor, ha ismeretlen, 0 értékkel.</p>
+
+</dd>
+<dt id="exiftool--whitebalance--auto--WhiteBalance-tung-dst.jpg"><code>exiftool -whitebalance-=auto -WhiteBalance=tung dst.jpg</code></dt>
+<dd>
+
+<p>A <code>WhiteBalance</code> beállítása <code>Tungsten</code>-re csak akkor, ha korábban <code>Auto</code> volt.</p>
+
+</dd>
+<dt id="exiftool--comment---comment-new-comment-a.jpg"><code>exiftool -comment-= -comment=&#39;new comment&#39; a.jpg</code></dt>
+<dd>
+
+<p>Új megjegyzés írása csak akkor, ha a képnek még nincs.</p>
+
+</dd>
+<dt id="exiftool--o-d-f.xmp-dir"><code>exiftool -o %d%f.xmp dir</code></dt>
+<dd>
+
+<p>XMP-metainformáció-adatfájlok létrehozása a <code>dir</code> könyvtárban lévő összes képhez.</p>
+
+</dd>
+<dt id="exiftool--o-test.xmp--owner-Phil--title-XMP-File"><code>exiftool -o test.xmp -owner=Phil -title=&#39;XMP File&#39;</code></dt>
+<dd>
+
+<p>XMP-adatfájl létrehozása kizárólag a parancssorban definiált tagekből.</p>
+
+</dd>
+<dt id="exiftool--ICC_Profile-d-f.icc-image.jpg"><code>exiftool &#39;-ICC_Profile&lt;=%d%f.icc&#39; image.jpg</code></dt>
+<dd>
+
+<p>ICC_Profile írása egy képbe egy azonos nevű <code>.icc</code> fájlból.</p>
+
+</dd>
+<dt id="exiftool--hierarchicalkeywords-keyword-one-children-keyword-B"><code>exiftool -hierarchicalkeywords=&#39;{keyword=one,children={keyword=B}}&#39;</code></dt>
+<dd>
+
+<p>Strukturált XMP-információ írása. Bővebb részletekért lásd a <a href="https://exiftool.org/struct.html">https://exiftool.org/struct.html</a> oldalt.</p>
+
+</dd>
+<dt id="exiftool--trailer:all-image.jpg"><code>exiftool -trailer:all= image.jpg</code></dt>
+<dd>
+
+<p>Bármely, a kép vége (EOI) után talált trailer törlése egy JPEG-fájlban. Több digitális fényképezőgép nagy PreviewImage-et tárol a JPEG EOI után, és a fájlméret jelentősen csökkenthető e trailer törlésével. A felismert JPEG-trailerek listájáért lásd a <a>JPEG Tags dokumentációt</a>.</p>
+
+</dd>
+</dl>
+
+<h1 id="COPYING-EXAMPLES">MÁSOLÁSI PÉLDÁK</h1>
+
+<p>Ezek a példák bemutatják a tag-értékek fájlok közötti másolásának képességét.</p>
+
+<dl>
+
+<dt id="exiftool--tagsFromFile-src.cr2-dst.jpg"><code>exiftool -tagsFromFile src.cr2 dst.jpg</code></dt>
+<dd>
+
+<p>Az összes írható tag értékeinek másolása a <code>src.cr2</code>-ből a <code>dst.jpg</code>-be, az információt a preferált csoportokban lévő azonos nevű tagekbe írva.</p>
+
+</dd>
+<dt id="exiftool--TagsFromFile-src.jpg--all:all-dst.jpg"><code>exiftool -TagsFromFile src.jpg -all:all dst.jpg</code></dt>
+<dd>
+
+<p>Az összes írható tag értékeinek másolása a <code>src.jpg</code>-ből a <code>dst.jpg</code>-be, az eredeti tag-csoportok megőrzésével.</p>
+
+</dd>
+<dt id="exiftool--all--tagsfromfile-src.jpg--exif:all-dst.jpg"><code>exiftool -all= -tagsfromfile src.jpg -exif:all dst.jpg</code></dt>
+<dd>
+
+<p>Az összes metainformáció törlése a <code>dst.jpg</code> képből, majd az EXIF-tagek másolása a <code>src.jpg</code>-ből.</p>
+
+</dd>
+<dt id="exiftool--exif:all--tagsfromfile--all:all--unsafe-bad.jpg"><code>exiftool -exif:all= -tagsfromfile @ -all:all -unsafe bad.jpg</code></dt>
+<dd>
+
+<p>Az összes EXIF-metainformáció újraépítése a semmiből egy képben. Ez a technika JPEG-képekben használható a sérült EXIF-információ javítására, amelyet egyébként hibák miatt nem lehetne kiírni. Az <code>Unsafe</code> tag rövidítés a JPEG-képekben lévő nem biztonságos EXIF-tagekhez, amelyeket normál esetben nem másolunk. A nem biztonságos tagekről bővebben lásd a <a>tagnév-dokumentációt</a>.</p>
+
+</dd>
+<dt id="exiftool--Tagsfromfile-a.jpg-out.xmp"><code>exiftool -Tagsfromfile a.jpg out.xmp</code></dt>
+<dd>
+
+<p>Metainformáció másolása az <code>a.jpg</code>-ből egy XMP-adatfájlba. Ha az <code>out.xmp</code> XMP-adatfájl már létezik, az új információval frissül. Egyébként az XMP-adatfájl létrejön. Csak kizárólag metaadatot tartalmazó fájlok hozhatók így létre (a képeket tartalmazó fájlok szerkeszthetők, de nem hozhatók létre). Az XMP-fájlok generálásának egy másik technikájáért lásd a fenti <a href="#WRITING-EXAMPLES">&quot;ÍRÁSI PÉLDÁK&quot;</a> szakaszt.</p>
+
+</dd>
+<dt id="exiftool--tagsFromFile-a.jpg--XMP:All--ThumbnailImage--m-b.jpg"><code>exiftool -tagsFromFile a.jpg -XMP:All= -ThumbnailImage= -m b.jpg</code></dt>
+<dd>
+
+<p>Az összes metainformáció másolása az <code>a.jpg</code>-ből a <code>b.jpg</code>-be, az összes XMP-információ és a bélyegkép törlésével a célból.</p>
+
+</dd>
+<dt id="exiftool--TagsFromFile-src.jpg--title--author-Phil-dst.jpg"><code>exiftool -TagsFromFile src.jpg -title -author=Phil dst.jpg</code></dt>
+<dd>
+
+<p>A title másolása az egyik képből egy másikba, és egy új szerzőnév beállítása.</p>
+
+</dd>
+<dt id="exiftool--TagsFromFile-a.jpg--ISO--TagsFromFile-b.jpg--comment-dst.jpg"><code>exiftool -TagsFromFile a.jpg -ISO -TagsFromFile b.jpg -comment dst.jpg</code></dt>
+<dd>
+
+<p>Az ISO másolása az egyik képből és a Comment másolása egy másik képből egy cél-képbe.</p>
+
+</dd>
+<dt id="exiftool--tagsfromfile-src.jpg--exif:all---subifd:all-dst.jpg1"><code>exiftool -tagsfromfile src.jpg -exif:all --subifd:all dst.jpg</code></dt>
+<dd>
+
+<p>Csak az EXIF-információ másolása az egyik képből egy másikba, a SubIFD tageket kizárva.</p>
+
+</dd>
+<dt id="exiftool--FileModifyDateDateTimeOriginal-dir"><code>exiftool &#39;-FileModifyDate&lt;DateTimeOriginal&#39; dir</code></dt>
+<dd>
+
+<p>A metainformációban lévő eredeti dátum használata ugyanazon fájl fájlrendszerbeli módosítási dátumának beállítására egy könyvtár összes képéhez. (Vedd figyelembe, hogy a <code>-TagsFromFile @</code> feltételeződik, ha nincs más <b>-TagsFromFile</b> megadva információ átirányításakor, mint ebben a példában.)</p>
+
+</dd>
+<dt id="exiftool--TagsFromFile-src.jpg--xmp:allall-dst.jpg"><code>exiftool -TagsFromFile src.jpg &#39;-xmp:all&lt;all&#39; dst.jpg</code></dt>
+<dd>
+
+<p>Az összes lehetséges információ másolása a <code>src.jpg</code>-ből és kiírása XMP-formátumban a <code>dst.jpg</code>-be.</p>
+
+</dd>
+<dt id="exiftool--Description-FileName-s-.-.-dir"><code>exiftool &#39;-Description&lt;${FileName;s/\.[^.]*$//}&#39; dir</code></dt>
+<dd>
+
+<p>A kép Description-jének beállítása a fájlnévből a kiterjesztés eltávolítása után. Ez a példa a <a href="#Advanced-formatting-feature">&quot;Haladó formázási szolgáltatást&quot;</a> használja egy helyettesítési művelet végrehajtására, hogy eltávolítsa az utolsó pontot és az azt követő karaktereket a fájlnévből.</p>
+
+</dd>
+<dt id="exiftool---iptc2xmp.args--iptc:all-a.jpg"><code>exiftool -@ iptc2xmp.args -iptc:all= a.jpg</code></dt>
+<dd>
+
+<p>Az IPTC-információ átfordítása XMP-re a megfelelő tagnév-konverziókkal, és az eredeti IPTC-információ törlése egy képből. Ez a példa az iptc2xmp.args-t használja, amely egy, az ExifTool-disztribúcióhoz mellékelt fájl, amely tartalmazza az IPTC-információ XMP-formátumba konvertálásához szükséges argumentumokat. A disztribúcióhoz mellékelt még az xmp2iptc.args (amely az inverz konverziót végzi el) és néhány további .args fájl az EXIF, IPTC és XMP közötti egyéb konverziókhoz.</p>
+
+</dd>
+<dt id="exiftool--tagsfromfile-d-f.CR2--r--ext-JPG-dir"><code>exiftool -tagsfromfile %d%f.CR2 -r -ext JPG dir</code></dt>
+<dd>
+
+<p>A <code>dir</code>-ben lévő összes <code>JPG</code>-kép rekurzív újraírása az ugyanazon könyvtárakban lévő megfelelő <code>CR2</code>-képekből másolt információval.</p>
+
+</dd>
+<dt id="exiftool--keywords-make-image.jpg"><code>exiftool &#39;-keywords+&lt;make&#39; image.jpg</code></dt>
+<dd>
+
+<p>A fényképezőgép gyártójának hozzáadása a kulcsszavak listájához.</p>
+
+</dd>
+<dt id="exiftool--commentISO-exif:iso-Exposure-shutterspeed-dir"><code>exiftool &#39;-comment&lt;ISO=$exif:iso Exposure=${shutterspeed}&#39; dir</code></dt>
+<dd>
+
+<p>A <code>dir</code>-ben lévő összes kép Comment tagjének beállítása az EXIF:ISO és a ShutterSpeed tagek értékeiből. Az eredményül kapott megjegyzés „ISO=100 Exposure=1/60" alakú lesz.</p>
+
+</dd>
+<dt id="exiftool--TagsFromFile-src.jpg--icc_profile-dst.jpg"><code>exiftool -TagsFromFile src.jpg -icc_profile dst.jpg</code></dt>
+<dd>
+
+<p>Az ICC_Profile másolása az egyik képből egy másikba.</p>
+
+</dd>
+<dt id="exiftool--TagsFromFile-src.jpg--all:all-dst.mie"><code>exiftool -TagsFromFile src.jpg -all:all dst.mie</code></dt>
+<dd>
+
+<p>Az összes metainformáció másolása eredeti formájában egy JPEG-képből egy MIE-fájlba. A MIE-fájl létrejön, ha nem létezik. Ez a technika használható egy kép metaadatainak tárolására, hogy később a munkafolyamatban (az inverz paranccsal) visszailleszthető legyen a képbe.</p>
+
+</dd>
+<dt id="exiftool--o-dst.mie--all:all-src.jpg"><code>exiftool -o dst.mie -all:all src.jpg</code></dt>
+<dd>
+
+<p>Ez a parancs pontosan ugyanazt a feladatot végzi el, mint a fenti parancs, azzal a különbséggel, hogy a <b>-o</b> opció nem ír egy már létező kimeneti fájlba.</p>
+
+</dd>
+<dt id="exiftool--b--jpgfromraw--w-d-f_-ue.jpg--execute--b--previewimage--w-d-f_-ue.jpg--execute--tagsfromfile--srcfile-d-f_-ue.jpg--overwrite_original--common_args---ext-jpg-DIR"><code>exiftool -b -jpgfromraw -w %d%f_%ue.jpg -execute -b -previewimage -w %d%f_%ue.jpg -execute -tagsfromfile @ -srcfile %d%f_%ue.jpg -overwrite_original -common_args --ext jpg DIR</code></dt>
+<dd>
+
+<p>[Haladó] A JpgFromRaw vagy PreviewImage kinyerése a DIR-ben lévő összes, a JPG kivételével vett fájlból, <code>image_EXT.jpg</code>-hez hasonló fájlnevekkel mentve, majd az összes metainformáció hozzáadása az eredeti fájlokból a kinyert képekhez. Itt a parancssor három szakaszra van bontva (<b>-execute</b> opciókkal elválasztva), és mindegyik úgy hajtódik végre, mintha külön parancs lenne. A <b>-common_args</b> opció hatására a <code>--ext jpg DIR</code> argumentumok mind a három parancsra alkalmazódnak, a <b>-srcfile</b> opció pedig lehetővé teszi, hogy a kinyert JPG-kép legyen a harmadik parancs forrásfájlja (míg a RAW-fájlok a forrásfájljai a másik két parancsnak).</p>
+
+</dd>
+</dl>
+
+<h1 id="RENAMING-EXAMPLES">ÁTNEVEZÉSI PÉLDÁK</h1>
+
+<p>A <code>FileName</code> és <code>Directory</code> tagek írásával a fájlok átneveződnek és/vagy új könyvtárakba helyeződnek. Ez különösen hasznos és hatékony lehet a fájlok dátum szerinti rendezéséhez, amikor a <b>-d</b> opcióval kombinálják. Az új könyvtárak szükség szerint létrejönnek, de a meglévő fájlok nem íródnak felül. A %d, %f és %e formátumkódok használhatók az új fájlnévben az eredeti fájl könyvtárának, nevének és kiterjesztésének jelölésére, a %c pedig másolatszám hozzáadására, ha a fájl már létezik (részletekért lásd a <b>-w</b> opciót). Vedd figyelembe, hogy ha egy dátumformátum-sztringen belül használják, egy extra „%"-ot kell hozzáadni, hogy ezek a kódok átmenjenek a dátum/idő értelmezőn. (És vedd figyelembe azt is, hogy egy Windows batch fájlban minden „%" karaktert szintén escape-elni kell, így ebben a szélsőséges esetben a „%%%%f" szükséges egy egyszerű „%f" átvitelére az értelmezés két szintjén.) További dokumentációért és példákért lásd a <a href="https://exiftool.org/filename.html">https://exiftool.org/filename.html</a> oldalt.</p>
+
+<dl>
+
+<dt id="exiftool--filename-new.jpg-dir-old.jpg"><code>exiftool -filename=new.jpg dir/old.jpg</code></dt>
+<dd>
+
+<p>Az <code>old.jpg</code> átnevezése <code>new.jpg</code>-re a <code>dir</code> könyvtárban.</p>
+
+</dd>
+<dt id="exiftool--directory-e-dir"><code>exiftool -directory=%e dir</code></dt>
+<dd>
+
+<p>Az összes fájl áthelyezése a <code>dir</code> könyvtárból az eredeti fájlkiterjesztésekről elnevezett könyvtárakba.</p>
+
+</dd>
+<dt id="exiftool--DirectoryDateTimeOriginal--d-Y-m-d-dir"><code>exiftool &#39;-Directory&lt;DateTimeOriginal&#39; -d %Y/%m/%d dir</code></dt>
+<dd>
+
+<p>A <code>dir</code>-ben lévő összes fájl áthelyezése egy év, hónap és nap alapú könyvtárhierarchiába a <code>DateTimeOriginal</code> szerint. pl.) Ez a parancs a <code>dir/image.jpg</code> fájlt, amelynek <code>DateTimeOriginal</code>-ja <code>2005:10:12 16:05:56</code>, a <code>2005/10/12/image.jpg</code>-be helyezné.</p>
+
+</dd>
+<dt id="exiftool--o-.--DirectoryDateTimeOriginal--d-Y-m-d-dir"><code>exiftool -o . &#39;-Directory&lt;DateTimeOriginal&#39; -d %Y/%m/%d dir</code></dt>
+<dd>
+
+<p>Ugyanaz a hatás, mint fent, azzal a különbséggel, hogy a fájlok másolódnak áthelyezés helyett.</p>
+
+</dd>
+<dt id="exiftool--filename-f_-model-.-e-dir"><code>exiftool &#39;-filename&lt;%f_${model;}.%e&#39; dir</code></dt>
+<dd>
+
+<p>A <code>dir</code>-ben lévő összes fájl átnevezése úgy, hogy a fényképezőgép modellnevét adjuk a fájlnévhez. A kapcsos zárójeleken belül a tagnév után álló pontosvessző hatására a Windows-fájlnevekben érvénytelen karakterek törlődnek a tag-értékből (magyarázatért lásd a <a href="#Advanced-formatting-feature">&quot;Haladó formázási szolgáltatást&quot;</a>).</p>
+
+</dd>
+<dt id="exiftool--FileNameCreateDate--d-Y-m-d_-H-M-S--c.-e-dir"><code>exiftool &#39;-FileName&lt;CreateDate&#39; -d %Y%m%d_%H%M%S%%-c.%%e dir</code></dt>
+<dd>
+
+<p>A <code>dir</code>-ben lévő összes kép átnevezése a <code>CreateDate</code> dátuma és ideje szerint, bevezető „-"-szal ellátott másolatszámot adva, ha a fájl már létezik (<code>%-c</code>), és megőrizve az eredeti fájlkiterjesztést (<code>%e</code>). Vedd figyelembe a fájlnévkódok (<code>%c</code> és <code>%e</code>) escape-eléséhez szükséges extra „%"-ot a dátumformátum-sztringben.</p>
+
+</dd>
+<dt id="exiftool--r--FileNameCreateDate--d-Y--m--d-H-M_-f.-e-dir"><code>exiftool -r &#39;-FileName&lt;CreateDate&#39; -d %Y-%m-%d/%H%M_%%f.%%e dir</code></dt>
+<dd>
+
+<p>A könyvtár és a fájlnév együtt is megváltoztatható a <code>FileName</code> tagen keresztül, ha az új <code>FileName</code> tartalmaz egy „/"-t. A fenti példa rekurzívan átnevezi egy könyvtár összes képét úgy, hogy egy <code>CreateDate</code> időbélyeget ad a fájlnév elejéhez, majd dátum szerint elnevezett új könyvtárakba helyezi őket.</p>
+
+</dd>
+<dt id="exiftool--FileName-CreateDate-_-filenumber.jpg--d-Y-m-d--ext-jpg"><code>exiftool &#39;-FileName&lt;${CreateDate}_$filenumber.jpg&#39; -d %Y%m%d -ext jpg .</code></dt>
+<dd>
+
+<p>Az aktuális könyvtárban lévő összes JPG-kép fájlnevének beállítása a CreateDate és FileNumber tagekből, „20060507_118-1861.jpg" alakban.</p>
+
+</dd>
+</dl>
+
+<h1 id="GEOTAGGING-EXAMPLES">GEOTAGGELÉSI PÉLDÁK</h1>
+
+<p>Az ExifTool a GPS-naplófájlokból való geotaggelést 3 speciális tagen keresztül valósítja meg: Geotag (amely kényelmi okból exiftool-opcióként is meg van valósítva), Geosync és Geotime. Az alábbi példák néhány geotaggelési szolgáltatást emelnek ki. További dokumentációért lásd a <a href="https://exiftool.org/geotag.html">https://exiftool.org/geotag.html</a> oldalt. (Vedd figyelembe, hogy az ismert GPS-koordinátákból való geotaggelést a <a>GPS-tagek</a> közvetlen írásával végzik, nem a <b>-geotag</b> opcióval.)</p>
+
+<dl>
+
+<dt id="exiftool--geotag-track.log-a.jpg"><code>exiftool -geotag track.log a.jpg</code></dt>
+<dd>
+
+<p>Egy kép (<code>a.jpg</code>) geotaggelése egy GPS-nyomvonalnapló (<code>track.log</code>) pozícióinformációjából. Mivel a <code>Geotime</code> tag nincs megadva, a geotaggeléshez a SubSecDateTimeOriginal (elsődlegesen) vagy a DateTimeOriginal értéke használatos. A helyi rendszeridő feltételeződik, hacsak az idő nem tartalmaz időzónát.</p>
+
+</dd>
+<dt id="exiftool--geotag-track.log--geolocate-geotag-a.jpg"><code>exiftool -geotag track.log -geolocate=geotag a.jpg</code></dt>
+<dd>
+
+<p>Egy kép geotaggelése, és a legközelebbi város geolokációs információjának (városnév, állam/tartomány és ország) beírása is. A Geolocation szolgáltatásról bővebben itt olvashatsz: <a href="https://exiftool.org/geolocation.html#Write">https://exiftool.org/geolocation.html#Write</a></p>
+
+</dd>
+<dt id="exiftool--geotag-t.log--geotime-2009:04:02-13:41:12-05:00-a.jpg"><code>exiftool -geotag t.log -geotime=&#39;2009:04:02 13:41:12-05:00&#39; a.jpg</code></dt>
+<dd>
+
+<p>Egy kép geotaggelése egy adott időponthoz tartozó GPS-pozícióval.</p>
+
+</dd>
+<dt id="exiftool--geotag-log.gpx--xmp:geotimecreatedate-dir"><code>exiftool -geotag log.gpx &#39;-xmp:geotime&lt;createdate&#39; dir</code></dt>
+<dd>
+
+<p>A <code>dir</code> könyvtárban lévő összes kép geotaggelése XMP-tagekkel EXIF-tagek helyett, a kép CreateDate-je alapján.</p>
+
+</dd>
+<dt id="exiftool--geotag-a.log--geosync--20-dir"><code>exiftool -geotag a.log -geosync=-20 dir</code></dt>
+<dd>
+
+<p>A <code>dir</code> könyvtárban lévő képek geotaggelése, figyelembe véve, hogy a képek időbélyegei 20 másodperccel a GPS előtt jártak.</p>
+
+</dd>
+<dt id="exiftool--geotag-a.log--geosync-1.jpg--geosync-2.jpg-dir"><code>exiftool -geotag a.log -geosync=1.jpg -geosync=2.jpg dir</code></dt>
+<dd>
+
+<p>Képek geotaggelése két korábban geotaggelt kép (1.jpg és 2.jpg) idő-szinkronizációjának felhasználásával, a kép- és GPS-idők szinkronizálásával egy lineáris időelcsúszás-korrekció segítségével.</p>
+
+</dd>
+<dt id="exiftool--geotag-a.log--geotime-createdate-01:00-dir"><code>exiftool -geotag a.log &#39;-geotime&lt;${createdate}+01:00&#39; dir</code></dt>
+<dd>
+
+<p>A <code>dir</code>-ben lévő képek geotaggelése a CreateDate használatával, a megadott időzónával. Ha a CreateDate már tartalmazott időzónát, akkor a parancssorban megadott időzóna figyelmen kívül marad.</p>
+
+</dd>
+<dt id="exiftool--geotag-a.jpg"><code>exiftool -geotag= a.jpg</code></dt>
+<dd>
+
+<p>Azon GPS-tagek törlése, amelyeket a geotag szolgáltatás adhatott hozzá. Vedd figyelembe, hogy ez nem távolít el minden GPS-taget -- ehhez helyette a <code>-gps:all=</code>-t használd.</p>
+
+</dd>
+<dt id="exiftool--xmp:geotag-a.jpg"><code>exiftool -xmp:geotag= a.jpg</code></dt>
+<dd>
+
+<p>Azon XMP GPS-tagek törlése, amelyeket a geotag szolgáltatás adott hozzá.</p>
+
+</dd>
+<dt id="exiftool--xmp:geotag-track.log-a.jpg"><code>exiftool -xmp:geotag=track.log a.jpg</code></dt>
+<dd>
+
+<p>Egy kép geotaggelése XMP-tagekkel, a SubSecDateTimeOriginal vagy DateTimeOriginal idejét használva.</p>
+
+</dd>
+<dt id="exiftool--geotag-a.log--geotag-b.log--r-dir"><code>exiftool -geotag a.log -geotag b.log -r dir</code></dt>
+<dd>
+
+<p>Több nyomvonalnapló kombinálása és egy teljes képkönyvtár-fa geotaggelése.</p>
+
+</dd>
+<dt id="exiftool--geotag-tracks-.log--r-dir"><code>exiftool -geotag &#39;tracks/*.log&#39; -r dir</code></dt>
+<dd>
+
+<p>Az összes nyomvonalnapló beolvasása a <code>tracks</code> könyvtárból.</p>
+
+</dd>
+<dt id="exiftool--p-gpx.fmt-dir-out.gpx"><code>exiftool -p gpx.fmt dir &gt; out.gpx</code></dt>
+<dd>
+
+<p>GPX-nyomvonalnapló generálása a <code>dir</code> könyvtárban lévő összes képből. Ez a példa a teljes ExifTool-disztribúciós csomagban lévő <code>gpx.fmt</code> fájlt használja, és feltételezi, hogy a <code>dir</code>-ben lévő képek mind korábban geotaggelve lettek.</p>
+
+</dd>
+</dl>
+
+<h1 id="PIPING-EXAMPLES">CSŐVEZETÉKES (PIPE) PÉLDÁK</h1>
+
+<dl>
+
+<dt id="cat-a.jpg-exiftool"><code>cat a.jpg | exiftool -</code></dt>
+<dd>
+
+<p>Információ kinyerése a stdinről.</p>
+
+</dd>
+<dt id="exiftool-image.jpg--thumbnailimage--b-exiftool"><code>exiftool image.jpg -thumbnailimage -b | exiftool -</code></dt>
+<dd>
+
+<p>Információ kinyerése egy beágyazott bélyegképből.</p>
+
+</dd>
+<dt id="cat-a.jpg-exiftool--iptc:keywords-fantastic---b.jpg"><code>cat a.jpg | exiftool -iptc:keywords+=fantastic - &gt; b.jpg</code></dt>
+<dd>
+
+<p>Egy IPTC-kulcsszó hozzáadása egy csővezetékben, a kimenetet egy új fájlba mentve.</p>
+
+</dd>
+<dt id="curl--s-http:-a.domain.com-bigfile.jpg-exiftool--fast"><code>curl -s http://a.domain.com/bigfile.jpg | exiftool -fast -</code></dt>
+<dd>
+
+<p>Információ kinyerése egy interneten lévő képből a cURL segédeszközzel. A <b>-fast</b> opció megakadályozza, hogy az exiftool trailer-információt keressen, így csak a metainformáció-fejléc kerül átvitelre.</p>
+
+</dd>
+<dt id="exiftool-a.jpg--thumbnailimage--b-exiftool--comment-wow---exiftool-a.jpg--thumbnailimage"><code>exiftool a.jpg -thumbnailimage -b | exiftool -comment=wow - | exiftool a.jpg -thumbnailimage&#39;&lt;=-&#39;</code></dt>
+<dd>
+
+<p>Megjegyzés hozzáadása egy beágyazott bélyegképhez. (Hogy ezt miért akarná bárki csinálni, nem tudom, de példaként mellékeltem, hogy szemléltessem az ExifTool rugalmasságát.)</p>
+
+</dd>
+</dl>
+
+<h1 id="INTERRUPTING-EXIFTOOL">AZ EXIFTOOL MEGSZAKÍTÁSA</h1>
+
+<p>Az exiftool megszakítása CTRL-C-vel vagy SIGINT-tel nem eredményez részlegesen kiírt fájlokat vagy a merevlemezen maradó ideiglenes fájlokat. Az exiftool alkalmazás elkapja a SIGINT-et, és szükség esetén elhalasztja a kritikus folyamatok végéig, majd megfelelő takarítást végez a kilépés előtt.</p>
+
+<h1 id="EXIT-STATUS">KILÉPÉSI STÁTUSZ</h1>
+
+<p>Az exiftool alkalmazás 0 státusszal lép ki siker esetén, 1-gyel, ha hiba történt, vagy 2-vel, ha minden fájl megbukott a <b>-if</b> feltételen (bármely parancs esetén, ha a <b>-execute</b>-ot használták).</p>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>Copyright 2003-2026, Phil Harvey</p>
+
+<p>Ez szabad szoftver; terjesztheted és/vagy módosíthatod ugyanazon feltételek szerint, mint magát a Perlt.</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p><a>Image::ExifTool(3pm)</a>, <a>Image::ExifTool::TagNames(3pm)</a>, <a>Image::ExifTool::Shortcuts(3pm)</a>, <a>Image::ExifTool::Shift.pl</a></p>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="_podblock_" style="background-color: #cccccc; color: #000" valign="middle">
+<big><strong><span class="_podblock_">&nbsp;exiftool alkalmazás dokumentáció</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>
+
+

@@ -1,0 +1,2710 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+<title>Image::ExifTool</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+pre  { padding: 0; margin: 0px 2px }
+ul   { margin-top: 0 }
+table.top td { vertical-align: top }
+-->
+</style>
+</head>
+<body>
+<h1 class='up'>Az Image::ExifTool Perl könyvtármodul</h1>
+
+<h2>Description</h2>
+
+<p>Az Image::ExifTool könyvtár Perl-modulok gyűjteményét biztosítja
+metainformáció olvasásához és írásához sokféle kép-, hang-, videó- és
+dokumentumfájlban.  Ez a dokumentum az ExifTool API nyilvános metódusait
+részletezi.</p>
+
+<hr><h2><a name="Methods">Methods</a></h2>
+
+<p>Az ExifTool minden szolgáltatása az alább felsorolt nyilvános felület
+metódusain keresztül érhető el.  A többi Image::ExifTool metódust és modult nem
+szabad közvetlenül elérni, mert a felületük jövőbeli verziókkal változhat.</p>
+
+<p>Az ExifTool metódusai megfelelő argumentumokkal hívva soha nem halnak el, és
+nem írnak figyelmeztetést a STDERR-re (kivéve a
+<a href="#SetNewValue">SetNewValue</a>-t, amely hibaüzenetet küldhet a
+STDERR-re, de csak skalár kontextusban hívva).  A feldolgozás közben előforduló
+hiba- és figyelmeztető üzenetek az Error és Warning tagek értékeiben tárolódnak,
+és a <a href="#GetValue">GetValue</a> metóduson keresztül érhetők el egyetlen
+Error vagy Warning üzenet lekéréséhez, illetve a <a href="#GetInfo">GetInfo</a>
+metóduson keresztül tetszőleges számú üzenet lekéréséhez.</p>
+
+<p>Az ExifTool metódusai nem szálbiztosak.</p>
+
+<table><tr><td valign=top>
+<ul>
+<li><a href="#ImageInfo">ImageInfo</a></li>
+<li><a href="#new">new</a></li>
+<li><a href="#Options">Options</a></li>
+<li><a href="#ClearOptions">ClearOptions</a></li>
+<li><a href="#ExtractInfo">ExtractInfo</a></li>
+<li><a href="#GetInfo">GetInfo</a></li>
+<li><a href="#WriteInfo">WriteInfo</a></li>
+<li><a href="#GetTagList">GetTagList</a></li>
+<li><a href="#GetFoundTags">GetFoundTags</a></li>
+<li><a href="#GetRequestedTags">GetRequestedTags</a></li>
+<li><a href="#GetValue">GetValue</a></li>
+<li><a href="#SetNewValue">SetNewValue</a></li>
+<li><a href="#GetNewValue">GetNewValue</a></li>
+</ul>
+</td><td valign=top>
+<ul>
+<li><a href="#SetNewValuesFromFile">SetNewValuesFromFile</a></li>
+<li><a href="#CountNewValues">CountNewValues</a></li>
+<li><a href="#SaveNewValues">SaveNewValues</a></li>
+<li><a href="#RestoreNewValues">RestoreNewValues</a></li>
+<li><a href="#SetAlternateFile">SetAlternateFile</a></li>
+<li><a href="#SetFileModifyDate">SetFileModifyDate</a></li>
+<li><a href="#SetFileName">SetFileName</a></li>
+<li><a href="#SetNewGroups">SetNewGroups</a></li>
+<li><a href="#GetNewGroups">GetNewGroups</a></li>
+<li><a href="#GetTagID">GetTagID</a></li>
+<li><a href="#GetDescription">GetDescription</a></li>
+<li><a href="#GetGroup">GetGroup</a></li>
+<li><a href="#GetGroups">GetGroups</a></li>
+</ul>
+</td><td valign=top>
+<ul>
+<li><a href="#BuildCompositeTags">BuildCompositeTags</a></li>
+<li><a href="#AvailableOptions">AvailableOptions</a></li>
+<li><a href="#GetTagName">GetTagName</a></li>
+<li><a href="#GetShortcuts">GetShortcuts</a></li>
+<li><a href="#GetAllTags">GetAllTags</a></li>
+<li><a href="#GetWritableTags">GetWritableTags</a></li>
+<li><a href="#GetAllGroups">GetAllGroups</a></li>
+<li><a href="#GetDeleteGroups">GetDeleteGroups</a></li>
+<li><a href="#GetFileType">GetFileType</a></li>
+<li><a href="#CanWrite">CanWrite</a></li>
+<li><a href="#CanCreate">CanCreate</a></li>
+<li><a href="#AddUserDefinedTags">AddUserDefinedTags</a></li>
+<li><a href="#OrderedKeys">OrderedKeys</a></li>
+</ul>
+</td></tr></table>
+
+<hr><h2><a name="UsingExifTool">Az ExifTool használata</a></h2>
+
+<p>Az ExifTool modul egyszerűen az <a href="#ImageInfo">ImageInfo</a> függvény
+hívásával használható:</p>
+
+<blockquote><table class='box'><tr><td><pre>
+use Image::ExifTool qw(:Public);
+my $info = <a href="#ImageInfo">ImageInfo</a>('image.jpg');
+</pre></td></tr></table></blockquote>
+
+<p>vagy objektumorientáltabb módon, egy ExifTool objektum létrehozásával:</p>
+
+<blockquote><table class='box'><tr><td><pre>
+use Image::ExifTool;
+my $exifTool = Image::ExifTool-&gt;<a href="#new">new</a>;
+my $info = $exifTool-&gt;<a href="#ImageInfo">ImageInfo</a>('image.jpg');
+</pre></td></tr></table></blockquote>
+
+<p>Az objektumorientált módszer nagyobb rugalmasságot enged, de kissé
+bonyolultabb.  Válaszd azt a módszert, amelyiket jobban kedveled.</p>
+
+<p>A fenti példákban az <a href="#ImageInfo">ImageInfo</a> által visszaadott
+$info érték egy hivatkozás egy hash-re, amely a tag/érték párokat tartalmazza.
+Íme egy egyszerűsített példa, amely kiírja ezt az információt:</p>
+
+<blockquote><table class='box'><tr><td><pre>
+foreach (keys %$info) {
+    print "$_ =&gt; $$info{$_}\n";
+}
+</pre></td></tr></table></blockquote>
+
+<p>Az info hash bejegyzéseinek részletesebb leírását lásd az
+<a href="#ImageInfo">ImageInfo</a> résznél.</p>
+
+<p>A metainformáció írásának technikája ugyanilyen egyszerű:</p>
+
+<blockquote><table class='box'><tr><td><pre>
+use Image::ExifTool;
+my $exifTool = Image::ExifTool-&gt;<a href="#new">new</a>;
+$exifTool-&gt;<a href="#SetNewValue">SetNewValue</a>(Author =&gt; 'Phil Harvey');
+$exifTool-&gt;<a href="#WriteInfo">WriteInfo</a>('image.jpg','modified_image.jpg');
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="Config">Konfiguráció</a></h2>
+
+<p>Felhasználó által definiált tagek adhatók hozzá az ExifTool konfigurációs
+fájlján keresztül, vagy a %Image::ExifTool::UserDefined hash definiálásával,
+mielőtt bármelyik ExifTool függvényt meghívnád.  További részletekért lásd az
+"<a href="config.html">ExifTool_config</a>" fájlt az ExifTool
+disztribúcióban.</p>
+
+<p>Alapértelmezés szerint az ExifTool egy ".ExifTool_config" nevű konfigurációs
+fájlt keres, először a saját könyvtáradban (home directory), majd az alkalmazás
+szkriptjének könyvtárában, de az EXIFTOOL_HOME környezeti változó beállításával
+más könyvtár is megadható, vagy más fájl is megadható az ExifTool
+"<code>configFile</code>" változójának beállításával az Image::ExifTool
+használata előtt.  Például:</p>
+
+<blockquote><table class='box'><tr><td><pre>
+BEGIN { $Image::ExifTool::configFile = '/Users/phil/myconfig.cfg' }
+use Image::ExifTool;
+</pre></td></tr></table></blockquote>
+
+<p>A konfigurációs szolgáltatás le is tiltható a "<code>configFile</code>" üres
+sztringre állításával:</p>
+
+<blockquote><table class='box'><tr><td><pre>
+BEGIN { $Image::ExifTool::configFile = '' }
+use Image::ExifTool;
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="ImageInfo">ImageInfo</a></h2>
+
+<p>Beolvassa a képfájlt, és visszaadja a metainformációt.  Ez az egylépéses
+függvény metainformáció lekérésére egy képből.  Belsőleg az
+<a href="#ImageInfo">ImageInfo</a> az <a href="#ExtractInfo">ExtractInfo</a>-t
+hívja az adatok kinyeréséhez a képből, a <a href="#GetInfo">GetInfo</a>-t az
+információs hash előállításához, és a <a href="#GetTagList">GetTagList</a>-et a
+visszaadott taglistához.</p>
+
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>ImageInfo($;@)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> [<i>opcionális</i>] ExifTool objektumhivatkozás
+    <br><b>1)</b> Fájlnév, fájlhivatkozás vagy skalárhivatkozás
+    <br><b>2-N)</b> [<i>opcionális</i>] a keresendő tagnevek listája (vagy taglista-hivatkozás,
+    vagy opciós hash hivatkozása, lásd lentebb)
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Hivatkozás a tag-kulcs/érték párok hash-ére</td></tr>
+</table></blockquote>
+
+<p><b>Példák:</b></p>
+
+<blockquote>Nem objektumorientált példa az opciók használatával és taglista visszaadásával:
+<table class='box'><tr><td><pre>
+use Image::ExifTool qw(ImageInfo);
+my @ioTagList;
+my $info;
+
+$info = <b>ImageInfo</b>('image.jpg', \@ioTagList, {Sort =&gt; 'Group0'});
+</pre></td></tr></table></blockquote>
+
+<blockquote>Objektumorientált példa egy már megnyitott fájlból való olvasásra:
+<table class='box'><tr><td><pre>
+my $exifTool = Image::ExifTool-&gt;<a href="#new">new</a>;
+
+$info = $exifTool-&gt;<b>ImageInfo</b>(\*FILE_PT, 'Aperture', 'ShutterSpeed', 'ISO');
+</pre></td></tr></table></blockquote>
+
+<blockquote>Információ kinyerése egy memóriában lévő képből:
+<table class='box'><tr><td><pre>
+$info = $exifTool-&gt;<b>ImageInfo</b>(\$imageData);
+</pre></td></tr></table></blockquote>
+
+<blockquote>Információ kinyerése egy beágyazott bélyegképből:
+<table class='box'><tr><td><pre>
+$info = <b>ImageInfo</b>('image.jpg', 'thumbnailimage');
+my $thumbInfo = <b>ImageInfo</b>($$info{ThumbnailImage});
+</pre></td></tr></table></blockquote>
+
+<blockquote>ExifTool objektum használata az opciók beállítására az
+<a href="#ImageInfo">ImageInfo</a> hívása előtt:
+<table class='box'><tr><td><pre>
+my $filename = shift || die "Please specify filename\n";
+my @ioTagList = qw(filename imagesize xmp:creator exif:* -ifd1:*);
+
+$exifTool-&gt;<a href="#Options">Options</a>(Unknown =&gt; 1, DateFormat =&gt; '%H:%M:%S %a. %b. %e, %Y');
+$info = $exifTool-&gt;<b>ImageInfo</b>($filename, \@ioTagList);
+</pre></td></tr></table></blockquote>
+
+<p><b>Függvényargumentumok:</b></p>
+
+<p>Az <a href="#ImageInfo">ImageInfo</a> nagyon rugalmasan kezeli a neki
+átadott argumentumokat, és a típusuk alapján értelmezi őket.  Egy vagy több
+argumentummal hívható. Az egyetlen kötelező argumentum vagy egy SCALAR (a
+képfájl neve), egy fájlhivatkozás (hivatkozás a képfájlra), vagy egy SCALAR
+hivatkozás (hivatkozás a memóriában lévő képre).  A többi argumentum
+opcionális.  Az argumentumok sorrendje nem számít, kivéve hogy az első SCALAR
+a fájlnévnek minősül, hacsak nem szerepel korábban egy fájlhivatkozás vagy
+skalárhivatkozás az argumentumlistában.</p>
+
+<p>Az alábbiakban részletesebb magyarázat következik arról, hogyan
+értelmeződnek az <a href="#ImageInfo">ImageInfo</a> függvény argumentumai.</p>
+
+<blockquote><table class='norm'>
+<tr><td valign=top><b>ExifTool&nbsp;ref</b></td><td>
+Az <a href="#ImageInfo">ImageInfo</a> igény szerint ExifTool objektummal is
+hívható.  Az objektumorientált forma előnye, hogy az opciók beállíthatók az
+<a href="#ImageInfo">ImageInfo</a> hívása előtt, és az objektum utána is
+használható a tagfüggvények eléréséhez.  Ha használod, az első argumentumnak
+kell lennie.
+
+</td></tr><tr><td valign=top><b>SCALAR</b></td><td>
+Az első skalár argumentum a fájlnévnek minősül, hacsak egy korábbi argumentum
+nem adta meg a képadatokat fájlhivatkozással (file ref) vagy adathivatkozással
+(SCALAR ref).  A többi skalár argumentum a kért információhoz tartozó tagek
+neve.  Ha nincs tag megadva, az összes tag visszaadódik.
+<br>&nbsp;<br>
+A tagnevek kis-/nagybetűre nem érzékenyek, és megelőzhetik őket opcionális,
+kettősponttal elválasztott csoportnevek.  Egy csoportnév kezdődhet
+családszámmal (pl. '<code>1IPTC:Keywords</code>'), hogy egy adott családra
+szűkítse a találatokat. A tagnévben a '<code>?</code>' bármely egyetlen
+karakterre illeszkedik, a '<code>*</code>' pedig nulla vagy több karakterre.
+Így a '<code>GROUP:*</code>' egy adott csoport összes tagjét jelenti.  A
+csoportnevekben nem használhatók helyettesítő karakterek, kivéve hogy a
+'<code>*</code>' csoportnév használható egy tag összes elérhető előfordulásának
+kinyerésére a <a href="#Duplicates">Duplicates</a> beállítástól függetlenül
+(pl. '<code>*:WhiteBalance</code>').  Több csoport is megadható (pl. az
+'<code>EXIF:Time:*</code>' az összes EXIF Time taget kinyeri).  Végül a vezető
+'<code>-</code>' kizárandó taget jelöl (pl. '<code>-IFD1:*</code>'), a záró
+'<code>#</code>' pedig azt eredményezi, hogy ehhez a taghez a ValueConv érték
+adódik vissza.
+<br>&nbsp;<br>
+Vedd figyelembe, hogy a visszaadott információs hash kulcsai és a visszaadott
+taglista elemei nem feltétlenül egyeznek ezekkel a tagnevekkel, mert a
+csoportnevek eltávolításra kerülnek, a kis-/nagybetűs alak megváltozhat, és
+előfordulásszám adódhat hozzájuk.  Ezért a tagértékek eléréséhez legjobb a
+visszaadott hash kulcsait vagy a visszaadott taglista elemeit használni.
+<br>&nbsp;<br>
+Az ExifTool tagneveinek teljes listáját lásd a
+<a href="TagNames/index.html">TagNames</a> dokumentációban.
+
+</td></tr><tr><td valign=top><b>File&nbsp;ref</b></td><td>
+Hivatkozás egy megnyitott képfájlra.  Ha ezt a módszert (vagy egy SCALAR
+hivatkozást) használod egy kép információinak eléréséhez, a FileName és
+Directory tagek nem adódnak vissza.  (Továbbá a FileSize, FileModifyDate,
+FilePermissions és FileAttributes tagek sem adódnak vissza, hacsak nem közönséges
+fájlról van szó.)  A képfeldolgozás az aktuális fájlpozíciónál kezdődik, és
+visszatéréskor a fájlpozíció nem meghatározott. Lehet szabványos filehandle
+vagy hivatkozás egy File::RandomAccess objektumra.
+<br>&nbsp;<br>
+[Haladó:  Ha azt szeretnéd, hogy egy nem visszatekerhető adatfolyam (pl. egy
+hálózati socket) az ExifTool általi feldolgozás után újraolvasható legyen,
+először csomagold a fájlhivatkozást egy File::RandomAccess objektumba, majd add
+át ezt az objektumot az <a href="#ImageInfo">ImageInfo</a>-nak.  A
+File::RandomAccess objektum szükség esetén puffereli a fájlt, és használható a
+fájl újraolvasására, miután az <a href="#ImageInfo">ImageInfo</a> visszatért.]
+
+</td></tr><tr><td valign=top><b>SCALAR&nbsp;ref</b></td><td>
+Hivatkozás a memóriában lévő képadatokra.
+
+</td></tr><tr><td valign=top><b>ARRAY&nbsp;ref</b></td><td>
+Hivatkozás egy tagnévlistára.  Bemenetkor a lista bármely eleme hozzáadódik a
+kért tagek listájához.  Visszatéréskor ez a lista frissül, és a visszaadott
+információhoz tartozó tag-kulcsok rendezett listáját tartalmazza.
+<br>&nbsp;<br>
+A kért tagek és a visszaadott tag-kulcsok között csak akkor lesz 1:1
+megfeleltetés, ha a <a href="#Duplicates">Duplicates</a> opció 0, és a
+<a href="#Sort">Sort</a> értéke 'Input'.  (Engedélyezett
+<a href="#Duplicates">Duplicates</a> mellett a visszaadott tag-kulcslistában
+több bejegyzés is lehet, más <a href="#Sort">Sort</a> beállításokkal pedig a
+bejegyzések nem feltétlenül a kért sorrendben vannak.)  Ha egy kért tag nem
+létezik, a tag-kulcs akkor is előáll, de a tagérték nem definiált.
+<br>&nbsp;<br>
+<b>Megjegyzés:</b> Ne használd újra ezt a listát az
+<a href="#ImageInfo">ImageInfo</a> további hívásaiban, mert tag-kulcsokat ad
+vissza, nem neveket, és a lista minden hívásnál nő, ami egyre lassabb
+teljesítményhez vezet.
+
+</td></tr><tr><td valign=top><b>HASH&nbsp;ref</b></td><td>
+Hivatkozás egy hash-re, amely a kizárólag erre a hívásra érvényes opciós
+beállításokat tartalmazza.  Az elérhető opciók listáját lásd a lenti
+<a href="#Options">Options</a> dokumentációban. Az
+<a href="#ImageInfo">ImageInfo</a> argumentumaiként megadott opciók
+elsőbbséget élveznek az <a href="#Options">Options</a> beállításaival szemben.
+</td></tr></table></blockquote>
+
+<p><b>Visszatérési érték:</b></p>
+
+<p>Az <a href="#ImageInfo">ImageInfo</a> hivatkozást ad vissza a
+tag-kulcs/érték párok hash-ére.  A tag-kulcsok azonosítók -- lényegében
+kis-/nagybetűre érzékeny tagnevek, hozzáfűzött előfordulásszámmal, ha több
+azonos nevű taget nyertünk ki a képből.  Sok ExifTool függvény tag-kulcsot vár
+argumentumként.  Egy adott tag-kulcshoz tartozó tagnév lekéréséhez használd a
+<a href="#GetTagName">GetTagName</a>-t.  Vedd figyelembe, hogy a tagnevek
+kis-/nagybetűs alakja eltérhet a kérttől.</p>
+
+<p>A visszaadott hash értékei általában egyszerű skalárok, de bináris adatot
+skalárhivatkozás jelöl, listát pedig tömbhivatkozás jelölhet.  Továbbá
+hash-hivatkozás is visszaadódhat, ha a <a href="#Struct">Struct</a> opció
+használatban van (a hash kulcsainak lekéréséhez lásd az
+<a href="#OrderedKeys">OrderedKeys</a> opciót).  Az értéklisták csak akkor
+fűződnek össze vesszőkkel egyetlen sztringgé, ha a PrintConv opció és a
+ListJoin opció is engedélyezve van (ezek az alapértelmezések).  Vedd
+figyelembe, hogy a bináris értékek nem feltétlenül kerülnek kinyerésre, hacsak
+nem kifejezetten kérted őket, vagy a Binary opció engedélyezve van, és a tag
+nincs kifejezetten kizárva. Ha nincs kinyerve, az érték egy
+"<code>Binary data ##### bytes</code>" formátumú sztringre mutató hivatkozás.</p>
+
+<p>Íme egy egyszerű példa az <a href="#ImageInfo">ImageInfo</a> által
+visszaadott információ kiírására:</p>
+
+<blockquote><table class='box'><tr><td><pre>
+foreach (keys %$info) {
+    my $val = $$info{$_};
+    if (ref $val eq 'ARRAY') {
+        $val = join(', ', @$val);
+    } elsif (ref $val eq 'SCALAR') {
+        $val = '(Binary data)';
+    }
+    printf("%-24s : %s\n", $_, $val);
+}
+</pre></td></tr></table></blockquote>
+
+<p>amely ilyesféle kimenetet ad (engedélyezett PrintConv mellett):</p>
+
+<blockquote><table class='box'><tr><td><pre>
+WhiteBalance             : Auto
+FNumber                  : 3.5
+InteroperabilityOffset   : 936
+XResolution              : 72
+ISO                      : 100
+ThumbnailImage           : (Binary data)
+FlashOn                  : On
+Make                     : FUJIFILM
+ShutterSpeedValue        : 1/64
+ExposureCompensation     : 0
+Sharpness                : Soft
+ResolutionUnit           : inches
+</pre></td></tr></table></blockquote>
+
+<p><b>Megjegyzések:</b></p>
+
+<p>Az ExifTool minden értéket kódolt karakterekből álló bájtsztringként ad
+vissza.  Perl széles karaktereket nem használ.  A kódolásokról részletekért
+lásd a <a href="faq.html#Q10">10. GYIK-pontot</a>.  Alapértelmezés szerint a
+legtöbb visszaadott sztring UTF-8 kódolású.  Ezeknél az Encode::decode_utf8()
+használható a logikai Perl-karakterek sorozatává alakításhoz.</p>
+
+<p>A képből kinyert információt reprezentáló tageken kívül az ExifTool által
+generált következő <a href="TagNames/Extra.html">Extra tagek</a> is
+visszaadódhatnak:</p>
+
+<blockquote><table class='norm'>
+<tr><td><b>ExifToolVersion</b></td><td>Az ExifTool verziószáma</td></tr>
+<tr><td><b>Error</b></td><td>Hibaüzenet, ha a képet nem sikerült feldolgozni</td></tr>
+<tr><td><b>Warning</b></td><td>Figyelmeztető üzenet, ha a kép feldolgozása
+során problémákba ütköztünk</td></tr>
+</table></blockquote>
+
+<hr><h2><a name="new">new</a></h2>
+<p>Létrehoz egy új ExifTool objektumot.</p>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my $exifTool = Image::ExifTool-&gt;<b>new</b>;
+</pre></td></tr></table></blockquote>
+
+<p>Egy ExifTool objektum sok fájl feldolgozására használható, ezért több
+ExifTool objektum létrehozása általában nem szükséges.</p>
+<p>Vedd figyelembe, hogy az ExifTool AUTOLOAD-ot használ a nem tag jellegű
+metódusok betöltéséhez, ezért minden osztálynak, amely az Image::ExifTool-t
+használja ősosztályként, definiálnia kell egy AUTOLOAD-ot, amely az
+Image::ExifTool::DoAutoLoad()-ot hívja.  Azaz)</p>
+
+<blockquote><table class='box'><tr><td><pre>
+sub AUTOLOAD
+{
+    Image::ExifTool::DoAutoLoad($AUTOLOAD, @_);
+}
+</pre></td></tr></table></blockquote>
+
+<hr><table bgcolor='#aaffaa' width='100%' cellpadding=8><tr><td><center><b>
+A következő függvények ExifTool objektumot igényelnek első argumentumként
+</b></center></td></tr></table>
+
+<hr><h2><a name='options'></a><a name="Options">Options</a></h2>
+<p>Lekéri/beállítja az ExifTool opcióit.  Ez a függvény meghívható egy ExifTool
+objektum alapértelmezett opcióinak beállításához.  Az így beállított opciók
+minden függvényhívásra érvényesek, de egyes függvényeknek argumentumként
+átadott opciók felülírhatják őket.  Az opciónevek kis-/nagybetűre nem
+érzékenyek, az opcióértékek viszont igen.</p>
+<p>Az alapértelmezett opcióértékek megváltoztathatók egy
+%Image::ExifTool::UserDefined::Options hash definiálásával.  Példákért lásd az
+<a href="config.html">ExifTool_config fájlt</a> a teljes ExifTool
+disztribúcióban.  Ha másképp nincs jelezve, a numerikus értékű opcióknál az
+undef alapértelmezés ugyanolyan hatású, mint a 0 érték.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>Options($$;@)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1)</b> Paraméternév (kis-/nagybetűre nem érzékeny, lásd a lenti táblázatot)
+    <br><b>2)</b> [<i>opcionális</i>] Opcióérték, ha meg van adva (undef is lehet az opció törléséhez)
+    <br><b>3-N)</b> [<i>opcionális</i>] További paraméter/érték párok
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Az utoljára megadott paraméter előző értéke</td></tr>
+</table></blockquote>
+
+<p><b>Elérhető opciók:</b></p>
+<p><i>Vedd figyelembe, hogy ezek az API-opciók az
+<a href="exiftool_pod.html">exiftool alkalmazásban</a> is használhatók a
+parancssori <b>-api</b> opción keresztül.</i></p>
+<blockquote>
+<table class='norm'>
+<tr><th colspan=4 bgcolor='#dddddd'><font size='+1'>ExifTool opciók</font></th></tr>
+<tr><th>Opció</th><th>Leírás</th><th>Értékek</th><th>Alapértelmezés</th></tr>
+<tr id="Binary"><td>Binary</td><td>Jelző az összes bináris tag értékadatainak
+    kinyeréséhez.  A nagy bináris adatblokkokat reprezentáló tagértékek (pl.
+    ThumbnailImage) nem feltétlenül kerülnek kinyerésre, hacsak ez az opció
+    nincs beállítva, vagy a taget kifejezetten név szerint nem kérted.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="ByteUnit"><td>ByteUnit</td><td>Mértékegység a FileSize és más bájtértékek kiírási konverziójához.</td>
+    <td align=center><table class=clear>
+    <tr><td valign=top align=right><b>SI</b>&nbsp;=</td><td>SI-egységek (1000 bájt = 1 kB)</td></tr>
+    <tr><td valign=top align=right><b>Binary</b>&nbsp;=</td><td>Bináris egységek (1024 bájt = 1 KiB)</td></tr>
+    </table></td><td align=center>'SI'</td></tr>
+<tr id="BlockExtract"><td>BlockExtract</td><td>Jelző egyes könyvtárak (a
+    <a href="TagNames/index.html">Tag Name dokumentációban</a> említettek)
+    blokként való kinyeréséhez.</td>
+    <td align=center><table class=clear>
+    <tr><td valign=top align=right><b>0</b>&nbsp;=</td><td>Blokként csak akkor nyeri ki, ha a tag név szerint van megadva</td></tr>
+    <tr><td valign=top align=right><b>1</b>&nbsp;=</td><td>Blokként nyeri ki, és a tartalmazott tageket is kinyeri</td></tr>
+    <tr><td valign=top align=right><b>2</b>&nbsp;=</td><td>Blokként nyeri ki a tartalmazott tagek nélkül</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr id="ByteOrder"><td>ByteOrder</td><td>Az újonnan létrehozott EXIF-szegmensek
+    bájtsorrendje íráskor.  Vedd figyelembe, hogy ha már létezik EXIF-információ,
+    a meglévő sorrend megmarad.  Ha a ByteOrder nincs definiálva, akkor a maker
+    note-ok sorrendje használatos (ha azokat másoljuk), egyébként big-endian
+    ('MM') sorrend feltételezett.  Ez a
+    <a href="TagNames/Extra.html">ExifByteOrder tagen</a> keresztül is
+    beállítható, de ha mindkettő be van állítva, a ByteOrder opció élvez
+    elsőbbséget.</td>
+    <td align=center>'MM', 'II' vagy undef</td><td align=center>undef</td></tr>
+<tr id="Charset"><td>Charset</td><td>Karakterkészlet az ExifTool-nak
+    átadott/onnan kapott, U+007F feletti kódpontokat tartalmazó
+    karaktersztringek kódolásához.  Vedd figyelembe, hogy ez az opció bizonyos
+    típusú információt a fájl olvasásakor/írásakor, más típusokat pedig a
+    tagértékek lekérésekor/beállításakor érint, ezért mindkét fajta hozzáféréshez
+    definiálni kell. A jobb oldalon felsorolt Charset-értékeknek vannak
+    zárójelben megadott aliasai. A kis-/nagybetű nem számít.  A
+    karakterkészletekről további információért lásd a
+    <a href="faq.html#Q10">10. GYIK-pontot</a>.</td>
+    <td align=center><table class=clear>
+    <tr><td valign=top align=right>UTF8</td><td>(cp65001, UTF-8)</td></tr>
+    <tr><td valign=top align=right>Latin</td><td>(cp1252, Latin1)</td></tr>
+    <tr><td valign=top align=right>Latin2</td><td>(cp1250)</td></tr>
+    <tr><td valign=top align=right>Cyrillic</td><td>(cp1251, Russian)</td></tr>
+    <tr><td valign=top align=right>Greek</td><td>(cp1253)</td></tr>
+    <tr><td valign=top align=right>Turkish</td><td>(cp1254)</td></tr>
+    <tr><td valign=top align=right>Hebrew</td><td>(cp1255)</td></tr>
+    <tr><td valign=top align=right>Arabic</td><td>(cp1256)</td></tr>
+    <tr><td valign=top align=right>Baltic</td><td>(cp1257)</td></tr>
+    <tr><td valign=top align=right>Vietnam</td><td>(cp1258)</td></tr>
+    <tr><td valign=top align=right>Thai</td><td>(cp874)</td></tr>
+    <tr><td valign=top align=right>DOSLatinUS</td><td>(cp437)</td></tr>
+    <tr><td valign=top align=right>DOSLatin1</td><td>(cp850)</td></tr>
+    <tr><td valign=top align=right>DOSCyrillic</td><td>(cp866)</td></tr>
+    <tr><td valign=top align=right>MacRoman</td><td>(cp10000, Mac, Roman)</td></tr>
+    <tr><td valign=top align=right>MacLatin2</td><td>(cp10029)</td></tr>
+    <tr><td valign=top align=right>MacCyrillic</td><td>(cp10007)</td></tr>
+    <tr><td valign=top align=right>MacGreek</td><td>(cp10006)</td></tr>
+    <tr><td valign=top align=right>MacTurkish</td><td>(cp10081)</td></tr>
+    <tr><td valign=top align=right>MacRomanian</td><td>(cp10010)</td></tr>
+    <tr><td valign=top align=right>MacIceland</td><td>(cp10079)</td></tr>
+    <tr><td valign=top align=right>MacCroatian</td><td>(cp10082)</td></tr>
+    </table></td><td align=center>'UTF8'</td></tr>
+<tr id="CharsetEXIF"><td>CharsetEXIF</td><td>A tárolt EXIF "ASCII"
+    sztringértékekhez használt belső kódolás.  undef-re is állítható, hogy az
+    EXIF "ASCII" értékeket átkódolás nélkül engedje át.  Állítsd "UTF8"-ra az
+    MWG-ajánlásnak való megfeleléshez.</td>
+    <td align=center><i>(lásd a <a href="#Charset">Charset</a> opciót)</i><br>vagy undef</td><td align=center>undef</td></tr>
+<tr id="CharsetFileName"><td>CharsetFileName</td><td>Az ExifTool függvényeinek
+    átadott fájlnevekhez használt külső karakterkészlet. Alapértelmezése undef,
+    de Windowson "UTF8" feltételezett, ha a fájlnév speciális karaktereket
+    tartalmaz és érvényes UTF8.  Üres sztringre is állítható, hogy elkerüld az
+    "encoding must be specified" figyelmeztetéseket Windowson.  Vedd figyelembe,
+    hogy a <a href="#WindowsWideFile">WindowsWideFile</a> vagy
+    <a href="#WindowsLongPath">WindowsLongPath</a> opció beállítása azt
+    eredményezi, hogy a CharsetFileName Windowson 'UTF8'-ra áll alapértelmezésbe,
+    ha nincs definiálva, és hogy a
+    <a href="#WindowsLongPath">WindowsLongPath</a> alapértelmezés szerint be van
+    állítva, ha a Win32::API elérhető.</td>
+    <td align=center><i>(lásd a <a href="#Charset">Charset</a> opciót)</i><br>vagy undef</td><td align=center>undef</td></tr>
+<tr id="CharsetID3"><td>CharsetID3</td><td>Az ID3v1 sztringeknél feltételezendő
+    belső kódolás.  A specifikáció szerint az ID3v1 sztringeket ISO 8859-1
+    kódolással (lényegében 'Latin') kellene kódolni, de egyes alkalmazások
+    helyi kódolást használhatnak helyette.  Ez az opció lehetővé teszi eltérő
+    kódolások megadását.</td>
+    <td align=center><i>(lásd a <a href="#Charset">Charset</a> opciót)</i></td><td align=center>'Latin'</td></tr>
+<tr id="CharsetIPTC"><td>CharsetIPTC</td><td>Tartalék belső IPTC-karakterkészlet, amelyet feltételez, ha az IPTC-információ
+    nem tartalmaz CodedCharacterSet taget.</td>
+    <td align=center><i>(lásd a <a href="#Charset">Charset</a> opciót)</i></td><td align=center>'Latin'</td></tr>
+<tr id="CharsetPhotoshop"><td>CharsetPhotoshop</td><td>A Photoshop IRB erőforrásneveknél feltételezendő belső kódolás.</td>
+    <td align=center><i>(lásd a <a href="#Charset">Charset</a> opciót)</i></td><td align=center>'Latin'</td></tr>
+<tr id="CharsetQuickTime"><td>CharsetQuickTime</td><td>A nem meghatározott
+    kódolással tárolt QuickTime-sztringeknél feltételezendő belső kódolás.</td>
+    <td align=center><i>(lásd a <a href="#Charset">Charset</a> opciót)</i></td><td align=center>'MacRoman'</td></tr>
+<tr id="CharsetRIFF"><td>CharsetRIFF</td><td>A RIFF-metaadatokban (pl. AVI és
+    WAV fájlok) lévő sztringeknél feltételezendő belső kódolás.  A 0
+    alapértelmezett érték 'Latin' kódolást feltételez, hacsak a RIFF CSET chunk
+    másképp nem rendelkezik.  Állítsd undef-re a sztringek átkódolás nélküli
+    átengedéséhez.</td>
+    <td align=center><i>(lásd a <a href="#Charset">Charset</a> opciót)</i><br>vagy 0 vagy undef</td><td align=center>0</td></tr>
+<tr id="Compact"><td>Compact</td><td>Vesszővel elválasztott beállításlista
+    tömör XMP írásához.  Vedd figyelembe, hogy a 'NoPadding' csak a beágyazott
+    XMP-t érinti, mivel az önálló XMP-fájlokhoz soha nem íródik kitöltés
+    (padding).  Vedd azt is figyelembe, hogy a 'OneDesc' nem ajánlott 64 KiB-nál
+    nagyobb XMP JPG-fájlba írásakor, mert zavarja az ExifTool azon technikáját,
+    amellyel a nagy rdf:Description elemeket a kiterjesztett XMP-be választja le.
+    Ezeknél az opcióknál a kis-/nagybetű nem számít.  Egyes opcióknak vannak
+    aliasai (zárójelben feltüntetve).</td>
+    <td align=center><table class=clear>
+    <tr><td valign=top align=right><b>NoPadding</b>&nbsp;=</td><td>Elkerüli az ajánlott 2 KiB kitöltést az XMP végén (NoPad)</td></tr>
+    <tr><td valign=top align=right><b>NoIndent</b>&nbsp;=</td><td>Elkerüli a sorok olvashatóság végett történő szóközös behúzását (NoSpace, NoSpaces)</td></tr>
+    <tr><td valign=top align=right><b>NoNewline</b>&nbsp;=</td><td>Elkerüli a felesleges sortöréseket (NoNewlines)</td></tr>
+    <tr><td valign=top align=right><b>Shorthand</b>&nbsp;=</td><td>XMP Shorthand formátum használata</td></tr>
+    <tr><td valign=top align=right><b>OneDesc</b>&nbsp;=</td><td>Az XMP-tulajdonságok egyetlen rdf:Description-be vonása (OneDescr)</td></tr>
+    <tr><td valign=top align=right><b>AllSpace</b>&nbsp;=</td><td>'NoPadding,NoIndent,NoNewline'</td></tr>
+    <tr><td valign=top align=right><b>AllFormat</b>&nbsp;=</td><td>'Shorthand,OneDesc'</td></tr>
+    <tr><td valign=top align=right><b>All</b>&nbsp;=</td><td>'AllSpace,AllFormat'</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr id="Composite"><td>Composite</td><td>Jelző Composite tagek generálásához információ kinyerésekor.</td>
+    <td align=center>0 vagy 1</td><td align=center>1</td></tr>
+<tr id="Compress"><td>Compress</td><td>Jelző az új értékek tömörített
+    formátumban való írásához, ha lehetséges. Nincs hatása, hacsak a megfelelő
+    tömörítő könyvtár nem elérhető.  PNG-, JXL-, HEIC- vagy MIE-képekbe történő
+    metaadatíráskor érvényes.  Nullára állítása azt eredményezi, hogy a
+    JXL-metaadat szerkesztéskor tömörítetlenként íródik újra.</td>
+    <td align=center>0, 1 vagy undef</td><td align=center>undef</td></tr>
+<tr id="CoordFormat"><td>CoordFormat</td><td>Megadja a GPS-koordináták kimeneti formátumát.</td>
+    <td>printf-stílusú formátumsztring fok, perc és másodperc specifikátorokkal
+    ebben a sorrendben, azonban a perc és a másodperc elhagyható.  Ha a
+    félgömb ismert, minden kiírt koordinátához hozzáfűződik egy irányjelzés
+    (N, S, E vagy W), de a '<code>+</code>' vagy '<code>-</code>' hozzáadása az
+    első formátumspecifikátorhoz (pl. <code>'%+.6f'</code> vagy
+    <code>'%-.6f'</code>) helyette előjeles koordinátát ír ki (a
+    '<code>+</code>' a pozitív koordinátákhoz vezető pluszjelet is hozzáad, míg
+    a '<code>-</code>' nem). Az olvasáshoz az alapértelmezés egy
+    <code>q{%d&nbsp;deg&nbsp;%d'&nbsp;%.2f"}</code> formátumsztringgel
+    egyenértékű, de a pontosság elvesztésének elkerülése végett a tagek
+    <a href="#SetNewValuesFromFile">SetNewValuesFromFile</a>-lal való
+    másolásakor az alapértelmezés <code>q{%d&nbsp;%d&nbsp;%.8f}</code>.
+    </td><td align=center>undef</td></tr>
+<tr id="DateFormat"><td>DateFormat</td><td>A dátum/idő értékek kimeneti
+    formátuma. Ha a dátum nem konvertálható, az érték változatlan marad, hacsak
+    a <a href="#StrictDate">StrictDate</a> opció nincs beállítva.  Az inverz
+    konverzió (azaz a <a href="#SetNewValue">SetNewValue</a> hívásakor) csak
+    akkor hajtódik végre, ha a POSIX::strptime vagy a Time::Piece telepítve
+    van.</td><td>Részletekért lásd a strftime manpage-t, valamint a gyakori
+    dátum/idő formázási kódokért és a további ExifTool-kódokért
+    <a href="filename.html#codes">ezt az oldalt</a>. Az undef alapértelmezett
+    beállítás azt eredményezi, hogy a dátum/idő értékek a szabványos
+    EXIF-formátumban maradnak (hasonlóan a
+    <code>"%Y:%m:%d %H:%M:%S"</code> DateFormathoz).</td>
+    <td align=center>undef</td></tr>
+<!-- <tr id="Debug"><td>Debug</td><td>Enable debugging messages</td>
+    <td align=center>0 or 1</td><td align=center>undef</td></tr> -->
+<tr id="Duplicates"><td>Duplicates</td><td>Jelző az azonos nevű tagek
+    értékeinek visszaadásához információ kinyerésekor.  A tagek
+    <a href="#SetNewValuesFromFile">SetNewValuesFromFile</a>-lal való másolásakor
+    1-re kényszerítve.</td>
+    <td align=center>0 vagy 1</td><td align=center>1</td></tr>
+<!-- <tr id="EncodeHangs"><td>EncodeHangs</td><td>Avoid using the Encode module
+    because it hangs.  This was a problem when running in a Windows 10 virtual
+    machine and the current working directory was a long path name.</td>
+    <td align=center>0 or 1</td><td align=center>undef</td></tr> -->
+<tr id="Escape"><td>Escape</td>
+    <td>A kinyert értékekben lévő speciális karakterek HTML- vagy XML-escape-elése.
+    A <a href="#SetNewValue">SetNewValue</a>-nak átadott bemeneti értékekben lévő
+    HTML- vagy XML-karakterentitásokat is visszafejti (unescape).</td> <td
+    align=center>HTML, XML vagy undef</td>
+    <td align=center>undef</td></tr>
+<tr id="Exclude"><td>Exclude</td>
+    <td>A megadott tagek kizárása információ kinyerésekor.  Vedd figyelembe, hogy
+    ez az opció azután érvényesül, hogy az összes tag már betöltődött a
+    memóriába (így a <a href="#GetInfo">GetInfo</a> egymást követő hívásaiban
+    eltérő tagek zárhatók ki).  A tagek eleve be sem töltésével történő
+    memóriatakarékossághoz lásd az <a href="#IgnoreTags">IgnoreTags</a>
+    opciót.</td>
+    <td>Kizárandó tagnév vagy tagnévlistára mutató hivatkozás.  A kis-/nagybetű
+    nem számít. A tagek úgy is kizárhatók, hogy az ImageInfo argumentumaiban a
+    nevüket '-' előzi meg.</td>
+    <td align=center>undef</td></tr>
+<tr id="ExtendedXMP"><td>ExtendedXMP</td><td>Ez a beállítás a JPEG-képekben
+    lévő kiterjesztett XMP olvasását és szerkesztését érinti.  Az
+    XMP-specifikáció szerint a kiterjesztett XMP csak akkor érvényes, ha
+    rendelkezik a <a href="TagNames/XMP.html#xmpNote">HasExtendedXMP tag</a>
+    által megadott GUID-dal.  Az ExifTool 9.95 és korábbi verziói a GUID-tól
+    függetlenül olvasták a kiterjesztett XMP-t, de ennek az opciónak a 9.96-os
+    verzióban való bevezetésével az alapértelmezett viselkedés megváltozott, hogy
+    megfeleljen az XMP-specifikációnak (hogy csak a megfelelő GUID-dal
+    rendelkező kiterjesztett XMP-t olvassa).  Ezt az opciót 2-re kell állítani a
+    9.96 előtti viselkedés emulálásához és az összes kiterjesztett XMP
+    olvasásához.  Beállítható egy GUID-ra is egy adott kiterjesztett XMP
+    olvasásához, vagy 0-ra a kiterjesztett XMP teljes figyelmen kívül
+    hagyásához.</td>
+    <td align=center><table class=clear>
+    <tr><td valign=top align=right><b>0</b>&nbsp;=</td><td>Kiterjesztett XMP figyelmen kívül hagyása</td></tr>
+    <tr><td valign=top align=right><b>1</b>&nbsp;=</td><td>Csak érvényes GUID</td></tr>
+    <tr><td valign=top align=right><b>2</b>&nbsp;=</td><td>Bármely GUID</td></tr>
+    <tr><td valign=top align=right><i>guid</i>&nbsp;=</td><td>Konkrét GUID</td></tr>
+    </table></td><td align=center>1</td></tr>
+<tr id="ExtractEmbedded"><td>ExtractEmbedded</td>
+    <td>Jelző információ kinyeréséhez az EPS-fájlokban lévő beágyazott
+    dokumentumokból, a PDF-fájlokban lévő beágyazott EPS-információból, valamint
+    JPEG- és Jpeg2000-képekből, a JPEG- és MPO-fájlokban lévő beágyazott
+    MPF-képekből, az MKV-fájlokban az első Cluster utáni metaadatokból, a
+    videókban lévő időzített metaadatokból, egy többrészes EXR-kép összes
+    képkockájából, és a Mac OS-fájlok resource fork-jából.  A 2-es beállítás
+    azt is eredményezi, hogy az MP4-fájlokban lévő H264-videofolyam az első SEI
+    üzenet dekódolásáig elemzésre kerül, a 3-as pedig a teljes H264-folyamot
+    elemzi az MP4-videókban és a teljes M2TS-fájlt, hogy GPS-metaadatot
+    tartalmazó, nem listázott programot keressen.</td>
+    <td align=center>0, 1, 2 vagy 3</td><td align=center>undef</td></tr>
+<tr id="FastScan"><td>FastScan</td>
+    <td>Jelző a fájlok olvasásának gyorsításához, egyes metaadattípusok
+    kinyerésének elkerülésével.  Ha ez az opció 1-re van állítva, az ExifTool
+    nem olvassa végig a JPEG-képet, hogy AFCP-, CanonVRD-, FotoStation-,
+    PhotoMechanic-, MIE- vagy PreviewImage-trailert keressen.  Ez GIF-képeknél
+    az első komment után, RIFF-formátumú fájloknál (AVI, WAV stb.) pedig a
+    hang-/videoadatnál is leállítja az elemzést, így bármilyen végén lévő
+    metaadat (pl. egyes segédprogramok által írt XMP) kimaradhat.  Egyes
+    fájltípusoknál a bemeneti pufferelést is letiltja a memóriahasználat
+    csökkentése végett nem visszakereshető adatfolyamból való olvasáskor, és a
+    sebesség érdekében megkerüli a CRC-ellenőrzést PNG-fájlok írásakor.  A
+    ScanForXMP opcióval kombinálva megakadályozza az XMP keresését a felismert
+    fájltípusokban.  2-es értékkel az ExifTool az EXIF MakerNote-információ
+    kinyerését is elkerüli, és a PNG-képek IDAT chunkjánál, valamint a
+    QuickTime-formátumú fájlok mdat atomjánál leállítja a feldolgozást.  (A
+    PNG-specifikáció szerint a metaadat megengedett az IDAT után, de az ExifTool
+    mindig előtte írja, mert egyes segédprogramok egyébként figyelmen kívül
+    hagyják.)  3-as vagy magasabb értéknél csak pszeudo rendszertagek és a
+    FileType generálódnak. 3-nál a fájlfejléc beolvasásra kerül, hogy megalapozott
+    becslést adjon a FileType-ra. 4-nél a fájl egyáltalán nem kerül olvasásra, és
+    a FileType a fájl kiterjesztése alapján dől el.  5-nél a Composite tagek
+    generálása is le van tiltva (mintha a <a href="#Composite">Composite</a>
+    0-ra lenne állítva).</td>
+    <td align=center>0, 1, 2, 3, 4 vagy 5</td><td align=center>undef</td></tr>
+<tr id="Filter"><td>Filter</td>
+    <td>Az összes visszaadott tagérték szűrésére használt Perl-kifejezés.  Csak
+    a PrintConv értékekre vonatkozik.  A listaelemek egyenként szűrődnek.</td>
+    <td>Kifejezés, amely a Perl alapértelmezett változójának ($_) értékén hat,
+    szükség szerint megváltoztatva e változó értékét.  Az aktuális ExifTool
+    objektum a $self-en keresztül érhető el.  Az érték nem változik, ha a $_
+    undef-re van állítva.</td>
+    <td align=center>undef</td></tr>
+<tr id="FilterW"><td>FilterW</td>
+    <td>A PrintConv értékek íráskori szűrésére használt Perl-kifejezés.</td>
+    <td>Kifejezés, amely a Perl alapértelmezett változójának ($_) értékén hat,
+    szükség szerint megváltoztatva e változó értékét.  Az aktuális ExifTool
+    objektum a $self-en keresztül érhető el.  A tag nem íródik ki, ha a $_
+    undef-re van állítva.</td>
+    <td align=center>undef</td></tr>
+<tr id="FixBase"><td>FixBase</td>
+    <td>A maker note-ok báziseltolásának javítása.  Lehetővé teszi az értékek
+    kinyerését olyan maker note-okból, amelyeket harmadik féltől származó
+    szoftverrel való szerkesztés sértett meg.</td>
+    <td>Egész szám, amely a maker note-ok báziseltolásához hozzáadandó értéket
+    adja meg, vagy az üres sztring (''), hogy az ExifTool legjobb tudása szerint
+    tippelje meg a helyes bázist.</td>
+    <td align=center>undef</td></tr>
+<tr id="GeoDir"><td>GeoDir</td>
+    <td>[Nem valódi opció] Kényelmi funkcióként biztosított, hogy a
+    $Image::ExifTool::geoDir futásidőben beállítható legyen.  Ez a változó
+    megadja a Geolocation-adatbázisok könyvtárát, és csak egyszer használatos,
+    amikor ezek az adatbázisok betöltődnek.</td>
+    <td>-</td><td align=center>-</td></tr>
+<tr id="Geolocation"><td>Geolocation</td>
+    <td>Jelző geolokációs tagek generálásához a fájlból beolvasott
+    GPSLatitude/GPSLongitude vagy City/State/Province/Country információ
+    alapján.  Ez a szolgáltatás egy mellékelt adatbázist használ, amely a
+    geonames.org-ról származó, 2000 fő feletti népességű városokat tartalmazza.
+    Beállítható "Lat,Lon" formátumú sztringre (pl. "44.56,-72.33"), vagy
+    városra opcionális régióval, alrégióval, országgal és/vagy országkóddal
+    (pl. "Paris,France"), hogy alapértelmezésként szolgáljon a GPS- vagy
+    geolokációs információt nem tartalmazó fájlokhoz, vagy vezető dollárjeles
+    tagneveket is tartalmazhat vesszővel elválasztva, hogy megadja a
+    geolokációs bemenethez használandó tageket. Ha "Lat,Lon" van megadva,
+    hozzáadható a "num=##", hogy a megadott számú közeli várost adja vissza (a
+    <a href="#Duplicates">Duplicates</a> opciót is használni kell ahhoz, hogy a
+    duplikált tagek visszaadódjanak).  Reguláris kifejezéseket is tartalmazhat a
+    városnevek rugalmasabb illesztéséhez.  További részletekért lásd a
+    <a href="geolocation.html#Read">Geolokációs információ olvasása</a>
+    részt.</td>
+    <td align=center>0, 1, vagy vesszővel elválasztott sztring alapértelmezett
+    helyszínnel és/vagy a geolokáció meghatározásához bemenetként használandó
+    tagnevekkel.  Részletekért lásd <a href="geolocation.html#Read">itt</a>.</td>
+    <td align=center>undef</td></tr>
+<tr id="GeolocAltNames"><td>GeolocAltNames</td>
+    <td>Jelző az alternatív Geolocation-városnevek kereséséhez, ha elérhetők.</td>
+    <td align=center>0 vagy 1</td>
+    <td align=center>1</td></tr>
+<tr id="GeolocFeature"><td>GeolocFeature</td>
+    <td>A városkeresésben belefoglalandó vagy kizárandó feature-kódok.  Az
+    érvényes feature-kódok: PPL, PPLA, PPLA2, PPLA3, PPLA4, PPLA5, PPLC, PPLCH,
+    PPLF, PPLG, PPLH, PPLL, PPLQ, PPLR, PPLS, PPLW, PPLX, STLMT és Other, plusz
+    esetleges felhasználó által belefoglalt kódok, ha alternatív adatbázist
+    használsz.  E kódok leírásáért olvass
+    <a href="http://www.geonames.org/export/codes.html#P">itt</a>.</td>
+    <td align=center>Feature-kódok vesszővel elválasztott listája, vezető
+    kötőjellel (-) e feature-ök kizárásához</td>
+    <td align=center>undef</td></tr>
+<tr id="GeolocMaxDist"><td>GeolocMaxDist</td>
+    <td>Maximális távolság km-ben a Geolocation-városig.  A Geolocation tagek
+    nem generálódnak, ha a távolság ennél nagyobb.</td>
+    <td align=center>Bármely szám</td>
+    <td align=center>undef</td></tr>
+<tr id="GeolocMinPop"><td>GeolocMinPop</td>
+    <td>Minimális népesség a Geolocation-városhoz.  Az ennél kisebb városok
+    figyelmen kívül maradnak.</td>
+    <td align=center>Bármely egész szám</td>
+    <td align=center>undef</td></tr>
+<tr id="GeoMaxIntSecs"><td>GeoMaxIntSecs</td>
+    <td>Maximális interpolációs idő másodpercben a geotaggeléshez.  A
+    geotaggelés extrapolációnak minősül, ha a Geotime érték ugyanazon nyomvonal
+    két olyan fixpontja közé esik, amelyeket ennél nagyobb számú másodperc
+    választ el.  Egyébként a koordináták a Geotime érték mindkét oldalán lévő
+    legközelebbi fixpontok közötti lineáris interpolációként számítódnak.
+    Állítsd 0-ra az interpoláció letiltásához és a legközelebbi fixpont
+    koordinátáinak használatához helyette (feltéve, hogy az a GeoMaxExtSecs-en
+    belül van, egyébként a geotaggelés meghiúsul).</td>
+    <td align=center>Lebegőpontos szám</td>
+    <td align=center>1800</td></tr>
+<tr id="GeoMaxExtSecs"><td>GeoMaxExtSecs</td>
+    <td>Maximális extrapolációs idő másodpercben a geotaggeléshez.  A
+    geotaggelés meghiúsul, ha a Geotime érték ennél nagyobb számú másodperccel
+    esik kívül egy GPS-nyomvonalon.  Egyébként az extrapolációhoz a legközelebbi
+    fixpont koordinátái kerülnek felhasználásra (azaz feltételezett, hogy ez idő
+    alatt nem mozogtál).</td>
+    <td align=center>Lebegőpontos szám</td>
+    <td align=center>1800</td></tr>
+<tr id="GeoMaxHDOP"><td>GeoMaxHDOP</td>
+    <td>Maximális vízszintes (2D) hígulási pontatlanság (Dilution Of Precision)
+    a geotaggeléshez.  A GPS-fixpontok figyelmen kívül maradnak, ha a HDOP
+    ennél nagyobb.</td>
+    <td align=center>Lebegőpontos szám vagy undef</td>
+    <td align=center>undef</td></tr>
+<tr id="GeoMaxPDOP"><td>GeoMaxPDOP</td>
+    <td>Maximális pozíció szerinti (3D) hígulási pontatlanság (Dilution Of
+    Precision) a geotaggeléshez.  A GPS-fixpontok figyelmen kívül maradnak, ha a
+    PDOP ennél nagyobb.</td>
+    <td align=center>Lebegőpontos szám vagy undef</td>
+    <td align=center>undef</td></tr>
+<tr id="GeoHPosErr"><td>GeoHPosErr</td>
+    <td>Kifejezés a GPSHPositioningError beállításához a GPSDOP értéke alapján
+    geotaggeléskor.  Például használd a <code>'$GPSDOP * 4'</code>-et a
+    GPSHPositioningError GPSDOP négyszeresére állításához.</td>
+    <td align=center>Perl-kifejezés <code>$GPSDOP</code> használatával</td>
+    <td align=center>undef</td></tr>
+<tr id="GeoMinSats"><td>GeoMinSats</td>
+    <td>Minimális műholdak száma a geotaggeléshez.
+    A GPS-fixpontok figyelmen kívül maradnak, ha a befogott műholdak száma
+    ennél kevesebb.</td>
+    <td align=center>Pozitív egész szám vagy undef</td>
+    <td align=center>undef</td></tr>
+<tr id="GeoSpeedRef"><td>GeoSpeedRef</td>
+    <td>Referencia-mértékegység a GPSSpeed írásához geotaggeléskor.</td>
+    <td align=center><table class=clear>
+    <tr><td valign=top align=right><b>K</b>,&nbsp;<b>k</b>&nbsp;or&nbsp;<b>km/h</b></td><td>=&nbsp;km/h</td></tr>
+    <tr><td valign=top align=right><b>M</b>,&nbsp;<b>m</b>&nbsp;or&nbsp;<b>mph</b></td><td>=&nbsp;mph</td></tr>
+    <tr><td valign=top align=right><i>(bármi más)</i></td><td>=&nbsp;csomó</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr id="GeoUserTag"><td>GeoUserTag</td><td>További felhasználó által definiált
+    tagek, amelyeket GPX- vagy CSV-fájlokból való geotaggeléskor kell írni.  A
+    formátum '<i>TAG</i>=<i>TOKEN</i>,...', ahol a <i>TAG</i> egy ExifTool
+    tagnév (opcionális csoportnévvel), a <i>TOKEN</i> pedig a GPX-tulajdonságnév
+    vagy a CSV-oszlopnév.  pl.) a '<code>Location=desc</code>' a Location taget
+    a GPS-naplófájlban lévő 'desc' értéke alapján írja. A tagérték az időben
+    legközelebbi fixpontból származik.  Vesszős elválasztással több tag is
+    megadható.</td>
+    <td align=center>'<i>TAG</i>=<i>TOKEN</i>,...' formátumú sztring</td>
+    <td align=center>undef</td></tr>
+<tr id="GlobalTimeShift"><td>GlobalTimeShift</td>
+    <td>Az összes kinyert dátum/idő PrintConv értékre alkalmazandó időeltolás.
+    A ValueConv értékeket nem érinti. Ha hónapok és/vagy évek számát adod meg
+    eltoláshoz, meg kell adni a kezdő dátum tagjét, hogy a napok száma
+    egyértelműen meghatározható legyen. Ha nincs megadva, vagy a megadott tag
+    nem elérhető, az eltolás az első eltolt tag alapján számítódik.</td>
+    <td>Dátum/idő eltolási sztring vezető '-' jellel a negatív eltolásokhoz
+    (lásd <a href="Shift.html">Image::ExifTool::Shift.pl</a>), vagy tagnév
+    opcionális csoportprefixszel, amelyet '+' vagy '-', majd az eltolási sztring
+    követ.  pl.)<br>
+    <code>'createdate-1:0:0&nbsp;0:0:0'</code> – visszaeltolás a CreateDate
+    érték előtti év hosszával<br><code>'xmp:createdate+0:2:0&nbsp;0'</code> –
+    előreeltolás az XMP:CreateDate utáni 2 hónap hosszával</td>
+    <td align=center>undef</td></tr>
+<tr id="GPSQuadrant"><td>GPSQuadrant</td>
+    <td>Ez az opció a GPS-kvadráns megadására szolgál abban az esetben, ha
+    figyelmeztetés jelent meg, mert a GPS-kvadránst nem lehetett
+    meghatározni.</td>
+    <td>2 karakteres kvadránskód, ahol az első karakter 'N' vagy 'S', a második
+    pedig 'E' vagy 'W' (kis-/nagybetűre nem érzékeny).  Ha ez az opció nincs
+    beállítva, és a kvadráns ismeretlen, figyelmeztetés jelenik meg, és a
+    kvadráns 'NE'-nek feltételeződik.</td><td align=center>undef</td></tr>
+<tr id="GroupNum"><td>Group#</td><td>Csak a # családbeli megadott csoportokhoz
+    nyer ki tageket (Group0 feltételezett, ha a # nincs megadva).</td>
+    <td>Csoportnév vagy csoportnévlistára mutató hivatkozás.
+    A csoportnév kezdődhet '-' jellel egy csoport kizárásához.  A kis-/nagybetű
+    SZÁMÍT.  A csoportcsaládok leírásáért lásd a <a href="#GetGroup">GetGroup</a>-ot,
+    az elérhető csoportok listájáért pedig a <a href="#GetAllGroups">GetAllGroups</a>-ot.</td>
+    <td align=center>undef</td></tr>
+<tr id="HexTagIDs"><td>HexTagIDs</td><td>Decimális helyett hexadecimális
+    használata a numerikus ID-jű tagek 7-es családbeli csoportneveihez.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="HtmlDump"><td>HtmlDump</td><td>Az információ hexadecimális kiírása egy
+    dinamikus HTML-weboldalra.  Az opció értéke korlátot állít a maximális
+    blokkméretre.  A kimeneti fájlt a TextOut opció adja meg.</td>
+    <td align=center><table class=clear>
+    <tr><td valign=top align=center><b>0</b>&nbsp;=</td><td>Nincs HTML-dump</td></tr>
+    <tr><td valign=top align=center><b>1</b>&nbsp;=</td><td>1 KB méretkorlát</td></tr>
+    <tr><td valign=top align=center><b>2</b>&nbsp;=</td><td>16 KB méretkorlát</td></tr>
+    <tr><td valign=top align=center><b>3</b>&nbsp;=</td><td>Teljes dump</td></tr>
+    </table></td><td align=center>0</td></tr>
+<tr id="HtmlDumpBase"><td>HtmlDumpBase</td><td>Bázis a HTML-dump
+    eltolásokhoz.  Ha nincs definiálva, az EXIF/TIFF báziseltolás használatos.</td>
+    <td align=center><table class=clear>
+    <tr><td valign=top align=right><b>0</b>&nbsp;=</td><td>Abszolút eltolások</td></tr>
+    <tr><td valign=top align=right><i>nem&#8209;nulla</i>&nbsp;=</td><td>Relatív eltolások</td></tr>
+    <tr><td valign=top align=right><b>undef</b>&nbsp;=</td><td>EXIF/TIFF eltolások</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr id="IgnoreGroups"><td>IgnoreGroups</td><td>Olvasáskor figyelmen kívül
+    hagyandó csoportnevek listája.  A csoportnevek kis-/nagybetűre nem
+    érzékenyek, és megelőzheti őket egy családszám.</td>
+    <td>Listahivatkozás, nevek elválasztott sztringje (bármely elválasztó
+    megengedett), vagy undef az előző IgnoreGroups lista törléséhez.</td>
+    <td align=center>undef</td></tr>
+<tr id="IgnoreMinorErrors"><td>IgnoreMinorErrors</td><td>Jelző a kisebb hibák
+    figyelmen kívül hagyásához.  Azt eredményezi, hogy a kisebb hibák
+    figyelmeztetéssé minősülnek vissza, a kisebb figyelmeztetések pedig figyelmen
+    kívül maradnak.  Ez az opció főleg azért van, hogy kisebb hibák esetén is
+    lehessen fájlokat írni, de egyes kisebb figyelmeztetések figyelmen kívül
+    hagyásával az ExifTool viselkedése megváltozhat, hogy engedjen egyes
+    megkérdőjelezhető műveleteket (például bélyegképek és előnézeti képek
+    kinyerését még akkor is, ha nincs felismerhető fejlécük).  A kisebb
+    hibákat/figyelmeztetéseket az üzenet elején lévő "[minor]" jelöli, illetve
+    "[Minor]" (nagy "M"-mel) azoknál a figyelmeztetéseknél, amelyek figyelmen
+    kívül hagyva befolyásolják a feldolgozást.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="IgnoreTags"><td>IgnoreTags</td><td>Olvasáskor figyelmen kívül hagyandó
+    tagnevek listája.  Ez segíthet olyan helyzetekben, ahol a memória korlátozott,
+    mert a figyelmen kívül hagyott tagértékek nem tárolódnak a memóriában. A
+    tagnevek kis-/nagybetűre nem érzékenyek, és csoportnevek, valamint
+    helyettesítő karakterek nem megengedettek.  Egy speciális "All" tagnév
+    használható az összes tag figyelmen kívül hagyásához, a
+    <a href="#RequestTags">RequestTags opció</a> által megadottak kivételével.</td>
+    <td>Listahivatkozás, nevek elválasztott sztringje (bármely elválasztó
+    megengedett), vagy undef az előző IgnoreTags lista törléséhez.</td>
+    <td align=center>undef</td></tr>
+<tr id="ImageHashType"><td>ImageHashType</td><td>Beállítja az ImageDataHash tag
+    kiszámításához használt hash-algoritmus típusát.</td>
+    <td align=center>'MD5', 'SHA256' vagy 'SHA512'</td><td align=center>'MD5'</td></tr>
+<tr id="KeepUTCTime"><td>KeepUTCTime</td><td>Jelző az UTC-idők Zulu időzónában
+    tartásához a helyi időre konvertálás helyett.  Csak az UTC-epoch óta eltelt
+    másodpercként tárolt időket érinti.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="Lang"><td>Lang</td><td>Honosított nyelv az ExifTool tagleírásaihoz stb.
+    Ha a megadott nyelv nem elérhető, az opció nem változik.  undef-re
+    állítható a beépített alapértelmezett nyelv kiválasztásához.</td>
+    <td align=left>Image::ExifTool::Lang modulnév (pl. 'fr', 'zh_cn'), vagy 'en', illetve undef az alapértelmezett nyelvhez.</td>
+    <td align=center>'en'</td></tr>
+<tr id="LargeFileSupport"><td>LargeFileSupport</td><td>Jelző annak jelzésére,
+    hogy ezen a rendszeren támogatottak a 64 bites fájleltolások.  Ha nincs
+    beállítva, a feldolgozás megszakad, ha 2 GB-nál nagyobb chunkot talál.
+    Állítsd 1-re a nagy chunkok feldolgozásához, vagy 2-re a figyelmeztetéssel
+    történő feldolgozáshoz.</td>
+    <td align=center>0, 1 vagy 2</td><td align=center>1</td></tr>
+<tr id="LimitLongValues"><td>LimitLongValues</td><td>Egyes konkrét tagek (általában
+    Unknown tagek) egyes értékeinek kinyerésekor a PrintConv értékek hosszra
+    korlátozottak, és az érték kihagyásjellel ("[...]") csonkolódik, ha egy
+    megadott hosszt meghalad. Ez az opció adja meg a hosszkorlátot ezekhez a
+    tagekhez.  A 4-es vagy kisebb beállítás letiltja a korlátot (mert a
+    kihagyásjeles sztring ennél hosszabb).</td>
+    <td align=center>Bármely egész szám</td><td align=center>60</td></tr>
+<!-- deprecated in ExifTool 10.54; use "ListJoin" instead
+<tr id="List"><td>List</td><td>Flag to extract lists of PrintConv values into arrays instead of combining
+    them into a string of values.</td><td align=center>0 or 1</td><td align=center>undef</td></tr>
+-->
+<tr id="ListItem"><td>ListItem</td><td>Csak egy adott elemet ad vissza a lista
+    típusú értékekből.  A 0 érték minden lista első elemét adja vissza, az 1 a
+    másodikat stb. Negatív indexek is használhatók, ahol a -1 a lista utolsó
+    elemét jelenti. Csak a beágyazott listák legfelső szintű listájára
+    vonatkozik.</td>
+    <td align=center>Egész szám vagy undef</td><td align=center>undef</td></tr>
+<tr id="ListJoin"><td>ListJoin</td><td>A többelemű List típusú tagek PrintConv
+    értékének egyetlen sztringgé fűzéséhez használt elválasztó.  Ha nincs
+    definiálva, a többelemű listák listahivatkozásként adódnak vissza.  A
+    ValueConv értékeket nem érinti.</td>
+    <td align=center>Bármely sztring vagy undef</td><td align=center>', '</td></tr>
+<!-- deprecated in ExifTool 10.54; use "ListJoin" instead
+<tr id="ListSep"><td>ListSep</td><td>Separator string used to join lists of PrintConv values when
+    List option is not set.</td><td align=center>Any string</td><td align=center>', '</td></tr>
+-->
+<tr id="ListSplit"><td>ListSplit</td><td>A lista típusú tagek értékeinek
+    íráskor egyedi elemekre bontásához használt reguláris kifejezés. (pl.
+    használd a <code>',\\s*'</code>-ot egy vesszővel elválasztott lista
+    felbontásához.)  Bontás akár PrintConv, akár ValueConv értékek írásakor.</td>
+    <td align=center>Reguláris kifejezésminta vagy undef</td><td align=center>undef</td></tr>
+<tr id="MakerNotes"><td>MakerNotes</td><td>Opció a MakerNotes és más írható
+    alkönyvtárak (például PrintIM) adatblokként való kinyeréséhez.  Normál
+    esetben a MakerNotes kinyerésekor az újraépül, hogy az eredeti maker
+    note-adatblokk határain kívüli adatokat is tartalmazza, de a 2 érték
+    letiltja ezt a szolgáltatást.</td>
+    <td><table class=clear>
+    <tr><td valign=top align=center><b>0</b>&nbsp;=</td><td>Ne nyerje ki az írható alkönyvtárakat</td></tr>
+    <tr><td valign=top align=center><b>1</b>&nbsp;=</td><td>Nyerje ki és építse újra a makernote-okat önálló blokká</td></tr>
+    <tr><td valign=top align=center><b>2</b>&nbsp;=</td><td>Nyerje ki a makernote-ok újraépítése nélkül</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr id="MDItemTags"><td>MDItemTags</td><td>Jelző az OS X metaadatelem-tagek
+    kinyeréséhez (további információért lásd az "mdls" man page-t és a
+    <a href="TagNames/MacOS.html#MDItem">MacOS MDItem Tags dokumentációt</a>).</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="MissingTagValue"><td>MissingTagValue</td><td>A tagnév-kifejezésekben
+    interpolált hiányzó tagek értéke (vagy azon tageké, ahol a haladó formázási
+    kifejezés undef-et ad vissza). Ha nincs beállítva, a hiányzó értékekhez
+    kisebb hiba jelenik meg, vagy az érték ''-re áll, ha az IgnoreMinorErrors
+    be van állítva.</td>
+    <td align=center>Bármely sztring vagy undef</td><td align=center>undef</td></tr>
+<tr id="NoDups"><td>NoDups</td><td>Jelző a List típusú tagek íráskor sorba
+    állított értékeiből a duplikált elemek eltávolításához.  Ez csak a sorba
+    állított értékekre vonatkozik, és nem oldja fel a duplikátumokat a fájlban
+    lévő meglévő értékekkel egy meglévő listához való hozzáadáskor.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="NoMandatory"><td>NoMandatory</td><td>Jelző a kötelező EXIF-tagek írásának megkerüléséhez.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="NoMultiExif"><td>NoMultiExif</td><td>Hibát vált ki, ha többszegmenses
+    EXIF írását kíséreljük meg egy JPEG-képbe.</td><td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="NoPDFList"><td>NoPDFList</td><td>Jelző a PDF lista típusú tagek
+    értékeinek külön elemekre bontásának elkerüléséhez.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="NoWarning"><td>NoWarning[+]</td><td>Reguláris kifejezés az illeszkedő
+    figyelmeztető üzenetek elnyomásához.  Például a "^Ignored" érték elnyom
+    minden olyan figyelmeztetést, amely az "Ignored" szóval kezdődik.  A
+    feldolgozásra egyébként nincs hatással, ellentétben az
+    <a href="#IgnoreMinorErrors">IgnoreMinorErrors</a>-szal egyes
+    figyelmeztetéseknél.  Kezdd a kifejezést "(?i)"-vel a kis-/nagybetűre nem
+    érzékeny illesztéshez.  Használd a NoWarning+-t a meglévő kifejezésekhez
+    való hozzáadáshoz.</td>
+    <td align=center>Reguláris kifejezésminta vagy undef</td><td align=center>undef</td></tr>
+<tr id="Password"><td>Password</td><td>Jelszó jelszóval védett PDF-dokumentumok
+    olvasásához/írásához. Figyelmen kívül marad, ha nincs szükség jelszóra. A
+    jelszó karakterkódolását a Charset opció feldolgozáskori értéke határozza
+    meg.</td>
+    <td align=center>Bármely sztring</td><td align=center>undef</td></tr>
+<tr id="Plot"><td>Plot</td><td>Az SVG-plot szolgáltatás beállításai vesszővel
+    elválasztott sztringként.  Az értékekben lévő vesszőket "&amp;#44;"-ként kell
+    escape-elni. Az érvényes beállítások és alapértelmezett értékeik:
+    <table class="clear top">
+    <tr><td>"Type=Line"</td><td>-</td><td>a plot típusa (Line, Scatter vagy Histogram)</td></tr>
+    <tr><td>"Style=Line"</td><td>-</td><td>adatstílus (Line, Marker és/vagy Fill)</td></tr>
+    <tr><td>"NBins=20"</td><td>-</td><td>a hisztogram rekeszeinek száma</td></tr>
+    <tr><td>"Size=800 600"</td><td>-</td><td>a kimeneti kép szélessége,magassága</td></tr>
+    <tr><td>"Margin=60&nbsp;15&nbsp;15&nbsp;30"</td><td>-</td><td>bal,felső,jobb,alsó margók a plot területe körül</td></tr>
+    <tr><td>"Legend=0 0"</td><td>-</td><td>x,y eltolás a plot jelmagyarázatának elmozdításához</td></tr>
+    <tr><td>"TxtPad=10 10"</td><td>-</td><td>térköz a szöveg és az x,y skála között</td></tr>
+    <tr><td>"LineSpacing=20"</td><td>-</td><td>térköz a szövegsorok között</td></tr>
+    <tr><td>"Stroke=1"</td><td>-</td><td>a plot vonásvastagsága és a jelölőméret skálázása</td></tr>
+    <tr><td>Title, XLabel, YLabel</td><td>-</td><td>a plot címe és az x/y tengely feliratai (nincs alapértelmezés)</td></tr>
+    <tr><td>XMin, XMax</td><td>-</td><td>az x tengely minimuma/maximuma (automatikus skálázás, ha nincs beállítva)</td></tr>
+    <tr><td>YMin, YMax</td><td>-</td><td>az y tengely minimuma/maximuma</td></tr>
+    <tr><td>"Multi="</td><td>-</td><td>jelző több plot rajzolásához, adathalmazonként egy</td></tr>
+    <tr><td>"Split="</td><td>-</td><td>jelző számsztringek listákra bontásához
+    (&gt;1 az N elemű listákra bontáshoz)</td></tr>
+    <tr><td>"Grid=darkgray"</td><td>-</td><td>rácsszín</td></tr>
+    <tr><td>"Text=black"</td><td>-</td><td>szöveg- és szegélyszín</td></tr>
+    <tr><td>"Bkg="</td><td>-</td><td>háttérszín (alapértelmezetten átlátszó)</td></tr>
+    <tr><td colspan=3>"Cols=red green blue black orange gray fuchsia brown turquoise gold"
+    – a plot adatainak színei</td></tr>
+    <tr><td colspan=3>"Marks=circle square triangle diamond star plus pentagon left down right"
+    – jelölőforma-nevek minden adathalmazhoz</td></tr>
+    </table></td>
+    <td>Az alapértelmezett értékeket felülíró beállítások vesszővel elválasztott
+    sztringje, vagy undef az alapértelmezett beállításokhoz való visszatéréshez.
+    A beállítások halmozódnak, ha ez az opció többször van
+    beállítva.<br><br>További részletekért és példákért lásd
+    <a href="plot.html">Az ExifTool Plot szolgáltatása</a> részt.</td><td align=center>undef</td></tr>
+<tr id="PrintConv"><td>PrintConv</td><td>Jelző a kiírási konverzió
+    engedélyezéséhez.  Az íráshoz az inverz kiírási konverziót is
+    engedélyezi.</td><td align=center>0 vagy 1</td><td align=center>1</td></tr>
+<tr id="PrintCSV"><td>PrintCSV</td><td>Jelző CSV-formátumú kimenet közvetlen
+    kiírásához a tagek normál kinyerése helyett.  Jelenleg ez a szolgáltatás
+    csak a <a href="TagNames/GM.html">GM PDR-adatokra</a> vonatkozik.  Ennek az
+    opciónak a beállítása automatikusan "all"-ra állítja az
+    <a href="#IgnoreTags">IgnoreTags</a>-et, az
+    <a href="#ExtractEmbedded">ExtractEmbedded</a>-et pedig 1-re.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="QuickTimeHandler"><td>QuickTimeHandler</td><td>Beállított jelző egy
+    'mdir' <a href="TagNames/QuickTime.html#Handler">Handler</a> hozzáadásához
+    egy újonnan létrehozott Meta box-hoz QuickTime ItemList tagek hozzáadásakor.
+    Az Adobe Bridge nem adja hozzá ezt a Handlert, de más szoftverek mintáiban
+    gyakran megtalálható, és jelezték, hogy az Apple QuickTime Player és a
+    Photos.apps figyelmen kívül hagyja az ItemList tageket, ha ez hiányzik.</td>
+    <td align=center>0 vagy 1</td>
+    <td align=center>1</td></tr>
+<tr id="QuickTimePad"><td>QuickTimePad</td><td>Jelző egyes QuickTime-atomok
+    kitöltésének (padding) megőrzéséhez íráskor.  A QuickTime-alapú Canon
+    CR3-fájlok null bájtokkal töltik ki a konténeratomok értékeit.  Ez a
+    kitöltés alapértelmezés szerint eltávolításra kerül a fájl újraírásakor, de
+    ennek az opciónak az 1-re állítása kitöltést ad hozzá az eredeti atomméret
+    megőrzéséhez, ha az új atom kisebb lenne az eredetinél.</td>
+    <td align=center>0 vagy 1</td>
+    <td align=center>undef</td></tr>
+<tr id="QuickTimeUTC"><td>QuickTimeUTC</td><td>Beállított jelző annak
+    feltételezéséhez, hogy az egész értékű QuickTime dátum/idő értékek UTC-ként
+    tárolódnak, ami helyi időre konvertálást eredményez a kinyerésükkor, és
+    helyi időből konvertálást az írásukkor. A QuickTime-specifikáció szerint
+    ezeknek a dátum/idő értékeknek UTC-nek kellene lenniük, de sok digitális
+    fényképezőgép helyi időt tárol helyette (feltehetően azért, mert nem ismeri
+    az időzónát), ezért az alapértelmezés az, hogy nem konvertálja ezeket az
+    időket (kivéve a Canon CR3-fájlokat, amelyek mindig UTC-időt használnak).
+    Ez az opció letiltja ezekben a dátum/idő értékekben a hibás
+    időnullapont-eltolások automatikus felismerését is, és 1904-es időnullapontot
+    kényszerít a QuickTime-specifikáció szerint.</td>
+    <td align=center>0 vagy 1</td>
+    <td align=center>undef</td></tr>
+<tr id="RequestAll"><td>RequestAll</td><td>Jelző az összes tag kinyerésének
+    kéréséhez.  Ez azt eredményezi, hogy egyes tagek generálódnak, amelyek
+    normál esetben nem, hacsak nem kéred őket kifejezetten (a tagnév átadásával
+    az <a href="#ImageInfo">ImageInfo</a>-nak vagy az
+    <a href="#ExtractInfo">ExtractInfo</a>-nak).  Beállítható 2-re vagy 3-ra
+    egyes további tagek generálásának engedélyezéséhez, ahogy a
+    <a href="TagNames/index.html">Tag Name dokumentációban</a> szerepel.</td>
+    <td align=center>0, 1, 2 vagy 3</td><td align=center>undef</td></tr>
+<tr id="RequestTags"><td>RequestTags</td><td>További tag- és/vagy csoportnevek
+    listája, amelyeket az <a href="#ExtractInfo">ExtractInfo</a> további
+    hívásaiban kell kérni. Ez az opció csak azoknál a tageknél/csoportoknál
+    hasznos, amelyek nem kerülnek kinyerésre, hacsak nem kéred őket
+    kifejezetten, vagy ha az <a href="#IgnoreTags">IgnoreTags</a> "All"-ra van
+    állítva. A csoportok a név után írt kettősponttal kérhetők (pl. "MacOS:").
+    A nevek kisbetűssé alakulnak, amikor a listához adódnak.</td><td>Listahivatkozás,
+    nevek elválasztott sztringje (bármely elválasztó megengedett), vagy undef az
+    előző RequestTags lista törléséhez.</td>
+    <td align=center>undef</td></tr>
+<tr id="SaveBin"><td>SaveBin</td><td>Jelző a tagek bináris értékeinek
+    mentéséhez, amelyek a <a href="#GetValue">GetValue</a> "Bin" értéktípusú
+    hívásain keresztül érhetők el.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="SaveFormat"><td>SaveFormat</td><td>Jelző az EXIF/TIFF formátumtípus
+    6-os családbeli csoportnévként való mentéséhez információ kinyerésekor.  Ha
+    ez az opció nincs beállítva, a 6-os családbeli csoportnevek nem
+    generálódnak.  További részletekért lásd a <a href="#GetGroup">GetGroup</a>-ot.
+    </td><td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="SavePath"><td>SavePath</td><td>Jelző a metaadatútvonal 5-ös családbeli
+    csoportnévként való mentéséhez információ kinyerésekor.  Ha ez az opció
+    nincs beállítva, az 5-ös családbeli csoportnevek nem generálódnak.  További
+    részletekért lásd a <a href="#GetGroup">GetGroup</a>-ot.
+    </td><td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="ScanForXMP"><td>ScanForXMP</td><td>Jelző az összes fájl (még a nem
+    felismert formátumok) XMP-információra való átvizsgálásához, hacsak XMP-t
+    már nem találtunk a fájlban.  A FastScan opcióval kombinálva csak a nem
+    felismert fájltípusok kerülnek XMP-re átvizsgálásra.
+    </td><td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="Sort"><td>Sort</td><td>Megadja a tagek rendezési sorrendjét a visszaadott taglistában.</td>
+    <td><table class="clear top">
+    <tr><td align=right><b>Input</b>&nbsp;=</td><td>A bemeneti tagargumentumokkal azonos sorrendben rendez</td></tr>
+    <tr><td align=right><b>File</b>&nbsp;=</td><td>Abban a sorrendben rendez, ahogy a tagek a fájlban megtalálhatók</td></tr>
+    <tr><td align=right><b>Tag</b>&nbsp;=</td><td>Tagnév szerint ábécésorrendben rendez</td></tr>
+    <tr><td align=right><b>Descr</b>&nbsp;=</td><td>Tagleírás szerint rendez (az aktuális Lang beállítással)</td></tr>
+    <tr><td align=right><b>Group#</b>&nbsp;=</td><td>Tagcsoport szerint rendez,
+        ahol a # nulla vagy több, kettősponttal elválasztott családszám. Ha a # nincs
+        megadva, Group0 feltételezett.  A csoportcsaládok leírásáért lásd a
+        <a href="#GetGroup">GetGroup</a>-ot.</td></tr>
+    </table></td><td align=center>'Input'</td></tr>
+<tr id="Sort2"><td>Sort2</td><td>Másodlagos rendezési sorrend az egyes csoportokon belüli tagekhez, ha a Sort értéke 'Group'.</td>
+    <td><table class="clear top">
+    <tr><td align=right><b>File</b>&nbsp;=</td><td>Abban a sorrendben rendez, ahogy a tagek a fájlban megtalálhatók</td></tr>
+    <tr><td align=right><b>Tag</b>&nbsp;=</td><td>Tagnév szerint ábécésorrendben rendez</td></tr>
+    <tr><td align=right><b>Descr</b>&nbsp;=</td><td>Tagleírás szerint rendez (az aktuális Lang beállítással)</td></tr>
+    </table></td><td align=center>'File'</td></tr>
+<tr id="StrictDate"><td>StrictDate</td><td>Jelző nem definiált érték
+    visszaadásához minden olyan dátumhoz, amely nem konvertálható, amikor a
+    DateFormat opció használatban van.  Ha 1-re van állítva egy PrintConv
+    dátum/idő érték írásakor a DateFormat opció beállításával, az érték csak
+    akkor íródik ki, ha a POSIX::strptime vagy a Time::Piece elérhető, és
+    sikeresen konvertálja az értéket. A PNG CreationTime esetén az 1-es
+    beállításnak az a további hatása, hogy a dátum/idő újraformázódik a PNG 1.2
+    ajánlás (RFC-1123) szerint íráskor, és figyelmeztetés jelenik meg minden
+    nem szabványos értékhez olvasáskor (de vedd figyelembe, hogy a Windows nem
+    biztos, hogy felismeri a szabványos formátumú PNG dátum/idő értékeket).</td>
+    <td><table class="clear top">
+    <tr><td align=right><b>undef</b>&nbsp;=</td><td>Ugyanaz, mint a 0 olvasáshoz/íráshoz, vagy az 1 másoláshoz</td></tr>
+    <tr><td align=right><b>0</b>&nbsp;=</td><td>A hibás dátum/idő értékeket változatlanul adja vissza</td></tr>
+    <tr><td align=right><b>1</b>&nbsp;=</td><td>undef-et ad vissza, ha a dátum/idő érték nem konvertálható</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr id="Struct"><td>Struct</td><td>Jelző az XMP-struktúrák HASH-hivatkozásként
+    való visszaadásához, ahelyett hogy egyedi tagekké lapítaná őket.  Ennek a
+    beállításnak nincs hatása íráskor, mivel mind a lapított, mind a
+    strukturált tagek mindig írhatók.  A strukturált információról további
+    részletekért lásd a <a href="struct.html">Strukturált információ
+    dokumentációt</a>.  Létezhet egy speciális "_ordered_keys_" elem, amely
+    rendezett kulcsok listáját tartalmazza, ha a struktúra elemei rendezettek
+    (lásd az <a href="#OrderedKeys">OrderedKeys</a> metódust).</td>
+    <td><table class="clear top">
+    <tr><td align=right><b>undef</b>&nbsp;=</td><td>Ugyanaz, mint a 0 olvasáshoz és a 2 másoláshoz</td></tr>
+    <tr><td align=right><b>0</b>&nbsp;=</td><td>Lapított tagek olvasása/másolása</td></tr>
+    <tr><td align=right><b>1</b>&nbsp;=</td><td>Struktúrák olvasása/másolása</td></tr>
+    <tr><td align=right><b>2</b>&nbsp;=</td><td>Lapított és strukturált tagek olvasása/másolása is,
+    de a lapított tagek "nem biztonságos"-ként jelölve a másoláshoz</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr id="StructFormat"><td>StructFormat</td><td>A szerializált struktúrák
+    formátuma olvasáskor/íráskor.  A strukturált információról további
+    részletekért <a href="struct.html">olvass itt</a>.  Vedd figyelembe, hogy a
+    JSONQ beállítás azt eredményezi, hogy az exiftool alkalmazás -json
+    kimenetében minden érték idézőjelbe kerül, függetlenül attól, hogy
+    struktúrában vannak-e vagy sem.</td>
+    <td><table class="clear top">
+    <tr><td align=right><b>undef</b>&nbsp;=</td><td>ExifTool-formátum</td></tr>
+    <tr><td align=right><b>JSON</b>&nbsp;=</td><td>JSON-formátum</td></tr>
+    <tr><td align=right><b>JSONQ</b>&nbsp;=</td><td>JSON idézőjeles számokkal</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr id="SystemTags"><td>SystemTags</td><td>Jelző a következő további
+    fájlrendszer-tagek kinyeréséhez:  FileAttributes, FileDeviceNumber,
+    FileInodeNumber, FileHardLinks, FileUserID, FileGroupID, FileDeviceID,
+    FileBlockSize és FileBlockCount.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="SystemTimeRes"><td>SystemTimeRes</td><td>A tört másodpercek
+    számjegyeinek száma a rendszeridőkhöz és egyes más epoch-időkhöz.  A 0 érték
+    a legközelebbi másodpercre kerekít.  A negatív értékek a záró nullák
+    eltávolítását eredményezik.  pl.) a <code>-6</code> érték a rendszeridőket 6
+    tizedesjegyre adja vissza, a záró nullák eltávolításával. Vedd figyelembe,
+    hogy egyes időformátumoknál kerekítési hibák jelenhetnek meg a 6.
+    tizedesjegytől kezdve.</td>
+    <td align=center>Bármely egész szám</td><td align=center>0</td></tr>
+<tr id="TextOut"><td>TextOut</td><td>Kimeneti fájl a Verbose és HtmlDump opciókhoz.</td>
+    <td align=center>Fájlhivatkozás</td><td align=center>\*STDOUT</td></tr>
+<tr id="TimeZone"><td>TimeZone</td><td>Beállítja az időzónát a helyi dátum/idő
+    értékekhez. Az érték egy időzóna-eltolás, mint "+05:00" (de vedd figyelembe,
+    hogy az eltolás UTC-hez képest van, nem UTC-től, ezért a nyugati időzónáknál
+    pozitív), vagy egy időzónanév, mint "EST5EDT".  Unix-alapú rendszereknél az
+    érték lehet időzóna-azonosító is, mint "America/New_York".  Windowson a
+    Time::Piece-t, más rendszereken a POSIX::tzset-et igényli.</td>
+    <td>Időzóna-eltolás vagy -azonosító, vagy undef a rendszer időzónájának használatához</td><td align=center>undef</td></tr>
+<tr id="UndefTags"><td>UndefTags</td><td>Jelző a nem definiált tagértékek
+    fenntartásához az alkalmazás <code>-if</code> kifejezésében, amikor a
+    <code>-f</code> vagy <code>-m</code> opció is használatban van.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="Unknown"><td>Unknown</td><td>Az ismeretlen tagek kinyerésének vezérlése.</td>
+    <td><table class="clear top">
+    <tr><td align=center><b>0</b>&nbsp;=</td><td>Az ismeretlen tagek nem kerülnek kinyerésre</td></tr>
+    <tr><td align=center><b>1</b>&nbsp;=</td><td>Az ismeretlen tagek kinyerésre kerülnek az EXIF
+        (és más tagelt formátumú) könyvtárakból</td></tr>
+    <tr><td align=center><b>2</b>&nbsp;=</td><td>Az ismeretlen tagek bináris adatblokkokból is kinyerésre kerülnek</td></tr>
+    </table></td><td align=center>0</td></tr>
+<tr id="UserParam"><td>UserParam</td><td>Speciális opció felhasználó által
+    definiált paraméterek beállításához/lekéréséhez.  Hasznos ahhoz, hogy külső
+    bemenetet engedjen a tagnév-kifejezésekbe és a ValueConv logikába.  A
+    <i>PARAM</i> a felhasználó által definiált paraméternév (kis-/nagybetűre nem
+    érzékeny). Ezek a paraméterek elérhetők a tagnév-kifejezésekben úgy, hogy a
+    paraméternevet dollárjel előzi meg, akárcsak a normál tageket, vagy az
+    API-n keresztül az <code>Options('UserParam','PARAM')</code> hívásával.  A
+    paraméternévhez hash tag (<code>#</code>) hozzáfűzése azt is eredményezi,
+    hogy a paraméter normál tagként kerül kinyerésre (a UserParam csoportban).
+    Ha további argumentumok nélkül hívod, az <code>Options('UserParam')</code>
+    hivatkozást ad vissza az összes felhasználói paraméter hash-ére (kisbetűs
+    nevekkel).
+</td>
+    <td><table class="clear top">
+    <tr><td><i>PARAM</i></td><td>-</td><td>Paraméter lekérése</td></tr>
+    <tr><td><i>PARAM=</i></td><td>-</td><td>Paraméter törlése</td></tr>
+    <tr><td><i>PARAM^=</i></td><td>-</td><td>Paraméter üres sztringre állítása</td></tr></table>
+    <table class=clear>
+    <tr><td><i>PARAM=VALUE</i></td><td>-</td><td>Paraméter beállítása</td></tr>
+    </table><table class=clear>
+    <tr><td><i>hash&nbsp;ref</i></td><td>-</td><td>UserParam hash beállítása</td></tr>
+    <tr><td><b>undef</b></td><td>-</td><td>UserParam hash törlése</td></tr>
+    </table>
+    </td><td align=center>{ }</td></tr>
+<tr id="Validate"><td>Validate</td><td>Jelző extra metaadat-érvényesítési
+    ellenőrzések végrehajtásához olvasáskor, ami extra figyelmeztetések
+    generálását eredményezi, ha problémákat talál.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="Verbose"><td>Verbose</td><td>Részletes üzenetek kiírása a TextOut opció
+    által megadott fájlba.  Példakimenetekért
+    <a href="verbose.html">kattints ide</a>.</td>
+    <td><table class="clear top">
+    <tr><td align=center><b>0</b>&nbsp;=</td><td>Nincsenek részletes üzenetek</td></tr>
+    <tr><td align=center><b>1</b>&nbsp;=</td><td>Tagnevek és nyers értékek kiírása</td></tr>
+    <tr><td align=center><b>2</b>&nbsp;=</td><td>További tagrészletek hozzáadása</td></tr>
+    <tr><td align=center><b>3</b>&nbsp;=</td><td>A tagadatok hexdumpjának hozzáadása (hosszkorlátokkal)</td></tr>
+    <tr><td align=center><b>4</b>&nbsp;=</td><td>A tagértékek dumpjának hosszkorlátja megszűnik</td></tr>
+    <tr><td align=center><b>5</b>&nbsp;=</td><td>A JPEG-szegmensek dumpjának hosszkorlátja megszűnik</td></tr>
+    </table></td><td align=center>0</td></tr>
+<tr id="WindowsLongPath"><td>WindowsLongPath</td><td>Hosszú útvonalnevek
+    támogatása Windowson.  Ennek az opciónak az engedélyezése automatikusan
+    engedélyezi a WindowsWideFile szolgáltatást.</td>
+    <td align=center>0 vagy 1</td><td align=center>1, ha a Win32::API elérhető, egyébként 0</td></tr>
+<tr id="WindowsWideFile"><td>WindowsWideFile</td><td>Kikényszeríti a széles
+    karakteres Windows I/O függvények használatát.  Erre szükség lehet, amikor a
+    fájlok hálózati meghajtón vannak, és az aktuális könyvtár neve Unicode
+    karaktereket tartalmaz.  Ezen opció nélkül a széles karakteres függvények
+    csak akkor használatosak, ha a megadott fájlútvonal Unicode karaktereket
+    tartalmaz.</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="WriteMode"><td>WriteMode</td><td>Beállítja a tag írási/létrehozási
+    módját.  A csoport szintje a metaadatok különböző típusainál eltér.  XMP
+    vagy IPTC esetén ez a teljes XMP/IPTC blokk (a 0-s családbeli csoport), EXIF
+    esetén viszont az egyedi IFD (az 1-es családbeli csoport).  A 'w' és 'c'
+    mód csak a <a href="#SetNewValue">SetNewValue</a> hívásakor kerül tesztelésre,
+    de a 'g' mód a <a href="#WriteInfo">WriteInfo</a>-ban is tesztelésre kerül.</td>
+    <td>Sztring, amely egy vagy több ilyen karaktert tartalmaz:<table class="clear top">
+    <tr><td align=center><b>w</b>&nbsp;=</td><td>Meglévő tagek írása (<b>w</b>rite)</td></tr>
+    <tr><td align=center><b>c</b>&nbsp;=</td><td>Új tagek létrehozása (<b>c</b>reate)</td></tr>
+    <tr><td align=center><b>g</b>&nbsp;=</td><td>Új csoportok (<b>g</b>roups) létrehozása <sup>&dagger;</sup></td></tr>
+    </table></td><td align=center>'wcg'</td></tr>
+<tr id="XAttrTags"><td>XAttrTags</td><td>Jelző az OS X kiterjesztett
+    attribútum-tagek kinyeréséhez (további információért lásd az "xattr" man
+    page-t és a
+    <a href="TagNames/MacOS.html#XAttr">MacOS XAttr Tags dokumentációt</a>).</td>
+    <td align=center>0 vagy 1</td><td align=center>undef</td></tr>
+<tr id="XMPAutoConv"><td>XMPAutoConv</td><td>Jelző az automatikus konverzió
+    engedélyezéséhez olyan ismeretlen XMP-tagek olvasásakor, amelyek értékei
+    racionális számoknak vagy dátumoknak tűnnek.</td>
+    <td align=center>0 vagy 1</td>
+    <td align=center>1</td></tr>
+</table></blockquote>
+
+<blockquote><table><tr><td valign=top><sup>&dagger;</sup></td><td>A csoport
+szintje a metaadatok különböző típusainál eltér.  XMP vagy IPTC esetén ez a
+teljes XMP/IPTC blokk (a 0-s családbeli csoport), EXIF esetén viszont az egyedi
+IFD (az 1-es családbeli csoport).</td></tr></table></blockquote>
+
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># a visszaadott információból kizárja az 'OwnerName' taget</span>
+$exifTool-&gt;<b>Options</b>(Exclude =&gt; 'OwnerName');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># csak az EXIF vagy MakerNotes csoportok információját kéri le</span>
+$exifTool-&gt;<b>Options</b>(Group0 =&gt; ['EXIF', 'MakerNotes']);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># figyelmen kívül hagyja az IFD1 információját</span>
+$exifTool-&gt;<b>Options</b>(Group1 =&gt; '-IFD1');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># a 2-es család csoportjai szerint rendez, és kinyeri az ismeretlen tageket</span>
+$exifTool-&gt;<b>Options</b>(Sort =&gt; 'Group2', Unknown =&gt; 1);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># visszaállítja a DateFormat opciót</span>
+$exifTool-&gt;<b>Options</b>(DateFormat =&gt; undef);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># nem nyeri ki az azonos nevű tageket</span>
+$oldSetting = $exifTool-&gt;<b>Options</b>(Duplicates =&gt; 0);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># lekéri az aktuális Verbose beállítást</span>
+$isVerbose = $exifTool-&gt;<b>Options</b>('Verbose');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># beállít egy felhasználói paramétert</span>
+$exifTool-&gt;<b>Options</b>(UserParam => 'MyParam=some value');
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="ClearOptions">ClearOptions</a></h2>
+<p>Visszaállítja az összes opciót az alapértelmezett értékére.  Betölti a
+felhasználó által definiált alapértelmezett opcióértékeket a .ExifTool_config
+fájlban lévő %Image::ExifTool::UserDefined::Options hash-ből, ha az létezik.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>ClearOptions()</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+</td></tr>
+</table></blockquote>
+
+<hr><h2><a name="ExtractInfo">ExtractInfo</a></h2>
+<p>Kinyeri az összes metainformációt egy képből.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>ExtractInfo($;@)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1-N)</b> Ugyanaz, mint az <a href="#ImageInfo">ImageInfo</a>, kivéve hogy
+    ARRAY hivatkozás megadása esetén nem ad vissza tag-kulcslistát.
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>1, ha ez felismert fájlformátum volt, egyébként 0</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+$success = $exifTool-&gt;<b>ExtractInfo</b>('image.jpg', \%options);
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetInfo">GetInfo</a></h2>
+<p>A <a href="#GetInfo">GetInfo</a> a metainformáció visszaadására hívódik,
+miután azt egy korábbi <a href="#ExtractInfo">ExtractInfo</a> vagy
+<a href="#ImageInfo">ImageInfo</a> hívás kinyerte a képből.  Ez a függvény
+ismételten hívható egyetlen <a href="#ExtractInfo">ExtractInfo</a> vagy
+<a href="#ImageInfo">ImageInfo</a> hívás után.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetInfo($;@)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1-N)</b> Ugyanaz, mint az <a href="#ImageInfo">ImageInfo</a>, kivéve hogy
+    kép nem adható meg
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Hivatkozás az információs hash-re, ugyanúgy, mint az
+    <a href="#ImageInfo">ImageInfo</a>-nál</td></tr>
+</table></blockquote>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># csak a kép szélességét és magasságát kéri le</span>
+$info = $exifTool-&gt;<b>GetInfo</b>('ImageWidth', 'ImageHeight');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># lekéri az összes Error és Warning üzenetet</span>
+$info = $exifTool-&gt;<b>GetInfo</b>('Error', 'Warning');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># információt kér le a lista összes tagjéhez (a lista frissül a talált tagekkel)</span>
+$info = $exifTool-&gt;<b>GetInfo</b>(\@ioTagList);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># lekéri az Author vagy Location csoportok összes információját</span>
+$info = $exifTool-&gt;<b>GetInfo</b>({Group2 =&gt; ['Author', 'Location']});
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="WriteInfo">WriteInfo</a></h2>
+<p>Metainformációt ír egy fájlba.  A megadott forrásfájl azonos típusú
+cél-fájllá íródik újra, a <a href="#SetNewValue">SetNewValue</a> korábbi hívásai
+által megadott új információval.  A megadott információ tárolásához szükséges
+szegmensek és/vagy könyvtárak igény szerint létrejönnek a cél-fájlban.
+Ismételten hívható, hogy ugyanazt az információt további fájlokba írja, anélkül
+hogy újra kellene hívni a <a href="#SetNewValue">SetNewValue</a>-t.</p>
+
+<p>Az ExifTool sorba állít minden új értéket, amelyet a
+<a href="#SetNewValue">SetNewValue</a> hívásai rendelnek hozzá, majd egy vagy
+több <a href="#WriteInfo">WriteInfo</a> híváson keresztül tetszőleges számú
+fájlra alkalmazza őket.  Ezek a sorba állított értékek a
+<a href="#GetNewValue">GetNewValue</a>-n keresztül érhetők el, és teljesen
+elkülönülnek a fájlokból az <a href="#ExtractInfo">ExtractInfo</a> vagy
+<a href="#ImageInfo">ImageInfo</a> révén kinyert, és a
+<a href="#GetInfo">GetInfo</a> vagy <a href="#GetValue">GetValue</a> révén
+elért metaadatoktól.</p>
+
+<p>Világosan: <b>NEM</b> szükséges hívni az <a href="#ExtractInfo">ExtractInfo</a>-t
+vagy az <a href="#ImageInfo">ImageInfo</a>-t a <a href="#WriteInfo">WriteInfo</a>
+előtt.  A <a href="#WriteInfo">WriteInfo</a> csak a
+<a href="#SetNewValue">SetNewValue</a> korábbi hívásai által megadott
+metaadatokat változtatja meg.</p>
+
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>WriteInfo($$;$$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1)</b> Forrásfájl neve, fájlhivatkozás, skalárhivatkozás, vagy undef
+    fájl nulláról való létrehozásához.  Forrásként File::RandomAccess
+    objektumra mutató hivatkozás is megengedett, de ebben az esetben a cél nem
+    opcionális.
+    <br><b>2)</b> [<i>opcionális</i>] Cél-fájl neve, fájlhivatkozás,
+    skalárhivatkozás memóriába íráshoz, vagy undef az eredeti fájl
+    felülírásához.  Lehet '-' a stdout-ra íráshoz.
+    <br><b>3)</b> [<i>opcionális</i>] Cél-fájl típusa.  Figyelmen kívül marad,
+    ha forrás van definiálva.
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>1, ha a fájl írása rendben megtörtént, 2, ha a fájl
+íródott, de nem történt változás, 0 fájlírási hiba esetén.
+</td></tr>
+</table></blockquote>
+<p>A forrásfájl neve lehet definiálatlan fájl nulláról való létrehozásához
+(jelenleg csak XMP-, MIE-, ICC-, VRD-, DR4-, EXV- és EXIF-fájlok hozhatók
+létre így -- részletekért lásd a <a href="#CanCreate">CanCreate</a>-et).
+Ha definiálatlan, a cél-fájl típusa kötelező, hacsak a típus nem határozható
+meg a cél-fájl nevének kiterjesztéséből.</p>
+<p>Ha cél-fájlnév van megadva, a megadott fájl nem létezhet, mert egy meglévő
+cél-fájl nem íródik felül.  A FileName, Directory vagy HardLink bármely új
+értéke figyelmen kívül marad, ha cél-fájlnév van megadva.</p>
+<p>A cél-fájlnév lehet definiálatlan az eredeti fájl felülírásához (gondoskodj
+róla, hogy legyen biztonsági másolatod!).  Ebben az esetben, ha forrásfájlnév
+van megadva, ideiglenes fájl jön létre, és átnevezéssel lecseréli a
+forrásfájlt, ha az írás során nem történt hiba.  Egyébként, ha forrásfájl-
+vagy skalárhivatkozás van használatban, a kép először a memóriába íródik, majd
+vissza az eredeti helyére másolódik, ha nem volt hiba.</p>
+<p>Mac OS-rendszereken a fájl resource fork-ja megőrződik, ha ezt a rutint
+forrásfájlnévvel hívod.</p>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># információt ad egy forrásfájlhoz, a kimenetet új fájlba írja</span>
+my $result = $exifTool-&gt;<b>WriteInfo</b>($srcfile, $dstfile);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># XMP-adatfájlt hoz létre nulláról</span>
+$exifTool-&gt;<b>WriteInfo</b>(undef, $dstfile, 'XMP');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># felülírja a fájlt (ugye van biztonsági másolatod?)</span>
+$exifTool-&gt;<b>WriteInfo</b>($srcfile);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># lekéri a hiba- és figyelmeztető üzeneteket</span>
+$errorMessage = $exifTool-&gt;<a href="#GetValue">GetValue</a>('Error');
+$warningMessage = $exifTool-&gt;<a href="#GetValue">GetValue</a>('Warning');
+</pre></td></tr></table></blockquote>
+<p>Ha hibakód adódik vissza, egy Error tag beállítódik, és a GetValue('Error')
+hívható a hiba leírásának lekéréséhez.  Warning tag akkor is beállítódhat, ha
+ez a rutin sikeres.  A WriteInfo hívása töröl minden korábban meglévő Error és
+Warning taget.</p>
+
+<hr><h2><a name="GetTagList">GetTagList</a></h2>
+<p>Rendezett taglistát kér le a megadott információs hash-ből vagy taglistából.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetTagList($;$$$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1)</b> [<i>opcionális</i>] Hivatkozás az info hash-re vagy a taglistára
+    <br><b>2)</b> [<i>opcionális</i>] Rendezési sorrend ('Input', 'File', 'Tag', 'Descr' vagy 'Group#')
+    <br><b>3)</b> [<i>opcionális</i>] Másodlagos rendezési sorrend ('File', 'Tag' vagy 'Descr')
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Tag-kulcsok listája a megadott sorrendben</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+@tags = $exifTool-&gt;<b>GetTagList</b>($info, 'Group0');
+</pre></td></tr></table></blockquote>
+<p>Ha az információs hash vagy a taglista-hivatkozás nincs megadva, akkor az
+<a href="#ImageInfo">ImageInfo</a>, <a href="#ExtractInfo">ExtractInfo</a> vagy
+<a href="#GetInfo">GetInfo</a> utolsó hívásából származó talált tagek listája
+használatos helyette, és az eredmény ugyanaz, mintha a
+<a href="#GetFoundTags">GetFoundTags</a>-et hívtad volna.  Ha a rendezési
+sorrend nincs megadva, a rendezési sorrend az aktuális opcióbeállításokból
+származik.</p>
+
+<hr><h2><a name="GetFoundTags">GetFoundTags</a></h2>
+<p>Lekéri a talált tagek listáját a megadott rendezési sorrendben.  A talált
+tagek az ehhez az objektumhoz tartozó <a href="#ImageInfo">ImageInfo</a>,
+<a href="#ExtractInfo">ExtractInfo</a> vagy <a href="#GetInfo">GetInfo</a>
+legutóbbi hívásából kapott információhoz tartozó tagek.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetFoundTags($;$$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1)</b> [<i>opcionális</i>] Rendezési sorrend ('Input', 'File', 'Tag', 'Descr' vagy 'Group#')
+    <br><b>2)</b> [<i>opcionális</i>] Másodlagos rendezési sorrend ('File', 'Tag' vagy 'Descr')
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Tag-kulcsok listája a megadott sorrendben</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my @tags = $exifTool-&gt;<b>GetFoundTags</b>('File');
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetRequestedTags">GetRequestedTags</a></h2>
+<p>Lekéri a kért tagek listáját.  Ezek azok a tagek, amelyeket az
+<a href="#ImageInfo">ImageInfo</a>, <a href="#ExtractInfo">ExtractInfo</a> vagy
+<a href="#GetInfo">GetInfo</a> legutóbbi hívásának argumentumaiban adtunk meg,
+beleértve a taglista-hivatkozáson keresztül megadott tageket is.  Ugyanabban a
+sorrendben adódnak vissza, ahogy megadták őket.  A rövidítés-tagek ki vannak
+fejtve a listában.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetRequestedTags($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Tag-kulcsok listája a kért tagekhez
+(üres, ha nem kértél kifejezetten tageket)</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my @requestedTags = $exifTool-&gt;<b>GetRequestedTags</b>();
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetValue">GetValue</a></h2>
+<p>Lekéri egy megadott tag értékét.  A visszaadott érték vagy az emberi
+olvasásra szánt (PrintConv) érték, a konvertált gépi olvasásra szánt
+(ValueConv) érték, az eredeti nyers (Raw) érték, vagy racionális formátumoknál
+az eredeti racionális (Rational) érték.  Ha az értéktípus nincs megadva, a
+PrintConv érték adódik vissza, ha a PrintConv opció be van állítva, egyébként a
+ValueConv érték adódik vissza.  A PrintConv értékek ugyanazok, mint amelyeket
+az <a href="#ImageInfo">ImageInfo</a> és a <a href="#GetInfo">GetInfo</a> ad
+vissza a tag/érték hash-ben, hacsak a PrintConv opció nincs letiltva.</p>
+<p>A több érték listáit reprezentáló tageket (ahogy például a
+'<code>Keywords</code>'-nél előfordulhat) speciálisan kezeli.  Skalár
+kontextusban ezeknél a tageknél a visszaadott PrintConv érték vagy egy
+értéksztring, vagy egy listahivatkozás (a ListJoin opció beállításától
+függően), a ValueConv érték pedig mindig listahivatkozás.  De lista
+kontextusban a <a href="#GetValue">GetValue</a> mindig magát a listát adja
+vissza.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetValue($$;$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1)</b> Tag-kulcs, vagy kis-/nagybetűre nem érzékeny tagnév opcionális csoportprefix(ek)szel
+    <br><b>2)</b> [<i>opcionális</i>] Értéktípus: 'PrintConv', 'ValueConv', 'Both',
+    'Raw', 'Bin' vagy 'Rational'
+    <br>&nbsp;<br>Az alapértelmezett értéktípus 'PrintConv', ha a PrintConv opció
+    be van állítva, egyébként az alapértelmezés 'ValueConv'.  A 'Both' értéktípus
+    a ValueConv és a PrintConv értéket is visszaadja listaként.  A 'Raw' a nyers
+    dekódolt tagértéket adja vissza.  A 'Bin' az EXIF-tagek eredeti bináris
+    adatait adja vissza, ha a <a href="#SaveBin">SaveBin</a> opció be volt
+    állítva.  A 'Rational' racionális típusoknál a nyers racionális értéket adja
+    vissza sztringtörtként, más típusoknál undef-et.
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>
+A megadott tag értéke.  Ha a tag több érték listáját reprezentálja, és a
+ListJoin opció engedélyezve van, akkor a PrintConv értéksztringet ad vissza,
+egyébként a listára mutató hivatkozás adódik vissza skalár kontextusban.  Lista
+kontextusban maga a lista adódik vissza.  (Kivéve ha 'Both' értékeket kérsz,
+ekkor két listahivatkozás adódik vissza, kontextustól függetlenül.)  Az értékek
+lehetnek bináris adatra mutató skalárhivatkozások is, vagy hash-hivatkozások,
+ha a <a href="#Struct">Struct</a> opció be van állítva.<br>&nbsp;<br>
+Megjegyzés: Lehetséges, hogy a <a href="#GetValue">GetValue</a> nem definiált
+ValueConv vagy PrintConv értéket ad vissza (vagy üres listát lista
+kontextusban) még akkor is, ha a tag létezik, mivel lehetséges, hogy ezek a
+konverziók nem definiált értéket eredményeznek.  A Rational érték pedig minden
+nem racionális taghez nem definiált lesz.  A Raw értéknek mindig léteznie kell,
+ha a tag létezik.
+</td></tr>
+</table></blockquote>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># PrintConv példa</span>
+my $val = $exifTool-&gt;<b>GetValue</b>($tag);
+if (ref $val eq 'SCALAR') {
+    print "$tag = (unprintable value)\n";
+} else {
+    print "$tag = $val\n";
+}
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># ValueConv példa</span>
+my $val = $exifTool-&gt;<b>GetValue</b>($tag, 'ValueConv');
+if (ref $val eq 'ARRAY') {
+    print "$tag is a list of values\n";
+} elsif (ref $val eq 'SCALAR') {
+    print "$tag represents binary data\n";
+} else {
+    print "$tag is a simple scalar\n";
+}
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># lista példa</span>
+my @keywords = $exifTool-&gt;<b>GetValue</b>('Keywords', 'ValueConv');
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="SetNewValue">SetNewValue</a></h2>
+<p>Beállítja egy tag új értékét.  A rutin többször is hívható sok tag
+értékének beállításához, mielőtt a <a href="#WriteInfo">WriteInfo</a>-val
+kiírnád az új értékeket egy képbe.  Ezek az értékek sorba állítva maradnak a
+további fájlokba íráshoz, amíg a <a href="#SetNewValue">SetNewValue</a>-t
+argumentumok nélkül nem hívod a sorba állított értékek visszaállításához.</p>
+<p>Lista típusú tageknél (mint a <code>Keywords</code>) vagy ismételten hívd
+ugyanazzal a tagnévvel minden értékhez, vagy hívd az értékek listájára mutató
+hivatkozással.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>SetNewValue($;$$%)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+ <br><b>1)</b> [<i>opcionális</i>] Tag-kulcs vagy tagnév, vagy undef az összes
+    új érték törléséhez.  A tagnevet megelőzheti egy vagy több 0-s, 1-es vagy
+    2-es családbeli csoportnév opcionális vezető családszámmal, kettősponttal
+    elválasztva (pl. '<code>EXIF:Artist</code>', '<code>XMP:Time:*</code>'), ami
+    egyenértékű egy Group opcióargumentum használatával.  Továbbá a tagnévhez
+    hozzáfűzhető egy '<code>#</code>' (pl. '<code>EXIF:Orientation#</code>'),
+    ugyanazzal a hatással, mint a Type 'ValueConv'-ra állítása.  Helyettesítő
+    karakterek ('<code>*</code>' és '<code>?</code>') használhatók a tagnévben
+    több tag egyidejű hozzárendeléséhez vagy törléséhez. A '<code>*</code>'
+    tagnév speciális információ törlésekor, és egy egész csoportot töröl még
+    akkor is, ha a csoport egyes egyedi tagjei nem írhatók, de csak akkor, ha
+    egyetlen 0-s vagy 1-es családbeli csoportnév van megadva (egyébként a tagek
+    egyenként törlődnek).  A törölhető csoportnevek listájának lekéréséhez
+    használd a <a href="#GetDeleteGroups">GetDeleteGroups</a>-ot, az ExifTool
+    tagneveinek teljes listájáért pedig lásd a
+    <a href="TagNames/index.html">TagNames dokumentációt</a>.
+ <br><b>2)</b> [<i>opcionális</i>] A tag új értéke.  Definiálatlan a tag
+     fájlból való törléséhez. Lehet skalár, skalárhivatkozás, listahivatkozás
+     értéklista beállításához, vagy hash-hivatkozás egy struktúrához. Az egész
+     értékek megadhatók hexadecimális sztringként (vezető '0x'-szel), az
+     egyszerű racionális értékek pedig megadhatók tört alakban (pl. '4/10').  A
+     struktúra-tagek megadhatók hash-hivatkozásként vagy szerializált
+     sztringként (lásd az alábbi utolsó két példát).
+ <br><b>3-N)</b> [<i>opcionális</i>] SetNewValue opció/érték párok (lásd lentebb).
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Skalár kontextus: A beállított tagek
+száma, a hibák pedig a STDERR-re íródnak.
+<br>Lista kontextus: A beállított tagek száma és a hibasztring (definiálatlan, ha nincs hiba).
+</td></tr>
+</table></blockquote>
+<blockquote><table class='norm'>
+<tr><th colspan=4 bgcolor='#dddddd'>SetNewValue opciók</th></tr>
+<tr><th>Opció</th><th>Leírás</th><th width='30%'>Értékek</th><th>Alapértelmezés</th></tr>
+<tr><td>AddValue</td><td>Értéket ad a <b>fájlban</b> lévő meglévő listához,
+    ahelyett hogy felülírná a meglévő értékeket</td>
+    <td><table class="clear top">
+    <tr><td align=center><b>0</b>&nbsp;=</td><td>Felülírja a meglévő érték(ek)et</td></tr>
+    <tr><td align=center><b>1</b>&nbsp;=</td><td>Hozzáad a meglévő listához, vagy figyelmeztet a nem lista jellegű tageknél</td></tr>
+    <tr><td align=center><b>2</b>&nbsp;=</td><td>Hozzáad a meglévő listához, vagy felülírja a nem lista jellegű tageket</td></tr>
+    </table></td><td align=center>0</td></tr>
+<tr><td>DelValue</td><td>Törli a meglévő taget egy fájlból, ha a megadott
+    értéke van.  Lista típusú tageknél ez egy megadott elemet töröl a listából.
+    Nem lista jellegű tageknél ez használható egy tag feltételes cseréjéhez,
+    úgy, hogy egy külön <a href="#SetNewValue">SetNewValue</a> hívásban új
+    értéket adsz (lásd az alábbi példákat).  Strukturált tageknél a teljes
+    struktúra csak akkor törlődik/cserélődik, ha az összes megadott mező
+    illeszkedik a meglévő struktúrához.</td>
+    <td align=center>0 vagy 1</td><td align=center>0</td></tr>
+<tr><td>EditGroup</td><td>Csak meglévő csoportokban hoz létre tageket. Nem hoz
+    létre új csoportot.  Gyakorlatilag eltávolítja a 'g'-t az ExifTool
+    WriteMode opciójából csak ehhez a taghez.</td>
+    <td align=center>0 vagy 1</td><td align=center>0</td></tr>
+<tr><td>EditOnly</td><td>Csak akkor szerkeszti a taget, ha az már létezik. Nem
+    hoz létre új taget.  Gyakorlatilag eltávolítja a 'c'-t az ExifTool
+    WriteMode opciójából csak ehhez a taghez.</td>
+    <td align=center>0 vagy 1</td><td align=center>0</td></tr>
+<tr><td>Group</td><td>Megadja a csoportnevet, ahová a taget írni kell.  Ezt az
+    opciót felülírja a tagnévben megadott bármely csoport. Ha nincs megadva, a
+    tag a <a href="#SetNewGroups">SetNewGroups</a> által megadott legmagasabb
+    prioritású csoportba íródik.  A kis-/nagybetű nem számít</td>
+    <td align=center>Egy vagy több 0-s, 1-es vagy 2-es családbeli csoport
+    opcionális vezető családszámmal, kettősponttal elválasztva</td><td align=center>undef</td></tr>
+<tr><td>NoFlat</td><td>A lapított tageket 'nem biztonságos'-ként kezeli</td><td align=center>0 vagy 1</td><td align=center>0</td></tr>
+<tr><td>NoShortcut</td><td>Letiltja azt az alapértelmezett viselkedést, hogy a
+    taget a rövidítések között keresi, ha máshogy nem található meg.</td><td align=center>0 vagy 1</td><td align=center>0</td></tr>
+<tr><td>Protected</td><td>Engedélyezi a nem biztonságos és védett tagek írását</td>
+    <td>Az írandó tagvédelmi szintek bitmaszkja:
+    <table class="clear top">
+    <tr><td align=center><b>0x01</b>&nbsp;=</td>
+    <td>'<a href="TagNames/index.html">nem biztonságos</a>' tagek írása (azaz olyan
+        tagek, amelyek nem másolódnak automatikusan a
+        <a href="#SetNewValuesFromFile">SetNewValuesFromFile</a>-lal)</td></tr>
+    <tr><td align=center><b>0x02</b>&nbsp;=</td>
+    <td>'<a href="TagNames/index.html">védett</a>' tagek írása (csak belső használatra)</td></tr>
+    </table></td><td align=center>0</td></tr>
+<tr><td>ProtectSaved</td><td>Elkerüli olyan új értékek beállítását, amelyek a
+    <a href="#SaveNewValues">SaveNewValues</a> N-edik hívása után lettek
+    elmentve.  Nincs hatása a nem mentett értékekre, vagy az N-edik hívás előtt
+    elmentett értékekre.</td><td align=center>N</td><td align=center>undef</td></tr>
+<tr><td>Replace</td><td>Lecseréli ennek a tagnek a korábbi új értékeit (azaz
+    lecseréli a <a href="#SetNewValue">SetNewValue</a> korábbi hívásaiban
+    beállított értékeket). Ezt az opciót leggyakrabban a lista típusú tagek
+    korábban beállított új értékeinek lecserélésére használják.</td>
+    <td><table class="clear top">
+    <tr><td align=center><b>0</b>&nbsp;=</td><td>Normál módon állítja be az új értéket (lista típusú tageknél hozzáad az új értékekhez)</td></tr>
+    <tr><td align=center><b>1</b>&nbsp;=</td><td>Visszaállít minden korábbi új értéket az új érték beállítása előtt</td></tr>
+    <tr><td align=center><b>2</b>&nbsp;=</td><td>Csak visszaállítja a korábbi új értékeket (az új érték argumentum figyelmen kívül marad)</td></tr>
+    </table></td><td align=center>0</td></tr>
+<tr><td>Shift</td><td>Eltolja a taget a megadott értékkel.  Jelenleg csak
+    dátum/idő tagek és numerikus értékű tagek tolhatók el.  Az érték hozzáadódik,
+    ha a Shift 1, vagy kivonódik, ha a Shift -1.  Az időeltolási formátumok
+    részleteiért lásd az <a href="Shift.html">Image::ExifTool::Shift.pl</a>-t.</td>
+    <td><table class="clear top">
+    <tr><td align=left colspan=2><b>undef</b>&nbsp;= Nincs eltolás</td></tr>
+    <tr><td align=right><b>0</b>&nbsp;=</td><td>Eltolás, ha eltolható:<br>
+    Pozitív, ha az AddValue be van állítva, vagy<br>
+    Negatív, ha a DelValue be van állítva, és<br>
+    a tag dátum/idő</td></tr>
+    <tr><td align=right><b>1</b>&nbsp;=</td><td>Pozitív eltolás</td></tr>
+    <tr><td align=right><b>-1</b>&nbsp;=</td><td>Negatív eltolás</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr><td>Type</td><td>A beállítandó érték típusa</td>
+    <td>PrintConv, ValueConv vagy Raw (az alapértelmezés a <a href="#PrintConv">PrintConv</a> opciótól függ)</td>
+    <td align=center>PrintConv vagy ValueConv</td></tr>
+</table></blockquote>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># új értéket állít be egy taghez (a hibák a STDERR-re mennek)</span>
+$success = $exifTool-&gt;<b>SetNewValue</b>($tag, $value);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># új értéket állít be, és elkap minden hibaüzenetet</span>
+($success, $errStr) = $exifTool-&gt;<b>SetNewValue</b>($tag, $value);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># törli a megadott tag információját, ha az létezik a képben
+# (visszaállítja az AddValue és DelValue opciókat is ehhez a taghez)</span>
+$exifTool-&gt;<b>SetNewValue</b>($tag);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># visszaállít minden értéket a SetNewValue() korábbi hívásaiból</span>
+$exifTool-&gt;<b>SetNewValue</b>();
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># töröl egy adott kulcsszót</span>
+$exifTool-&gt;<b>SetNewValue</b>('Keywords', $word, DelValue =&gt; 1);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># beállítja a keywords-öt (egy lista típusú taget) két új értékkel</span>
+$exifTool-&gt;<b>SetNewValue</b>(Keywords =&gt; 'word1');
+$exifTool-&gt;<b>SetNewValue</b>(Keywords =&gt; 'word2');
+<span class=com># egyenértékű, de mindkettőt egy hívásban állítja be egy tömbhivatkozással</span>
+$exifTool-&gt;<b>SetNewValue</b>(Keywords =&gt; ['word1','word2']);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># hozzáad egy kulcsszót a fájlban lévő meglévő kulcsszavak lecserélése nélkül</span>
+$exifTool-&gt;<b>SetNewValue</b>(Keywords =&gt; $word, AddValue =&gt; 1);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># feltételesen hozzáad vagy lecserél egy taget, ha korábban nem létezett,
+# vagy egy megadott értéke volt ("old value")</span>
+$exifTool-&gt;<b>SetNewValue</b>(Description =&gt; '', DelValue =&gt; 1);
+$exifTool-&gt;<b>SetNewValue</b>(Description =&gt; 'old value', DelValue =&gt; 1);
+$exifTool-&gt;<b>SetNewValue</b>(Description =&gt; 'new value');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># beállít egy taget egy adott csoportban</span>
+$exifTool-&gt;<b>SetNewValue</b>(Headline =&gt; $val, Group =&gt; 'XMP');
+$exifTool-&gt;<b>SetNewValue</b>('XMP:Headline' =&gt; $val);  <span class=com># (egyenértékű)</span>
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># visszatolja az eredeti dátumot/időt 2,5 órával</span>
+$exifTool-&gt;<b>SetNewValue</b>(DateTimeOriginal =&gt; '2:30', Shift =&gt; -1);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># csak akkor ír ki egy taget, ha egy megadott értéke volt
+# (az alábbi hívások sorrendje nem számít)</span>
+$exifTool-&gt;<b>SetNewValue</b>(Title =&gt; $oldVal, DelValue =&gt; 1);
+$exifTool-&gt;<b>SetNewValue</b>(Title =&gt; $newVal);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># tag kiírása numerikus érték szerint</span>
+$exifTool-&gt;<b>SetNewValue</b>(Orientation =&gt; 6, Type =&gt; 'ValueConv');
+$exifTool-&gt;<b>SetNewValue</b>('Orientation#' =&gt; 6);  <span class=com># (egyenértékű)</span>
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># töröl minden taget az EXIF-tagek kivételével</span>
+$exifTool-&gt;<b>SetNewValue</b>('*');  <span class=com># töröl mindent...</span>
+$exifTool-&gt;<b>SetNewValue</b>('EXIF:*', undef, Replace =&gt; 2); <span class=com># ...az EXIF kivételével</span>
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td>
+<pre><span class=com># strukturált információ írása HASH-hivatkozásként</span>
+$exifTool-&gt;<b>SetNewValue</b>('XMP:Flash' =&gt; { mode=>'on', fired=>'true', return=>'not' });</pre>
+</td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td>
+<pre><span class=com># strukturált információ írása szerializált sztringként</span>
+$exifTool-&gt;<b>SetNewValue</b>('XMP:Flash' =&gt; '{mode=on,fired=true,return=not}');</pre>
+</td></tr></table>(a struktúra-szerializálási technika leírásáért lásd a
+<a href="struct.html#Serialize">struct.html</a>-t)</blockquote>
+
+<p><b>Megjegyzések:</b></p>
+<p>Tagcsoportok törlésekor a Replace opció használható adott csoportok
+kizárására a tömeges törlésből. Ez a technika azonban nem használható egyedi
+tagek kizárására egy csoporttörlésből (hacsak nem 2-es családbeli csoport lett
+megadva a törlésben).  Helyette használd a
+<a href="#SetNewValuesFromFile">SetNewValuesFromFile</a>-t az egyedi tagek
+értékeinek visszaállításához egy csoport törlése után.</p>
+<p>Egy JPEG-kép összes tagjének törlésekor az APP14 "Adobe" információ
+alapértelmezés szerint nem törlődik, mert ez befolyásolhatja a kép
+megjelenését.  Ez az információ azonban törölhető, ha kifejezetten megadod,
+vagy csoport szerint (a '<code>Adobe:*</code>'-gal), vagy blokként (a
+'<code>Adobe</code>'-val).</p>
+
+<hr><h2><a name="GetNewValue">GetNewValue</a><a name="GetNewValues"></a></h2>
+<p>Lekéri egy tag új Raw értékét.  Ez a
+<a href="#SetNewValue">SetNewValue</a> által beállított érték, amely sorba van
+állítva a fájlba íráshoz.  A lista típusú tagek lista kontextusban több
+értéket is visszaadhatnak.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetNewValue($$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+ <br><b>1)</b> Tagnév (kis-/nagybetűre érzékeny, megelőzhetik 0-s, 1-es vagy
+ 7-es családbeli csoportnevek, kettősponttal elválasztva)
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Az új Raw tagértékek listája, vagy a lista
+első értéke, ha skalár kontextusban hívod. A lista lehet üres, ha a tag nem
+íródik ki, vagy ha törlődik (azaz ha a <a href="#SetNewValue">SetNewValue</a>-t
+érték nélkül hívtad).
+</td></tr>
+</table></blockquote>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my $rawVal = $exifTool-&gt;<b>GetNewValue</b>($tag);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+my @rawVals = $exifTool-&gt;<b>GetNewValue</b>($tag);
+</pre></td></tr></table></blockquote>
+
+<p><b>Megjegyzések:</b></p>
+<p>Az API NoDups opciója érvényes ennek a rutinnak a hívásakor, és eltávolítja
+a duplikált elemeket a List típusú tagekhez visszaadott értékekből.</p>
+
+<hr><h2><a name="SetNewValuesFromFile">SetNewValuesFromFile</a></h2>
+<p>Egy nagyon erős rutin, amely új értékeket állít be a tagekhez egy megadott
+fájlban talált információból.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>SetNewValuesFromFile($$;@)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+ <br><b>1)</b> Fájlnév, fájlhivatkozás vagy skalárhivatkozás
+ <br><b>2-N)</b> [<i>opcionális</i>] A beállítandó tagnevek listája vagy opciós
+ hash hivatkozásai.  Ha egy sincs megadva, az összes írható tag beállítódik.  A
+ tagnevek nem kis-/nagybetűre érzékenyek, és megelőzheti őket egy vagy több
+ 0-s, 1-es, 2-es vagy 7-es családbeli csoportnév opcionális vezető
+ családszámmal, kettősponttal elválasztva (pl. '<code>exif:iso</code>').  A
+ vezető '<code>-</code>' kizárandó tageket jelöl (pl. '<code>-comment</code>'),
+ a záró '<code>#</code>' pedig azt eredményezi, hogy a ValueConv érték
+ másolódik (ugyanaz, mint a Type opció 'ValueConv'-ra állítása csak ehhez a
+ taghez).  A vezető '<code>+</code>' tagonként 0-ra állítja a Replace opciót
+ (lásd az Opciókat lentebb).  Helyettesítő karakterek ('<code>*</code>' és
+ '<code>?</code>') használhatók a tagnévben.  A '<code>*</code>' tagnevet
+ gyakran használják, amikor egy csoport van megadva, a csoport összes tagjének
+ másolásához (pl. '<code>XMP:*</code>').<br>&nbsp;<br>
+ Egy speciális szolgáltatás lehetővé teszi '<code>DSTTAG&lt;SRCTAG</code>'
+ (vagy '<code>SRCTAG&gt;DSTTAG</code>') alakú tagnevek megadását, hogy az
+ információt egy eltérő nevű vagy megadott csoportú taghez másolja.  Mind a
+ '<code>SRCTAG</code>', mind a '<code>DSTTAG</code>' tartalmazhat helyettesítő
+ karaktereket, és/vagy megelőzheti csoportnév (pl.
+ '<code>fileModifyDate&lt;modifyDate</code>' vagy '<code>xmp:*&lt;*</code>'),
+ és/vagy '<code>#</code>' zárhatja a kiírási konverzió letiltásához.  A másolt
+ tagek hozzáadhatók vagy törölhetők is egy listából a
+ '<code>DSTTAG+&lt;SRCTAG</code>' vagy '<code>DSTTAG-&lt;SRCTAG</code>' alakú
+ argumentumokkal.  A tagek sorrendben értékelődnek, így a kizárások csak a
+ listában korábban szereplő tagekre vonatkoznak.  Ennek a szolgáltatásnak egy
+ kiterjesztése lehetővé teszi a tagérték beállítását egy olyan sztringből,
+ amely vezető '<code>$</code>' jelekkel ellátott tagneveket tartalmaz (pl.
+ '<code>Comment&lt;the file is $filename</code>'). Kapcsos zárójelek
+ ('<code>{}</code>') használhatók egy tagnév köré, hogy elválasszák a rákövetkező
+ szövegtől, a '<code>$$</code>' pedig egy '<code>$</code>' jel jelölésére
+ szolgál.  A kifejezésekben lévő hiányzó tagek viselkedését a
+ <a href="#MissingTagValue">MissingTagValue</a> opció határozza meg.  A tagérték
+ módosítható az alapértelmezett bemeneti változó (<code>$_</code>)
+ megváltoztatásával egy Perl-kifejezésben, amelyet a kapcsos zárójeleken belül,
+ a tagnevet követő pontosvessző után helyezel el (lásd az alábbi utolsó
+ példát).  A tagnév után (a pontosvessző előtt) hozzáadható egy
+ <code>@</code>, hogy a kifejezés a lista típusú tageknél az egyedi
+ listaelemeken hasson, ne az összefűzött sztringen.  A kifejezés hozzáfér a
+ teljes ExifTool API-hoz az aktuális ExifTool objektumon (<code>$self</code>)
+ és a tag-kulcson (<code>$tag</code>) keresztül.  A kifejezésen belüli kapcsos
+ zárójeleknek kiegyensúlyozottnak kell lenniük.<br>&nbsp;<br>
+ Több opciós hash hivatkozás is átadható, hogy különböző tagekhez különböző
+ opciókat állíts be.  Az opciók az argumentumlistában rákövetkező tagekre
+ vonatkoznak.
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Az sikeresen beállított információ
+hash-e.  Tartalmazhat Warning vagy Error bejegyzéseket, ha problémák voltak a
+bemeneti fájl olvasásakor.
+</td></tr>
+</table></blockquote>
+<p>Alapértelmezés szerint ez a rutin átviszi az információt a különböző
+csoportokban lévő azonos nevű tagek között, ami lehetővé teszi az információ
+lefordítását különböző formátumú képek között.  Ez a viselkedés módosítható a
+kinyert tagekhez csoportnév megadásával (még akkor is, ha '<code>*</code>' van
+csoportnévként használva), amely esetben az információ az eredeti csoportba
+íródik, hacsak nem irányítod át egy másik csoportba.  Ha '<code>*</code>' van
+csoportnévként használva, alapértelmezés szerint az eredeti tag 1-es családbeli
+csoportja megőrződik, de vezető családszámmal más család is megadható.
+(Például a '<code>*:*</code>' megadása minden információt lemásol az eredeti
+1-es családbeli csoportok megőrzésével, míg a '<code>0*:*</code>' a 0-s
+családbeli csoportot őrzi meg.)</p>
+<p><b>SetNewValuesFromFile opciók:</b></p>
+<p>Az opciók ugyanazok, mint a <a href="#SetNewValue">SetNewValue</a>-nál, és
+belsőleg közvetlenül a <a href="#SetNewValue">SetNewValue</a>-nak adódnak át,
+néhány kivétellel:</p>
+<ul>
+<li>A Replace opció alapértelmezése 1, nem 0, mint a
+<a href="#SetNewValue">SetNewValue</a>-nál, azonban a tagnév argumentum
+megelőzhető '+'-szal, hogy a Replace opciót 0-ra állítsd csak ehhez az
+argumentumhoz.</li>
+<li>Az AddValue vagy DelValue opció egyedi tagekhez beállítódik, ha '+&gt;'
+vagy '-&gt;' (illetve '+&lt;' vagy '-&lt;') van használva.</li>
+<li>A Group opció beállítódik azoknál a tageknél, ahol csoportnév van megadva.</li>
+<li>A Protected jelző 1-re állítódik az egyedileg megadott tageknél.</li>
+<li>A Type opció a kinyert tagekre is vonatkozik.</li>
+</ul>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># új értékeket állít be egy fájl összes információjából...</span>
+my $info = $exifTool-&gt;<b>SetNewValuesFromFile</b>($srcFile);
+<span class=com># ...majd kiírja ezeket az értékeket egy másik képbe</span>
+my $result = $exifTool-&gt;<a href="#WriteInfo">WriteInfo</a>($file2, $outFile);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># beállítja az összes új értéket az eredeti csoportok megőrzésével</span>
+$exifTool-&gt;<b>SetNewValuesFromFile</b>($srcFile, '*:*');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># beállít konkrét információt</span>
+$exifTool-&gt;<b>SetNewValuesFromFile</b>($srcFile, $tag1, $tag2...);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># új értéket állít be egy adott csoportban lévő másik tagből</span>
+$exifTool-&gt;<b>SetNewValuesFromFile</b>($src, 'XMP-dc:Subject&lt;IPTC:Keywords');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># hozzáadja az összes IPTC-kulcsszót az XMP subject listához</span>
+$exifTool-&gt;<b>SetNewValuesFromFile</b>($src, 'XMP-dc:Subject+&lt;IPTC:Keywords');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># új értéket állít be egy más tageket tartalmazó sztringből</span>
+$exifTool-><b>SetNewValuesFromFile</b>($file,
+    'Comment&lt;ISO=$ISO Aperture=$aperture Exposure=$shutterSpeed');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># beállítja a keywords listát több tag értékeiből</span>
+$exifTool-&gt;<b>SetNewValuesFromFile</b>($file, { Replace =&gt; 0 },
+    'keywords&lt;xmp:subject', 'keywords&lt;filename');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># lemásolja az összes EXIF-információt az eredeti IFD megőrzésével
+# ('*.*&lt;' nélkül a tagek a preferált EXIF IFD-be másolódnának)</span>
+$exifTool-&gt;<b>SetNewValuesFromFile</b>($file, '*:*&lt;EXIF:*');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># lemásolja az összes olyan taget, amelynek neve "gps"-szel kezdődik (megjegyzés:
+# ez különbözik a "gps:*"-tól, mert az XMP GPS tageket is másolja)</span>
+$exifTool-&gt;<b>SetNewValuesFromFile</b>($file, 'gps*');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># beállítja a FileName-et a Modelből, a kérdéses karaktereket aláhúzásra cserélve</span>
+$exifTool-&gt;<b>SetNewValuesFromFile</b>($file, 'filename&lt;${model;tr(/\\\\?*:|"&lt;&gt;)(_)}.jpg');
+</pre></td></tr></table></blockquote>
+
+<p><b>Megjegyzések:</b></p>
+<p>A PrintConv opció erre a rutinra vonatkozik, de normál esetben bekapcsolva
+kell hagyni, hogy megbízhatóbb legyen az információ átvitele a csoportok
+között.</p>
+<p>Ha előnézeti kép létezik, az nem másolódik.  Az előnézeti képet külön kell
+átvinni, ha kívánod, egy külön <a href="#WriteInfo">WriteInfo</a> hívásban</p>
+<p>Amikor egyszerűen minden információt átmásolsz azonos típusú fájlok között,
+általában kívánatos az eredeti csoportok megőrzése úgy, hogy
+'<code>*:*</code>'-ot adsz meg a beállítandó tagekhez.</p>
+<p>A <a href="#Duplicates">Duplicates</a> opció mindig érvényes az ezzel a
+rutinnal a forrásfájlból kinyert tagekre.</p>
+<p>A <a href="#Struct">Struct</a> opció alapértelmezés szerint engedélyezve van
+az ezzel a rutinnal kinyert tagekhez.  Ez lehetővé teszi az összetett
+struktúrák hierarchiájának megőrzését másoláskor, de a Struct opció 0-ra
+állítható ennek a viselkedésnek a felülbírálásához, és helyette lapított
+tagekként való másoláshoz.</p>
+
+<hr><h2><a name="CountNewValues">CountNewValues</a></h2>
+<p>Visszaadja a beállított új értékek teljes számát.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>CountNewValues($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Skalár kontextusban visszaadja azon
+tagek teljes számát, amelyeknek új értéke van beállítva.  Lista kontextusban
+visszaadja a beállított "pszeudo" tagértékek számát is.  A "pszeudo" tagek
+olyan tagek, mint a FileName és a FileModifyDate, amelyek nincsenek a fájlon
+belül, és a fájl újraírása nélkül megváltoztathatók.</td></tr>
+</table></blockquote>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my $numSet = $exifTool-&gt;<b>CountNewValues</b>();
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+my ($numSet, $numPseudo) = $exifTool-&gt;<b>CountNewValues</b>();
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="SaveNewValues">SaveNewValues</a></h2>
+<p>Elmenti az új értékek állapotát, hogy később a <a href="#RestoreNewValues">RestoreNewValues</a> visszaállíthassa.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>SaveNewValues($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Annak száma, hányszor hívták ezt a rutint
+(N) azóta, hogy legutóbb visszaállították az új értékeket.</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+$exifTool-&gt;<b>SaveNewValues</b>();         <span class=com># elmenti az új értékek állapotát</span>
+$exifTool-&gt;<a href="#SetNewValue">SetNewValue</a>(ISO =&gt; 100); <span class=com># új értéket állít be az ISO-hoz</span>
+$exifTool-&gt;<a href="#WriteInfo">WriteInfo</a>($src, $dst1);  <span class=com># kiírja az ISO-t plusz minden korábbi új értéket</span>
+$exifTool-&gt;<b>RestoreNewValues</b>();      <span class=com># visszaállítja a korábbi új értékeket</span>
+$exifTool-&gt;<a href="#WriteInfo">WriteInfo</a>($src, $dst2);  <span class=com># csak a korábbi új értékeket írja ki</span>
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="RestoreNewValues">RestoreNewValues</a></h2>
+<p>Visszaállítja az új értékeket azokra a beállításokra, amelyek akkor
+léteztek, amikor a <a href="#SaveNewValues">SaveNewValues</a>-t legutóbb
+hívták.  Ismételten hívható egyetlen <a href="#SaveNewValues">SaveNewValues</a>
+hívás után.  Példáért lásd a fenti <a href="#SaveNewValues">SaveNewValues</a>-t.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>RestoreNewValues($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+</td></tr>
+</table></blockquote>
+
+<hr><h2><a name="SetAlternateFile">SetAlternateFile</a></h2>
+<p>Megad egy alternatív fájlt, amelyből metaadatot kell olvasni.  Az alternatív
+fájlból származó tagek elérhetők, miután az <a href="#ExtractInfo">ExtractInfo</a>-t
+hívták, vagy egy <a href="#SetNewValuesFromFile">SetNewValuesFromFile</a> hívás
+során, egy 8-as családbeli csoportnév használatával (pl. '<code>File1</code>'
+az alábbi példában).</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>SetAlternateFile($$$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+<br><b>1)</b> Kis-/nagybetűre nem érzékeny 8-as családbeli csoportnév ('File1', 'File2' vagy 'File3' stb.)
+<br><b>2)</b> Az alternatív bemeneti fájl neve, vagy undef a visszaállításhoz
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>1 siker esetén, vagy 0, ha a csoportnév érvénytelen.
+</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+$exifTool-&gt;<b>SetAlternateFile</b>(File1 =&gt; 'images/test1.jpg');
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="SetFileModifyDate">SetFileModifyDate</a></h2>
+<p>Kiírja a fájlrendszer módosítási vagy létrehozási idejét a FileModifyDate
+vagy FileCreateDate tag új értékéből.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>SetFileModifyDate($$;$$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+ <br><b>1)</b> Fájlnév
+ <br><b>2)</b> [<i>opcionális</i>] Bázisidő eltolás alkalmazása esetén (napokban $^T előtt)
+ <br><b>3)</b> [<i>opcionális</i>] Az írandó tag: 'FileModifyDate' (alapértelmezés) vagy 'FileCreateDate'
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>1, ha az idő megváltozott, 0, ha semmi nem
+történt, vagy -1, ha hiba volt az idő beállításakor.
+</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+$exifTool-&gt;<a href="#SetNewValue">SetNewValue</a>(FileModifyDate =&gt; '2000:01:02 03:04:05', Protected => 1);
+my $result = $exifTool-&gt;<b>SetFileModifyDate</b>($file);
+</pre></td></tr></table></blockquote>
+<p><b>Megjegyzések:</b></p>
+<p>Egyenértékű a <a href="#WriteInfo">WriteInfo</a> hívásával, de annál
+hatékonyabb, amikor csak a FileModifyDate vagy FileCreateDate tag lett
+beállítva.  Ha nincs időzóna megadva, helyi idő feltételezett.  Eltoláskor az
+eredeti fájl idejét használja, hacsak az opcionális bázisidő nincs megadva.</p>
+<p>A FileCreateDate írásának lehetősége jelenleg csak Windows-rendszerekre korlátozódik.</p>
+
+<hr><h2><a name="SetFileName">SetFileName</a></h2>
+<p>Beállítja a fájlnevet és a könyvtárat, vagy hard linket hoz létre a
+fájlhoz.  Ha nincs megadva, az új fájlnév a FileName és Directory tagek új
+értékeiből származik, illetve link létrehozásakor a HardLink vagy SymLink
+tagből.  Ha a FileName tag '<code>/</code>'-t tartalmaz, akkor a fájl egy új
+könyvtárba nevezhető át. Ha a FileName '<code>/</code>'-vel végződik, akkor
+könyvtárnévnek minősül, és a fájl az új könyvtárba kerül.  A Directory tag új
+értéke elsőbbséget élvez a FileName-ben megadott bármely könyvtárral szemben.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>SetFileName($$;$$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+ <br><b>1)</b> Aktuális fájlnév
+ <br><b>2)</b> [<i>opcionális</i>] Új fájlnév
+ <br><b>3)</b> [<i>opcionális</i>] 'HardLink' vagy 'SymLink' hard, illetve
+ szimbolikus link létrehozásához a fájl átnevezése helyett, vagy 'Test' az
+ átnevezési szolgáltatás teszteléséhez, amely a régi és új nevet írja ki
+ ahelyett, hogy bármit megváltoztatna.
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>1 siker esetén, 0, ha semmi nem történt,
+vagy -1, ha hiba volt a fájl átnevezésekor vagy a link létrehozásakor.
+</td></tr>
+</table></blockquote>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my $result = $exifTool-&gt;<b>SetFileName</b>($file);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+my $result = $exifTool-&gt;<b>SetFileName</b>($file, $newName);
+</pre></td></tr></table></blockquote>
+<p><b>Megjegyzések:</b></p>
+<p>Nem írja felül a meglévő fájlokat. Az új könyvtárak szükség szerint
+létrejönnek. Ha a fájl átnevezése sikeres, az új fájlnév elérhető a
+<code>$$exifTool{NewName}</code>-en keresztül.</p>
+
+<hr><h2><a name="SetNewGroups">SetNewGroups</a></h2>
+<p>Beállítja a preferált csoportok sorrendjét új információ hozzáadásakor.  A
+<a href="#SetNewValue">SetNewValue</a> további hívásaiban az új információ
+ennek a listának az első érvényes csoportjában jön létre.  Ennek csak akkor van
+hatása, ha a csoport nincs megadva a
+<a href="#SetNewValue">SetNewValue</a> hívásakor, és ha a tagnév egynél több
+csoportban létezik.  Az alapértelmezett sorrend: EXIF, IPTC, XMP, MakerNotes,
+QuickTime, Photoshop, ICC_Profile, CanonVRD, Adobe.  Bármely 0-s családbeli
+csoportnév használható.  A kis-/nagybetű nem számít.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>SetNewGroups($;@)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+<br><b>1-N)</b> Csoportok prioritási sorrendben.  Ha nincs csoport megadva, a
+prioritások visszaállnak az alapértelmezésekre.
+</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+$exifTool-&gt;<b>SetNewGroups</b>('XMP','EXIF','IPTC');
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetNewGroups">GetNewGroups</a></h2>
+<p>Lekéri az aktuális csoportprioritási listát.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetNewGroups($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Csoportnevek listája írási prioritási
+sorrendben.  A legmagasabb prioritás elöl.
+</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+@groups = $exifTool-&gt;<b>GetNewGroups</b>();
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetTagID">GetTagID</a></h2>
+<p>Lekéri a megadott tag ID-jét.  Az ID az EXIF-információban az IFD
+tagszáma, az XMP-információban a tulajdonságnév, illetve egy bináris
+adatblokkban az adateltolás. Egyes tageknél, például a Composite tageknél, ahol
+nincs ID, üres sztring adódik vissza.  Lista kontextusban visszaad egy
+nyelvkódot is a taghez, ha elérhető, és eltér az alapértelmezett nyelvtől (pl.
+az XMP "lang-alt" tagek alternatív nyelvi bejegyzéseinél).</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetTagID($$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1)</b> Tag-kulcs
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Skalár kontextusban visszaadja a tag ID-jét,
+vagy ''-t, ha ehhez a taghez nincs ID.<br>Lista kontextusban visszaadja a tag
+ID-jét (vagy ''-t) és a nyelvkódot (vagy undef-et).</td></tr>
+</table></blockquote>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my $id = $exifTool-&gt;<b>GetTagID</b>($tag);
+</pre></td></tr></table></blockquote>
+<blockquote><table class='box'><tr><td><pre>
+my ($id, $lang) = $exifTool-&gt;<b>GetTagID</b>($tag);
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetDescription">GetDescription</a></h2>
+<p>Lekéri a megadott tag leírását.  Ez a függvény mindig definiált értéket ad
+vissza.  Abban az esetben, ha a leírás nem létezik, egy a tagnévből
+generálódik.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetDescription($$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1)</b> Tag-kulcs
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Tagleírás</td></tr>
+</table></blockquote>
+
+<hr><h2><a name="GetGroup">GetGroup</a></h2>
+<p>Lekéri egy megadott tag csoportnevét/-neveit.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetGroup($$;$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1)</b> Tag-kulcs
+    <br><b>2)</b> [<i>opcionális</i>] Csoportcsalád-szám, vagy kettősponttal
+    elválasztott számok sztringje
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Csoportnév (vagy '', ha a tagnek nincs
+csoportja). Ha nincs csoportcsalád megadva, skalár kontextusban a 0-s
+családbeli csoport nevét adja vissza, lista kontextusban pedig az összes
+családhoz tartozó csoportok neveit. Kettősponttal elválasztott csoportnév-
+sztringet ad vissza, ha a bemeneti csoportcsalád kettőspontot tartalmaz.  A
+sztring egyszerűsödik: eltávolítja a vezető 'Main:'-t és a szomszédos azonos
+csoportneveket, hacsak a családsztring nem kettősponttal kezdődik.
+</td></tr>
+</table></blockquote>
+<p>A következő csoportcsaládok érhetők el:</p>
+<blockquote><table class='norm'>
+<tr><th>Család</th><th>Leírás</th><th>Példá(k)</th></tr>
+<tr><td align=center>0</td><td>Információtípus</td> <td>EXIF, XMP, IPTC</td></tr>
+<tr><td align=center>1</td><td>Konkrét helyszín</td><td>IFD0, ExifIFD, XMP-dc</td></tr>
+<tr><td align=center>2</td><td>Kategória</td> <td>Author, Time</td></tr>
+<tr><td align=center>3</td><td>Dokumentumszám</td> <td>Main, Doc1, Doc3-2</td></tr>
+<tr><td align=center>4</td><td>Előfordulásszám</td> <td>Copy1, Copy2, Copy3</td></tr>
+<tr><td align=center>5</td><td>Metaadatútvonal</td> <td>JPEG-APP1-IFD0-ExifIFD</td></tr>
+<tr><td align=center>6</td><td>EXIF/TIFF formátum</td> <td>int8u, int32u, undef, string</td></tr>
+<tr><td align=center>7</td><td>Tag ID</td> <td>ID-271, ID-rights, ID-a9aut</td></tr>
+<tr><td align=center>8</td><td>Alternatív fájl</td> <td>File1, File2, File3</td></tr>
+</table></blockquote>
+
+<p>A 0-s és 1-es család a fájlszerkezeten alapul, és hasonlóak, kivéve hogy az
+1-es család konkrétabb, és egyes csoportokat tovább oszt, hogy több részletet
+adjon arról a konkrét helyszínről, ahol az információt találtuk.  Például az
+EXIF csoport a konkrét IFD (Image File Directory) alapján oszlik fel, a
+MakerNotes csoport gyártónkénti csoportokra oszlik, az XMP csoport pedig az
+XMP-névtér prefixe alapján válik szét. Vedd figyelembe, hogy csak a gyakori
+XMP-névterek szerepelnek a <a href="#GetAllGroups">GetAllGroups</a>
+dokumentációban, de egyes XMP-adatokban további névterek is előfordulhatnak.
+Vedd azt is figyelembe, hogy az '<code>XMP-xmp</code>...' csoportnevek
+megjelenhetnek a régebbi '<code>XMP-xap</code>...' alakban is, mivel ezek a
+nevek az XMP-szabvány fejlődése során alakultak ki.  Az ICC_Profile csoport
+lebomlik, hogy információt adjon arról a konkrét ICC_Profile tagről, amelyből
+több értéket nyertünk ki.  Emellett az ICC_Profile fejlécéből kinyert
+információ az ICC-header csoportba különül.</p>
+<p>A 2-es család azon logikai kategória alapján osztályozza az információt,
+amelyre az információ hivatkozik.</p>
+<p>A 3-as család megadja a dokumentumszámot a beágyazott dokumentumokból
+kinyert tagekhez, illetve 'Main'-t a fődokumentumból származó tagekhez.  (A
+beágyazott dokumentumokból való tagkinyeréshez lásd az
+<a href="#ExtractEmbedded">ExtractEmbedded</a> opciót.)  A beágyazott
+aldokumentumokat (ha léteznek) a csoportnévben kötőjelekkel elválasztott
+számok jelzik, tetszőleges mélységig. (pl. a '<code>Doc2-3-1</code>' a
+fődokumentum 2<sup>.</sup> beágyazott dokumentumának 3<sup>.</sup>
+aldokumentumában lévő 1<sup>.</sup> al-aldokumentum.)  A dokumentumszámok a
+videókban lévő időzített metaadatok mintáinak megkülönböztetésére is
+szolgálnak.</p>
+<p>A 4-es család módszert nyújt a tagek megkülönböztetésére, amikor több
+azonos nevű tag létezik ugyanazon a helyszínen.  Egy tag elsődleges
+előfordulásának (a kinyert tagnek, amikor a Duplicates opció le van tiltva, és
+nincs csoport megadva) nincs 4-es családbeli csoportneve, de a további
+előfordulások 4-es családbeli csoportneve '<code>Copy1</code>',
+'<code>Copy2</code>', '<code>Copy3</code>' stb.  A kényelem kedvéért az
+elsődleges tag elérhető a '<code>Copy0</code>' csoportnévvel is.</p>
+<p>Az 5-ös család megadja a metaadat teljes útvonalát a fájlban.  Csak akkor
+generálódik, ha a <a href="#SavePath">SavePath</a> opció használatban van a
+kinyeréskor.</p>
+<p>A 6-os családot jelenleg csak EXIF/TIFF-metaadatokhoz használják, és megadja
+a kinyert érték formátumtípusát.  Csak akkor generálódik, ha a
+<a href="#SaveFormat">SaveFormat</a> opció használatban van a kinyeréskor.</p>
+<p>A 7-es családot a tag ID-khez használják.  A csoportnevek a tényleges tag
+ID-k vezető "ID-" sztringgel.  A nem numerikus tag ID-kben a [-_A-Za-z0-9]-tól
+eltérő karakterek hexre konvertálódnak.  A numerikus tag ID-k hexben adódnak
+vissza, ha a <a href="#HexTagIDs">HexTagIDs</a> opció be van állítva, egyébként
+decimális használatos.  Egy 7-es családbeli csoportnév megadásakor a numerikus
+ID-k lehetnek hexben (vezető "0x"-szel) vagy decimálisan, a nem numerikus
+ID-kben pedig a [-_A-Za-z0-9]-tól eltérő karakterek konvertálódhatnak vagy
+sem hexre.  Vedd figyelembe, hogy más csoportnevekkel ellentétben a 7-es
+családbeli csoportnevekben lévő tag ID-k kis-/nagybetűre érzékenyek (de a
+vezető "ID-" nem).</p>
+<p>A 8-as családot az <a href="#SetAlternateFile">SetAlternateFile</a>
+hívásaiban definiált alternatív bemeneti fájlokból betöltött tagek
+megadására használják.</p>
+<p>A csoportnevek listáiért lásd a <a href="#GetAllGroups">GetAllGroups</a>-ot.</p>
+
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># visszaadja a 0-s családbeli csoportnevet (pl. 'EXIF')</span>
+$group = $exifTool-&gt;<b>GetGroup</b>($tag, 0);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># visszaadja az összes csoportot (pl. qw{EXIF IFD0 Author Main})</span>
+@groups = $exifTool-&gt;<b>GetGroup</b>($tag);
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># visszaadja a csoportokat sztringként (pl. 'Main:IFD0:Author')</span>
+$group = $exifTool-&gt;<b>GetGroup</b>($tag, ':3:1:2');
+</pre></td></tr></table></blockquote>
+
+<blockquote><table class='box'><tr><td><pre>
+<span class=com># visszaadja a csoportokat egyszerűsített sztringként (pl. 'IFD0:Author')</span>
+$group = $exifTool-&gt;<b>GetGroup</b>($tag, '3:1:2');
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetGroups">GetGroups</a></h2>
+<p>Lekéri a csoportnevek listáját a megadott információs hash összes tagjéhez.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetGroups($;$$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+    <br><b>1)</b> [<i>opcionális</i>] Információs hash hivatkozása (alapértelmezetten az összes kinyert információ)
+    <br><b>2)</b> [<i>opcionális</i>] Csoportcsalád-szám (alapértelmezetten 0)
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>
+Csoportnevek listája ábécésorrendben.
+Ha az információs hash nincs megadva, a csoportnevek az összes kinyert
+információhoz adódnak vissza.  Az egyes családokba tartozó csoportok listájáért
+lásd a <a href="#GetAllGroups">GetAllGroups</a>-ot.
+</td></tr>
+</table></blockquote>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my @groups = $exifTool-&gt;<b>GetGroups</b>($info, $family);
+</pre></td></tr></table></blockquote>
+<blockquote>Példa egy módra, ahogy csoportonként rendezve írható ki az információ
+<table class='box'><tr><td><pre>
+my $exifTool = Image::ExifTool-&gt;<a href="#new">new</a>;
+$exifTool-&gt;<a href="#ExtractInfo">ExtractInfo</a>('t/images/ExifTool.jpg');
+
+my $family = 1;
+my @groups = $exifTool-&gt;<b>GetGroups</b>($family);
+my $group;
+foreach $group (@groups) {
+    print "---- $group ----\n";
+    my $info = $exifTool-&gt;<a href="#GetInfo">GetInfo</a>({"Group$family" =&gt; $group});
+    foreach ($exifTool-&gt;<a href="#GetTagList">GetTagList</a>($info)) {
+        print "$_ : $$info{$_}\n";
+    }
+}
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="BuildCompositeTags">BuildCompositeTags</a></h2>
+<p>Composite tageket épít a szükséges tagekből.  A composite tagek kényelmi
+tagek, amelyek más tagek értékeiből származnak.  Ezt a rutint az
+<a href="#ImageInfo">ImageInfo</a> automatikusan hívja, ha a Composite opció be
+van állítva.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>BuildCompositeTags($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> ExifTool objektumhivatkozás
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>(nincs)</td></tr>
+</table></blockquote>
+<p><b>Megjegyzések:</b></p>
+<ol>
+<li>A tagértékek ábécésorrendben számítódnak, hacsak egy tag nem Require-öl
+vagy Desire-öl egy másik composite taget, amely esetben a számítás a másik tag
+kiszámítása utánra halasztódik.</li>
+<li>A composite tageknek szükségük lehet adat olvasására a képből az értékük
+meghatározásához, és ezekhez a <a href="#BuildCompositeTags">BuildCompositeTags</a>-et
+akkor kell hívni, amíg a kép elérhető.  Ez csak akkor probléma, ha az
+<a href="#ImageInfo">ImageInfo</a>-t fájlnévvel hívod (szemben a
+fájlhivatkozással vagy skalárhivatkozással), mivel ebben az esetben a fájl
+bezáródik, mielőtt az <a href="#ImageInfo">ImageInfo</a> visszatérne.  Itt
+használható a Composite opció, hogy a
+<a href="#BuildCompositeTags">BuildCompositeTags</a> az
+<a href="#ImageInfo">ImageInfo</a>-n belülről hívódjon, mielőtt a fájl
+bezáródna.</li>
+</ol>
+<hr><table bgcolor='#ffaaaa' width='100%' cellpadding=8><tr><td><center><b>
+A következő függvények csak statikus adatot érnek el, és nem ExifTool
+objektummal hívódnak
+</b></center></td></tr></table>
+
+<p>A következő összes függvény neve, plusz az
+<a href="#ImageInfo">ImageInfo</a>, importálható az aktuális névtérbe a
+"Public" taggel.  Ha ez megtörtént, a függvények elérhetők anélkül, hogy a
+függvénynevet a "<code>Image::ExifTool::</code>" prefixszel kellene ellátni.
+Például:</p>
+<blockquote><table class='box'><tr><td><pre>
+use Image::ExifTool ':Public';
+$tagName = <a href="#GetTagName">GetTagName</a>($tag);
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="AvailableOptions">AvailableOptions</a></h2>
+<p>Lekéri az elérhető API-opciók listáját. (Az opciók részleteiért lásd az
+<a href="#Options">Options metódust</a>.)</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>AvailableOptions()</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td>(nincs)</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Hivatkozás az elérhető opciók listájára.
+A lista minden bejegyzése egy listahivatkozás 3 elemmel: 0=Opció neve,
+1=Alapértelmezett érték, 2=Leírás, 3=jelző, ha az opció nincs dokumentálva</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my $opts = Image::ExifTool::<b>AvailableOptions</b>();
+foreach (@$opts) {
+    my ($optionName, $defaultValue, $description) = @$_;
+    ...
+}
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetTagName">GetTagName</a></h2>
+<p>Lekéri a tag nevét a tag-azonosítóból.  Ez egy kényelmi függvény, amely
+eltávolítja a beágyazott előfordulásszámot, ha létezik, a tag-kulcsból.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetTagName($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> Tag-kulcs
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Tagnév</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+$tagName = Image::ExifTool::<b>GetTagName</b>($tag);
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetShortcuts">GetShortcuts</a></h2>
+<p>Lekéri a tag-rövidítésnevek listáját.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetShortcuts()</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td>(nincs)
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Rövidítések listája</td></tr>
+</table></blockquote>
+
+<hr><h2><a name="GetAllTags">GetAllTags</a></h2>
+<p>Lekéri az összes elérhető tagnév listáját.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetAllTags(;$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> [<i>opcionális</i>] Csoportnév,
+vagy kettősponttal elválasztott csoportnév-sztring
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Az összes elérhető tag listája
+ábécésorrendben, vagy egy megadott csoport, illetve csoportmetszet összes
+tagje.  A csoportnév kis-/nagybetűre nem érzékeny, és a 0–2. családok bármely
+csoportja használható, kivéve az EXIF 1-es családbeli csoportjait (azaz a
+konkrét IFD-t).
+</td></tr>
+</table></blockquote>
+
+<hr><h2><a name="GetWritableTags">GetWritableTags</a></h2>
+<p>Lekéri az összes írható tagnév listáját.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetWritableTags(;$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> [<i>opcionális</i>] Csoportnév,
+vagy kettősponttal elválasztott csoportnév-sztring
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Az összes írható tag listája
+ábécésorrendben. Ezek azok a tagek, amelyekhez a
+<a href="#SetNewValue">SetNewValue</a>-n keresztül állíthatók be értékek. Ha
+csoportnév van megadva, csak a megadott csoport(ok)ban lévő írható tageket adja
+vissza. A csoportnév kis-/nagybetűre nem érzékeny, és a 0–2. családok bármely
+csoportja használható, kivéve az EXIF 1-es családbeli csoportjait (azaz a
+konkrét IFD-t).
+</td></tr>
+</table></blockquote>
+
+<hr><h2><a name="GetAllGroups">GetAllGroups</a></h2>
+<p>Lekéri az összes csoportnév listáját a megadott családban.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetAllGroups($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> Csoportcsalád-szám (0–7)
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td>
+<td>A megadott család összes csoportjának listája ábécésorrendben</td></tr>
+</table></blockquote>
+<p>Íme a csoportok teljes listája családonként:</p>
+<blockquote><table class='norm'>
+<tr><th>Család</th><th>Csoportnevek</th></tr>
+<tr><td><b>0 (Információtípus)</b></td>
+<td>AAC, AFCP, AIFF, APE, APP0, APP1, APP10, APP11, APP12, APP13, APP14, APP15,
+APP2, APP3, APP4, APP5, APP6, APP7, APP8, APP9, ASF, Audible, Canon,
+CanonVRD, Composite, DICOM, DjVu, DNG, Ducky, DV, EXE, EXIF, ExifTool, File,
+FITS, FLAC, Flash, FlashPix, FLIR, Font, FotoStation, Garmin, GeoTiff, GIF,
+GIMP, GM, GoPro, H264, HTML, ICC_Profile, ID3, IPTC, ISO, ITC, JFIF, JPEG,
+Jpeg2000, JSON, JUMBF, Kandao, Leaf, LNK, Lytro, M2TS, MakerNotes, Matroska,
+Meta, MIE, MIFF, MISB, MNG, MOI, MPC, MPEG, MPF, MXF, Ogg, OpenEXR, Opus, Palm,
+PanasonicRaw, Parrot, PDF, PhotoCD, PhotoMechanic, Photoshop, PICT, PLIST, PNG,
+PostScript, PrintIM, Protobuf, PSP, QuickTime, Radiance, RAF, Rawzor, Real, Red,
+RIFF, RSRC, RTF, SigmaRaw, Sony, Stim, SVG, Theora, Torrent, Trailer, VCard,
+Vorbis, WTV, XML, XMP, ZIP
+</td></tr>
+<tr><td><b>1&nbsp;(Konkrét&nbsp;helyszín)</b></td>
+<td>AAC, AADAccelFeatures, AC3, AccelData, Activity, Adobe, AdobeCM, AdobeDNG,
+AFCP, AIFF, AntChannelID, AntRx, AntTx, APE, APP2, Apple, AROT, ASF,
+Audible, AudioItemList, AudioKeys, AudioUserData, AuxBattery, AVI1,
+AviationAttitude, Barometer, BeatIntervals, BikeProfile, BloodPress,
+CadenceZone, CameraEvent, CameraIFD, Canon, CanonCustom, CanonDR4, CanonRaw,
+CanonVRD, Capabilities, Casio, CBOR, Chapter#, ChronoShotData,
+ChronoShotSession, CIFF, ClimbPro, Composite, Connectivity, Course,
+CoursePoint, DevDataID, DeviceInfo, DeviceSettings, DICOM, DiveAlarm,
+DiveApneaAlarm, DiveGas, DiveSettings, DiveSummary, DJI, DjVu, DjVu-Meta,
+DNG, Ducky, DV, EPPIM, Event, ExdDataConceptConfig, ExdDataFieldConfig,
+ExdScreenConfig, EXE, ExerciseTitle, EXIF, ExifIFD, ExifTool, FieldCaps,
+FieldDescr, File, FileCaps, FileCreator, FileID, FITS, FLAC, Flash,
+FlashPix, FLIR, Font, FotoStation, FujiFilm, FujiIFD, Garmin, GE, GeoTiff,
+GIF, GIMP, GlobParamIFD, GM, Goal, Google, GoPro, GPS, GraphConv,
+GSpherical, GyroData, H264, HP, HR, HRMProfile, HRV, HRVStatusSummary,
+HRVValue, HRZone, HSA_HRData, HSA_SPO2Data, HSAAccelData, HSABodyBattery,
+HSAConfigData, HSAEvent, HSAGyroData, HSARespirData, HSAStepData,
+HSAStressData, HSAWristTemp, HTC, HTML, HTML-dc, HTML-ncc, HTML-office,
+HTML-prod, HTML-vw96, HTTP-equiv, ICC-chrm, ICC-cicp, ICC-clrt, ICC-header,
+ICC-meas, ICC-meta, ICC-view, ICC_Profile, ICC_Profile#, ID3, ID3v1,
+ID3v1_Enh, ID3v2_2, ID3v2_3, ID3v2_4, IFD0, IFD1, InfiRay, Insta360,
+InteropIFD, IPTC, IPTC#, ISO, ITC, ItemList, iTunes, JFIF, JFXX, JPEG,
+JPEG-HDR, Jpeg2000, JPS, JSON, JUMBF, Jump, JVC, KDC_IFD, Keys, KFIX, Kodak,
+KodakBordersIFD, KodakEffectsIFD, KodakIFD, KVAR, KyoceraRaw, Lap, Leaf,
+LeafSubIFD, Leica, Length, LNK, Lyrics3, Lytro, M-RAW, M2TS, MAC, MacOS,
+MagData, MakerNotes, MakerUnknown, Matroska, MaxMetData, MediaJukebox,
+MemoGlob, MesgCaps, Meta, MetaIFD, MetZone, Microsoft, MIE-Audio,
+MIE-Camera, MIE-Canon, MIE-Doc, MIE-Extender, MIE-Flash, MIE-Geo, MIE-GPS,
+MIE-Image, MIE-Lens, MIE-Main, MIE-MakerNotes, MIE-Meta, MIE-Orient,
+MIE-Preview, MIE-Thumbnail, MIE-Unknown, MIE-UTM, MIE-Video, MIFF, Minolta,
+MinoltaRaw, MISB, MNG, MOBI, MOI, MonitorHRData, MonitorInfo, Monitoring,
+Motorola, MPC, MPEG, MPF0, MPImage, MS-DOC, MXF, NapEvent, Nextbase, Nikon,
+NikonCapture, NikonCustom, NikonScan, NikonSettings, NineEdits, Nintendo,
+NITF, NMEA, OBDIIData, Ocad, Ogg, OHRSettings, Olympus, OneDSensorCal,
+OnePlus, OpenEXR, Opus, Palm, Panasonic, PanasonicRaw, Parrot, PDF, Pentax,
+PhaseOne, PhotoCD, PhotoMechanic, Photoshop, PICT, PictureInfo, PNG,
+PNG-cICP, PNG-pHYs, PostScript, PowerZone, PreviewIFD, PrintIM, ProfileIFD,
+PSP, Qualcomm, QuickTime, Radiance, RAF, RAF2, RawBBI, Rawzor, Real,
+Real-CONT, Real-MDPR, Real-PROP, Real-RA3, Real-RA4, Real-RA5, Real-RJMD,
+Reconyx, Record, Red, RespirationRate, Ricoh, RIFF, RMETA, RSRC, RTF,
+Samsung, Sanyo, Scalado, Schedule, SDMProfile, SEAL, SegFile, SegLap,
+SegLeaderboard, SegmentID, SegPoint, Session, Set, Sigma, SigmaRaw,
+SkinTempOvernight, SlaveDevice, SleepAssessment, SleepDisruptOvernight,
+SleepDisruptPeriod, SleepLevel, Software, Sony, SonyIDC, SpeedZone, SPIFF,
+Split, SplitSummary, SPO2Data, Sport, SR2, SR2DataIFD, SR2SubIFD, SRF#,
+Stim, StressLevel, SubIFD, SVG, System, TankSummary, TankUpdate, Theora,
+ThreeDSensorCal, TimeInZone, Torrent, Totals, Track#, Track#ItemList,
+Track#Keys, Track#UserData, TrainingFile, TrainingSettings, TSCorrelation,
+UserData, UserProfile, VCalendar, VCard, Version0, Video, VideoClip,
+VideoDescr, VideoFrame, VideoItemList, VideoKeys, VideoTitle, VideoUserData,
+Vivo, VNote, Vorbis, WatchfaceSettings, WeatherAlert, WeatherConditions,
+WeightScale, Workout, WorkoutSess, WorkoutStep, WTV, XML, XMP, XMP-aas,
+XMP-acdsee, XMP-acdsee-rs, XMP-album, XMP-apdi, XMP-apple-fi, XMP-ast,
+XMP-aux, XMP-cc, XMP-cell, XMP-crd, XMP-creatorAtom, XMP-crs, XMP-dc,
+XMP-Device, XMP-dex, XMP-DICOM, XMP-digiKam, XMP-drone-dji, XMP-dwc, XMP-et,
+XMP-exif, XMP-exifEX, XMP-expressionmedia, XMP-extensis, XMP-fpv,
+XMP-GAudio, XMP-GCamera, XMP-GContainer, XMP-GCreations, XMP-GDepth,
+XMP-getty, XMP-GFocus, XMP-GImage, XMP-GPano, XMP-GSpherical, XMP-hdr,
+XMP-HDRGainMap, XMP-hdrgm, XMP-ics, XMP-iptcCore, XMP-iptcExt, XMP-LImage,
+XMP-lr, XMP-mediapro, XMP-microsoft, XMP-MP, XMP-MP1, XMP-mwg-coll,
+XMP-mwg-kw, XMP-mwg-rs, XMP-nine, XMP-panorama, XMP-pdf, XMP-pdfx,
+XMP-photomech, XMP-photoshop, XMP-PixelLive, XMP-plus, XMP-pmi, XMP-prism,
+XMP-prl, XMP-prm, XMP-pur, XMP-rdf, XMP-sdc, XMP-seal, XMP-swf, XMP-tiff,
+XMP-x, XMP-xmp, XMP-xmpBJ, XMP-xmpDM, XMP-xmpDSA, XMP-xmpMM, XMP-xmpNote,
+XMP-xmpPLUS, XMP-xmpRights, XMP-xmpTPg, ZIP, ZonesTarget
+</td></tr>
+<tr><td><b>2&nbsp;(Kategória)</b></td>
+<td>Audio, Author, Camera, Device, Document, ExifTool, Image, Location, Other,
+Preview, Printing, Time, Unknown, Video
+</td></tr>
+<tr><td><b>3&nbsp;(Dokumentumszám)</b></td>
+<td>Doc#, Main
+</td></tr>
+<tr><td><b>4&nbsp;(Előfordulásszám)</b></td>
+<td>Copy#
+</td></tr>
+<tr><td><b>5&nbsp;(Metaadatútvonal)</b></td>
+<td>pl. JPEG-APP1-IFD0-ExifIFD
+</td></tr>
+<tr><td><b>6&nbsp;(EXIF/TIFF&nbsp;formátum)</b></td>
+<td>int8u, string, int16u, int32u, rational64u, int8s, undef, int16s, int32s,
+rational64s, float, double, ifd, unicode, complex, int64u, int64s, ifd64</td></tr>
+<tr><td><b>7&nbsp;(Tag&nbsp;ID)</b></td>
+<td>ID-xxx (Ahol az xxx a tag ID.  A numerikus ID-k hexben adódnak vissza vezető
+"0x"-szel, ha a HexTagIDs opció be van állítva, egyébként decimálisan.  A nem
+numerikus ID-kben lévő, csoportnévben nem érvényes karakterek 2 hexadecimális
+számjegyként adódnak vissza.)</td></tr>
+<tr><td><b>8&nbsp;(Alternatív&nbsp;fájl)</b></td>
+<td>File#
+</td></tr>
+</table></blockquote>
+<p>Megjegyzés:  Ez a függvény ExifTool tagfüggvényként is hívható, hogy a
+HexTagIDs opció beállítható legyen a 7-es családbeli csoportnevek lekérésekor.</p>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+@groupList = Image::ExifTool::<b>GetAllGroups</b>($family);
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetDeleteGroups">GetDeleteGroups</a></h2>
+<p>Lekéri az összes törölhető csoportnév listáját.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetDelGroups()</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td>
+<td>Nincs
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>A törölhető csoportnevek listája
+ábécésorrendben.
+</td></tr>
+</table></blockquote>
+<p>Az alábbiakban a törölhető csoportnevek aktuális listája látható.</p>
+<blockquote>Adobe, AFCP, APP0, APP1, APP10, APP11, APP12, APP13, APP14, APP15, APP2,
+APP3, APP4, APP5, APP6, APP7, APP8, APP9, AROT, Audio, Author, Camera, CanonVRD,
+CIFF, Document, Ducky, EXIF, ExifIFD, ExifTool, File, FlashPix, FotoStation,
+GlobParamIFD, GPS, ICC_Profile, IFD0, IFD1, Image, Insta360, InteropIFD,
+IPTC, ItemList, JFIF, Jpeg2000, Keys, Location, MakerNotes, Meta, MetaIFD,
+Microsoft, MIE, MPF, NikonCapture, Other, PDF, PDF-update, PhotoMechanic,
+Photoshop, PNG, PNG-pHYs, Preview, PrintIM, Printing, QuickTime, RMETA,
+RSRC, SubIFD, Time, Trailer, UserData, Video, XML, XML-*, XMP, XMP-*</blockquote>
+<p>Egy csoport törlésre ütemezéséhez hívd a <a href="#SetNewValue">SetNewValue</a>-t
+egy '<code>EXIF:*</code>' jellegű tagnévvel és definiálatlan tagértékkel.</p>
+<p>Egy 0-s vagy 1-es családbeli csoport törlése a metaadatok teljes megfelelő
+blokkját törli, de egy 2-es családbeli csoport (pl. Audio, Author, Camera stb.)
+törlése az adott kategóriába tartozó egyedi tageket törli.</p>
+<p>A '<code>Trailer</code>' csoport lehetővé teszi a JPEG- és TIFF-formátumú
+képekben lévő összes trailer egyszerre történő törlését, beleértve az
+ismeretlen trailereket is.  Vedd figyelembe, hogy a JPEG "APP" csoportok
+speciálisak, és csak olyan alkalmazásszegmensek törlésére szolgálnak, amelyek
+nincsenek másik törölhető csoporthoz társítva.  Például az
+'<code>APP14:*</code>' törlése törli a többi APP14 szegmenst, de az APP14
+"Adobe" szegmenst nem.</p>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my @delGroups = Image::ExifTool::<b>GetDelGroups</b>();
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="GetFileType">GetFileType</a></h2>
+<p>Lekéri a fájl típusát a fájlnév alapján.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>GetFileType(;$$)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td>
+<td><b>0)</b> [<i>opcionális</i>] Fájlnév vagy kiterjesztés
+<br><b>1)</b> [<i>opcionális</i>] Jelző típus helyett leírás visszaadásához.
+Alapértelmezése undef.  Állítsd 0-ra, hogy a felismert, de nem támogatott
+fájlok típusát is visszaadja (egyébként nem támogatott fájloknál undef adódik
+vissza), vagy 1-re a fájlleírások visszaadásához.
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Egy sztring a fájlkiterjesztés
+alapján, amely a fájl alapformátumát jelzi.  Vedd figyelembe, hogy egyes fájlok
+más formátumokon alapulhatnak (ahogy sok RAW képformátum a TIFF-en alapul).
+Lista kontextusban egynél több fájltípust is visszaadhat, ha a fájl különböző
+formátumokon alapulhat.  undef-et ad vissza, ha az ExifTool még nem támogatja
+az ilyen kiterjesztésű fájlokat.  Az összes támogatott fájltípus
+kiterjesztéseinek listáját adja vissza, ha nincs bemeneti kiterjesztés megadva
+(illetve az összes felismert fájltípust, ha a leírás jelző 0-ra van állítva).
+A konkrét fájlformátum részletesebb leírását adja vissza, ha a leírás jelző be
+van állítva.</td></tr>
+</table></blockquote>
+<p><b>Példák:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my $type = Image::ExifTool::<b>GetFileType</b>($filename);
+my $desc = Image::ExifTool::<b>GetFileType</b>($filename, 1);
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="CanWrite">CanWrite</a></h2>
+<p>Írható-e a megadott fájl?</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>CanWrite($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td>
+<td><b>0)</b> Fájlnév vagy kiterjesztés</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Igaz, ha az ExifTool támogatja az
+ilyen típusú fájlok írását (a fájlkiterjesztés alapján).</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my $writable = Image::ExifTool::<b>CanWrite</b>($filename);
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="CanCreate">CanCreate</a></h2>
+<p>Létrehozható-e a megadott fájl?</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>CanCreate($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td>
+<td><b>0)</b> Fájlnév vagy kiterjesztés</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Igaz, ha az ExifTool nulláról tud
+létrehozni ilyen kiterjesztésű fájlokat.<br>Jelenleg ez csak XMP-, MIE-, ICC-,
+VRD-, DR4-, EXV- és EXIF-fájlokkal tehető meg.</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+my $creatable = Image::ExifTool::<b>CanCreate</b>($filename);
+</pre></td></tr></table></blockquote>
+
+<hr><h2><a name="AddUserDefinedTags">AddUserDefinedTags</a></h2>
+<p>Felhasználó által definiált tageket ad egy meglévő tag-táblához futásidőben.
+Ez különbözik a felhasználó által definiált tagek létrehozásának szokásos
+technikájától a %Image::ExifTool::UserDefined hash-en keresztül (lásd a
+<a href="config.html">minta konfigurációs fájlt</a>), mert lehetővé teszi
+tagek hozzáadását azután, hogy egy tag-tábla inicializálódott.</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>AddUserDefinedTags($%)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> A cél tag-tábla neve
+<br><b>1-N)</b> Tag ID / tag-információs hash hivatkozás párok az új tagekhez
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>A hozzáadott tagek száma</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+use Image::ExifTool ':Public';
+my %tags = (
+    TestTagID1 => { Name => 'TestTagName1' },
+    TestTagID2 => { Name => 'TestTagName2' },
+);
+my $num = <b>AddUserDefinedTags</b>('Image::ExifTool::PDF::Info', %tags);
+</pre></td></tr></table></blockquote>
+<p><b>Megjegyzések:</b></p>
+<p>Az azonos ID-jű, már meglévő tagek lecserélődnek a céltáblában.  A
+tag-információs hash elemeinek teljes részleteiért lásd a teljes
+disztribúcióban a lib/Image/ExifTool/README-t.</p>
+
+<hr><h2><a name="OrderedKeys">OrderedKeys</a></h2>
+<p>Visszaadja egy strukturált tag rendezett kulcsainak listáját (azaz egy
+olyan tagértékét, amely HASH-hivatkozásként adódik vissza, amikor a
+<a href="#Struct">Struct</a> opció használatban van).</p>
+<blockquote><table class='norm'>
+<tr><td><b>Prototípus</b></td><td>OrderedKeys($)</td></tr>
+<tr><td valign=top><b>Bemenetek</b></td><td><b>0)</b> Struktúra HASH-hivatkozás
+</td></tr>
+<tr><td valign=top><b>Visszatérési érték</b></td><td>Rendezett kulcsok listája, vagy
+ábécésorrendbe rendezett kulcsok, ha nem rendezett.</td></tr>
+</table></blockquote>
+<p><b>Példa:</b></p>
+<blockquote><table class='box'><tr><td><pre>
+use Image::ExifTool ':Public';
+my @keys = OrderedKeys($structRef);
+</pre></td></tr></table></blockquote>
+
+<hr>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool kezdőlapjára</a></p>
+</body>
+</html>
