@@ -3,28 +3,29 @@
 <html>
 <!-- (this file generated automatically by Image::ExifTool::BuildTagLookup) -->
 <head>
-<title>MacOS Tags</title>
+<title>MacOS tagek</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 </head>
 <body>
-<h2 class=top>MacOS Tags</h2>
+<h2 class=top>MacOS tagek</h2>
 <p>
-On MacOS systems, the there are additional MDItem and XAttr Finder tags that
-may be extracted.  These tags are not extracted by default -- they must be
-specifically requested or enabled via an API option.  (Except when reading
-MacOS &quot;._&quot; files directly, see below.)</p>
+MacOS rendszereken további MDItem és XAttr Finder tagek nyerhetők ki.  Ezek a
+tagek alapértelmezés szerint nem kerülnek kinyerésre – kifejezetten kérni kell
+őket, vagy egy API-opcióval engedélyezni.  (Kivéve, amikor közvetlenül a
+MacOS &quot;._&quot; fájlokat olvassuk, lásd lentebb.)</p>
 
-<p>The tables below list some of the tags that may be extracted, but ExifTool
-will extract all available information even for tags not listed.</p>
+<p>Az alábbi táblázatok a kinyerhető tagek egy részét sorolják fel, de az
+ExifTool minden elérhető információt kinyer, még a nem listázott tagek
+esetében is.</p>
 
-<p>Tags in these tables are referred to as &quot;pseudo&quot; tags because their
-information is not stored in the file itself.  As such, <b>Writable</b> tags in
-these tables may be changed without having to rewrite the file.
+<p>Az ezekben a táblázatokban lévő tageket &quot;pszeudo&quot; tageknek nevezzük, mert az
+információjuk nem magában a fájlban tárolódik.  Ezért az ezekben a táblázatokban
+<b>Writable</b> (írható) tagek a fájl újraírása nélkül módosíthatók.
 </p>
-<p>Note that on some filesystems, MacOS creates sidecar files with names that
-begin with &quot;._&quot;.  ExifTool will read these files if specified, and extract
-the information listed in the following table without the need for extra
-options, but these files are not writable directly.</p>
+<p>Vegyük figyelembe, hogy egyes fájlrendszereken a MacOS &quot;._&quot; kezdetű nevű
+kísérőfájlokat hoz létre.  Az ExifTool megadás esetén beolvassa ezeket a
+fájlokat, és extra opciók nélkül kinyeri a következő táblázatban felsorolt
+információkat, de ezek a fájlok közvetlenül nem írhatók.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -42,12 +43,12 @@ options, but these files are not writable directly.</p>
 <td>--&gt; <a href='MacOS.html#XAttr'>MacOS XAttr Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='XAttr'>MacOS XAttr Tags</a></h2>
-<p>XAttr tags are extracted using the &quot;xattr&quot; utility.  They are extracted if
-any &quot;XAttr*&quot; tag or the MacOS group is specifically requested, or by setting
-the API <a href="../ExifTool.html#XAttrTags">XAttrTags</a> option to 1 or the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option to 2 or higher.
-And they are extracted by default from MacOS &quot;._&quot; files when reading
-these files directly.</p>
+<h2><a name='XAttr'>MacOS XAttr tagek</a></h2>
+<p>Az XAttr tageket az &quot;xattr&quot; segédprogrammal nyerjük ki.  Akkor kerülnek
+kinyerésre, ha kifejezetten kérünk valamely &quot;XAttr*&quot; taget vagy a MacOS
+csoportot, vagy ha az API <a href="../ExifTool.html#XAttrTags">XAttrTags</a> opcióját 1-re, illetve az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opcióját 2-re vagy magasabbra állítjuk.
+A MacOS &quot;._&quot; fájlokból pedig alapértelmezés szerint kinyerésre kerülnek,
+amikor ezeket a fájlokat közvetlenül olvassuk.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -101,13 +102,13 @@ deleted when writing)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MDItem'>MacOS MDItem Tags</a></h2>
-<p>MDItem tags are extracted using the &quot;mdls&quot; utility.  They are extracted if
-any &quot;MDItem*&quot; tag or the MacOS group is specifically requested, or by
-setting the API <a href="../ExifTool.html#MDItemTags">MDItemTags</a> option to 1 or the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option to 2 or
-higher.  Note that these tags do not necessarily reflect the current
-metadata of a file -- it may take some time for the MacOS mdworker daemon to
-index the file after a metadata change.</p>
+<h2><a name='MDItem'>MacOS MDItem tagek</a></h2>
+<p>Az MDItem tageket az &quot;mdls&quot; segédprogrammal nyerjük ki.  Akkor kerülnek
+kinyerésre, ha kifejezetten kérünk valamely &quot;MDItem*&quot; taget vagy a MacOS
+csoportot, vagy ha az API <a href="../ExifTool.html#MDItemTags">MDItemTags</a> opcióját 1-re, illetve az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opcióját 2-re vagy
+magasabbra állítjuk.  Vegyük figyelembe, hogy ezek a tagek nem feltétlenül
+tükrözik a fájl aktuális metainformációját – eltarthat egy ideig, míg a MacOS
+mdworker démon a metainformáció változása után indexeli a fájlt.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -655,7 +656,7 @@ not be written)</span></span></td></tr>
 
 <hr>
 (This document generated automatically by Image::ExifTool::BuildTagLookup)
-<br><i>Last revised Feb 16, 2024</i>
-<p class=lf><a href='index.html'>&lt;-- ExifTool Tag Names</a></p>
+<br><i>Utoljára módosítva: 2024. február 16.</i>
+<p class=lf><a href='index.html'>&lt;-- ExifTool tagnevek</a></p>
 </body>
 </html>

@@ -3,33 +3,32 @@
 <html>
 <!-- (this file generated automatically by Image::ExifTool::BuildTagLookup) -->
 <head>
-<title>PNG Tags</title>
+<title>PNG tagek</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 </head>
 <body>
-<h2 class=top>PNG Tags</h2>
-<p>Tags extracted from PNG images.  See
-<a href="http://www.libpng.org/pub/png/spec/1.2/">http://www.libpng.org/pub/png/spec/1.2/</a> for the official PNG 1.2
-specification.</p>
+<h2 class=top>PNG tagek</h2>
+<p>A PNG képekből kinyert tagek.  A hivatalos PNG 1.2 specifikációt lásd itt:
+<a href="http://www.libpng.org/pub/png/spec/1.2/">http://www.libpng.org/pub/png/spec/1.2/</a>.</p>
 
-<p>According to the specification, a PNG file should end at the IEND chunk,
-however ExifTool will preserve any data found after this when writing unless
-it is specifically deleted with <code>-Trailer:All=</code>.  When reading, a minor
-warning is issued if this trailer exists, and ExifTool will attempt to parse
-this data as additional PNG chunks.</p>
+<p>A specifikáció szerint a PNG-fájlnak az IEND chunknál kell végződnie, az
+ExifTool azonban íráskor megőrzi az ezt követően talált adatokat, hacsak azokat
+kifejezetten nem töröljük a <code>-Trailer:All=</code> kapcsolóval.  Olvasáskor kisebb
+figyelmeztetés jelenik meg, ha ez a trailer létezik, és az ExifTool megpróbálja
+ezeket az adatokat további PNG chunkokként értelmezni.</p>
 
-<p>Also according to the PNG specification, there is no restriction on the
-location of text-type chunks (tEXt, zTXt and iTXt).  However, certain
-utilities (including some Apple and Adobe utilities) won&#39;t read the XMP iTXt
-chunk if it comes after the IDAT chunk, and at least one utility won&#39;t read
-other text chunks here.  For this reason, when writing, ExifTool 11.63 and
-later create new text chunks (including XMP) before IDAT, and move existing
-text chunks to before IDAT.</p>
+<p>Szintén a PNG-specifikáció szerint nincs megkötés a szöveges típusú chunkok
+(tEXt, zTXt és iTXt) helyére.  Egyes segédprogramok azonban (köztük néhány
+Apple- és Adobe-segédprogram) nem olvassák be az XMP iTXt chunkot, ha az az
+IDAT chunk után következik, és legalább egy segédprogram az egyéb szöveges
+chunkokat sem olvassa be itt.  Emiatt íráskor a 11.63-as és újabb ExifTool az
+új szöveges chunkokat (az XMP-t is beleértve) az IDAT elé hozza létre, és a
+meglévő szöveges chunkokat az IDAT elé mozgatja.</p>
 
-<p>The PNG format contains CRC checksums that are validated when reading with
-either the <a href="../ExifTool.html#Verbose">Verbose</a> or <a href="../ExifTool.html#Validate">Validate</a> option.  When writing, these checksums are
-validated by default, but the <a href="../ExifTool.html#FastScan">FastScan</a> option may be used to bypass this
-check if speed is more of a concern.</p>
+<p>A PNG formátum CRC-ellenőrzőösszegeket tartalmaz, amelyeket olvasáskor a
+<a href="../ExifTool.html#Verbose">Verbose</a> vagy a <a href="../ExifTool.html#Validate">Validate</a> opcióval ellenőrzünk.  Íráskor ezek az ellenőrzőösszegek
+alapértelmezés szerint ellenőrzésre kerülnek, de a <a href="../ExifTool.html#FastScan">FastScan</a> opcióval ez az
+ellenőrzés kihagyható, ha a sebesség fontosabb szempont.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -238,7 +237,7 @@ be written when the ICC_Profile is written)</span></span></td></tr>
   <br><span class='n s'>(a once-proposed chunk for compressed EXIF)</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='ImageHeader'>PNG ImageHeader Tags</a></h2>
+<h2><a name='ImageHeader'>PNG ImageHeader tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -286,9 +285,9 @@ be written when the ICC_Profile is written)</span></span></td></tr>
   <br>1 = Adam7 Interlace</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='AnimationControl'>PNG AnimationControl Tags</a></h2>
-<p>Tags found in the Animation Control chunk.  See
-<a href="https://wiki.mozilla.org/APNG_Specification">https://wiki.mozilla.org/APNG_Specification</a> for details.</p>
+<h2><a name='AnimationControl'>PNG AnimationControl tagek</a></h2>
+<p>Az Animation Control chunkban található tagek.  Részletekért lásd:
+<a href="https://wiki.mozilla.org/APNG_Specification">https://wiki.mozilla.org/APNG_Specification</a>.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -306,7 +305,7 @@ be written when the ICC_Profile is written)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PrimaryChromaticities'>PNG PrimaryChromaticities Tags</a></h2>
+<h2><a name='PrimaryChromaticities'>PNG PrimaryChromaticities tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -354,9 +353,9 @@ be written when the ICC_Profile is written)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='CICodePoints'>PNG CICodePoints Tags</a></h2>
-<p>These tags are found in the PNG cICP chunk and belong to the PNG-cICP family
-1 group.</p>
+<h2><a name='CICodePoints'>PNG CICodePoints tagek</a></h2>
+<p>Ezek a tagek a PNG cICP chunkban találhatók, és a PNG-cICP 1-es családbeli
+csoportjához tartoznak.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -429,32 +428,32 @@ be written when the ICC_Profile is written)</span></span></td></tr>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='TextualData'>PNG TextualData Tags</a></h2>
-<p>The PNG TextualData format allows arbitrary tag names to be used.  The tags
-listed below are the only ones that can be written (unless new user-defined
-tags are added via the configuration file), however ExifTool will extract
-any other TextualData tags that are found.  All TextualData tags (including
-tags not listed below) are removed when deleting all PNG tags.</p>
+<h2><a name='TextualData'>PNG TextualData tagek</a></h2>
+<p>A PNG TextualData formátum tetszőleges tagnevek használatát engedi.  Az alább
+felsorolt tagek az egyedüliek, amelyek írhatók (hacsak nem adunk hozzá új,
+felhasználó által definiált tageket a konfigurációs fájlon keresztül), az
+ExifTool azonban minden más megtalált TextualData taget is kinyer.  Az összes
+TextualData tag (a nem listázottakat is beleértve) eltávolításra kerül az összes
+PNG tag törlésekor.</p>
 
-<p>These tags may be stored as tEXt, zTXt or iTXt chunks in the PNG image.  By
-default ExifTool writes new string-value tags as as uncompressed tEXt, or
-compressed zTXt if the <a href="../ExifTool.html#Compress">Compress</a> (-z) option is used and Compress::Zlib is
-available.  Alternate language tags and values containing special characters
-(unless the Latin character set is used) are written as iTXt, and compressed
-if the <a href="../ExifTool.html#Compress">Compress</a> option is used and Compress::Zlib is available.  Raw profile
-information is always created as compressed zTXt if Compress::Zlib is
-available, or tEXt otherwise.  Standard XMP is written as uncompressed iTXt.
-User-defined tags may set an &#39;iTXt&#39; flag in the tag definition to be written
-only as iTXt.</p>
+<p>Ezek a tagek tEXt, zTXt vagy iTXt chunkként tárolhatók a PNG képben.  Az
+ExifTool alapértelmezés szerint az új sztringértékű tageket tömörítetlen
+tEXt-ként írja, vagy tömörített zTXt-ként, ha a <a href="../ExifTool.html#Compress">Compress</a> (-z) opciót használjuk, és a Compress::Zlib
+elérhető.  Az alternatív nyelvű tageket és a speciális karaktereket tartalmazó
+értékeket (hacsak nem a Latin karakterkészletet használjuk) iTXt-ként írja, és
+tömöríti, ha a <a href="../ExifTool.html#Compress">Compress</a> opciót használjuk, és a Compress::Zlib elérhető.  A nyers
+profilinformáció mindig tömörített zTXt-ként jön létre, ha a Compress::Zlib
+elérhető, egyébként tEXt-ként.  A szabványos XMP tömörítetlen iTXt-ként íródik.
+A felhasználó által definiált tagek a tagdefinícióban beállíthatnak egy &#39;iTXt&#39;
+jelzőt, hogy csak iTXt-ként íródjanak.</p>
 
-<p>Alternate languages are accessed by suffixing the tag name with a &#39;-&#39;,
-followed by an RFC 3066 language code (eg. &quot;PNG:Comment-fr&quot;, or
-&quot;Title-en-US&quot;).  See <a href="http://www.ietf.org/rfc/rfc3066.txt">http://www.ietf.org/rfc/rfc3066.txt</a> for the RFC 3066
-specification.</p>
+<p>Az alternatív nyelvek úgy érhetők el, hogy a tagnév végére egy &#39;-&#39; jelet,
+majd egy RFC 3066 nyelvkódot fűzünk (pl. &quot;PNG:Comment-fr&quot; vagy
+&quot;Title-en-US&quot;).  Az RFC 3066 specifikációt lásd itt: <a href="http://www.ietf.org/rfc/rfc3066.txt">http://www.ietf.org/rfc/rfc3066.txt</a>.</p>
 
-<p>Some of the tags below are not registered as part of the PNG specification,
-but are included here because they are generated by other software such as
-ImageMagick.</p>
+<p>Az alábbi tagek közül néhány nincs regisztrálva a PNG-specifikáció
+részeként, de itt szerepelnek, mert más szoftverek, például az ImageMagick
+generálja őket.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -624,10 +623,10 @@ image didn&#39;t already contain XMP)</span></td></tr>
 <td><span class=s><span class=n>(unregistered)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='PhysicalPixel'>PNG PhysicalPixel Tags</a></h2>
-<p>These tags are found in the PNG pHYs chunk and belong to the PNG-pHYs family
-1 group.  They are all created together with default values if necessary
-when any of these tags is written, and may only be deleted as a group.</p>
+<h2><a name='PhysicalPixel'>PNG PhysicalPixel tagek</a></h2>
+<p>Ezek a tagek a PNG pHYs chunkban találhatók, és a PNG-pHYs 1-es családbeli
+csoportjához tartoznak.  Ha bármelyiküket írjuk, szükség esetén mindegyik
+létrejön együtt, alapértelmezett értékekkel, és csak csoportként törölhetők.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -652,7 +651,7 @@ when any of these tags is written, and may only be deleted as a group.</p>
   <br>1 = meters</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='SubjectScale'>PNG SubjectScale Tags</a></h2>
+<h2><a name='SubjectScale'>PNG SubjectScale tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -676,7 +675,7 @@ when any of these tags is written, and may only be deleted as a group.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='StereoImage'>PNG StereoImage Tags</a></h2>
+<h2><a name='StereoImage'>PNG StereoImage tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -690,7 +689,7 @@ when any of these tags is written, and may only be deleted as a group.</p>
   <br>1 = Diverging-fuse Layout</span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='VirtualPage'>PNG VirtualPage Tags</a></h2>
+<h2><a name='VirtualPage'>PNG VirtualPage tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -715,7 +714,7 @@ when any of these tags is written, and may only be deleted as a group.</p>
 
 <hr>
 (This document generated automatically by Image::ExifTool::BuildTagLookup)
-<br><i>Last revised Feb 26, 2025</i>
-<p class=lf><a href='index.html'>&lt;-- ExifTool Tag Names</a></p>
+<br><i>Utoljára módosítva: 2025. február 26.</i>
+<p class=lf><a href='index.html'>&lt;-- ExifTool tagnevek</a></p>
 </body>
 </html>
