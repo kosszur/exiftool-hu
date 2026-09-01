@@ -1,0 +1,807 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- (this file generated automatically by Image::ExifTool::BuildTagLookup) -->
+<head>
+<title>PDF tagek</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+</head>
+<body>
+<h2 class=top>PDF tagek</h2>
+<p>
+Az alábbi PDF-táblázatokban felsorolt tagek azok, amelyeket az ExifTool a
+metainformáció kinyerésére használ, de ezek csak töredékét teszik ki az összes
+elérhető PDF tagnek.  A hivatalos PDF-specifikációt lásd itt:
+<a href="http://www.adobe.com/devnet/pdf/pdf_reference.html">http://www.adobe.com/devnet/pdf/pdf_reference.html</a>.</p>
+
+<p>Az ExifTool a 2.0-s verzióig támogatja a PDF dokumentumok olvasását és
+írását, beleértve az RC4, AES-128 és AES-256 titkosítás támogatását.  A
+<a href="../ExifTool.html#Password">Password</a> opció a jelszóval védett
+PDF-fájlok feldolgozását teszi lehetővé.</p>
+
+<p>Az ExifTool használható natív PDF- és XMP-metainformáció PDF-fájlokba
+írására. Inkrementális frissítési technikát alkalmaz, amelynek előnye, hogy
+egyszerre gyors és visszafordítható.  Ha egy PDF-fájlt az ExifTool-lal
+módosítottunk, az eredeti visszaállítható a <code>PDF-update</code> pszeudo-csoport törlésével (a parancssorban a
+<code>-PDF-update:all=</code> kapcsolóval).  Ennek a technikának azonban két fő
+hátránya van:</p>
+
+<p>1) A linearizált PDF-fájl a frissítés után már nem linearizált, ezért ha
+szükséges, utólag újra linearizálni kell.</p>
+
+<p>2) Minden metainformáció-szerkesztés visszafordítható.  Bár ez rendes
+körülmények között előnynek számítana, potenciális biztonsági problémát jelent,
+mert a régi információ valójában sosem törlődik a fájlból.  (Az ExifTool
+futtatása után azonban a régi információ véglegesen eltávolítható a
+&quot;qpdf&quot; segédprogrammal ezzel a paranccsal: &quot;qpdf --linearize in.pdf out.pdf&quot;.)
+</p>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Encrypt'</td>
+<td>Encrypt</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Encrypt'>PDF Encrypt Tags</a></td></tr>
+<tr class=b>
+<td>'Info'</td>
+<td>Info</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Info'>PDF Info Tags</a></td></tr>
+<tr>
+<td>'Root'</td>
+<td>Root</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Root'>PDF Root Tags</a></td></tr>
+<tr class=b>
+<td>'_linearized'</td>
+<td>Linearized</td>
+<td class=c>no</td>
+<td><span class=s><span class=n>(flag set if document is linearized for fast web display; not a real Tag ID)</span>
+  <br>&#39;false&#39; = No
+  <br>&#39;true&#39; = Yes</span></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Encrypt'>PDF Encrypt tagek</a></h2>
+<p>A dokumentum Encrypt szótárából kinyert tagek.</p>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Filter'</td>
+<td>Encryption</td>
+<td class=c>no</td>
+<td><span class=s><span class=n>(extracted value is actually a combination of the Filter, SubFilter, V, R and
+Length information from the Encrypt dictionary)</span></span></td></tr>
+<tr class=b>
+<td>'P'</td>
+<td>UserAccess</td>
+<td class=c>no</td>
+<td><table class=cols><tr>
+  <td>Bit 2 = Print
+  <br>Bit 3 = Modify
+  <br>Bit 4 = Copy
+  <br>Bit 5 = Annotate</td><td>&nbsp;&nbsp;</td>
+  <td>Bit 8 = Fill forms
+  <br>Bit 9 = Extract
+  <br>Bit 10 = Assemble
+  <br>Bit 11 = Print high-res</td></tr></table>
+</td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Info'>PDF Info tagek</a></h2>
+<p>Az alább felsorolt tageken kívül a PDF-specifikáció megengedi, hogy
+felhasználó által definiált tagek is legyenek az Info szótárban.  Ezeket a
+tageket – amelyeknek megfelelő XMP-pdfx bejegyzésekkel kell rendelkezniük a
+PDF XML Metadata objektum XMP-jében – szintén kinyeri az ExifTool.</p>
+
+<p>A <b>Writable</b> az érték formátumát adja meg, és PDF tagek esetén lehet <code>string</code>, <code>date</code>,
+<code>integer</code>, <code>real</code>, <code>boolean</code> vagy <code>name</code>.</p>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'AAPL:Keywords'</td>
+<td>AppleKeywords</td>
+<td class=c title=' + = List'>string+</td>
+<td><span class=s><span class=n>(keywords written by Apple utilities, although they seem to use PDF:Keywords
+when reading)</span></span></td></tr>
+<tr class=b>
+<td>'Author'</td>
+<td>Author</td>
+<td class=c>string</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'CreationDate'</td>
+<td>CreateDate</td>
+<td class=c>date</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Creator'</td>
+<td>Creator</td>
+<td class=c>string</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'Keywords'</td>
+<td>Keywords</td>
+<td class=c title=' + = List'>string+</td>
+<td><span class=s><span class=n>(stored as a string but treated as a comma- or semicolon-separated list of
+items when reading if the string contains commas or semicolons, whichever is
+more numerous, otherwise it is treated a space-separated list of items.  The
+list behaviour may be defeated by setting the API NoPDFList option.  Written
+as a comma-separated string.  Note that the corresponding XMP-pdf:Keywords
+tag is not treated as a list, so the NoPDFList option should be used when
+copying between these two.)</span></span></td></tr>
+<tr class=b>
+<td>'ModDate'</td>
+<td>ModifyDate</td>
+<td class=c>date</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'Producer'</td>
+<td>Producer</td>
+<td class=c>string</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'SourceModified'</td>
+<td>SourceModified</td>
+<td class=c>date</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'Subject'</td>
+<td>Subject</td>
+<td class=c>string</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Title'</td>
+<td>Title</td>
+<td class=c>string</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'Trapped'</td>
+<td>Trapped</td>
+<td class=c title=' ! = Unsafe'>string!</td>
+<td>&nbsp;</td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Root'>PDF Root tagek</a></h2>
+<p>Ez a PDF dokumentumkatalógusa.</p>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'AF'</td>
+<td>AF</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#AF'>PDF AF Tags</a></td></tr>
+<tr class=b>
+<td>'AcroForm'</td>
+<td>AcroForm</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#AcroForm'>PDF AcroForm Tags</a></td></tr>
+<tr>
+<td>'Lang'</td>
+<td>Language</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'MarkInfo'</td>
+<td>MarkInfo</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#MarkInfo'>PDF MarkInfo Tags</a></td></tr>
+<tr>
+<td>'Metadata'</td>
+<td>Metadata</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Metadata'>PDF Metadata Tags</a></td></tr>
+<tr class=b>
+<td>'PageLayout'</td>
+<td>PageLayout</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'PageMode'</td>
+<td>PageMode</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Pages'</td>
+<td>Pages</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Pages'>PDF Pages Tags</a></td></tr>
+<tr>
+<td>'Perms'</td>
+<td>Perms</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Perms'>PDF Perms Tags</a></td></tr>
+<tr class=b>
+<td>'Version'</td>
+<td>PDFVersion</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='AF'>PDF AF tagek</a></h2>
+<p>Csak C2PA információ esetén kerül feldolgozásra, ha az AFRelationship értéke &quot;/C2PA_Manifest&quot;.</p>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'EF'</td>
+<td>EF</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#EF'>PDF EF Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='EF'>PDF EF tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'F'</td>
+<td>F_</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#F'>PDF F Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='F'>PDF F tagek</a></h2>
+<p>A &quot;/C2PA_Manifest&quot; fájlból kinyert C2PA JUMBF metainformáció.</p>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'_stream'</td>
+<td>JUMBF</td>
+<td class=c>-</td>
+<td>--&gt; <a href='Jpeg2000.html'>Jpeg2000 Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='AcroForm'>PDF AcroForm tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'_has_xfa'</td>
+<td>HasXFA</td>
+<td class=c>no</td>
+<td><span class=s><span class=n>(this tag is defined if a document contains form fields, and is true if it
+uses XML Forms Architecture; not a real Tag ID)</span>
+  <br>&#39;false&#39; = No
+  <br>&#39;true&#39; = Yes</span></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='MarkInfo'>PDF MarkInfo tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Marked'</td>
+<td>TaggedPDF</td>
+<td class=c>no</td>
+<td><span class=s><span class=n>(not a Tagged PDF if this tag is missing)</span>
+  <br>&#39;false&#39; = No
+  <br>&#39;true&#39; = Yes</span></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Metadata'>PDF Metadata tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'XML_stream'</td>
+<td>XMP</td>
+<td class=c>-</td>
+<td>--&gt; <a href='XMP.html'>XMP Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Pages'>PDF Pages tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Count'</td>
+<td>PageCount</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Kids'</td>
+<td>Kids</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Kids'>PDF Kids Tags</a></td></tr>
+<tr>
+<td>'MediaBox'</td>
+<td>MediaBox</td>
+<td class=c title=' + = List'>no+</td>
+<td>&nbsp;</td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Kids'>PDF Kids tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Kids'</td>
+<td>Kids</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Kids'>PDF Kids Tags</a></td></tr>
+<tr class=b>
+<td>'Metadata'</td>
+<td>Metadata</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Metadata'>PDF Metadata Tags</a></td></tr>
+<tr>
+<td>'PieceInfo'</td>
+<td>PieceInfo</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#PieceInfo'>PDF PieceInfo Tags</a></td></tr>
+<tr class=b>
+<td>'Resources'</td>
+<td>Resources</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Resources'>PDF Resources Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='PieceInfo'>PDF PieceInfo tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'AdobePhotoshop'</td>
+<td>AdobePhotoshop</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#AdobePhotoshop'>PDF AdobePhotoshop Tags</a></td></tr>
+<tr class=b>
+<td>'Illustrator'</td>
+<td>Illustrator</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Illustrator'>PDF Illustrator Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='AdobePhotoshop'>PDF AdobePhotoshop tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Private'</td>
+<td>Private</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Private'>PDF Private Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Private'>PDF Private tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'ImageResources'</td>
+<td>ImageResources</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#ImageResources'>PDF ImageResources Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='ImageResources'>PDF ImageResources tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'_stream'</td>
+<td>PhotoshopStream</td>
+<td class=c>-</td>
+<td>--&gt; <a href='Photoshop.html'>Photoshop Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Illustrator'>PDF Illustrator tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Private'</td>
+<td>Private</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#AIPrivate'>PDF AIPrivate Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='AIPrivate'>PDF AIPrivate tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'AIMetaData'</td>
+<td>AIMetaData</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#AIMetaData'>PDF AIMetaData Tags</a></td></tr>
+<tr class=b>
+<td>'AIPDFPrivateData'</td>
+<td>AIPDFPrivateData</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PostScript.html'>PostScript Tags</a></td></tr>
+<tr>
+<td>'AIPrivateData'</td>
+<td>AIPrivateData</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PostScript.html'>PostScript Tags</a>
+  <br><span class='n s'>(the <a href="../ExifTool.html#ExtractEmbedded">ExtractEmbedded</a> option enables information to be extracted from embedded
+PostScript documents in the AIPrivateData# and AIPDFPrivateData# streams)</span></td></tr>
+<tr class=b>
+<td>'ContainerVersion'</td>
+<td>ContainerVersion</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'CreatorVersion'</td>
+<td>CreatorVersion</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'RoundTripVersion'</td>
+<td>RoundTripVersion</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='AIMetaData'>PDF AIMetaData tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'_stream'</td>
+<td>AIStream</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PostScript.html'>PostScript Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Resources'>PDF Resources tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'ColorSpace'</td>
+<td>ColorSpace</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#ColorSpace'>PDF ColorSpace Tags</a></td></tr>
+<tr class=b>
+<td>'Properties'</td>
+<td>Properties</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Properties'>PDF Properties Tags</a></td></tr>
+<tr>
+<td>'XObject'</td>
+<td>XObject</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#XObject'>PDF XObject Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='ColorSpace'>PDF ColorSpace tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'CS0'</td>
+<td>CS0</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#DefaultRGB'>PDF DefaultRGB Tags</a></td></tr>
+<tr class=b>
+<td>'Cs1'</td>
+<td>Cs1</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#DefaultRGB'>PDF DefaultRGB Tags</a></td></tr>
+<tr>
+<td>'DefaultCMYK'</td>
+<td>DefaultCMYK</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#DefaultRGB'>PDF DefaultRGB Tags</a></td></tr>
+<tr class=b>
+<td>'DefaultRGB'</td>
+<td>DefaultRGB</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#DefaultRGB'>PDF DefaultRGB Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='DefaultRGB'>PDF DefaultRGB tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'ICCBased'</td>
+<td>ICCBased</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#ICCBased'>PDF ICCBased Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='ICCBased'>PDF ICCBased tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'_stream'</td>
+<td>ICC_Profile</td>
+<td class=c>-</td>
+<td>--&gt; <a href='ICC_Profile.html'>ICC_Profile Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Properties'>PDF Properties tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'MC'</td>
+<td>MC</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#MC'>PDF MC Tags</a>
+  <br><span class='n s'>(the <a href="../ExifTool.html#ExtractEmbedded">ExtractEmbedded</a> option enables information to be extracted from these
+embedded metadata dictionaries)</span></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='MC'>PDF MC tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Metadata'</td>
+<td>Metadata</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Metadata'>PDF Metadata Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='XObject'>PDF XObject tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Im'</td>
+<td>Im</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Im'>PDF Im Tags</a>
+  <br><span class='n s'>(the <a href="../ExifTool.html#ExtractEmbedded">ExtractEmbedded</a> option enables information to be extracted from these
+embedded images)</span></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Im'>PDF Im tagek</a></h2>
+<p>A beágyazott képekből az <a href="../ExifTool.html#ExtractEmbedded">ExtractEmbedded</a> opcióval kinyert információ.
+Az EmbeddedImage és a metainformációja csak JPEG és Jpeg2000 képformátumok
+esetén kerül kinyerésre.</p>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'ColorSpace'</td>
+<td>EmbeddedImageColorSpace</td>
+<td class=c title=' + = List'>no+</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Filter'</td>
+<td>EmbeddedImageFilter</td>
+<td class=c title=' + = List'>no+</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'Height'</td>
+<td>EmbeddedImageHeight</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Image_stream'</td>
+<td>EmbeddedImage</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'Width'</td>
+<td>EmbeddedImageWidth</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Perms'>PDF Perms tagek</a></h2>
+<p>A digitális aláírások által előírt további dokumentumengedélyek.</p>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'DocMDP'</td>
+<td>DocMDP</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Signature'>PDF Signature Tags</a></td></tr>
+<tr class=b>
+<td>'FieldMDP'</td>
+<td>FieldMDP</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Signature'>PDF Signature Tags</a></td></tr>
+<tr>
+<td>'UR3'</td>
+<td>UR3</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Signature'>PDF Signature Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Signature'>PDF Signature tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'ContactInfo'</td>
+<td>SignerContactInfo</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Location'</td>
+<td>SigningLocation</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'M'</td>
+<td>SigningDate</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Name'</td>
+<td>SigningAuthority</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'Prop_AuthTime'</td>
+<td>AuthenticationTime</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Prop_AuthType'</td>
+<td>AuthenticationType</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'Reason'</td>
+<td>SigningReason</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr class=b>
+<td>'Reference'</td>
+<td>Reference</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#Reference'>PDF Reference Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='Reference'>PDF Reference tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'TransformParams'</td>
+<td>TransformParams</td>
+<td class=c>-</td>
+<td>--&gt; <a href='PDF.html#TransformParams'>PDF TransformParams Tags</a></td></tr>
+</table></td></tr></table></blockquote>
+
+<h2><a name='TransformParams'>PDF TransformParams tagek</a></h2>
+<blockquote>
+<table class=frame><tr><td>
+<table class=inner cellspacing=1>
+<tr class=h><th>Tag&nbsp;ID</th><th>Tag Name</th>
+<th>Writable</th><th>Values / <span class=n>Notes</span></th></tr>
+<tr>
+<td>'Action'</td>
+<td>FieldPermissions</td>
+<td class=c>no</td>
+<td><span class=s><span class=n>(FieldMDP signatures only)</span>
+  <br>&#39;All&#39; = Disallow changes to all form fields
+  <br>&#39;Exclude&#39; = Allow changes to specified form fields
+  <br>&#39;Include&#39; = Disallow changes to specified form fields</span></td></tr>
+<tr class=b>
+<td>'Annots'</td>
+<td>AnnotationUsageRights</td>
+<td class=c title=' + = List'>no+</td>
+<td><span class=s><span class=n>(possible values are Create, Delete, Modify, Copy, Import and Export;
+additional values for UR3 signatures are Online and SummaryView)</span></span></td></tr>
+<tr>
+<td>'Document'</td>
+<td>DocumentUsageRights</td>
+<td class=c title=' + = List'>no+</td>
+<td><span class=s><span class=n>(only possible value is FullSave)</span></span></td></tr>
+<tr class=b>
+<td>'EF'</td>
+<td>EmbeddedFileUsageRights</td>
+<td class=c title=' + = List'>no+</td>
+<td><span class=s><span class=n>(possible values are Create, Delete, Modify and Import)</span></span></td></tr>
+<tr>
+<td>'Fields'</td>
+<td>FormFields</td>
+<td class=c title=' + = List'>no+</td>
+<td><span class=s><span class=n>(FieldMDP signatures only)</span></span></td></tr>
+<tr class=b>
+<td>'Form'</td>
+<td>FormUsageRights</td>
+<td class=c title=' + = List'>no+</td>
+<td><span class=s><span class=n>(possible values are FillIn, Import, Export, SubmitStandalone and
+SpawnTemplate; additional values for UR3 signatures are BarcodePlaintext and
+Online)</span></span></td></tr>
+<tr>
+<td>'FormEX'</td>
+<td>FormExtraUsageRights</td>
+<td class=c title=' + = List'>no+</td>
+<td><span class=s><span class=n>(UR signatures only; only possible value is BarcodePlaintext)</span></span></td></tr>
+<tr class=b>
+<td>'Msg'</td>
+<td>UsageRightsMessage</td>
+<td class=c>no</td>
+<td>&nbsp;</td></tr>
+<tr>
+<td>'P'</td>
+<td>ModificationPermissions</td>
+<td class=c>no</td>
+<td><span class=s><span class=n>(1-3 for DocMDP signatures, default 2; true/false for UR3 signatures, default
+false)</span>
+  <br>1 = No changes permitted
+  <br>2 = Fill forms, Create page templates, Sign
+  <br>3 = Fill forms, Create page templates, Sign, Create/Delete/Edit annotations
+  <br>&#39;false&#39; = Do not restrict applications to reader permissions
+  <br>&#39;true&#39; = Restrict all applications to reader permissions</span></td></tr>
+<tr class=b>
+<td>'Signature'</td>
+<td>SignatureUsageRights</td>
+<td class=c title=' + = List'>no+</td>
+<td><span class=s><span class=n>(only possible value is Modify)</span></span></td></tr>
+</table></td></tr></table></blockquote>
+
+<hr>
+(This document generated automatically by Image::ExifTool::BuildTagLookup)
+<br><i>Utoljára módosítva: 2025. június 19.</i>
+<p class=lf><a href='index.html'>&lt;-- ExifTool tagnevek</a></p>
+</body>
+</html>
