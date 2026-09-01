@@ -31,55 +31,55 @@ próbafuttatásos (dry-run) teszteléshez használjuk.
 <td>Adobe</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>Adobe</td>
-<td><span class=s><span class=n>(the JPEG APP14 Adobe segment.  Extracted only if specified. See the
-<a href="JPEG.html#Adobe">JPEG Adobe Tags</a> for more information)</span></span></td></tr>
+<td><span class=s><span class=n>(a JPEG APP14 Adobe szegmens.  Csak akkor kerül kinyerésre, ha meg van adva. További információért lásd a
+<a href="JPEG.html#Adobe">JPEG Adobe Tags</a> oldalt)</span></span></td></tr>
 <tr class=b>
 <td>BaseName</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(file name without extension. Not generated unless specifically requested or
-the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(fájlnév kiterjesztés nélkül. Csak akkor generálódik, ha külön kérik, vagy ha
+az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opciója be van állítva)</span></span></td></tr>
 <tr>
 <td>CanonDR4</td>
 <td class=c title=' ! = Unsafe
  ^ = Deletable'>yes!^</td>
 <td class=c>CanonVRD</td>
-<td><span class=s><span class=n>(the full Canon DPP version 4 DR4 block.  This tag is generated only if
-specifically requested)</span></span></td></tr>
+<td><span class=s><span class=n>(a teljes Canon DPP version 4 DR4 blokk.  Ez a tag csak akkor generálódik, ha
+külön kérik)</span></span></td></tr>
 <tr class=b>
 <td>CanonVRD</td>
 <td class=c title=' ! = Unsafe
  ^ = Deletable'>yes!^</td>
 <td class=c>CanonVRD</td>
-<td><span class=s><span class=n>(the full Canon DPP VRD trailer block.  This tag is generated only if
-specifically requested)</span></span></td></tr>
+<td><span class=s><span class=n>(a teljes Canon DPP VRD trailer blokk.  Ez a tag csak akkor generálódik, ha
+külön kérik)</span></span></td></tr>
 <tr>
 <td>Comment</td>
 <td class=c>yes</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(comment embedded in JPEG, GIF89a or PPM/PGM/PBM image)</span></span></td></tr>
+<td><span class=s><span class=n>(JPEG, GIF89a vagy PPM/PGM/PBM képbe ágyazott megjegyzés)</span></span></td></tr>
 <tr class=b>
 <td>CurrentIPTCDigest</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(MD5 digest of existing IPTC data.  All zeros if IPTC exists but Digest::MD5
-is not installed.  Only calculated for IPTC in the standard location as
-specified by the <a href="http://www.metadataworkinggroup.org/">MWG</a>.  ExifTool
-automates the handling of this tag in the MWG module -- see the
-<a href="MWG.html">MWG Composite Tags</a> for details)</span></span></td></tr>
+<td><span class=s><span class=n>(a meglévő IPTC-adatok MD5-kivonata.  Csupa nulla, ha van IPTC, de a Digest::MD5
+nincs telepítve.  Csak a <a href="http://www.metadataworkinggroup.org/">MWG</a> által megadott
+szabványos helyen lévő IPTC-re számítódik ki.  Az ExifTool
+automatizálja ennek a tagnek a kezelését az MWG modulban -- részletekért lásd az
+<a href="MWG.html">MWG Composite Tags</a> oldalt)</span></span></td></tr>
 <tr>
 <td>Directory</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(the directory of the file as specified in the call to ExifTool, or &quot;.&quot; if no
-directory was specified.  May be written to move the file to another
-directory that will be created if doesn&#39;t already exist)</span></span></td></tr>
+<td><span class=s><span class=n>(a fájl könyvtára az ExifTool hívásában megadott módon, vagy &quot;.&quot;, ha nem
+adtak meg könyvtárat.  Írható, hogy a fájlt egy másik könyvtárba mozgassa,
+amely létrejön, ha még nem létezik)</span></span></td></tr>
 <tr class=b>
 <td>EXIF</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>EXIF</td>
-<td><span class=s><span class=n>(the full EXIF data block from JPEG, PNG, JP2, MIE and MIFF images. This tag
-is generated only if specifically requested)</span></span></td></tr>
+<td><span class=s><span class=n>(a teljes EXIF-adatblokk JPEG, PNG, JP2, MIE és MIFF képekből. Ez a tag
+csak akkor generálódik, ha külön kérik)</span></span></td></tr>
 <tr>
 <td>EmbeddedVideo</td>
 <td class=c>no</td>
@@ -89,47 +89,47 @@ is generated only if specifically requested)</span></span></td></tr>
 <td>Error</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(returns errors that may have occurred while reading or writing a file.  Any
-Error will prevent the file from being processed.  Minor errors may be
-downgraded to warnings with the -m or <a href="../ExifTool.html#IgnoreMinorErrors">IgnoreMinorErrors</a> option)</span></span></td></tr>
+<td><span class=s><span class=n>(visszaadja a fájl olvasása vagy írása közben esetlegesen fellépett hibákat.  Bármely
+Error hiba megakadályozza a fájl feldolgozását.  A kisebb hibák
+figyelmeztetéssé fokozhatók le a -m vagy <a href="../ExifTool.html#IgnoreMinorErrors">IgnoreMinorErrors</a> opcióval)</span></span></td></tr>
 <tr>
 <td>ExifByteOrder</td>
 <td class=c>yes</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(represents the byte order of EXIF information.  May be written to set the
-byte order only for newly created EXIF segments)</span>
+<td><span class=s><span class=n>(az EXIF-információ bájtsorrendjét jelöli.  Írható, hogy a bájtsorrendet
+csak az újonnan létrehozott EXIF-szegmensekhez állítsa be)</span>
   <br>&#39;II&#39; = Little-endian (Intel, II)
   <br>&#39;MM&#39; = Big-endian (Motorola, MM)</span></td></tr>
 <tr class=b>
 <td>ExifToolVersion</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(the version of ExifTool currently running)</span></span></td></tr>
+<td><span class=s><span class=n>(az éppen futó ExifTool verziója)</span></span></td></tr>
 <tr>
 <td>ExifUnicodeByteOrder</td>
 <td class=c>yes</td>
 <td class=c>-</td>
-<td><span class=s><span class=n>(specifies the byte order to use when writing EXIF Unicode text.  The EXIF
-specification is particularly vague about this byte ordering, and different
-applications use different conventions.  By default ExifTool writes Unicode
-text in EXIF byte order, but this write-only tag may be used to force a
-specific order.  Applies to the EXIF UserComment tag when writing special
-characters)</span>
+<td><span class=s><span class=n>(megadja az EXIF Unicode-szöveg írásakor használandó bájtsorrendet.  Az EXIF-
+specifikáció különösen homályos ezzel a bájtsorrenddel kapcsolatban, és a
+különböző alkalmazások különböző konvenciókat használnak.  Alapértelmezés szerint az ExifTool a Unicode-
+szöveget EXIF-bájtsorrendben írja, de ezzel a csak írható taggel egy adott
+sorrend kényszeríthető ki.  Speciális karakterek írásakor az EXIF UserComment
+tagre vonatkozik)</span>
   <br>&#39;II&#39; = Little-endian (Intel, II)
   <br>&#39;MM&#39; = Big-endian (Motorola, MM)</span></td></tr>
 <tr class=b>
 <td>FileAccessDate</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(the date/time of last access of the file.  Note that this access time is
-updated whenever any software, including ExifTool, reads the file)</span></span></td></tr>
+<td><span class=s><span class=n>(a fájl utolsó hozzáférésének dátuma/ideje.  Vedd figyelembe, hogy ez a hozzáférési idő
+akkor frissül, valahányszor bármely szoftver — az ExifToolt is beleértve — beolvassa a fájlt)</span></span></td></tr>
 <tr>
 <td>FileAttributes</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(extracted only if specifically requested or the API <a href="../ExifTool.html#SystemTags">SystemTags</a> or <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set.  2 or 3 values: 0. File type, 1. Attribute bits, 2. Windows
-attribute bits if Win32API::File is available)</span>
+<td><span class=s><span class=n>(csak akkor kerül kinyerésre, ha külön kérik, vagy ha az API <a href="../ExifTool.html#SystemTags">SystemTags</a> vagy <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva.  2 vagy 3 érték: 0. Fájltípus, 1. Attribútumbitek, 2. Windows-
+attribútumbitek, ha a Win32API::File elérhető)</span>
   <br>[Value 0]</span><table class=cols><tr>
   <td>0x0 = Unknown
   <br>0x1000 = FIFO
@@ -171,209 +171,209 @@ attribute bits if Win32API::File is available)</span>
 <td>FileBlockCount</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(extracted only if specifically requested or the API <a href="../ExifTool.html#SystemTags">SystemTags</a> or <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(csak akkor kerül kinyerésre, ha külön kérik, vagy ha az API <a href="../ExifTool.html#SystemTags">SystemTags</a> vagy <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva)</span></span></td></tr>
 <tr>
 <td>FileBlockSize</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(extracted only if specifically requested or the API <a href="../ExifTool.html#SystemTags">SystemTags</a> or <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(csak akkor kerül kinyerésre, ha külön kérik, vagy ha az API <a href="../ExifTool.html#SystemTags">SystemTags</a> vagy <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva)</span></span></td></tr>
 <tr class=b>
 <td>FileCreateDate</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(the filesystem creation date/time.  Windows/Mac/Linux only.  In Windows, the
-file creation date/time is preserved by default when writing if
-Win32API::File and Win32::API are available.  On Mac, this tag is extracted
-only if it or the MacOS group is specifically requested or the API
-<a href="../ExifTool.html#RequestAll">RequestAll</a> option is set to 2 or higher.  On
-Linux, this tag is read-only and extracted only if the filesystem supports
-btime and &quot;File::StatX&quot; is available.  Requires &quot;setfile&quot; for writing on
-Mac, which may be installed by typing <code>xcode-select --install</code> in the
-Terminal)</span></span></td></tr>
+<td><span class=s><span class=n>(a fájlrendszerbeli létrehozás dátuma/ideje.  Csak Windows/Mac/Linux.  Windows alatt a
+fájl létrehozási dátuma/ideje íráskor alapértelmezés szerint megőrződik, ha a
+Win32API::File és a Win32::API elérhető.  Mac alatt ez a tag csak akkor kerül kinyerésre,
+ha kifejezetten ezt vagy a MacOS csoportot kérik, vagy ha az API
+<a href="../ExifTool.html#RequestAll">RequestAll</a> opciója 2-re vagy magasabbra van állítva.  Linux
+alatt ez a tag csak olvasható, és csak akkor kerül kinyerésre, ha a fájlrendszer támogatja a
+btime-ot, és a &quot;File::StatX&quot; elérhető.  Mac alatt az íráshoz &quot;setfile&quot; szükséges,
+amely a Terminálban a <code>xcode-select --install</code> beírásával
+telepíthető)</span></span></td></tr>
 <tr>
 <td>FileDeviceID</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(extracted only if specifically requested or the API <a href="../ExifTool.html#SystemTags">SystemTags</a> or <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(csak akkor kerül kinyerésre, ha külön kérik, vagy ha az API <a href="../ExifTool.html#SystemTags">SystemTags</a> vagy <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva)</span></span></td></tr>
 <tr class=b>
 <td>FileDeviceNumber</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(extracted only if specifically requested or the API <a href="../ExifTool.html#SystemTags">SystemTags</a> or <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(csak akkor kerül kinyerésre, ha külön kérik, vagy ha az API <a href="../ExifTool.html#SystemTags">SystemTags</a> vagy <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva)</span></span></td></tr>
 <tr>
 <td>FileGroupID</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(extracted only if specifically requested or the API <a href="../ExifTool.html#SystemTags">SystemTags</a> or <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set.  Returns group ID number with the -n option, or name
-otherwise.  May be written with either group name or number)</span></span></td></tr>
+<td><span class=s><span class=n>(csak akkor kerül kinyerésre, ha külön kérik, vagy ha az API <a href="../ExifTool.html#SystemTags">SystemTags</a> vagy <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva.  A -n opcióval a csoport ID-számát adja vissza, egyébként a
+nevét.  Írható csoportnévvel vagy -számmal is)</span></span></td></tr>
 <tr class=b>
 <td>FileHardLinks</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(extracted only if specifically requested or the API <a href="../ExifTool.html#SystemTags">SystemTags</a> or <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(csak akkor kerül kinyerésre, ha külön kérik, vagy ha az API <a href="../ExifTool.html#SystemTags">SystemTags</a> vagy <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva)</span></span></td></tr>
 <tr>
 <td>FileInodeChangeDate</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(the date/time when the file&#39;s directory information was last changed.
-Non-Windows systems only)</span></span></td></tr>
+<td><span class=s><span class=n>(az az időpont, amikor a fájl könyvtárinformációja utoljára megváltozott.
+Csak nem Windows rendszereken)</span></span></td></tr>
 <tr class=b>
 <td>FileInodeNumber</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(extracted only if specifically requested or the API <a href="../ExifTool.html#SystemTags">SystemTags</a> or <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(csak akkor kerül kinyerésre, ha külön kérik, vagy ha az API <a href="../ExifTool.html#SystemTags">SystemTags</a> vagy <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva)</span></span></td></tr>
 <tr>
 <td>FileModifyDate</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(the filesystem modification date/time.  Note that ExifTool may not be able
-to handle filesystem dates before 1970 depending on the limitations of the
-system&#39;s standard libraries)</span></span></td></tr>
+<td><span class=s><span class=n>(a fájlrendszerbeli módosítás dátuma/ideje.  Vedd figyelembe, hogy az ExifTool esetleg nem
+tudja kezelni az 1970 előtti fájlrendszer-dátumokat, a rendszer standard
+könyvtárainak korlátaitól függően)</span></span></td></tr>
 <tr class=b>
 <td>FileName</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(may be written with a full path name to set FileName and Directory in one
-operation.  This is such a powerful feature that a TestName tag is provided
-to allow dry-run tests before actually writing the file name.  See
-<a href="../filename.html">filename.html</a> for more information on writing the
-FileName, Directory and TestName tags)</span></span></td></tr>
+<td><span class=s><span class=n>(írható teljes elérési útvonallal, hogy a FileName és a Directory egy
+műveletben legyen beállítható.  Ez olyan hatékony szolgáltatás, hogy a TestName tag azért
+van, hogy a fájlnév tényleges írása előtt próbafuttatásos (dry-run) tesztek végezhetők legyenek.  A
+FileName, Directory és TestName tagek írásáról bővebben lásd a
+<a href="../filename.html">filename.html</a> oldalt)</span></span></td></tr>
 <tr>
 <td>FilePath</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(absolute path of source file. Not generated unless specifically requested or
-the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option is set.  Does not support Windows Unicode file
-names)</span></span></td></tr>
+<td><span class=s><span class=n>(a forrásfájl abszolút elérési útja. Csak akkor generálódik, ha külön kérik, vagy
+ha az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opciója be van állítva.  Nem támogatja a Windows Unicode
+fájlneveket)</span></span></td></tr>
 <tr class=b>
 <td>FilePermissions</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(r=read, w=write and x=execute permissions for the file owner, group and
-others.  The ValueConv value is an octal number so bit test operations on
-this value should be done in octal, eg. &#39;oct($filePermissions#) &amp; 0200&#39;)</span></span></td></tr>
+<td><span class=s><span class=n>(r=olvasási, w=írási és x=végrehajtási jogosultságok a fájl tulajdonosára, csoportjára és
+a többiekre nézve.  A ValueConv-érték oktális szám, így a bittesztelő műveleteket
+ezen az értéken oktálisan kell végezni, pl. &#39;oct($filePermissions#) &amp; 0200&#39;)</span></span></td></tr>
 <tr>
 <td>FileSequence</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(sequence number for each source file when extracting or copying information,
-including files that fail the -if condition of the command-line application,
-beginning at 0 for the first file.  Not generated unless specifically
-requested or the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(minden forrásfájl sorszáma információ kinyerésekor vagy másolásakor,
+beleértve a parancssori alkalmazás -if feltételén megbukó fájlokat is,
+az első fájlnál 0-tól kezdve.  Csak akkor generálódik, ha külön
+kérik, vagy ha az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opciója be van állítva)</span></span></td></tr>
 <tr class=b>
 <td>FileSize</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(note that the print conversion for this tag uses SI prefixes by default:  1
-kB = 1000 bytes, etc.  Set the API ByteUnit option to &quot;Binary&quot; to use binary
-prefixes instead:  1 KiB = 1024 bytes, etc.)</span></span></td></tr>
+<td><span class=s><span class=n>(vedd figyelembe, hogy ennek a tagnek a kiírási konverziója alapértelmezés szerint SI-előtagokat használ:  1
+kB = 1000 bájt stb.  Állítsd az API ByteUnit opcióját &quot;Binary&quot; értékre, hogy helyette bináris
+előtagokat használjon:  1 KiB = 1024 bájt stb.)</span></span></td></tr>
 <tr>
 <td>FileType</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(a short description of the file type.  For many file types this is the just
-the uppercase file extension)</span></span></td></tr>
+<td><span class=s><span class=n>(a fájltípus rövid leírása.  Sok fájltípusnál ez csupán
+a nagybetűs fájlkiterjesztés)</span></span></td></tr>
 <tr class=b>
 <td>FileTypeExtension</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(a common lowercase extension for this file type, or uppercase with the -n
-option)</span></span></td></tr>
+<td><span class=s><span class=n>(a fájltípus szokásos kisbetűs kiterjesztése, vagy nagybetűs a -n
+opcióval)</span></span></td></tr>
 <tr>
 <td>FileUserID</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(extracted only if specifically requested or the API <a href="../ExifTool.html#SystemTags">SystemTags</a> or <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set.  Returns user ID number with the -n option, or name
-otherwise.  May be written with either user name or number)</span></span></td></tr>
+<td><span class=s><span class=n>(csak akkor kerül kinyerésre, ha külön kérik, vagy ha az API <a href="../ExifTool.html#SystemTags">SystemTags</a> vagy <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva.  A -n opcióval a felhasználó ID-számát adja vissza, egyébként a
+nevét.  Írható felhasználónévvel vagy -számmal is)</span></span></td></tr>
 <tr class=b>
 <td>ForceWrite</td>
 <td class=c>yes</td>
 <td class=c>-</td>
-<td><span class=s><span class=n>(write-only tag used to force metadata in a file to be rewritten even if no
-tag values are changed.  May be set to &quot;EXIF&quot;, &quot;IPTC&quot;, &quot;XMP&quot; or &quot;PNG&quot; to
-force the corresponding metadata type to be rewritten, &quot;FixBase&quot; to cause
-EXIF to be rewritten only if the MakerNotes offset base was fixed, or &quot;All&quot;
-to rewrite all of these metadata types.  Values are case insensitive, and
-multiple values may be separated with commas, eg. <code>-ForceWrite=exif,xmp</code>)</span></span></td></tr>
+<td><span class=s><span class=n>(csak írható tag, amellyel kikényszeríthető egy fájl metaadatainak újraírása akkor is, ha egyetlen
+tagérték sem változott.  Beállítható &quot;EXIF&quot;, &quot;IPTC&quot;, &quot;XMP&quot; vagy &quot;PNG&quot; értékre a
+megfelelő metaadattípus újraírásának kikényszerítéséhez, &quot;FixBase&quot; értékre, hogy az
+EXIF csak akkor íródjon újra, ha a MakerNotes eltolási bázisa javítva lett, vagy &quot;All&quot;
+értékre mindezen metaadattípusok újraírásához.  Az értékek nem kis-/nagybetűérzékenyek, és
+több érték vesszővel választható el, pl. <code>-ForceWrite=exif,xmp</code>)</span></span></td></tr>
 <tr>
 <td>Geolocate</td>
 <td class=c>yes</td>
 <td class=c>-</td>
-<td><span class=s><span class=n>(this write-only tag may be used to write geolocation city, region, country
-code and country based in input GPS coordinates, or to write GPS
-coordinates based on geolocation name.  See the
-<a href="../geolocation.html#Write">Writing section of the Geolocation page</a> for
-details.  This tag is writable regardless of the API <a href="../ExifTool.html#Geolocation">Geolocation</a>
-option setting)</span></span></td></tr>
+<td><span class=s><span class=n>(ezzel a csak írható taggel a geolokációs város, régió, országkód
+és ország írható a bemeneti GPS-koordináták alapján, vagy GPS-
+koordináták írhatók a geolokációs név alapján.  Részletekért lásd a
+<a href="../geolocation.html#Write">Writing section of the Geolocation page</a>
+részt.  Ez a tag az API <a href="../ExifTool.html#Geolocation">Geolocation</a>
+opciójának beállításától függetlenül írható)</span></span></td></tr>
 <tr class=b>
 <td>GeolocationBearing</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(compass bearing to GeolocationCity center. Geolocation tags are
-generated only if API <a href="../ExifTool.html#Geolocation">Geolocation</a> option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(iránytű szerinti irányszög a GeolocationCity középpontja felé. A geolokációs tagek
+csak akkor generálódnak, ha az API <a href="../ExifTool.html#Geolocation">Geolocation</a> opciója be van állítva)</span></span></td></tr>
 <tr>
 <td>GeolocationCity</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(name of city nearest to the current GPS coordinates)</span></span></td></tr>
+<td><span class=s><span class=n>(a jelenlegi GPS-koordinátákhoz legközelebbi város neve)</span></span></td></tr>
 <tr class=b>
 <td>GeolocationCountry</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(geolocation country name)</span></span></td></tr>
+<td><span class=s><span class=n>(geolokációs országnév)</span></span></td></tr>
 <tr>
 <td>GeolocationCountryCode</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(geolocation country code)</span></span></td></tr>
+<td><span class=s><span class=n>(geolokációs országkód)</span></span></td></tr>
 <tr class=b>
 <td>GeolocationDistance</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(distance in km from current GPS to city)</span></span></td></tr>
+<td><span class=s><span class=n>(távolság km-ben a jelenlegi GPS-től a városig)</span></span></td></tr>
 <tr>
 <td>GeolocationFeatureCode</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(geolocation feature code, see <a href="http://www.geonames.org/export/codes.html#P">http://www.geonames.org/export/codes.html#P</a>)</span></span></td></tr>
+<td><span class=s><span class=n>(geolokációs feature-kód, lásd <a href="http://www.geonames.org/export/codes.html#P">http://www.geonames.org/export/codes.html#P</a>)</span></span></td></tr>
 <tr class=b>
 <td>GeolocationFeatureType</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(geolocation feature type)</span></span></td></tr>
+<td><span class=s><span class=n>(geolokációs feature-típus)</span></span></td></tr>
 <tr>
 <td>GeolocationPopulation</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(city population rounded to 2 significant digits)</span></span></td></tr>
+<td><span class=s><span class=n>(a város népessége 2 értékes jegyre kerekítve)</span></span></td></tr>
 <tr class=b>
 <td>GeolocationPosition</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(approximate GPS coordinates of city)</span></span></td></tr>
+<td><span class=s><span class=n>(a város hozzávetőleges GPS-koordinátái)</span></span></td></tr>
 <tr>
 <td>GeolocationRegion</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(geolocation state, province or region)</span></span></td></tr>
+<td><span class=s><span class=n>(geolokációs állam, tartomány vagy régió)</span></span></td></tr>
 <tr class=b>
 <td>GeolocationSubregion</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(geolocation county or subregion)</span></span></td></tr>
+<td><span class=s><span class=n>(geolokációs megye vagy alrégió)</span></span></td></tr>
 <tr>
 <td>GeolocationTimeZone</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(geolocation time zone ID)</span></span></td></tr>
+<td><span class=s><span class=n>(geolokációs időzóna-azonosító)</span></span></td></tr>
 <tr class=b>
 <td>GeolocationWarning</td>
 <td class=c>no</td>
@@ -383,301 +383,300 @@ generated only if API <a href="../ExifTool.html#Geolocation">Geolocation</a> opt
 <td>Geosync</td>
 <td class=c>yes</td>
 <td class=c>-</td>
-<td><span class=s><span class=n>(this write-only tag specifies a time difference to add to Geotime for
-synchronization with the GPS clock.  For example, set this to &quot;-12&quot; if the
-camera clock is 12 seconds faster than GPS time.  Input format is
-&quot;[+-][[[DD ]HH:]MM:]SS[.ss]&quot;.  Additional features allow calculation of time
-differences and time drifts, and extraction of synchronization times from
-image files.  See the <a href="../geotag.html">geotagging documentation</a> for details)</span></span></td></tr>
+<td><span class=s><span class=n>(ez a csak írható tag egy időkülönbséget ad meg, amelyet a Geotime-hoz kell hozzáadni a
+GPS-órával való szinkronizáláshoz.  Például állítsd &quot;-12&quot; értékre, ha a
+fényképezőgép órája 12 másodperccel siet a GPS-időhöz képest.  A bemeneti formátum
+&quot;[+-][[[DD ]HH:]MM:]SS[.ss]&quot;.  További szolgáltatások lehetővé teszik időkülönbségek
+és időelcsúszások kiszámítását, valamint szinkronizációs idők kinyerését
+képfájlokból.  Részletekért lásd a <a href="../geotag.html">geotagging documentation</a> részt)</span></span></td></tr>
 <tr class=b>
 <td>Geotag</td>
 <td class=c>yes</td>
 <td class=c>-</td>
-<td><span class=s><span class=n>(this write-only tag is used to define the GPS track log data or track log
-file name.  Currently supported track log formats are GPX, NMEA RMC/GGA/GLL,
-KML, IGC, Garmin XML and TCX, Magellan PMGNTRK, Honeywell PTNTHPR, Winplus
-Beacon text, Bramor gEO, Google Takeout JSON, and CSV log files.  May be set
-to the special value of &quot;DATETIMEONLY&quot; (all caps) to set GPS date/time tags
-if no input track points are available.  See <a href="../geotag.html">geotag.html</a>
-for details)</span></span></td></tr>
+<td><span class=s><span class=n>(ez a csak írható tag a GPS-nyomvonalnapló adatait vagy a nyomvonalnapló
+fájlnevét adja meg.  A jelenleg támogatott nyomvonalnapló-formátumok: GPX, NMEA RMC/GGA/GLL,
+KML, IGC, Garmin XML és TCX, Magellan PMGNTRK, Honeywell PTNTHPR, Winplus
+Beacon text, Bramor gEO, Google Takeout JSON és CSV naplófájlok.  Beállítható
+a speciális &quot;DATETIMEONLY&quot; (csupa nagybetű) értékre, hogy a GPS dátum/idő tagek beállításra kerüljenek,
+ha nincsenek bemeneti nyomvonalpontok.  Részletekért lásd a <a href="../geotag.html">geotag.html</a>
+oldalt)</span></span></td></tr>
 <tr>
 <td>Geotime</td>
 <td class=c>yes</td>
 <td class=c>-</td>
-<td><span class=s><span class=n>(this write-only tag is used to define a date/time for interpolating a
-position in the GPS track specified by the Geotag tag.  Writing this tag
-causes GPS information to be written into the EXIF or XMP of the target
-files.  The local system timezone is assumed if the date/time value does not
-contain a timezone.  May be deleted to delete associated GPS tags.  A group
-name of &quot;EXIF&quot; or &quot;XMP&quot; may be specified to write or delete only EXIF or XMP
-GPS tags)</span></span></td></tr>
+<td><span class=s><span class=n>(ez a csak írható tag egy dátumot/időt ad meg egy pozíció interpolálásához a
+Geotag tag által megadott GPS-nyomvonalon.  Ennek a tagnek az írása hatására GPS-információ
+íródik a célfájlok EXIF- vagy XMP-adataiba.  A helyi rendszeridőzónát feltételezi, ha a dátum/idő érték nem
+tartalmaz időzónát.  Törölhető a hozzá tartozó GPS-tagek törléséhez.  &quot;EXIF&quot; vagy &quot;XMP&quot;
+csoportnév adható meg, hogy csak az EXIF vagy csak az XMP
+GPS-tagek íródjanak vagy törlődjenek)</span></span></td></tr>
 <tr class=b>
 <td>HardLink</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>-</td>
-<td><span class=s><span class=n>(this write-only tag is used to create a hard link with the specified name to
-the source file.  If the source file is edited, copied, renamed or moved in
-the same operation as writing HardLink, then the link is made to the updated
-file.  Note that subsequent editing of either hard-linked file by exiftool
-will break the link unless the -overwrite_original_in_place option is used)</span></span></td></tr>
+<td><span class=s><span class=n>(ez a csak írható tag a forrásfájlra mutató, megadott nevű hard link
+létrehozására szolgál.  Ha a forrásfájlt a HardLink írásával azonos műveletben
+szerkesztik, másolják, átnevezik vagy áthelyezik, akkor a link a frissített
+fájlra készül.  Vedd figyelembe, hogy bármelyik hard-linkelt fájl későbbi szerkesztése az exiftoollal
+megszakítja a linket, hacsak nem használod a -overwrite_original_in_place opciót)</span></span></td></tr>
 <tr>
 <td>ICC_Profile</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>ICC_Profile</td>
-<td><span class=s><span class=n>(the full ICC_Profile data block.  This tag is generated only if specifically
-requested)</span></span></td></tr>
+<td><span class=s><span class=n>(a teljes ICC_Profile adatblokk.  Ez a tag csak akkor generálódik, ha külön
+kérik)</span></span></td></tr>
 <tr class=b>
 <td>ID3Size</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(size of the ID3 data block)</span></span></td></tr>
+<td><span class=s><span class=n>(az ID3-adatblokk mérete)</span></span></td></tr>
 <tr>
 <td>IPTC</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>IPTC</td>
-<td><span class=s><span class=n>(the full IPTC data block.  This tag is generated only if specifically
-requested)</span></span></td></tr>
+<td><span class=s><span class=n>(a teljes IPTC-adatblokk.  Ez a tag csak akkor generálódik, ha külön
+kérik)</span></span></td></tr>
 <tr class=b>
 <td>ImageDataHash</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(Hash of image data. Generated only if specifically requested for JPEG, TIFF,
-PNG, CRW, CR3, MRW, RAF, X3F, IIQ, JP2, JXL, HEIC and AVIF images, MOV/MP4
-videos, and some RIFF-based files such as AVI, WAV and WEBP.  The hash
-algorithm is set by the API <a href="../ExifTool.html#ImageHashType">ImageHashType</a> option, and is &#39;MD5&#39; by default.
-The hash includes the main image data, plus JpgFromRaw/OtherImage for some
-formats, but does not include ThumbnailImage or PreviewImage.  Includes
-video and audio data for MOV/MP4.  The <a href="XMP.html#ExifTool">XMP-et:OriginalImageHash and
-XMP-et:OriginalImageHashType tags</a> provide a way to store
-the this hash value and the hash type in the file.)</span></span></td></tr>
+<td><span class=s><span class=n>(a képadatok hash-e. Csak akkor generálódik, ha külön kérik, JPEG, TIFF,
+PNG, CRW, CR3, MRW, RAF, X3F, IIQ, JP2, JXL, HEIC és AVIF képekhez, MOV/MP4
+videókhoz, valamint néhány RIFF-alapú fájlhoz, például AVI, WAV és WEBP.  A hash-
+algoritmust az API <a href="../ExifTool.html#ImageHashType">ImageHashType</a> opciója állítja be, és alapértelmezés szerint &#39;MD5&#39;.
+A hash tartalmazza a fő képadatokat, egyes formátumoknál a JpgFromRaw/OtherImage adatokat is,
+de nem tartalmazza a ThumbnailImage vagy PreviewImage adatokat.  MOV/MP4 esetén tartalmazza a
+videó- és hangadatokat is.  Az <a href="XMP.html#ExifTool">XMP-et:OriginalImageHash and
+XMP-et:OriginalImageHashType tags</a> lehetőséget adnak arra, hogy
+ezt a hash-értéket és a hash típusát a fájlban tárold.)</span></span></td></tr>
 <tr>
 <td>ImageHeight</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(the height of the image in number of pixels)</span></span></td></tr>
+<td><span class=s><span class=n>(a kép magassága képpontok számában)</span></span></td></tr>
 <tr class=b>
 <td>ImageWidth</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(the width of the image in number of pixels)</span></span></td></tr>
+<td><span class=s><span class=n>(a kép szélessége képpontok számában)</span></span></td></tr>
 <tr>
 <td>JPEGDigest</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(an MD5 digest of the JPEG quantization tables is combined with the component
-sub-sampling values to generate the value of this tag.  The result is
-compared to known values in an attempt to deduce the originating software
-based only on the JPEG image data.  For performance reasons, this tag is
-generated only if specifically requested or the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option is set
-to 3 or higher)</span></span></td></tr>
+<td><span class=s><span class=n>(a JPEG kvantálási tábláinak MD5-kivonatát a komponensek
+almintavételezési értékeivel kombinálva jön létre ennek a tagnek az értéke.  Az eredményt
+ismert értékekkel hasonlítja össze, hogy megpróbálja kikövetkeztetni az eredeti szoftvert
+kizárólag a JPEG-képadatok alapján.  Teljesítménybeli okokból ez a tag csak akkor
+generálódik, ha külön kérik, vagy ha az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opciója 3-ra vagy
+magasabbra van állítva)</span></span></td></tr>
 <tr class=b>
 <td>JPEGImageLength</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(byte length of JPEG image without metadata.  For performance reasons, this
-tag is generated only if specifically requested or the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option
-is set to 3 or higher)</span></span></td></tr>
+<td><span class=s><span class=n>(a JPEG-kép bájthossza metaadatok nélkül.  Teljesítménybeli okokból ez a
+tag csak akkor generálódik, ha külön kérik, vagy ha az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opciója
+3-ra vagy magasabbra van állítva)</span></span></td></tr>
 <tr>
 <td>JPEGQualityEstimate</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(an estimate of the IJG JPEG quality setting for the image, calculated from
-the quantization tables.  For performance reasons, this tag is generated
-only if specifically requested or the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option is set to 3 or
-higher)</span></span></td></tr>
+<td><span class=s><span class=n>(a kép IJG JPEG-minőségbeállításának becslése, a kvantálási táblákból
+számítva.  Teljesítménybeli okokból ez a tag csak akkor generálódik,
+ha külön kérik, vagy ha az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opciója 3-ra vagy
+magasabbra van állítva)</span></span></td></tr>
 <tr class=b>
 <td>JUMBF</td>
 <td class=c>no</td>
 <td class=c>JUMBF</td>
-<td><span class=s><span class=n>(the C2PA JUMBF data block, extracted only if specifically requested)</span></span></td></tr>
+<td><span class=s><span class=n>(a C2PA JUMBF adatblokk, csak akkor kerül kinyerésre, ha külön kérik)</span></span></td></tr>
 <tr>
 <td>MIMEType</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(the MIME type of the source file)</span></span></td></tr>
+<td><span class=s><span class=n>(a forrásfájl MIME-típusa)</span></span></td></tr>
 <tr class=b>
 <td>MakerNoteByteOrder</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(byte order of maker notes.  Generated only if different from ExifByteOrder)</span>
+<td><span class=s><span class=n>(a maker note-ok bájtsorrendje.  Csak akkor generálódik, ha eltér az ExifByteOrder értékétől)</span>
   <br>&#39;II&#39; = Little-endian (Intel, II)
   <br>&#39;MM&#39; = Big-endian (Motorola, MM)</span></td></tr>
 <tr>
 <td>MaxVal</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(maximum pixel value in PPM or PGM image)</span></span></td></tr>
+<td><span class=s><span class=n>(maximális képpontérték PPM vagy PGM képben)</span></span></td></tr>
 <tr class=b>
 <td>NewGUID</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(generates a new, random GUID with format
-YYYYmmdd-HHMM-SSNN-PPPP-RRRRRRRRRRRR, where Y=year, m=month, d=day, H=hour,
-M=minute, S=second, N=file sequence number in hex, P=process ID in hex, and
-R=random hex number; without dashes with the -n option.  Not generated
-unless specifically requested or the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(új, véletlenszerű GUID-ot generál
+YYYYmmdd-HHMM-SSNN-PPPP-RRRRRRRRRRRR formátumban, ahol Y=év, m=hónap, d=nap, H=óra,
+M=perc, S=másodperc, N=fájl sorszáma hexben, P=folyamatazonosító hexben, és
+R=véletlen hexszám; a -n opcióval kötőjelek nélkül.  Csak akkor generálódik,
+ha külön kérik, vagy ha az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opciója be van állítva)</span></span></td></tr>
 <tr>
 <td>NewUUID</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(generates a version 4 (&quot;random&quot;), variant 1 UUID as per RFC 9562, Section
-5.4.  Not generated unless specifically requested or the API <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(4-es verziójú (&quot;random&quot;), 1-es variánsú UUID-t generál az RFC 9562 5.4.
+szakasza szerint.  Csak akkor generálódik, ha külön kérik, vagy ha az API <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva)</span></span></td></tr>
 <tr class=b>
 <td>Now</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(the current date/time.  Useful when setting the tag values, eg.
-<code>&quot;-modifydate&lt;now&quot;</code>.  Not generated unless specifically requested or the
-API <a href="../ExifTool.html#RequestAll">RequestAll</a> option is set)</span></span></td></tr>
+<td><span class=s><span class=n>(a jelenlegi dátum/idő.  Hasznos tagértékek beállításakor, pl.
+<code>&quot;-modifydate&lt;now&quot;</code>.  Csak akkor generálódik, ha külön kérik, vagy ha az
+API <a href="../ExifTool.html#RequestAll">RequestAll</a> opciója be van állítva)</span></span></td></tr>
 <tr>
 <td>NumPlanes</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(number of color planes)</span></span></td></tr>
+<td><span class=s><span class=n>(a színsíkok száma)</span></span></td></tr>
 <tr class=b>
 <td>OtherImage</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(other JPEG-format embedded image)</span></span></td></tr>
+<td><span class=s><span class=n>(egyéb JPEG formátumú beágyazott kép)</span></span></td></tr>
 <tr>
 <td>PageCount</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(the number of pages in a multi-page TIFF document)</span></span></td></tr>
+<td><span class=s><span class=n>(a lapok száma egy többlapos TIFF-dokumentumban)</span></span></td></tr>
 <tr class=b>
 <td>PreviewImage</td>
 <td class=c>yes</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(JPEG-format embedded preview image)</span></span></td></tr>
+<td><span class=s><span class=n>(JPEG formátumú beágyazott előnézeti kép)</span></span></td></tr>
 <tr>
 <td>PreviewJXL</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(JXL-format embedded preview image)</span></span></td></tr>
+<td><span class=s><span class=n>(JXL formátumú beágyazott előnézeti kép)</span></span></td></tr>
 <tr class=b>
 <td>PreviewPDF</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(PDF-format embedded preview image)</span></span></td></tr>
+<td><span class=s><span class=n>(PDF formátumú beágyazott előnézeti kép)</span></span></td></tr>
 <tr>
 <td>PreviewPNG</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(PNG-format embedded preview image)</span></span></td></tr>
+<td><span class=s><span class=n>(PNG formátumú beágyazott előnézeti kép)</span></span></td></tr>
 <tr class=b>
 <td>PreviewTIFF</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(TIFF-format embedded preview image)</span></span></td></tr>
+<td><span class=s><span class=n>(TIFF formátumú beágyazott előnézeti kép)</span></span></td></tr>
 <tr>
 <td>PreviewWMF</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(WMF-format embedded preview image)</span></span></td></tr>
+<td><span class=s><span class=n>(WMF formátumú beágyazott előnézeti kép)</span></span></td></tr>
 <tr class=b>
 <td>ProcessingTime</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(the clock time in seconds taken by ExifTool to extract information from this
-file.  Not generated unless specifically requested or the API <a href="../ExifTool.html#RequestAll">RequestAll</a>
-option is set.  Requires Time::HiRes)</span></span></td></tr>
+<td><span class=s><span class=n>(az ExifTool által ebből a fájlból történő információ-kinyerésre fordított idő
+másodpercben.  Csak akkor generálódik, ha külön kérik, vagy ha az API <a href="../ExifTool.html#RequestAll">RequestAll</a>
+opciója be van állítva.  Time::HiRes szükséges hozzá)</span></span></td></tr>
 <tr>
 <td>ResourceForkSize</td>
 <td class=c>no</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(size of the file&#39;s resource fork if it contains data.  Mac OS only.  If this
-tag is generated the <a href="../ExifTool.html#ExtractEmbedded">ExtractEmbedded</a> option may be used to extract
-resource-fork information as a sub-document.  When writing, the resource
-fork is preserved by default, but it may be deleted with <code>-rsrc:all=</code> on
-the command line)</span></span></td></tr>
+<td><span class=s><span class=n>(a fájl resource fork-jának mérete, ha az tartalmaz adatot.  Csak Mac OS.  Ha ez a
+tag generálódik, az <a href="../ExifTool.html#ExtractEmbedded">ExtractEmbedded</a> opcióval a resource fork
+információi aldokumentumként nyerhetők ki.  Íráskor a resource
+fork alapértelmezés szerint megőrződik, de törölhető a parancssorban a <code>-rsrc:all=</code>
+kapcsolóval)</span></span></td></tr>
 <tr class=b>
 <td>SphericalVideoXML</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>GSpherical</td>
-<td><span class=s><span class=n>(the SphericalVideoXML block from MP4/MOV videos.  This tag is generated only
-if specifically requested)</span></span></td></tr>
+<td><span class=s><span class=n>(a SphericalVideoXML blokk MP4/MOV videókból.  Ez a tag csak akkor generálódik,
+ha külön kérik)</span></span></td></tr>
 <tr>
 <td>SymLink</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>-</td>
-<td><span class=s><span class=n>(this write-only tag is used to create a symbolic link with the specified
-name to the source file.  If the source file is edited, copied, renamed or
-moved in the same operation as writing SymLink, then the link is made to the
-updated file.  The link uses an absolute path unless it is created in the
-current working directory.  Valid only for file systems that support
-symbolic links.  Note that subsequent editing of the file via the symbolic
-link by exiftool will cause the link to be replaced by the edited file
-without changing the original unless the -overwrite_original_in_place option
-is used)</span></span></td></tr>
+<td><span class=s><span class=n>(ez a csak írható tag a forrásfájlra mutató, megadott nevű szimbolikus
+link létrehozására szolgál.  Ha a forrásfájlt a SymLink írásával azonos műveletben
+szerkesztik, másolják, átnevezik vagy áthelyezik, akkor a link a
+frissített fájlra készül.  A link abszolút elérési utat használ, hacsak nem a
+jelenlegi munkakönyvtárban jön létre.  Csak a szimbolikus linkeket támogató
+fájlrendszereknél érvényes.  Vedd figyelembe, hogy ha a fájlt később a szimbolikus
+linken keresztül szerkeszted az exiftoollal, akkor a link helyére a szerkesztett fájl kerül
+az eredeti megváltoztatása nélkül, hacsak nem használod a -overwrite_original_in_place
+opciót)</span></span></td></tr>
 <tr class=b>
 <td>TestName</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>-</td>
-<td><span class=s><span class=n>(this write-only tag may be used instead of FileName for dry-run tests of the
-file renaming feature.  Writing this tag prints the old and new file names
-to the console, but does not affect the file itself)</span></span></td></tr>
+<td><span class=s><span class=n>(ez a csak írható tag a FileName helyett használható a fájlátnevezési szolgáltatás
+próbafuttatásos (dry-run) teszteléséhez.  Ennek a tagnek az írása a régi és az új fájlnevet
+a konzolra írja ki, de magát a fájlt nem érinti)</span></span></td></tr>
 <tr>
 <td>ThumbnailImage</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(JPEG-format embedded thumbnail image)</span></span></td></tr>
+<td><span class=s><span class=n>(JPEG formátumú beágyazott bélyegkép)</span></span></td></tr>
 <tr class=b>
 <td>Trailer</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(the full JPEG trailer data block.  Extracted only if specifically requested
-or the API <a href="../ExifTool.html#RequestAll">RequestAll</a> option is set to 3 or higher)</span></span></td></tr>
+<td><span class=s><span class=n>(a teljes JPEG trailer-adatblokk.  Csak akkor kerül kinyerésre, ha külön kérik,
+vagy ha az API <a href="../ExifTool.html#RequestAll">RequestAll</a> opciója 3-ra vagy magasabbra van állítva)</span></span></td></tr>
 <tr>
 <td>Validate</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(generated only if specifically requested.  Requesting this tag automatically
-enables the API <a href="../ExifTool.html#Validate">Validate</a> option, imposing
-additional validation checks when extracting metadata.  Returns the number
-of errors, warnings and minor warnings encountered.  Note that the Validate
-feature focuses mainly on validation of EXIF/TIFF metadata)</span>
+<td><span class=s><span class=n>(csak akkor generálódik, ha külön kérik.  Ennek a tagnek a kérése automatikusan
+bekapcsolja az API <a href="../ExifTool.html#Validate">Validate</a> opcióját, ami
+további ellenőrzéseket ír elő a metaadatok kinyerésekor.  Visszaadja a
+fellépett hibák, figyelmeztetések és kisebb figyelmeztetések számát.  Vedd figyelembe, hogy a Validate
+szolgáltatás elsősorban az EXIF/TIFF metaadatok ellenőrzésére összpontosít)</span>
   <br>&#39;0 0 0&#39; = OK</span></td></tr>
 <tr class=b>
 <td>Warning</td>
 <td class=c>no</td>
 <td class=c>ExifTool</td>
-<td><span class=s><span class=n>(returns warnings that may have occurred while reading or writing a file.
-Use the -a or <a href="../ExifTool.html#Duplicates">Duplicates</a> option to see all warnings if more than one
-occurred. Minor warnings may be ignored with the -m or <a href="../ExifTool.html#IgnoreMinorErrors">IgnoreMinorErrors</a>
-option.  Minor warnings with a capital &quot;M&quot; in the &quot;[Minor]&quot; designation
-indicate that the processing is affected by ignoring the warning.  Multiple
-identical warnings are indicated by a count after the warning message, eg.
-&quot;[x2]&quot; if the same warning occurred twice)</span></span></td></tr>
+<td><span class=s><span class=n>(visszaadja a fájl olvasása vagy írása közben esetlegesen fellépett figyelmeztetéseket.
+Használd a -a vagy <a href="../ExifTool.html#Duplicates">Duplicates</a> opciót az összes figyelmeztetés megtekintéséhez, ha több mint egy
+lépett fel. A kisebb figyelmeztetések figyelmen kívül hagyhatók a -m vagy <a href="../ExifTool.html#IgnoreMinorErrors">IgnoreMinorErrors</a>
+opcióval.  Azok a kisebb figyelmeztetések, amelyeknél a &quot;[Minor]&quot; jelölésben nagy &quot;M&quot; betű van,
+azt jelzik, hogy a figyelmeztetés figyelmen kívül hagyása befolyásolja a feldolgozást.  A többszörös
+azonos figyelmeztetéseket a figyelmeztető üzenet után egy darabszám jelzi, pl.
+&quot;[x2]&quot;, ha ugyanaz a figyelmeztetés kétszer lépett fel)</span></span></td></tr>
 <tr>
 <td>XML</td>
 <td class=c>no</td>
 <td class=c>XML</td>
-<td><span class=s><span class=n>(the XML data block, extracted for some file types)</span></span></td></tr>
+<td><span class=s><span class=n>(az XML-adatblokk, egyes fájltípusoknál kerül kinyerésre)</span></span></td></tr>
 <tr class=b>
 <td>XMP</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>XMP</td>
-<td><span class=s><span class=n>(the XMP data block, but note that extended XMP in JPEG images may be split
-into multiple blocks.  This tag is generated only if specifically requested)</span></span></td></tr>
+<td><span class=s><span class=n>(az XMP-adatblokk, de vedd figyelembe, hogy a JPEG-képekben lévő kiterjesztett XMP több
+blokkra oszolhat.  Ez a tag csak akkor generálódik, ha külön kérik)</span></span></td></tr>
 <tr>
 <td>XResolution</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(the horizontal pixel resolution)</span></span></td></tr>
+<td><span class=s><span class=n>(a vízszintes képpontfelbontás)</span></span></td></tr>
 <tr class=b>
 <td>YResolution</td>
 <td class=c>no</td>
 <td class=c>File</td>
-<td><span class=s><span class=n>(the vertical pixel resolution)</span></span></td></tr>
+<td><span class=s><span class=n>(a függőleges képpontfelbontás)</span></span></td></tr>
 <tr>
 <td>ZoneIdentifier</td>
 <td class=c title=' ! = Unsafe'>yes!</td>
 <td class=c>System</td>
-<td><span class=s><span class=n>(Windows only.  Existence indicates that the file has a Zone.Identifier
-alternate data stream, which is used by some Windows browsers to mark
-downloaded files as possibly unsafe to run.  May be deleted to remove this
-stream.  Requires Win32API::File)</span></span></td></tr>
+<td><span class=s><span class=n>(csak Windows.  A megléte azt jelzi, hogy a fájlnak van Zone.Identifier
+alternatív adatfolyama, amelyet egyes Windows-böngészők arra használnak, hogy a
+letöltött fájlokat futtatásra potenciálisan nem biztonságosként jelöljék meg.  Törölhető ennek az
+adatfolyamnak az eltávolításához.  Win32API::File szükséges hozzá)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
 <hr>

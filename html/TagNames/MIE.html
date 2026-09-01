@@ -3,42 +3,42 @@
 <html>
 <!-- (this file generated automatically by Image::ExifTool::BuildTagLookup) -->
 <head>
-<title>MIE Tags</title>
+<title>MIE tagek</title>
 <link rel=stylesheet type='text/css' href='style.css' title='Style'>
 </head>
 <body>
-<h2 class=top>MIE Tags</h2>
-<p>MIE is a flexible format which may be used as a stand-alone meta information
-format, for encapsulation of other files and information, or as a trailer
-appended to other file formats.  The tables below represent currently
-defined MIE tags, however ExifTool will also extract any other information
-present in a MIE file.</p>
+<h2 class=top>MIE tagek</h2>
+<p>A MIE egy rugalmas formátum, amely használható önálló
+metainformáció-formátumként, más fájlok és információk beágyazására, vagy más
+fájlformátumokhoz fűzött trailerként.  Az alábbi táblázatok a jelenleg
+definiált MIE tageket mutatják, az ExifTool azonban minden más, a MIE fájlban
+jelen lévő információt is kinyer.</p>
 
-<p>When writing MIE information, some special features are supported:</p>
+<p>MIE-információ írásakor néhány speciális szolgáltatás támogatott:</p>
 
-<p>1) String values may be written as ASCII (ISO 8859-1) or UTF-8.  ExifTool
-automatically detects the presence of wide characters and treats the string
-appropriately. Internally, UTF-8 text may be converted to UTF-16 or UTF-32
-and stored in this format in the file if it is more compact.</p>
+<p>1) A sztringértékek írhatók ASCII-ként (ISO 8859-1) vagy UTF-8-ként.  Az
+ExifTool automatikusan észleli a széles karakterek jelenlétét, és megfelelően
+kezeli a sztringet. Belsőleg az UTF-8 szöveg UTF-16-ra vagy UTF-32-re
+konvertálható, és a fájlban ebben a formátumban tárolható, ha az tömörebb.</p>
 
-<p>2) All MIE string-value tags support localized text.  Localized values are
-written by adding a language/country code to the tag name in the form
-<code>TAG-xx_YY</code>, where <code>TAG</code> is the tag name, <code>xx</code> is a 2-character lower
-case ISO 639-1 language code, and <code>YY</code> is a 2-character upper case ISO
-3166-1 alpha 2 country code (eg. <code>Title-en_US</code>).  But as usual, the user
-interface is case-insensitive, and ExifTool will write the correct case to
-the file.</p>
+<p>2) Minden MIE sztringértékű tag támogatja a lokalizált szöveget.  A
+lokalizált értékeket úgy írjuk, hogy nyelv-/országkódot fűzünk a tagnévhez
+<code>TAG-xx_YY</code> alakban, ahol a <code>TAG</code> a tagnév, az <code>xx</code> egy 2 karakteres, kisbetűs
+ISO 639-1 nyelvkód, a <code>YY</code> pedig egy 2 karakteres, nagybetűs ISO
+3166-1 alpha 2 országkód (pl. <code>Title-en_US</code>).  De szokás szerint a
+felhasználói felület kis-/nagybetűre nem érzékeny, és az ExifTool a helyes
+kis-/nagybetűs alakot írja a fájlba.</p>
 
-<p>3) Some numerical MIE tags allow units of measurement to be specified.  For
-these tags, units may be added in brackets immediately following the value
-(eg. <code>55(mi/h)</code>).  If no units are specified, the default units are
-written.</p>
+<p>3) Néhány numerikus MIE tagnél megadható a mértékegység.  Ezeknél a tageknél
+a mértékegység közvetlenül az érték után, zárójelben adható meg
+(pl. <code>55(mi/h)</code>).  Ha nincs mértékegység megadva, az alapértelmezett
+mértékegység kerül kiírásra.</p>
 
-<p>4) ExifTool writes compressed metadata to MIE files if the <a href="../ExifTool.html#Compress">Compress</a> (-z)
-option is used and Compress::Zlib is available.</p>
+<p>4) Az ExifTool tömörített metaadatot ír a MIE fájlokba, ha a <a href="../ExifTool.html#Compress">Compress</a> (-z)
+opció használatban van, és a Compress::Zlib elérhető.</p>
 
-<p>See <a href="../MIE1.1-20070121.pdf">MIE1.1-20070121.pdf</a> for the official MIE
-specification.</p>
+<p>A hivatalos MIE-specifikációt lásd itt:
+<a href="../MIE1.1-20070121.pdf">MIE1.1-20070121.pdf</a>.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -102,7 +102,7 @@ when appended to another type of file.  ExifTool will create this tag if set
 to any value, but always with an empty data block)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Meta'>MIE Meta Tags</a></h2>
+<h2><a name='Meta'>MIE Meta tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -180,11 +180,11 @@ to any value, but always with an empty data block)</span></span></td></tr>
 <td>--&gt; <a href='XMP.html'>XMP Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Audio'>MIE Audio Tags</a></h2>
-<p>For the Audio group (and any other group containing a &#39;data&#39; element), tags
-refer to the contained data if present, otherwise they refer to the main
-SubfileData.  The <code>0Type</code> and <code>1Name</code> elements should exist only if <code>data</code>
-is present.</p>
+<h2><a name='Audio'>MIE Audio tagek</a></h2>
+<p>Az Audio csoport (és minden más, &#39;data&#39; elemet tartalmazó csoport) esetén a
+tagek a benne foglalt adatra hivatkoznak, ha az jelen van, egyébként a fő
+SubfileData-ra.  A <code>0Type</code> és <code>1Name</code> elemek csak akkor létezhetnek, ha a
+<code>data</code> jelen van.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -232,7 +232,7 @@ is present.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Camera'>MIE Camera Tags</a></h2>
+<h2><a name='Camera'>MIE Camera tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -375,7 +375,7 @@ is present.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Flash'>MIE Flash Tags</a></h2>
+<h2><a name='Flash'>MIE Flash tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -424,9 +424,9 @@ is present.</p>
 <td><span class=s><span class=n>(&quot;Internal&quot; or &quot;External&quot;)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Lens'>MIE Lens Tags</a></h2>
-<p>All recorded lens parameters (focal length, aperture, etc) include the
-effects of the extender if present.</p>
+<h2><a name='Lens'>MIE Lens tagek</a></h2>
+<p>Minden rögzített objektívparaméter (gyújtótávolság, rekesz stb.) tartalmazza
+a telekonverter hatását, ha az jelen van.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -499,7 +499,7 @@ effects of the extender if present.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Extender'>MIE Extender Tags</a></h2>
+<h2><a name='Extender'>MIE Extender tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -527,8 +527,8 @@ effects of the extender if present.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Orient'>MIE Orient Tags</a></h2>
-<p>These tags describe the camera orientation.</p>
+<h2><a name='Orient'>MIE Orient tagek</a></h2>
+<p>Ezek a tagek a kamera tájolását írják le.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -561,8 +561,8 @@ effects of the extender if present.</p>
 <td><span class=s><span class=n>(CW rotation angle of camera about lens axis)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Doc'>MIE Doc Tags</a></h2>
-<p>Information describing the main document, image or file.</p>
+<h2><a name='Doc'>MIE Doc tagek</a></h2>
+<p>A fő dokumentumot, képet vagy fájlt leíró információ.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -640,8 +640,8 @@ effects of the extender if present.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Geo'>MIE Geo Tags</a></h2>
-<p>Information related to geographic location.</p>
+<h2><a name='Geo'>MIE Geo tagek</a></h2>
+<p>A földrajzi helyhez kapcsolódó információ.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -684,7 +684,7 @@ effects of the extender if present.</p>
 <td>--&gt; <a href='MIE.html#UTM'>MIE UTM Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='GPS'>MIE GPS Tags</a></h2>
+<h2><a name='GPS'>MIE GPS tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -758,7 +758,7 @@ negative, but may be entered as positive numbers with a trailing &#39;W&#39;)</s
 <td><span class=s><span class=n>(&#39;km/h&#39; unless &#39;mi/h&#39;, &#39;m/s&#39; or &#39;kn&#39; specified)</span></span></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='UTM'>MIE UTM Tags</a></h2>
+<h2><a name='UTM'>MIE UTM tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -786,7 +786,7 @@ negative, but may be entered as positive numbers with a trailing &#39;W&#39;)</s
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Image'>MIE Image Tags</a></h2>
+<h2><a name='Image'>MIE Image tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -846,9 +846,9 @@ separate X, Y and Z values if necessary.  Units are &#39;/in&#39; unless &#39;/c
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='MakerNotes'>MIE MakerNotes Tags</a></h2>
-<p>MIE maker notes are contained within separate groups for each manufacturer
-to avoid name conflicts.</p>
+<h2><a name='MakerNotes'>MIE MakerNotes tagek</a></h2>
+<p>A MIE maker note-ok gyártónként külön csoportokban vannak, a névütközések
+elkerülése érdekében.</p>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -916,7 +916,7 @@ to avoid name conflicts.</p>
 <td>--&gt; <a href='MIE.html#Unknown'>MIE Unknown Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Canon'>MIE Canon Tags</a></h2>
+<h2><a name='Canon'>MIE Canon tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -929,7 +929,7 @@ to avoid name conflicts.</p>
 <td>--&gt; <a href='CanonVRD.html'>CanonVRD Tags</a></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Unknown'>MIE Unknown Tags</a></h2>
+<h2><a name='Unknown'>MIE Unknown tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -938,7 +938,7 @@ to avoid name conflicts.</p>
 <tr><td colspan=4 class=c><i>[no tags known]</i></td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Preview'>MIE Preview Tags</a></h2>
+<h2><a name='Preview'>MIE Preview tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -966,7 +966,7 @@ to avoid name conflicts.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Thumbnail'>MIE Thumbnail Tags</a></h2>
+<h2><a name='Thumbnail'>MIE Thumbnail tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -994,7 +994,7 @@ to avoid name conflicts.</p>
 <td>&nbsp;</td></tr>
 </table></td></tr></table></blockquote>
 
-<h2><a name='Video'>MIE Video Tags</a></h2>
+<h2><a name='Video'>MIE Video tagek</a></h2>
 <blockquote>
 <table class=frame><tr><td>
 <table class=inner cellspacing=1>
@@ -1029,7 +1029,7 @@ to avoid name conflicts.</p>
 
 <hr>
 (This document generated automatically by Image::ExifTool::BuildTagLookup)
-<br><i>Last revised Oct 1, 2022</i>
-<p class=lf><a href='index.html'>&lt;-- ExifTool Tag Names</a></p>
+<br><i>Utoljára módosítva: 2022. október 1.</i>
+<p class=lf><a href='index.html'>&lt;-- ExifTool tagnevek</a></p>
 </body>
 </html>
