@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Az ExifTool ábrázolás (Plot) szolgáltatása</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+pre   { color: #800; margin-left: 4em }
+.nr   { white-space: nowrap }
+.prog { padding: 0.5em; border: 1px solid gray; background: #fee }
+.indent { margin-left: 22% }
+-->
+</style>
+</head>
+<body>
+<h1>Az ExifTool ábrázolás (Plot) szolgáltatása</h1>
+<p>Az exiftool alkalmazás <code>-plot</code> opciója SVG-formátumú kimeneti
+ábrafájlok generálására szolgál a tagek értékeiből. Ennek a szolgáltatásnak sok
+felhasználása van, például időbélyeggel ellátott metaadatok ábrázolása a
+<code>-ee</code> (ExtractEmbedded) opcióval kombinálva, valamint egy vagy több
+tag értékeinek ábrázolása egy képhalmazon keresztül.</p>
+
+<p>Bármely numerikus értékű tag ábrázolható, beleértve a sztringeket és a számok
+listáit is. Legfeljebb 20 adathalmaz (pl. tag) ábrázolható együtt ugyanabban az
+ábrában, kivéve a hisztogramábrákat, amelyeknél a határ csak egy (de a
+<code>Multi</code> beállítással több ábra is rajzolható egyszerre). Ha túl sok
+taget próbálsz egyszerre ábrázolni, az figyelmeztetést eredményez, és a
+felesleges adathalmazok figyelmen kívül maradnak. Az X és Y skála minden ábrán
+belül közös az összes adathalmaz számára (azaz egyetlen ábrán belül több
+adathalmaz mind ugyanazokat a skálákat használja).</p>
+
+<p>Az ábra megtekinthető az SVG-fájl megnyitásával a kedvenc böngésződben vagy
+egy SVG-t kezelő képnézegetőben. A legtöbb modern böngésző támogatja az
+SVG-képek megjelenítését.</p>
+
+<p>Három alapvető ábratípus áll rendelkezésre: Line (vonal), Scatter (pontfelhő)
+és Histogram (hisztogram). Mindegyikre példa található az alábbi
+<a href="#examples">Példák szakaszban</a>.</p>
+
+<h2>Ábrabeállítások</h2>
+
+<p>Az ábrabeállítások az <a href="ExifTool.html#Plot">API Plot opción</a>
+keresztül változtathatók. Több opció is beállítható egyszerre, vagy úgy, hogy
+vesszővel elválasztott listába fűzöd őket össze, vagy több API Plot opción
+keresztül.</p>
+
+<p>Az egyes beállítások szintaxisa <code><i>NÉV</i>=<i>ÉRTÉK</i></code>. A
+beállításnevek kis-/nagybetűre nem érzékenyek. A <code><i>NÉV</i>=</code>
+érték nélküli használata az értéket <i>undef</i>-re állítja. A
+<code><i>NÉV</i></code> önmagában való használata az értéket 1-re állítja.
+Például az ábra címének és az első adatvonal színének beállításához a parancs a
+következő lehet:</p>
+
+<pre>exiftool -plot -api plot="title=some title,cols=pink" ...</pre>
+
+<blockquote>
+<table class='norm'>
+<tr><th colspan=6 bgcolor='#dddddd'><font size='+1'>ExifTool ábrabeállítások</font></th></tr>
+<tr><th>Név</th><th>Leírás</th><th colspan=2>Érték</th><th colspan=2>Alapértelmezés</th></tr>
+<tr><td>Type</td><td>Az ábra típusa</td>
+    <td align=center colspan=2>'Line', 'Scatter' vagy 'Histogram'&nbsp;<sup>1</sup></td>
+    <td align=center colspan=2>'Line'</td></tr>
+<tr><td>Style</td><td>Az ábra adatpontjainak stílusa</td>
+    <td align=center colspan=2>Nevek sztringje:&nbsp;<sup>2,3</sup> 'Line', 'Marker' és/vagy 'Fill'</td>
+    <td align=center colspan=2>'Line+Fill'&nbsp;a&nbsp;hisztogramábráknál,&nbsp;egyébként&nbsp;'Line'</td></tr>
+<tr><td>Title</td><td>Az ábra címe</td>
+    <td align=center colspan=2>Bármilyen sztring&nbsp;<sup>4</sup></td>
+    <td align=center colspan=2>'' (automatikusan generált)&nbsp;<sup>5</sup></td></tr>
+<tr><td>XLabel</td><td>Az X tengely feliratsztringje</td>
+    <td align=center colspan=2>Bármilyen sztring&nbsp;<sup>4</sup></td>
+    <td align=center colspan=2>'' (automatikusan generált)&nbsp;<sup>5</sup></td></tr>
+<tr><td>YLabel</td><td>Az Y tengely feliratsztringje</td>
+    <td align=center colspan=2>Bármilyen sztring&nbsp;<sup>4</sup></td>
+    <td align=center colspan=2>'' (automatikusan generált)&nbsp;<sup>5</sup></td></tr>
+<tr><td>XMin, XMax</td><td>Az X tengely minimuma és maximuma a Scatter és Histogram ábratípusoknál</td>
+    <td align=center colspan=2>Egy szám</td>
+    <td align=center colspan=2><i>undef</i> (automatikus skálázás)</td></tr>
+<tr><td>YMin, YMax</td><td>Az Y tengely minimuma és maximuma (a YMin beállítás nem vonatkozik a hisztogramábrákra)</td>
+    <td align=center colspan=2>Egy szám</td>
+    <td align=center colspan=2><i>undef</i> (automatikus skálázás)</td></tr>
+<tr><td>NBins</td><td>A hisztogramábra rekeszeinek száma</td>
+    <td align=center colspan=2>Egy szám</td>
+    <td align=center colspan=2>'20'</td></tr>
+<tr><td>Multi</td><td>Jelző több ábra rajzolásához, adathalmazonként egy</td>
+    <td align=center colspan=2>Ábrák száma soronként a kimeneti képen&nbsp;<sup>6</sup></td>
+    <td align=center colspan=2><i>undef</i></td></tr>
+<tr><td>Split</td><td>Számsztringek felosztása külön adathalmazokra</td>
+    <td align=center colspan=2>Adathalmazok száma, vagy 1 az összes felosztásához&nbsp;<sup>7</sup></td>
+    <td align=center colspan=2><i>undef</i></td></tr>
+<tr><td>Size</td><td>A kimeneti kép szélessége és magassága</td>
+    <td align=center colspan=2>2 szám sztringje&nbsp;<sup>2</sup></td>
+    <td align=center colspan=2>'800 600'</td></tr>
+<tr><td>Margin</td><td>Bal, jobb, felső, alsó margók az ábrázolási terület körül</td>
+    <td align=center colspan=2>4 szám sztringje&nbsp;<sup>2</sup></td>
+    <td align=center colspan=2>'60 15 15 30'</td></tr>
+<tr><td>Legend</td><td>A jelmagyarázat X és Y eltolása az alapértelmezett helytől</td>
+    <td align=center colspan=2>2 szám sztringje&nbsp;<sup>2</sup></td>
+    <td align=center colspan=2>'0 0'</td></tr>
+<tr><td>TxtPad</td><td>Térköz a szöveg és az X/Y skálák között</td>
+    <td align=center colspan=2>2 szám sztringje&nbsp;<sup>2</sup></td>
+    <td align=center colspan=2>'10 10'</td></tr>
+<tr><td>LineSpacing</td><td>Szövegsorköz</td>
+    <td align=center colspan=2>Egy szám</td>
+    <td align=center colspan=2>'20'</td></tr>
+<tr><td>Stroke</td><td>Skálázási tényező az ábra vonalvastagságához és a jelölő méretéhez</td>
+    <td align=center colspan=2>Egy szám</td>
+    <td align=center colspan=2>'1'</td></tr>
+<tr><td>Marks</td><td>A jelölők jellemzői minden adathalmazhoz</td>
+    <td align=center>Jelölőnevek sztringje (vagy 'none') opcionális kitöltési stílussal, színnel és átlátszatlansággal&nbsp;<sup>2,8</sup></td>
+    <td rowspan=2 colspan=2><img alt="markers" src="markers.svg" width=90 height=200></td>
+    <td align=center>'circle square triangle diamond star plus pentagon left down right'</td></tr>
+<tr><td>Cols</td><td>Az ábra vonalainak/jelölőinek színei minden adathalmazhoz</td>
+    <td align=center>SVG színkódok sztringje, vagy 'none' a vonal vagy jelölő szegélyének elhagyásához&nbsp;<sup>2</sup></td>
+    <td align=center>'red green blue black orange gray fuchsia brown turquoise gold'</td></tr>
+<tr><td>Grid</td><td>A rács színe</td>
+    <td align=center colspan=2>SVG színkód</td>
+    <td align=center colspan=2>'darkgray'</td></tr>
+<tr><td>Text</td><td>A szöveg és az ábraszegély színe</td>
+    <td align=center colspan=2>SVG színkód</td>
+    <td align=center colspan=2>'black'</td></tr>
+<tr><td>Bkg</td><td>Háttérszín</td>
+    <td align=center colspan=2>SVG színkód vagy <i>undef</i></td>
+    <td align=center colspan=2><i>undef</i> (átlátszó)</td></tr>
+</table>
+</blockquote>
+
+<p>Megjegyzések:</p>
+<blockquote><table class='clear'>
+<tr><td valign=top><sup>1</sup></td><td>A pontfelhő-ábra az elsőként megadott
+taget használja X koordinátaként, a többi taget pedig az Y értékek adathalmazaiként.</td></tr>
+<tr><td valign=top><sup>2</sup></td><td>A nevek vagy számok sztringjei
+elválasztóként szóközt, perjelet (<code>/</code>) vagy pluszjelet (<code>+</code>)
+használhatnak. Maguk a számok ne tartalmazzanak pluszjelet. A számok
+elválasztóként az '<code>x</code>'-et is használhatják (pl. '<code>size=320x200</code>').</td></tr>
+<tr><td valign=top><sup>3</sup></td><td>A <code>Fill</code>
+stílus csak a <code>Histogram</code> ábrastílusnál érvényes, vagy amikor a <code>Marker</code>
+stílust is használják. A <code>Fill</code> nélkül a hisztogramoszlopok és a jelölők üresek.
+A <code>Line</code> és a <code>Marker</code> együtt is használható (pl. '<code>Style=Line+Marker</code>').
+A rövidség kedvéért csak az egyes beállítások első betűjére van szükség (pl. '<code>Style=L+M</code>').</td></tr>
+<tr><td valign=top><sup>4</sup></td><td>A feliratokban lévő vesszőket vagy '<code>&amp;#44;</code>'
+vagy '<code>&amp;#x2c;</code>' formában kell escape-elni. Más karakterek nem igényelnek escape-elést, de más XML numerikus
+karakterhivatkozások is használhatók.</td></tr>
+<tr><td valign=top><sup>5</sup></td><td>A feliratok automatikus generálása csak korlátozott
+helyzetekben érvényes, és letiltható a <code><i>NÉV</i>=</code> segítségével.</td></tr>
+<tr><td valign=top><sup>6</sup></td><td>A több ábra együtt van rajzolva ugyanabban az SVG
+képben, a megadott számú oszloppal a kimeneti kép szélességén belül. A kép
+magassága a szükséges sorok számához igazodik. Az összes ábra X tengelye
+azonos, de az Y tengelyek függetlenek. Ezt követheti az egyes ábrákhoz tartozó
+adathalmazok száma bármilyen elválasztóval. Például a '<code>Multi=1.3.3</code>' egyetlen
+oszlopban rajzolja az ábrákat, az első és a második ábrában egyenként 3 adathalmazzal.
+Az <a href='#EX5'>5. példa</a> egy egyszerű használatot mutat.</td></tr>
+<tr><td valign=top><sup>7</sup></td><td>Például ha egy tag N darab gyorsulásmérő-leolvasás
+halmazát tartalmazza, amelyek mindegyike 3 értékből áll (X, Y és Z irány), akkor ezek
+3 külön adathalmazként ábrázolhatók a <code>Split=3</code> beállítással. Lásd a
+<a href='#EX4'>4. példát</a> a <code>Split</code> beállítás bemutatásához.</td></tr>
+<tr><td valign=top><sup>8</sup></td><td>A 'none' érték az ábra
+<code>Style</code> <code>Marker</code> beállításának felülírására használható, hogy egy adott adathalmaznál letiltsa a jelölőket.
+A rövidség kedvéért csak a jelölőnév első betűjére van szükség, kivéve a 'star',
+'pentagon' és 'down' eseteket, amelyekhez 2 betű kell, hogy megkülönböztethetők legyenek a 'square', 'plus'
+és 'diamond' nevektől. A jelölőnévhez opcionális kitöltési stílus, szín és átlátszatlanság fűzhető,
+kötőjelekkel elválasztva. A kitöltési stílus felülírja az ábra
+<code>Style</code> <code>Fill</code> beállítását az adott adathalmaznál, és lehet 'Fill'
+(vagy csak 'F') a kitöltött jelölőkhöz, vagy 'none' az üres jelölőkhöz. A kitöltött jelölők
+kitöltési színt és átlátszatlanságot is megadhatnak (1 és 100 százalék között). Például ha az 1. adathalmazhoz
+jobbra mutató háromszöget, a 3. adathalmazhoz pedig az alapértelmezett jelölőt tömör fekete kitöltéssel
+akarsz használni: '<code>marks=r++-f-black-100</code>'. A jelölő és a
+hisztogram kitöltésének alapértelmezett átlátszatlansága 20%, ha van szegélyük, egyébként 50%.</td></tr>
+</table></blockquote>
+
+<a name="examples"></a>
+<h2>Példák</h2>
+
+<a name="EX1"></a>
+<h3>1. példa – Vonaldiagram</h3>
+
+<p>Az első példa az AmbientTemperature és a CameraTemperature értékét ábrázolja
+egy könyvtárban lévő képhalmazból. A <code>-fileOrder</code> opció a fájlok (és
+így az adatpontok) időrendi rendezésére szolgál. Íme a használt parancs:</p>
+
+<pre>exiftool C:/pics "-*temperature" -plot -fileorder createdate > plot1.svg
+</pre>
+
+<p>És ez az eredményül kapott SVG-ábra (plot1.svg):</p>
+
+<blockquote><img src="plot1.svg" alt="SVG-format plot" width=800 height=600></blockquote>
+
+<a name="EX2"></a>
+<h3>2. példa – Hisztogramábra</h3>
+
+<p>Ez a példa egy hisztogramot mutat arról, hány kép készült különböző
+fókusztávolságokon egy képhalmaznál. Bemutatja az
+<a href="ExifTool.html#Plot">API Plot opció</a> használatát is különféle
+ábrabeállítások megváltoztatására. A <code>YMax</code> beállítás az Y skála
+korlátozására szolgált, mert egyébként a magas 20–25 mm-es oszloppal való
+automatikus skálázás hatása túl kicsivé tette volna a többi oszlopot. Ezzel az
+átskálázással a 20–25 mm-es oszlop kinyúlik az ábra tetején.</p>
+
+<p>Az alapértelmezett hisztogramábra-<code>Style</code> a <code>Line+Fill</code>.
+A kitöltés részben átlátszó, alapértelmezetten 20% átlátszatlansággal, ha a
+<code>Line</code> stílust használják, egyébként 50%, de ez a <code>Marks</code>
+beállítással megváltoztatható.</p>
+
+<p>A többi ábratípustól eltérően a hisztogramtípus csak egyetlen adathalmaz
+ábrázolását támogatja (azaz csak a parancssorban elsőként megadott taget
+használja, hacsak a <code>Multi</code> ábrabeállítást nem használják több ábra
+generálására).</p>
+
+<p>A <code>-w</code> opció a kimeneti fájl (plot2.svg) írására szolgált a shell
+átirányítás helyett. Vedd figyelembe, hogy amikor a <code>-plot</code> opciót
+használják, a <code>-w</code> opció teljes fájlnevet vár, nem csak egy
+kiterjesztést.</p>
+
+<pre>exiftool C:/my_trip -focallength35efl# -w plot2.svg \
+  -api plot="type=hist,nbins=40,ymax=50,cols=blue"</pre>
+
+<blockquote><img src="plot2.svg" alt="SVG-format plot" width=800 height=600></blockquote>
+
+<a name="EX3"></a>
+<h3>3. példa – Pontfelhő-ábra</h3>
+
+<p>Ez a példa ugyanazt az adathalmazt használja, mint az 1. példa, de a
+<code>Scatter</code> ábratípust használja a CameraTemperature és az
+AmbientTemperature közötti korreláció megmutatására. A parancssorban elsőként
+megadott tag a független változó (az X tengely mentén ábrázolva), a többi pedig
+a függő változó (Y tengely). Vedd figyelembe, hogy a jelmagyarázat nem jelenik
+meg ezen az ábrán, mert csak egy függő változó van, így helyette az Y tengely
+van felcímkézve a nevével.</p>
+
+<p>Az ábra <code>Style</code>-ja <code>Marker</code>-re lett változtatva, hogy az
+adatpontokhoz jelölőket mutasson ahelyett, hogy vonalakkal kötné össze őket, és
+a <code>Fill</code> hozzá lett adva, hogy kitöltött jelölőket mutasson körvonalak
+helyett. A kitöltés részben átlátszó, alapértelmezett 20%-os
+átlátszatlansággal, de ez 10%-ra lett változtatva a <code>Marks</code>
+beállítással, így az adathalmazban ritkán előforduló pontok észrevehetően
+világosabb színnel jelennek meg.</p>
+
+<pre>exiftool C:/pics -w plot3.svg "-*temperature" -plot \
+  -api plot="type=scatter,style=marker+fill,stroke=1.5,marks=---10"</pre>
+
+<blockquote><img src="plot3.svg" alt="SVG-format plot" width=800 height=600></blockquote>
+
+<a name="EX4"></a>
+<h3>4. példa – Értékek felosztása</h3>
+
+<p>Ahhoz, hogy egy videóból időbélyeggel ellátott gyorsulásmérő-leolvasásokat
+ábrázolj, ahol az Accelerometer értékek számsztringek, az
+<a href="ExifTool.html#Plot">API Plot opció</a> <code>Split</code> beállítását
+kell használni, hogy az értékeket külön vonalakra ossza az ábrán. Íme egy példa
+a fájl első Accelerometer értékére:</p>
+
+<pre><span class='blk'>&gt; </span>exiftool test.mp4 -ee -accelerometer -s2 --a
+<span class='blk'>Accelerometer: +0.12 +0.96 -0.09</span></pre>
+
+<p>És ez a parancs szolgált a következő ábra generálására:</p>
+
+<pre>exiftool test.mp4 -w plot4.svg -ee -accelerometer -plot -api plot="split,legend=30 107" \
+  -api plot="title=Accelerometer Readings,ylabel=G Force,xlabel=Sample Number"
+</pre>
+
+<blockquote><img src="plot4.svg" alt="SVG-format plot" width=800 height=600></blockquote>
+
+<a name="EX5"></a>
+<h3>5. példa – Több ábra</h3>
+
+<p>Ez a példa a <code>Multi</code> beállítást mutatja be több
+<code>Histogram</code> ábra 2 oszlopban való rajzolására. Az
+<a href="ExifTool.html#Filter">API Filter</a> opció a záridő átalakítására
+szolgál egy 1/640-hez hasonló értékből 640-re, hogy az érték nevezője legyen
+ábrázolva.</p>
+
+<pre>exiftool C:\my_trip -w! plot5.svg -fnumber -focallength35efl# -shutterspeed -iso -plot \
+  -api filter="s(1/)()" -api plot="multi=2,type=hist,style=fill,cols=green,ylabel="</pre>
+
+<blockquote><img src="plot5.svg" alt="SVG-format plot" width=800 height=600></blockquote>
+
+<hr>
+<i>Létrehozva: 2025. február 19.</i><br>
+<i>Utoljára módosítva: 2025. április 22.</i><br>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool kezdőlapjára</a></p>
+</body>
+</html>
+

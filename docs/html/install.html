@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+<title>Az ExifTool telepítése</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+li      { margin-top: .5em }
+.attn   { padding: 0.5em; border: 1px solid gray; background: #fee }
+div.rt  { float: right; clear: both }
+-->
+</style></head>
+<body>
+<h1 class='up'>Az ExifTool telepítése</h1>
+
+<blockquote class=attn><b class=red>Megjegyzés:</b> az ExifTool <b><u>nem</u> igényel
+telepítést</b> a futtatáshoz.  Egyszerűen töltsd le és csomagold ki a teljes Perl
+disztribúciót Mac/Linux rendszeren, vagy a Windows EXE változatot Windowson, és futtasd
+közvetlenül.  <i class=lt>[De vedd figyelembe, hogy ha átmozgatod a Perl "exiftool"
+alkalmazást, akkor a "lib" könyvtárát is át kell mozgatnod ugyanoda, és
+ha átmozgatod a Windows "exiftool(-k).exe" vagy "exiftool.exe" fájlt, akkor az
+"exiftool_files" mappát is át kell mozgatnod.]</i><br><br>A telepítés előnyei viszont a következők:
+<ul><li>Az ExifTool minden felhasználó számára elérhetővé válik.</li>
+<li>Kevesebb gépelés a parancssorban (mivel az "exiftool" bekerül a PATH-ba).</li>
+<li>Telepíti az ExifTool dokumentációját és API-könyvtárait (csak a teljes Perl változatnál).</li>
+</ul></blockquote>
+
+<p>Lásd lentebb a megfelelő szakaszt, amely az ExifTool telepítéséhez vagy
+eltávolításához ad útmutatást a konkrét platformodon:</p>
+
+<ul>
+<li><a href="#Windows">Windows</a></li>
+<li><a href="#MacOS">MacOS</a></li>
+<li><a href="#Unix">Unix platformok</a></li>
+</ul>
+
+<p>Az ExifTool futtatásához lásd még <a href="index.html#running">ezt az útmutatót</a>.</p>
+
+<hr>
+<h2><a name="Windows">Windows</a></h2>
+
+<p>Windowson az ExifTool két különböző változata közül lehet választani a
+telepítéshez.  A Perl disztribúcióhoz a Perlnek telepítve kell lennie a rendszereden.
+(Jó, ingyenes Perl-értelmező letölthető innen:
+<a href="https://www.activestate.com/products/perl/">activeperl.com</a> vagy
+<a href="https://strawberryperl.com/">strawberryperl.com</a>.)</p>
+<p>Ha még nincs telepítve a Perl, egyszerűbb az ExifTool futtatható változatát
+telepíteni, de vedd figyelembe, hogy ez a változat nem tartalmazza a
+HTML-dokumentációt és a teljes disztribúció néhány más fájlját.</p>
+
+<h3>Windows futtatható állomány</h3>
+<ol>
+<li><b>Töltsd le</b> a 32 bites vagy 64 bites <b>Windows futtatható állományt</b> az <a href="index.html">ExifTool honlapjáról</a>.
+<br><span class=lt>(A letöltött fájl neve "<code>exiftool-13.59_32.zip</code>"
+vagy "<code>exiftool-13.59_64.zip</code>" legyen.)</span></li>
+<li><b>Csomagold ki az "<code>exiftool-13.59_xx</code>" mappát</b> a
+"<code>.zip</code>" fájlból, és helyezd az <b>asztalodra</b>.
+<br><span class=lt>(Kattints duplán az "<code>exiftool-13.59_xx.zip</code>" fájlra az
+archívum megnyitásához, majd húzd az "<code>exiftool-13.59_xx</code>" mappát az asztalodra.)</span></li>
+<li>Nyisd meg az "<code>exiftool-13.59_xx</code>" mappát az asztalodról.</li>
+</ol>
+<p>Ezután duplán kattinthatsz a mappában lévő "<code>exiftool(-k).exe</code>" fájlra az
+alkalmazás dokumentációjának megtekintéséhez, vagy fájlokat és mappákat húzhatsz rá,
+hogy az exiftool a kiválasztott fájlokon fusson. Ha az exiftoolt a <b>parancssori
+használatra</b> szeretnéd telepíteni, folytasd az alábbi lépésekkel:</p>
+<ol start=4>
+<li><b>Nevezd át</b> az "<code>exiftool(-k).exe</code>" fájlt erre: <b>"<code>exiftool.exe</code>"</b>.
+<br><span class=lt>(vagy "<code>exiftool(-k)</code>" helyett "<code>exiftool</code>", ha a fájlnév-
+kiterjesztések el vannak rejtve a rendszereden)</span></li>
+<li><b>Mozgasd az "<code>exiftool.exe</code>" fájlt és az "<code>exiftool_files</code>" mappát</b>
+a PATH bármelyik könyvtárába (vagy bármely más, általad választott könyvtárba).</li>
+</ol>
+<p>Ezután az exiftoolt a parancssorba beírt "<code>exiftool</code>" paranccsal
+futtathatod (vagy "<code>c:\path\to\exiftool</code>", ha a könyvtár nincs a
+PATH-ban).  <br><span class=lt>(A parancssor eléréséhez válaszd a "Futtatás..."
+pontot a Windows "Start" menüjéből, majd írd be, hogy "<code>cmd</code>", és nyomj Entert.)</span></p>
+<!-- (I think that these notes probably applied only to the old self-extracting version)
+<p><b>Notes:</b></p>
+<ol type='a'>
+<li>In Windows 7, running exiftool may require administrator privileges.  If
+necessary, this may be enabled by right clicking on exiftool, then selecting
+<b>"Run this program as administrator"</b> from the Compatibility settings.</li>
+<li>Windows 10 users have sometimes reported that exiftool hangs when run.
+This may be due to Windows Defender blocking or slowing down exiftool. To solve
+this, either disable Windows Defender or add an exclusion for exiftool (but note
+that exiftool may still run more slowly if you just add an exclusion).</li>
+</ol> -->
+<p><a name="uninstall_Windows_exe"><b>Eltávolítás:</b></a></p>
+<ol type='i'>
+<li>Húzd az "<code>exiftool(-k).exe</code>" fájlt (vagy "<code>exiftool.exe</code>", ha átnevezted)
+és az "<code>exiftool_files</code>" mappát a Lomtárba.</li>
+</ol>
+<h3>Teljes Perl disztribúció</h3>
+<p>Ennek a változatnak a használatához telepítve kell lennie a Perlnek.  (Ingyenes
+Perl-változat letölthető innen:
+<a href="http://www.activestate.com/activeperl/">activeperl.com</a> vagy
+<a href="https://strawberryperl.com/">strawberryperl.com</a>.)</p>
+<ol>
+<li><b>Töltsd le</b> az <b>Image-ExifTool disztribúciót</b> az <a href="index.html">ExifTool honlapjáról</a>
+<br><span class=lt>(A letöltött fájl neve "<code>Image-ExifTool-13.59.tar.gz</code>" legyen.)</span></li>
+<li><b>Csomagold ki az ExifTool fájljait</b> az archívumból.
+<br><span class=lt>(Az archívum egy gzip-pel tömörített tar fájl, amely többféle
+Windows segédprogrammal megnyitható, például a WinZip-pel.)</span></li>
+<li><b>Nevezd át</b> az "<code>exiftool</code>" fájlt erre: <b>"<code>exiftool.pl</code>"</b>
+az exiftool disztribúcióban.</li>
+<li><b>Mozgasd az "<code>exiftool.pl</code>" fájlt</b> és a <b>"<code>lib</code>"</b>
+könyvtárat az exiftool disztribúcióból a PATH bármelyik könyvtárába.</li>
+</ol>
+<p>Ezután, ha megfelelően beállítottad a Windows-társítást a
+"<code>.pl</code>" kiterjesztéshez (ez egy opció az ActivePerl telepítésében),
+az exiftoolt az "<code>cmd.exe</code>" parancssorába beírt
+"<code>exiftool.pl</code>" paranccsal futtathatod.  Egyébként ezt kell beírnod:
+"<code>perl c:\path\to\exiftool.pl</code>".</p>
+<p><a name="uninstall_Windows_perl"><b>Eltávolítás:</b></a></p>
+<ol type='i'>
+<li>Húzd az "<code>exiftool.pl</code>" fájlt és a
+"<code>lib</code>" könyvtárat a Lomtárba.  Előbb győződj meg róla,
+hogy a "<code>lib</code>" csak a "<code>File</code>"
+és "<code>Image</code>" alkönyvtárakat tartalmazza.  Ne töröld, ha
+bármi mást is tartalmaz.</li>
+</ol>
+
+<hr>
+<h2><a name="MacOS"></a><a name="OSX">MacOS</a></h2>
+
+<p>Ha telepítetted a BSDSDK csomagot az Xcode Developer Toolsból
+(<i>azaz ha megvan a</i> "<code>make</code>" <i>segédprogram</i>), akkor az alábbi
+lépések helyett a következő szakaszban lévő, <a href="#Unix">Unix platformokra</a>
+vonatkozó telepítési eljárást kövesd. A Unix telepítés előnye, hogy az ExifTool
+könyvtárát elérhetővé teszi a Perl-szkriptjeid számára, valamint telepíti a
+man-oldalakat és a POD-dokumentációt.</p>
+<p>Egyébként két telepíthető csomag közül választhatsz: a MacOS csomag vagy a
+teljes Perl disztribúció.  Az alábbi két eljárás ugyanoda telepíti az ExifTool
+fájljait.  A MacOS csomagból való telepítés egyszerűbb, de a teljes disztribúció
+tartalmazza a HTML-dokumentációt és néhány más fájlt is, amely a MacOS csomagban
+nincs benne.  Mindkét változat natívan fut PPC és Intel Maceken.</p>
+
+<h3>MacOS csomag</h3>
+<ol>
+<li><b>Töltsd le</b> az <b>ExifTool MacOS csomagot</b> az <a href="index.html">ExifTool honlapjáról</a>.
+<br><span class=lt>(A letöltött fájl neve "<code>ExifTool-13.59.pkg</code>" legyen.)</span></li>
+<li><b>Telepítsd</b> szokásos <b>MacOS csomagként</b>.
+<br><span class=lt>(Kattints duplán a telepítőcsomagra, és kövesd az utasításokat.
+Ha az "unidentified developer" vagy "could not verify" üzenet megállít, lásd az
+alábbi Megjegyzéseket.)
+</span></li>
+</ol>
+<p>Ezután az exiftoolt egy Terminál-ablakban beírt "<code>exiftool</code>" paranccsal futtathatod.</p>
+<p>Ha ez nem működik, akkor valószínűleg a MacOS egy régebbi változatát használod,
+amelyben a /usr/local/bin nincs benne az alapértelmezett PATH-ban.  Ennek javításához
+add hozzá a következő sort a ~/.profile beállításaidhoz egy szövegszerkesztővel:</p>
+<blockquote><code>export PATH=$PATH:/usr/local/bin</code></blockquote>
+
+<p class=lt><b>Megjegyzések:</b></p>
+<p><i class=lt>Az Apple blokkolja az ismeretlen gyártóktól származó alkalmazásokat, és
+fejlesztői díjat követel, ami nemigen fér össze a nyílt forráskódú szoftver eszméjével,
+ezért nem vagyok hajlandó megfizetni – innen ered az alábbi kellemetlenség... - PH</i></p>
+<ul><li>A MacOS 10.8-tól a MacOS 14-ig ezt az üzenetet láthatod, amikor megpróbálod megnyitni a telepítőcsomagot:
+<blockquote class=red>"ExifTool-13.59.pkg" can't be opened because it is from an
+unidentified developer.</blockquote> A megoldás az, hogy Ctrl-kattintasz a pkg fájlra, majd
+a felugró menüből az "Open" pontot választod dupla kattintás helyett.  Alternatívaként
+csökkentheted a biztonsági beállításokat: a General "Security &amp; Privacy"
+rendszerbeállításokban az "Allow applications downloaded from" értékét "Anywhere"-re állítod.
+(<a href="https://support.apple.com/en-us/HT202491">Itt</a> vagy
+<a href="http://news.softpedia.com/news/Fix-OS-X-Error-Application-Can-t-Be-Opened-Because-it-Is-from-an-Unidentified-Developer-407375.shtml">itt</a>
+olvasható a teljes leírás.)</li>
+<li>A MacOS 15-ben vagy újabban ezt az üzenetet láthatod, amikor megpróbálod megnyitni a telepítőcsomagot:
+<blockquote class=red>Apple could not verify "ExifTool-13.59.pkg" is free of malware
+that may harm your Mac or compromise your privacy.</blockquote> A megoldás az, hogy
+megnyitod a "Privacy &amp; Security" rendszerbeállításokat, és megkeresed az "Open Anyway"
+gombot a Security szakaszban.</li>
+<li>Egy másik lehetőség, ha már van telepítve az ExifTool egy másik változata:
+távolítsd el a karantén jelzőt a következő parancsot egy Terminál-ablakban futtatva,
+így elindítható lesz a telepítő:
+<blockquote><pre class=code>exiftool -XAttrQuarantine= ExifTool-13.59.pkg</pre></blockquote>
+vagy ha még nincs telepítve az ExifTool, ezt teheted:
+<blockquote><pre class=code>xattr -d com.apple.quarantine ExifTool-13.59.pkg</pre></blockquote>
+Vedd figyelembe, hogy a fenti parancsok bármelyikének futtatása előtt "cd"
+paranccsal be kell lépned a csomagfájlt tartalmazó könyvtárba, vagy meg kell adnod
+a csomagfájl teljes elérési útját.
+</li></ul>
+
+<h3>Teljes Perl disztribúció</h3>
+<ol>
+<li><b>Töltsd le</b> az <b>Image-ExifTool disztribúciót</b> az <a href="index.html">ExifTool honlapjáról</a>
+az asztalodra.
+<br><span class=lt>(A letöltött fájl neve "<code>Image-ExifTool-13.59.tar.gz</code>" legyen.)</span></li>
+<li><b>Indítsd el</b> a <b>Terminál</b> alkalmazást az Alkalmazások mappán belüli Segédprogramok mappából.</li>
+<li>A Terminál-ablakban <b>írd be a következőt</b>:
+<pre class='code'>    cd ~/Desktop
+    tar -xzf Image-ExifTool-13.59.tar.gz
+    cd Image-ExifTool-13.59
+    sudo cp -r exiftool lib /usr/local/bin
+</pre>
+<span class=lt>(Megjegyzés: a fenti utolsó lépéshez meg kell adnod a
+jelszavadat.)</span></li>
+</ol>
+<p>Ezután az exiftoolt egy Terminál-ablakban beírt "<code>exiftool</code>" paranccsal futtathatod.</p>
+
+<p class=lt><b>Megjegyzés:</b></p>
+<ul><li>A fent vázolt mindkét MacOS-telepítési módszer az exiftoolt és a lib
+könyvtárát a /usr/local/bin alá helyezi, míg az alább ismertetett szabványos Unixos
+"<code>make install</code>" az "<code>exiftool</code>" fájlt a /usr/local/bin alá,
+az egyes könyvtárakat pedig a /Library/Perl/#.#.# alá teszi, ahol a "#.#.#" a
+Perl-verziódat jelöli. Ha mindkét könyvtárkészlet létezik, az exiftool számára a
+/usr/local/bin/lib az elsődleges, de bármely más Perl-szkript számára a
+/Library/Perl/#.#.# az alapértelmezett.</li></ul>
+
+<h3><a name="uninstall_MacOS">Eltávolítás</a></h3>
+<ol type='i'>
+<li>Indítsd el a "Terminal" alkalmazást az Alkalmazások Segédprogramok mappájából.</li>
+<li>Írd be a Terminál-ablakba, hogy "<code>open /usr/local/bin</code>" (idézőjelek
+nélkül), majd nyomj RETURN-t. (Ez megnyit egy olyan mappát, amelyhez MacOS alól
+általában nem férsz hozzá.)</li>
+<li>Húzd az "<code>exiftool</code>" és a "<code>lib</code>" elemet a kukába a
+megnyitott "<code>bin</code>" mappából. Előbb győződj meg róla, hogy a
+"<code>lib</code>" csak két almappát tartalmaz: "<code>File</code>" és
+"<code>Image</code>". Ha bármi mást is tartalmaz, ne dobd ki, mert rossz
+"<code>lib</code>" mappád van.</li>
+</ol>
+
+<hr>
+<h2><a name="Unix">Unix platformok</a></h2>
+
+<ol>
+<li><b>Töltsd le</b> az <b>Image-ExifTool disztribúciót</b> az <a href="index.html">ExifTool honlapjáról</a>
+<br><span class=lt>(A letöltött fájl neve "<code>Image-ExifTool-13.59.tar.gz</code>" legyen.)</span></li>
+<li><b>Csomagold ki a disztribúciót</b>, és <b>lépj be a könyvtárába</b> a következő beírásával:
+<pre class='code'>    cd <i>&lt;your download directory&gt;</i>
+    gzip -dc Image-ExifTool-13.59.tar.gz | tar -xf -
+    cd Image-ExifTool-13.59
+</pre>
+<span class=lt>(Ezen a ponton az exiftoolt a
+"<code>./exiftool <i>&lt;image file name&gt;</i></code>" beírásával futtathatod.)</span></li>
+<li><b>Teszteld és telepítsd az ExifToolt</b> a következő beírásával:
+<pre class='code'>
+    perl Makefile.PL
+    make test
+    sudo make install
+</pre>
+<span class=lt>(Megjegyzés: a "<code>make test</code>" lépés nem kötelező, de
+hasznos, mert lefuttat egy teljes tesztkészletet annak ellenőrzésére, hogy az ExifTool
+megfelelően működik-e a rendszereden.  A "<code>sudo make install</code>" parancshoz
+su-hozzáférés kell, és bekéri a jelszavadat.  Ez az ExifToolt és a dokumentációját a
+rendszered minden felhasználója számára elérhetővé teszi. Ha nincs su-hozzáférésed,
+az ExifToolt a saját fiókodban is futtathatod, ha az "<code>exiftool</code>" fájlt és
+a "<code>lib</code>" könyvtárát bármely alkalmas helyre mozgatod, lehetőleg valahová a
+PATH-ba.)</span></li>
+</ol>
+<p>Ezután az exiftoolt az "<code>exiftool</code>" beírásával futtathatod.  Emellett az
+ExifTool dokumentációját is megtekintheted az alábbihoz hasonló parancsokkal:</p>
+<blockquote><pre class='code'>perldoc exiftool
+perldoc Image::ExifTool
+perldoc Image::ExifTool::TagNames
+</pre></blockquote>
+<p>vagy</p>
+<blockquote><pre class='code'>man exiftool
+man Image::ExifTool
+man Image::ExifTool::TagNames
+</pre></blockquote>
+
+<h3><a name="uninstall_Unix">Eltávolítás</a></h3>
+<ol type='i'>
+<li>Írd be a disztribúció könyvtárában, hogy "<code>sudo make uninstall</code>".
+<br><span class=lt>(Megjegyzés: sajnos az újabb rendszerek adhatnak egy <i>"Uninstall
+is unsafe and deprecated"</i> üzenetet, pedig az ExifTool eltávolítása biztonságos,
+mert nincsenek függőségei.  Ha ez történik, a rendszer kilistázza a telepített fájlok
+eltávolításához szükséges parancsokat, és ezeket a parancsokat kézzel kell
+lefuttatni.)</span></li>
+</ol>
+
+<hr>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
+</body>
+</html>

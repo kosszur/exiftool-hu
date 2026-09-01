@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Maker note-ok idi(óta) sajátosságai</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+</head>
+<body>
+<h1 class='up'>Maker note-ok idi(óta) sajátosságai</h1>
+
+<p>Igazán meglepő, milyen ostobának tűnik némely (...sok, ...a legtöbb?) gyártó,
+amikor arról van szó, hogy egy meglehetősen egyszerű fájlformátumnak kellene
+lennie, amit írnak.</p>
+
+<p>Egy pozitívum, hogy a legtöbb gyártó úgy tűnik, egy EXIF-szerű IFD (Image
+File Directory) szerkezetre állt rá a maker note-jaihoz. De sok probléma
+felmerül az EXIF/TIFF formátum egy alapvető tervezési hibája miatt. A 4 bájtnál
+hosszabb értékek egy olyan helyen tárolódnak, amelyre a fájlban lévő abszolút
+pozíciótól számított eltolás hivatkozik (ahol a 0 eltolás az EXIF/TIFF-információ
+kezdete).</p>
+
+<p>A nehézség az, hogy ezeket az eltolásokat újra kell számítani, amikor egy
+fájlt újraírnak, de általában ez nem lehetséges (különösen a maker note-oknál),
+mert nem ismert minden információ formátuma. Néhány gyártó megpróbálta elkerülni
+ezt a problémát olyan eltolásokkal, amelyek a maker note IFD kezdetéhez
+viszonyítottak a szokásos EXIF-kezdet helyett. Ez jó ötlet, ha megfelelően van
+megvalósítva, de ezt nem következetesen teszik. (És némely gyártó még abban sem
+következetes, hogyan számolódnak az eltolások egyik fényképezőgép-modellről a
+másikra!)</p>
+
+<blockquote><font size='-1'><b>Technikai megjegyzés:</b>
+<br>Ha az EXIF-et megfelelően tervezték volna, minden eltolás az IFD vége utáni 4
+bájthoz viszonyulna, ami az értékek tárolásának normál pozíciója, és az IFD
+összes értékadata egy blokkban tárolódna ezen a helyen. Ha így tettek volna, egy
+egész IFD könnyen áthelyezhető lenne problémák okozása nélkül.</font></blockquote>
+
+<p>Az alábbiakban a különböző gyártók digitális fényképezőgépei vagy szoftverei
+által írt fájlok sajátosságainak listája következik. E furcsaságok közül sok a
+fent említett eltolásproblémához kapcsolódik.</p>
+
+<hr>
+
+<p><a name="Canon"><b>Canon:</b></a> A 350D (1.0.1 firmware) rosszul állapítja meg a bélyegkép
+méretét, és 10 bájttal hosszabbnak jelenti. Emiatt a jelentett bélyegkép-adat
+kifuthat az APP1 szegmens végén túlra. A 40D firmware 1.0.4-es verziójában lévő
+hiba miatt a maker note bejegyzésszáma eggyel nagyobbra íródik a kelleténél.</p>
+
+<p><a name="Casio"><b>Casio:</b></a> Az előnézeti képre két különböző eltolás hivatkozik (a
+PreviewImage tag, plusz egy PreviewImageStart/PreviewImageLength pár). Ráadásul a
+PrintIM-információ eltolása az IFD-bejegyzés kezdetéhez viszonyított, még akkor
+is, ha a többi eltolás nem az.</p>
+
+<p><a name="Concord"><b>Concord:</b></a> Néhány modell a PrintIM-információt a Casióhoz hasonlóan
+bejegyzésalapú eltolással írja.</p>
+
+<p><a name="GE"><b>General Electric:</b></a> Több GE fényképezőgép nulla eltolást tárol egyes
+maker note tagekhez (esetleg azt jelezve, hogy a tagek nem léteznek), más
+eltolások pedig 12 bájttal túl magasak egyes modelleknél (mint az A1230, E1035
+és G2).
+</p>
+
+<p><a name="HP"><b>Hewlett-Packard:</b></a> A PhotoSmart 720 (a kevés EXIF-formátumú maker
+note-ot használó HP-modell egyike) az 5-ös formátumkódot (rational64u) használja
+a 0x0204 taghez, de rational32u értéket tárol. A többi modell körülbelül annyi
+szabványosítást mutat, mint a Kodak fixfókuszos gépeinek sora. Ráadásul néhány
+modell (C945, M22, M23, R507, R607, R707, R717, R725, R727, R817, R818, R827,
+R927 és R960) az EXIF ComponentsConfiguration-t hibásan, ASCII-karakterekként
+írja (mint a Leica M8 és M9).</p>
+
+<p><a name="Kodak"><b>Kodak:</b></a> A Professional DCS Photo Desk szoftver olyan ciklikus
+EXIF-könyvtárat ír, amelyben az InteropIFD-mutató visszamutat az IFD0-ra. A
+fixfókuszos modellek kevés szabványosítást mutatnak a maker note formátumában.
+Néhány IFD-formátumú maker note-tal rendelkező modell hibás darabszámértékeket
+tárol több taghez (ez különösen kellemetlen), és tartalmazhatnak üres
+IFD-bejegyzéseket, amelyek 0xff-fel vannak feltöltve (nem nullákkal, mint más
+gyártóknál).</p>
+
+<p><a name="Konica"><b>Konica:</b></a> A KD-300Z minden maker note eltolást az egyes IFD-bejegyzés
+kezdetéhez viszonyítva ír.</p>
+
+<p><a name="Kyocera"><b>Kyocera:</b></a> Több modell minden maker note eltolást az egyes
+IFD-bejegyzés kezdetéhez viszonyítva ír.</p>
+
+<p><a name="Leica"><b>Leica:</b></a> A Leica messze a legkevésbé következetes cég, amikor a
+makernote-információ írásáról van szó. A különböző modellek különböző
+szignatúrákat és különböző bázisokat használnak a maker note-ok eltolásaihoz.
+Ezenkívül számos igazán különös dolgot művelnek a metaadataikkal.</p>
+
+<p>Az M8 és az M9 az EXIF ComponentsConfiguration értéket ASCII-ban írja bináris
+helyett. Az M8 az EXIF ExposureCompensation és ShutterSpeedValue értéket hibásan,
+előjel nélküli racionálisként írja, holott előjelesnek kellene lennie. Ez őrült
+értékekhez vezet, mint a „+65536" a kis negatív expozíciókorrekcióknál, és a
+„0 s" a hosszú expozíciós időknél. (MEGJEGYZÉS: ezek mind EXIF-sajátosságok,
+mivel az értékek a szabványos EXIF-ben vannak, nem a maker note-okban.) A
+DNG-képeknél az M8 a JPEG-képekben a maker note-ok kezdetéhez viszonyított maker
+note eltolásokat használ (nagyon ésszerű), de a DNG-képekben a maker note fejléc
+végéhez viszonyítottakat. Szerintem ez hiba volt, mert az M9 DNG-képeiben ezt
+megváltoztatták, hogy megegyezzen a JPEG-képekkel.</p>
+
+<p>2010-02-20: A Leica S2 maker note formátuma a LEGidiótább, amit valaha
+láttam, és a következő különcségei vannak:</p>
+
+<ul>
+<li>Trailerként van tárolva a JPEG EOI után (de az APP1 EXIF szegmensen belüli
+mutató hivatkozik rá).</li>
+<li>Ebben a MakerNote IFD-ben a legtöbb eltolás a fájl kezdetéhez viszonyított az
+EXIF TIFF fejléc helyett (ami különösen kegyetlen, mert eltörnek, ha más szoftver
+egyszerűen hozzáad egy bevezető JFIF szegmenst, de nincs egyszerű mód annak
+felismerésére, hogy ez megtörtént. Normál esetben ezt a mutatók elemzésével
+lehetne felismerni, de itt ez nem működik, mert a Leica maker note-jaiban lévő
+összes kihasználatlan adat lehetetlenné teszi a normál mutatófeltevéseket).</li>
+<li>A PreviewImage eltolása a MakerNote-adat kezdetéhez viszonyított (ami SOKKAL
+ésszerűbb, de két különböző eltolásbázis használata ugyanabban a könyvtárban az
+idiotizmus egy újabb szintje).</li>
+<li>A DNG-képekben a maker note-ok abszolút bázis-eltolást használnak. Megint
+csak másképp, mint az M8 és az M9. A következetesség nem a Leica erőssége.</li>
+</ul>
+
+<p>2013-07-27: Ezt húzzuk is ki. A legidiótább díjat most a Leica M (Typ 240)
+kapja, amely ezeket a furcsaságokat teszi hozzá (1.1.0.2 firmware):</p>
+
+<ul>
+<li>A 0x0301 tagnek ugyanaz az eltolása, mint a maker note IFD-ben lévő
+PreviewImage-nek, bár úgy tűnik, ennek a tagnek az adatai valószínűleg a
+PreviewImage után jönnek.</li>
+<li>A 0x0302 tagnek érvénytelen az eltolása (0xffffffff).</li>
+</ul>
+
+<p>2015-09-03: Rendben, feladom a Leicát. Az új Leica S (Typ 007) az ostobaság
+új szintjét éri el azzal, hogy az előnézeti képet egy teljesen értelmetlen
+technikával tárolja a JPG-fájlban (az EXIF szegmens IFD2-jében, az adatokat az
+EXIF szegmensen kívül, a JPEG EOI után tárolva), valamint különféle más
+agyatlan baklövésekkel. [@Leica: próbáljátok meg elolvasni az MPF
+specifikációt.]</p>
+
+<p><a name="Minolta"><b>Minolta:</b></a> A Z2 firmware-jében lévő nyilvánvaló hiba hibás eltolást ír
+a 'MinoltaCameraSettings2' információhoz -- magának az eltolásnak az eltolását
+írja az érték eltolása helyett (hahaha!). A többi eltolás helyes.</p>
+
+<p><a name="Nikon"><b>Nikon:</b></a> A D2H NEF fájljaiban hatalmas, csupa nulla adatot tartalmazó
+blokkok vannak (3,7 MB az én tesztfájlomban!).</p>
+
+<p><a name="Olympus"><b>Olympus:</b></a> Az E-1-nek és az E-300-nak alkönyvtárai vannak a maker
+note-okban, de ezeknek az alkönyvtáraknak az adatmérete nemcsak hogy kihagyja az
+alkönyvtár értékadatait, hanem 2 bájttal kisebb is magánál a könyvtárinformációnál
+(hoppá! -- elfelejtették beleszámítani a bejegyzésszámot). Hasonlóképpen, a maker
+note adatblokk tárolt mérete sok modellnél túl kicsi, ami adatvesztéshez vezet,
+ha a maker note-okat blokkként másolják egy kép újraírásakor.</p>
+
+<p><a name="Pentax"><b>Pentax:</b></a> Az Optio 330 a PrintIM-információhoz olyan eltolást használ,
+amely az IFD-bejegyzés kezdetéhez viszonyított (hmmm, mint néhány Casio-modell…).
+Ráadásul a maker note-okban lévő előnézeti kép eltolásai az EXIF-bázishoz
+viszonyítottan vannak megadva, nem a maker note-bázishoz (mint minden más maker
+note eltolás).</p>
+
+<p>Az Optio 550, 555, 33WR és 43WR mind PrintIM-könyvtárat ad meg ugyanazon a
+0x29a eltoláson, 40 bájt hosszal, de a fájlban lévő egyetlen PrintIM-információ
+sehol sincs annak az eltolásnak a közelében, és 128 bájt hosszú. Szintén ezeknél
+a modelleknél a 0x002e tag állandó 0x6a6 értékű, még akkor is, ha a pozíciója
+változik. Végül mindezek a modellek, plusz az Optio WP, sok kilobájtnyi helyet
+pazarol el minden képben nagy, kihasználatlan adatblokkokkal az
+EXIF-információban.</p>
+
+<p>Az Optio 330RS és 430RS kétszeresen hivatkozik az előnézeti kép
+információjára.</p>
+
+<p>Vedd figyelembe, hogy a legrosszabb problémák az Optio 230-cal, 330-cal és
+430-cal vannak, amelyek az Asahi márkanevet viselik.</p>
+
+<p><a name="Photoshop"><b>Photoshop és Nikon Capture:</b></a> Mindkét csomag 'int32u'-ként (vagy
+'LONG'-ként) írja a TIFF IPTC-információt. Ez hibás
+(<a href="http://www.awaresystems.be/imaging/tiff/tifftags/iptc.html">lásd a
+hivatkozást</a>). A Nikon Capture egy lépéssel tovább megy, és egyszerűen
+figyelmen kívül hagyja azt az IPTC-t, amely helyesen, 'undef'-ként vagy
+'int8u'-ként van írva. (Így a kompatibilitás érdekében az ExifTool is hibásan,
+'int32u'-ként írja ezt.) A Photoshop egy kép szerkesztésekor teljesen törli a
+maker note-okat.</p>
+
+<p><a name="Ricoh"><b>Ricoh:</b></a> Van egy IFD-alkönyvtár a Ricoh maker note-jaiban mind a
+Caplio RR30-nál, mind az RR1-nél. Az RR30 szabványos EXIF-eltolásokat használ
+(az EXIF-adat kezdetéhez viszonyítva), de az RR1-nél az eltolások az alkönyvtár
+kezdetéhez viszonyítottak. A G700 a fájl kezdetéhez viszonyított MPF-eltolásokat
+használ az MPF-specifikáció szerinti MPF-szegmens kezdete helyett. A HX15
+szabványos EXIF maker note szerkezetet használ, de 2 extra kitöltőbájt van az
+IFD bejegyzésszáma és az 1. IFD-bejegyzés között. A HZ15-nek és a Pentax XG-1-nek
+(a Ricoh-tól) is van 2 extra bájtja az IFD bejegyzésszámai után. A HZ15-nél
+minden értékeltolás tévesen 0, és az XG-1 által tárolt eltolásokkal is más
+problémák vannak.</p>
+
+<p><a name="Rollei"><b>Rollei:</b></a> A DK4010 minden maker note eltolást az egyes IFD-bejegyzés
+kezdetéhez viszonyítva ír.</p>
+
+<p><a name="Sanyo"><b>Sanyo:</b></a> A J1, J2, J3, S1, S3 és S4 maker note-jaiban írt eltolásoknak
+nagyon kevés közük van a valósághoz. A Sanyo programozói láthatóan nem értik az
+IFD-eltolás fogalmát.</p>
+
+<p><a name="Skanhex"><b>Skanhex:</b></a> Néhány Skanhex-modellnél (SX-210Z3, SX-330Z3, SX3300,
+SX410Z3) a 264 bájtos makernotes-blokk semmilyen hasznos információt nem
+tartalmaz, és átfed az ExifIFD-ből származó értékekkel. Ezeknél a modelleknél van
+egy nagy (jellemzően 1195 bájtos) blokk hivatkozás nélküli információból az
+EXIF-adatban, közvetlenül az IteropIFD után. Ez a blokk a „SKANH\0"
+karaktersorozattal kezdődik, és pontosan ugyanazt az információt tartalmazza
+mind a 20 olyan mintaképemben, amely tartalmazza ezt a blokkot (kivéve a végén
+lévő, változó mennyiségű 0xff bájtos kitöltést). Ezek a furcsaságok néhány
+Gateway-, Jenoptik-, Medion-, Samsung- és Yakumo-modellt is érintenek, amelyeket
+a Skanhex gyártott.</p>
+
+<p><a name="Toshiba"><b>Toshiba:</b></a> A PDR-3310 minden maker note eltolást az egyes
+IFD-bejegyzés kezdetéhez viszonyítva ír. (nagyon hasonló a Konica KD-300Z-hez)</p>
+
+<hr><a name="raw"></a>
+<h2>RAW fájlok sajátosságai</h2>
+
+<p><a name="MinoltaMRW"><b>Minolta MRW:</b></a> Az A200 az IFD0-ban lévő bélyegkép eltolását a fájl
+kezdetéhez viszonyítva tárolja, míg minden más eltolás a TIFF-fejléc kezdetéhez
+viszonyított, amely 48 bájtnyira van a fájl elejétől. Ráadásul az A200 a
+StripOffsets és a StripByteCounts értékeket rossz bájtsorrendben tárolja.</p>
+
+<p><a name="SonyARW"><b>Sony ARW:</b></a> Az ARW-képek maker note-jai nem önállóak, így némely
+információ elvész, amikor a képeket más szoftver újraírja (beleértve az Adobe
+DNG-konvertert). Az 1.00 firmware-es A100 a bélyegkép eltolásának felső szavát
+nullára állítja, holott néha 0x0001-nek kellene lennie. (Ez a probléma az 1.01
+firmware-ben javítva van.) Szintén az A100-nál az IFD0-ban tárolt
+JpgFromRawLength hibás lehet (bár ez az érték a MakerNotes-ban is tárolva van,
+és ott helyes). Ezenkívül sok információ ezekben a képekben titkosított, ami
+kissé bonyolítja a dolgokat. Még a Sony IDC segédeszköz sem tudja megfelelően
+újraírni az ARW-fájlokat -- megsérti a beágyazott MRW-rekordot, amikor
+ARW-képek szerkesztésére használják. Még viccesebb: az IDC v3.0 összeomlik,
+amikor néhány eredeti, 1.00 firmware-es A100-képet tölt be, de már nem omlik
+össze, ha a képeket előbb ExifToollal szerkesztik (valószínűleg azért, mert az
+ExifTool javítja a fent említett problémákat, amikor újraírja a képet).</p>
+
+<p><a name="HasselbladFFF"><b>Hasselblad FFF:</b></a> Sok Hasselblad
+fényképezőgép-modell TIFF-formátumú FFF raw fájlokat ír, amelyek egy
+kétszeresen hivatkozott, csökkentett felbontású képet tartalmaznak, amelyre
+mind az IFD0, mind az IFD1 hivatkozik. Közvetlenül e kép adatai után egy
+hivatkozás nélküli adatblokk következik, amelyet a Hasselblad Phocus szoftver
+egy frissített előnézethez használ, hogy tükrözze a raw előhívási
+beállításokat. Ez a hivatkozás nélküli adat elvész, ha az FFF-fájlt
+TIFF-kompatibilis algoritmussal szerkesztik, aminek eredményeként a Phocus már
+nem frissíti az előnézetet, amikor a beállítások megváltoznak.</p>
+
+<p><a name="LeicaDNG"><b>Leica DNG:</b></a> Az M8 makernote-eltolásai a JPEG-képekben a
+makernote IFD kezdetéhez viszonyítottak, de a DNG-képekben a makernote fejléc
+kezdetéhez (8 bájttal korábbra) viszonyítottak. <i>[2009-09-09: Ez az M9-nél
+javítva van, amelynek eltolásai a makernote fejléc kezdetéhez viszonyítottak
+mind JPEG, mind DNG esetén.]</i></p>
+
+<p><a name="NikonNEF"><b>Nikon NEF:</b></a> Azon a titkosításon kívül, amelyet a Nikon arra használ,
+hogy megpróbáljon elrejteni némely információt a maker note-jaiban, a NEF fájlok
+általában meglehetősen jól viselkednek. Ennek ellenére a Nikon Transfer
+segédeszköz (1.3-as verzió) még így is megsért némely információt a 0. SubIFD-ben,
+amikor NEF-képek feldolgozására használják. (Vigyázz, más Nikon-segédeszközöknek
+is lehet ugyanez a problémájuk, ha ugyanazokat a NEF-írási rutinokat használják.)
+De szerencsére az elveszett információ nem túl fontos. (Csak néhány tag vész el a
+beágyazott, teljes méretű előnézeti képből: XResolution, YResolution és
+YCbCrPositioning.) Ráadásul a Nikon Transfer és a Nikon Capture is hibás méretet
+ír a maker note-okhoz, ami MakerNote-információ elvesztését okozhatja, ha a
+fájlt más szoftver szerkeszti (de ez nem probléma az ExifToolnál, amely íráskor
+automatikusan javítja az ilyen típusú problémát).</p>
+
+<p><a name="NikonNRW"><b>Nikon NRW:</b></a> A Nikonnak egyszerűen NEF-nek kellett volna hívnia ezt
+egy másik verziószámmal -- semmi szükség nem lenne arra, hogy szükségtelen
+fájlkiterjesztések milliárdjaival szennyezzük az univerzumot. Ja, persze, nem
+voltak elég okosak ahhoz, hogy verziószámot tartalmazó fájlazonosítót tegyenek
+a NEF-képeikbe -- hoppá! Ezekben a képekben a CFAPattern2 hibásan, UNDEFINED
+formátummal van írva BYTE helyett.</p>
+
+<p><a name="PhaseOneIIQ"><b>Phase One IIQ:</b></a> Sok értékre több helyről is hivatkozik ezeknek a
+képeknek a TIFF-szerkezete. Például az IFD0 sávadatai valójában a MakerNotes
+adatblokkon belül léteznek. Ez rossz tervezés, és duplikált információhoz vezet,
+amikor a képet újraírják.</p>
+
+<p><a name="RicohDNG"><b>Ricoh DNG:</b></a>  A GR Digital IV (1.14 firmware) hibás hosszt tárol a
+SubIFD1-ben lévő JPEG-előnézethez.</p>
+
+<p><a name="SamsungSRW"><b>Samsung SRW:</b></a> Megint egy TIFF-alapú raw kép megfelelő
+fájlazonosító nélkül. Ezekben a képekben a bélyegkép az IFD1 egy SubIFD-jén
+belül van tárolva, nem közvetlenül az IFD1-ben (buta, buta…). Ráadásul az NX200
+(NX200_011181 firmware) az X/YResolution értékekhez olyan bázis-eltolást
+használ, amely különbözik a PreviewImageStart mutatótól, mindkettő a MakerNotes
+PreviewIFD-ben. (Vedd figyelembe, hogy az NX100 mindkettőhöz ugyanazt a bázist
+használja, így ez biztosan firmware-hiba az NX200-nál. <i>[2012-06-21: Ez a
+probléma most már az EX1-et, az NX20-at és a WB2000-et is érinti] [2013-07-25:
+Add hozzá az NX2000-et ehhez a listához]</i>)</p>
+
+<p><a name="GN120">2018-04-30: A Samsung EK-GN120-nak</a> sok
+problémája van a makernote-eltolásokkal. A legtöbb eltolás a maker note-ok
+kezdetéhez viszonyított, de a PreviewIFD eltolása 36 bájttal hibás, és néhány
+eltolás a PreviewIFD-ben a maker note-ok kezdetéhez viszonyított, míg mások
+abszolútak. Micsoda zűrzavar!</p>
+
+<hr>
+<i>Létrehozva: 2005. március 25.</i>
+<br><i>Utoljára módosítva: 2020. február 24.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool kezdőlapjára</a></p>
+</body>
+</html>

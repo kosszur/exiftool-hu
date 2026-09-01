@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+  <title>A jelenlegi metainformáció-szabványok problémái</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+a.ref   { text-decoration: none; font-size: x-small;
+          font-weight: normal; vertical-align: super; }
+-->
+</style>
+</head>
+<body>
+<div class='index'>
+<a href="#TIFF">TIFF 6.0</a>
+<br><a href="#DNG">DNG 1.3</a>
+<br><a href="#EXIF">EXIF 2.3</a>
+<br><a href="#PhotoInfo">OffsetSchema</a>
+<br><a href="#JPEG">JPEG</a>
+<br><a href="#MPF">MPF</a>
+<br><a href="#ID3">ID3</a>
+<br><a href="#refs">Hivatkozások</a>
+</div>
+
+<h1 class=up>A jelenlegi metainformáció-szabványok problémái</h1>
+
+<p>Úgy tűnik, minden metainformáció-szabványnak megvannak a maga sajátos
+problémái. Ez az oldal néhány jelentős szerkezeti problémát dokumentál, amely
+egyes jelenlegi metainformáció- és fájlformátum-specifikációkban található, és
+lehetséges megoldásokat kínál ezekre a problémákra.  <i>[Lásd még a <a href="commentary.html">Kommentár
+a metainformáció-formátumokhoz</a> című írásomat.]</i></p>
+
+<a name="TIFF"></a>
+<h3>TIFF 6.0 <a class=ref href="#ref1">[1]</a></h3>
+
+<p>Az 1992-es TIFF 6.0 specifikáció jelentős problémája, hogy nincs mód
+megkülönböztetni egy IFD-eltolást (image file directory) egy egyszerű egész
+értéktől.  Ennek eredményeként új IFD-k nem hozhatók létre anélkül, hogy ne
+kockáztatnánk a fájlok sérülését a szabványt nem ismerő szoftverek által.  Ez
+nemcsak a gyakran TIFF IFD-struktúrát használó, gyártói maker note-ok problémája,
+hanem a TIFF-alapú RAW képformátumok bővíthetőségének problémája is (ahogy azt a
+DNG 1.3 specifikáció is mutatja -- lásd lentebb).</p>
+
+<p><b>Egyszerű megoldás:</b></p>
+
+<p>IFD-eltolásokhoz a 4-es (LONG) helyett használjunk 13-as (IFD) TIFF-mezőtípust.
+Ezt először 1995-ben javasolta az Adobe a PageMaker
+6.0 TIFF Technical Notes<a class=ref href="#ref2">[2]</a> dokumentumban,
+de sajnos sosem került be a TIFF-specifikációba.  Ennek ellenére az
+Olympus Optical Co. némi éleslátásról tett tanúbizonyságot, és használja ezt a
+mezőtípust újabb digitális fényképezőgépeinek maker note-jaiban.
+</p>
+
+<p><b>Egy másik hasznos kiegészítés:</b> <i>(hozzáadva: 2009-09-27)</i></p>
+
+<p>Számos fényképezőgép- és mobiltelefon-gyártó (Concord, Kodak, Motorola,
+Nokia, Olympus, Pentax, Ricoh, Samsung és Sony) üres IFD-bejegyzéseket hagy
+egyes modellek képeinek maker note-jaiban. Ez feltehetően egyszerűsíti a
+beágyazott szoftvert azzal, hogy a kimeneti fájl szerkezete állandó maradhat
+akkor is, ha a maker note IFD-bejegyzéseinek száma változik.  Hasznos lenne, ha
+ezt a lehetőséget kifejezetten hozzáadnák a hivatalos TIFF-specifikációhoz, a
+0-s mezőtípust „szabad IFD-bejegyzésként" definiálva, amelyet figyelmen kívül
+kell hagyni.  (Megjegyzendő, hogy ez a képesség bizonyos szinten már most is
+implicit módon létezik a specifikációban, amely kimondja:
+<i>„Az olvasóknak át kell ugorniuk a váratlan mezőtípust tartalmazó
+mezőket"</i>.)</p>
+
+<a name="DNG"></a>
+<h3>DNG 1.3 <a class=ref href="#ref3">[3]</a></h3>
+
+<p>A 2009. júniusi DNG 1.3 specifikációval az Adobe egy új Camera Profile IFD-t
+adott hozzá, amelyre egy eltolás hivatkozik a szabványos (és szerencsétlen)
+TIFF LONG mezőtípus használatával.  Ez azt jelenti, hogy az új Profile IFD
+elvész, ha a fájlt olyan szoftver írja újra, amely nem rendelkezik kifejezett
+ismerettel az 1.3-as specifikációról.
+Hogy még rosszabb legyen a helyzet, az Adobe nem is szabványos IFD-formátumot
+használt az adatokhoz. Ehelyett az IFD egy TIFF-stílusú fejléccel kezdődik, és
+abszolút helyett relatív eltolásokat használ.  Ez jó ötlet lett volna, ha az
+IFD egy UNDEFINED tag értékeként tárolódna, nem pedig egy LONG eltolásról
+hivatkoznának rá. (Ha így csinálták volna, az új információ megmaradt volna, ha
+a fájlt a szabványt nem ismerő szoftver írja újra.) Ám a jelenlegi
+megvalósításában csak fokozza a fájl elemzésének kínját azzal, hogy még több
+speciális kódot kell írni a DNG 1.3 formátum támogatásához.</p>
+
+<p><b>Egyszerű megoldás:</b></p>
+
+<p>Rúgják ki az ezért felelős Adobe-fejlesztőket, és a jövőben új IFD-k
+hozzáadásakor használják a 13-as mezőtípust (ahogy fentebb a TIFF 6.0-hoz
+ajánlott) és szabványos TIFF IFD-struktúrát.</p>
+
+<a name="EXIF"></a>
+<h3>EXIF 2.3 <a class=ref href="#ref4">[4]</a></h3>
+
+<p>Az EXIF-specifikáció sok éve a digitális fényképezőgépek metainformációjának
+szabványa, és bár a digitális fényképezőgép-technológia jelentősen fejlődött
+ezekben az években, az EXIF-specifikáció nem.  Az EXIF-specifikációnak számos
+jelentős problémája van, amelyeket sosem orvosoltak.</p>
+
+<p>Az EXIF-specifikáció néhány jelenlegi problémája:</p>
+
+<ol>
+<li>A maker note adatstruktúrájára nincsenek megkötések, és az EXIF
+szerkesztésekor könnyen érvénytelenné válik.</li>
+<li>Nincs mód a dátum/idő értékek időzónájának tárolására. <i>[végül bekerült
+az Exif 2.31 specifikációba.]</i></li>
+<li>Nagyon korlátozott támogatás az alternatív karakterkészletekhez (lényegében
+csak a UserComment tag rendelkezik ezzel a szolgáltatással).</li>
+<li>Nincs alternatívnyelv-támogatás.</li>
+<li>A "Unicode" szöveges sztringek bájtsorrendje, és magának a "Unicode"-nak a
+jelentése nincs egyértelműen meghatározva.</li>
+<li>A kötelező tagek szükségtelenek, és kínszenvedés megvalósítani őket.</li>
+<li>Az ApertureValue és a MaxApertureValue előjel nélküli RATIONAL értékként
+tárolódik, ami azt jelenti, hogy az 1,0-nál fényerősebb (nullánál kisebb
+APEX-értékű) objektívek nem ábrázolhatók.</li>
+<li>A MaxApertureValue definíciója "az objektív legkisebb F-száma".  Ez a
+definíció nem egyértelmű zoomobjektívek esetében, ahol a maximális rekesz a
+zoomtartományon belül változik.  Egyes gyártók (Canon, Nikon, Sony) az adott
+fókusztávolsághoz tartozó maximális rekeszt tárolják, mások (Olympus, Pentax)
+viszont az objektív abszolút maximális rekeszét.</li>
+<li>Az EXIF nem bővíthető, és hiányoznak belőle bizonyos, a fényképezőgép
+tulajdonosai számára nagyon hasznos információk tárolására szolgáló definíciók
+(pl. a fényképezőgép billenési/dőlési szögei, az érzékelő hőmérséklete,
+arcfelismerés, autofókusz-pontok, képstabilizálás, vaku-expozíciókompenzáció
+stb.). <i>[Néhány ilyen tag bekerült az Exif 2.31 specifikációba.]</i></li>
+<li>Egyes racionális értékű tagek számlálójában vagy nevezőjében a 0xffffffff
+ismeretlen vagy végtelen érték jelzésére szolgál. Ez teljesen szükségtelen, és
+sok alkalmazás nem támogatja, mert külön, tagspecifikus logika megvalósítását
+igényli.</li>
+<li>A JPEG-képekben lévő EXIF-metainformáció teljes mérete legfeljebb 65527
+bájt lehet.</li>
+</ol>
+
+<p><b>Egyszerű megoldások:</b></p>
+
+<ol>
+<li>Írják elő, hogy a maker note adatainak önállónak kell lenniük (azaz nem
+léphetik túl a maker note értékadatainak határait), és áthelyezhetőnek kell
+lenniük (azaz nem használhatnak abszolút eltolásokat).  <i>[Azt javasoltam
+volna, hogy definiáljanak egy új maker note taget 13-as (IFD) mezőtípussal,
+amely egy szabványos formátumú IFD-re hivatkozik, de attól tartok, egyetlen
+fényképezőgép-gyártó sem állna kötélnek ezzel a javaslattal most, hogy már
+elcsábította őket a sötét oldal.]</i></li>
+<li>Módosítsák a specifikációt úgy, hogy egy opcionális, "-05:00" formátumú
+időzóna legyen fűzhető a dátum/idő sztringértékekhez.</li>
+<li>Módosítsák a specifikációt úgy, hogy megengedje az UTF-8-at az ASCII típusú
+értékekben, ahogyan azt az MWG<a class=ref href="#ref5">[5]</a> ajánlja.</li>
+<li>Erre nincs egyszerű megoldás.  Az XMP<a class=ref href="#ref6">[6]</a>
+az egyetlen ésszerű alternatíva, ha alternatívnyelv-támogatásra van
+szükség.</li>
+<li>Írják elő, hogy a Unicode bájtsorrendjének meg kell egyeznie az EXIF
+bájtsorrendjével. (Ez az egyetlen ésszerű választás, de valamiért úgy tűnik,
+hogy a Microsoft és az Apple is a processzor natív bájtsorrendjével írja a
+Unicode-ot, az EXIF bájtsorrendjétől függetlenül.)  Azt is egyértelművé kell
+tenni, hogy a "Unicode" alatt az EXIF-specifikáció valójában UCS-2-t ért, bár
+jó ötlet lehet ezt frissíteni úgy, hogy megengedje az UTF-16 helyettesítő
+párokat.</li>
+<li>Határozzanak meg ésszerű tartalék értékeket a hiányzó kötelező tagekhez.</li>
+<li>Tegyék lehetővé az ApertureValue és a MaxApertureValue előjeles SRATIONAL értékként való tárolását.</li>
+<li>Határozzák meg, hogy a MaxApertureValue a zoomobjektív aktuális
+fókusztávolságán, vagy a teljes zoomtartományon értendő-e.</li>
+<li>Bővítsék a szabványt, hogy tartalmazza a modern digitális fényképezőgépekből
+elérhető további hasznos információkat.</li>
+<li>Használjanak 1/0 racionális értéket a végtelen, és 0/0-t az
+ismeretlen/definiálatlan érték jelzésére.</li>
+<li>Tegyék lehetővé, hogy az EXIF több JPEG-szegmensre is kiterjedjen.  Több
+egymást követő EXIF-szegmens olvasáskor egyszerűen egyetlen adatblokká fűződik
+össze.
+<i>[Az Adobe láthatóan évek óta ezt csinálja<a class=ref href="#ref11">[11]</a>,
+és ez a képesség a 10.97-es verzióban került az ExifToolba.]</i></li>
+</ol>
+
+<a name="PhotoInfo"></a>
+<h3>A Microsoft "OffsetSchema" tagje <a class=ref href="#ref7">[7]</a></h3>
+
+<p>2007 februárjában a Microsoft egy új, "OffsetSchema" nevű PhotoInfo taget
+javasolt (hex. 0xEA1D, dec. 59933), hogy befoltozzon egy hiányosságot az EXIF
+maker note specifikációjában (lásd az 1. pontot a fenti EXIF 2.2 szakaszban).
+Ez a tag az eredeti maker note EXIF-en belüli helye és a szerkesztés utáni új
+helye közötti eltoláskülönbséget adja meg, és arra szolgál, hogy a maker note
+tagjeinek értékei elérhetők maradjanak azután is, hogy a maker note-ok helye az
+EXIF szerkesztésével megváltozott. <i>[Dicséret illeti őket, amiért megpróbálták
+javítani ezt a helyzetet, de bár az ötlet jó, a megvalósítás hibás és végső
+soron használhatatlan.]</i></p>
+
+<p>A megvalósításnak két fő problémája van, és a második megkerülhetetlen
+akadály:</p>
+
+<blockquote>1. Ahhoz, hogy ez az új tag elérhető legyen egy egymenetes
+metainformáció-olvasó számára, a maker note adatai <i>előtt</i> kell szerepelnie
+(hex. 0x927C, dec. 37500).  Mivel azonban az EXIF/TIFF formátum előírja, hogy a
+tageket számsorrendben kell tárolni, a maker note tag (hex. 0x927C) az
+OffsetSchema tag (hex. 0xEA1D) előtt van.</blockquote>
+
+<blockquote>2. Az OffsetSchema taget érvénytelenné teszi minden olyan szoftver,
+amely újraírja az EXIF-et és elmozdítja a maker note-okat anélkül, hogy
+megfelelően frissítené a taget.
+Egy ideális világban minden alkalmazásfejlesztő kiadná szoftverének egy
+frissített változatát, amely helyesen kezeli az OffsetSchemát, és minden
+felhasználó frissítene erre az új verzióra.  De mivel ez a való világ, ez
+egyszerűen nem fog megtörténni, ami megbízhatatlanná teszi az OffsetSchema
+értékét.  Kár, mert ez nem lett volna probléma, ha a Microsoft úgy határozza
+meg, hogy az új tag a maker note-ok eredeti eltolását jelenti, nem pedig az
+eredeti pozíciótól való különbséget. Ezzel a változtatással a taget nem kellene
+frissíteni az EXIF szerkesztésekor, és az információ sokkal megbízhatóbb lenne.
+Az egyetlen probléma itt az olyan szerkesztőszoftver lenne, amely kifejezetten
+megváltoztatja a maker note eltolásait.  Az ilyen képességű szoftver azonban
+ritka, és ésszerűbb azt kérni, hogy az OffsetSchema taget egyszerűen törölje
+minden olyan szoftver, amely frissíti a maker note eltolásait.  (Egy szoftvernek
+eleve meglehetősen fejlettnek kell lennie ahhoz, hogy elemezze a gyártói maker
+note adatstruktúráit, és megváltoztassa ezeket az eltolásokat.)</blockquote>
+
+<p><b>Egyszerű megoldás:</b></p>
+
+<p>Hozzanak létre egy új taget, amely a maker note-ok előtt szerepel (a
+hex. 0x927B, dec. 37499 jó lenne), és a maker note-ok eredeti eltolását
+jelenti.</p>
+
+<a name="JPEG"></a>
+<h3>JPEG File Interchange Format <a class=ref href="#ref8">[8]</a></h3>
+
+<p>A JPEG File Interchange Format 1.02-es verziója 1992-ben jelent meg.  E
+szabvány legnagyobb szerkezeti problémája, hogy az ilyen fájlokban a
+metainformáció olyan szegmensekben tárolódik, amelyek maximális mérete 65533
+bájt.  Ez a korlát számos kreatív megoldást tett szükségessé, amelyek mindegyike
+a maga bonyodalmait és problémáit szüli.  <i>[Lásd például a <a
+href="writing.html#Preview">PreviewImage-problémáról</a> szóló
+megjegyzéseimet.]</i></p>
+
+<p><b>Egyszerű megoldás:</b></p>
+
+<p>Mivel a szegmensméret-szó értéke magában foglalja magának a szegmensméret-szónak
+a 2 bájtját is, a jelenlegi JPEG-szabvány nem enged meg 0 vagy 1 értéket.
+A szabványt lehetne úgy bővíteni, hogy az 1 érték kiterjesztett JPEG-szegmenst
+jelezzen, amelyben a 2 bájtos méret-szót (0x0001 értékkel) közvetlenül egy
+4 bájtos egész szám követi, amely a kiterjesztett JPEG-szegmens méretét adja
+meg.  Ez legfeljebb 4294967291 bájtos szegmensméretet tenne lehetővé (feltéve,
+hogy a méret magában foglalja ezt a 4 bájtot). Továbbá a 0 értéket egy 8 bájtos
+egész számhoz lehetne definiálni, ha valaki tényleg óriási
+metainformáció-szegmenseket akarna támogatni.  Egy meglévő JPEG bármelyik
+módosítása tönkretenné az összes jelenlegi JPEG-olvasót/-írót, de a változtatás
+triviális, és könnyen megvalósítható lenne.</p>
+
+<p><b>Egy alternatív megoldás:</b></p>
+
+<p>Definiáljanak egy új alkalmazásjelölő szegmenst, amely 4 bájtos méret-szót
+használ.  Ezt a technikát a kiterjesztett JPEG2000 kódfolyam MCT-, MCC- és
+MIC-jelölőszegmenseinél már használják.</p>
+
+<p><b>Egy másik megoldás:</b> <i>[megvalósítva az ExifTool 10.97-ben]</i></p>
+
+<p>Ezt a korlátozást az EXIF-metainformáció esetében megkerülhetjük azzal, hogy
+engedjük több szegmensre kiterjedni, ugyanazzal a technikával, mint a Photoshop
+APP13 metainformációnál.</p>
+
+<a name="MPF"></a>
+<h3>Multi-Picture Format (MPF) <a class=ref href="#ref9">[9]</a></h3>
+
+<p>2009 februárjában a CIPA<a class=ref href="#ref10">[10]</a> kiadott egy
+"Multi-Picture Format" szabványt nagy méretű képek JPEG-fájlokban való
+tárolására.  Ez a formátum egy újabb kísérlet a JPEG szegmensméret-korlátjának
+(lásd fentebb) megkerülésére, hogy nagy méretű előnézeti képeket lehessen
+tárolni.  De ismét van egy jelentős probléma ezzel a szabvánnyal: az új APP2
+MPF-szegmens mutatói az ebben a szegmensben lévő MPF-fejléc kezdetéhez
+viszonyított eltolásokat használnak a JPEG EOI utáni képadatokra való
+hivatkozáshoz.  Sajnos ezek az eltolások gyorsan tönkremennek, ha az MPF-szegmens
+után bármely adat hossza megváltozik.  Ez a probléma elkerülhető lett volna, ha
+az eltolásokat a fájl végéhez viszonyítva határozzák meg, de ez már késő, hogy a
+specifikáció nyilvános.  Egy másik probléma azonban, hogy a JPEG EOI utáni
+információt a szoftverek gyakran eldobják a fájl szerkesztésekor.</p>
+
+<p><b>Egy lehetséges kerülőmegoldás:</b></p>
+
+<p>Érvényesítsék azt a szabályt, hogy az MPF APP2 szegmensnek minden más APP
+szegmens után kell következnie.  (Okos lett volna, ha ezt előírják a
+CIPA-szabványban, de sajnos nem így történt.)  Ha ez megtörténik, akkor a többi
+APP szegmensben (EXIF, IPTC, XMP stb.) lévő metainformáció biztonságosan
+szerkeszthető az MPF-eltolások tönkretétele nélkül.  Azt javaslom, hogy minden
+metainformáció-szerkesztő ezt a stratégiát alkalmazza, függetlenül a szabványban
+meghatározott szegmenssorrendtől (amely szerint az MPF APP2 szegmensnek
+közvetlenül az EXIF APP1 szegmens után kell következnie).</p>
+
+<p>Sajnos ennek a kerülőmegoldásnak ugyanazok a problémái, mint a Microsoft
+OffsetSchema tagjének, mert az MPF-információt egy nem hozzáértő szerkesztő
+könnyen érvénytelenné teheti, és nem oldja meg a JPEG EOI után tárolt adatok
+elvesztésének problémáját.</p>
+
+<p><b>Egyszerű megoldás:</b></p>
+
+<p>Módosítsák a JPEG-specifikációt, hogy nagyobb szegmenseket engedjen (ahogy
+fentebb a JPEG szakaszban említettük), és módosítsák az MPF-specifikációt, hogy
+minden információt egy JPEG-szegmensen belül tároljon.</p>
+
+<p><i>[2014-04-29: a CIPA megváltoztatta ezen szabványdokumentumok helyét, így
+az itt hivatkozott URL-ek már nem működnek.]</i></p>
+
+<a name="ID3"></a>
+<h3>ID3 <a class=ref href="#ref12">[12]</a></h3>
+
+<p>Már 2006-ban kommentálnom kellett volna ezt a specifikációt, amikor először
+próbáltam írási támogatást hozzáadni.  Hamar feladtam minden reményt, mert az
+ID3-specifikáció nem ad elég részletet az egyértelmű megvalósításhoz,
+de ez olyan régen volt, hogy most nem tudok pontosabb lenni a buktatókról. <i>(hozzáadva: 2026-03-26)</i></p>
+
+<a name="refs"></a>
+<h3>Hivatkozások</h3>
+
+<ol>
+<li><a name="ref1" href="http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf">http://partners.adobe.com/public/developer/en/tiff/TIFF6.pdf</a></li>
+<li><a name="ref2" href="http://partners.adobe.com/public/developer/en/tiff/TIFFPM6.pdf">http://partners.adobe.com/public/developer/en/tiff/TIFFPM6.pdf</a></li>
+<li><a name="ref3" href="http://www.adobe.com/products/dng/pdfs/dng_spec_1_3_0_0.pdf">http://www.adobe.com/products/dng/pdfs/dng_spec_1_3_0_0.pdf</a></li>
+<li><a name="ref4" href="http://www.cipa.jp/english/hyoujunka/kikaku/pdf/DC-008-2010_E.pdf">http://www.cipa.jp/english/hyoujunka/kikaku/pdf/DC-008-2010_E.pdf</a></li>
+<li><a name="ref5" href="https://web.archive.org/web/20180822085951/http://metadataworkinggroup.com/pdf/mwg_guidance.pdf">https://web.archive.org/web/20180822085951/http://metadataworkinggroup.com/pdf/mwg_guidance.pdf</a></li>
+<li><a name="ref6" href="http://www.adobe.com/devnet/xmp/">http://www.adobe.com/devnet/xmp/</a></li>
+<li><a name="ref7" href="http://support.microsoft.com/kb/927527">http://support.microsoft.com/kb/927527</a></li>
+<li><a name="ref8" href="http://www.jpeg.org/public/jfif.pdf">http://www.jpeg.org/public/jfif.pdf</a></li>
+<li><a name="ref9" href="http://www.cipa.jp/english/hyoujunka/kikaku/pdf/DC-X007-KEY_E.pdf">http://www.cipa.jp/english/hyoujunka/kikaku/pdf/DC-X007-KEY_E.pdf</a></li>
+<li><a name="ref10" href="http://www.cipa.jp/english/hyoujunka/kikaku/cipa_e_kikaku_list.html">http://www.cipa.jp/english/hyoujunka/kikaku/cipa_e_kikaku_list.html</a></li>
+<li id="ref11">XMP-specifikáció, 3. rész, 2014. november, 13. o.</li>
+<li><a name="ref12" href="https://id3.org/id3v2.3.0">https://id3.org/id3v2.3.0</a></li>
+</ol>
+<hr>
+<i>Létrehozva: 2009. szeptember 17.</i><br>
+<i>Utoljára módosítva: 2026. március 26.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
+</body>
+</html>

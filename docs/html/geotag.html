@@ -1,0 +1,823 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Geotaggelés az ExifToollal</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+pre   { color: #800; margin-left: 4em }
+.nr   { white-space: nowrap }
+.prog { padding: 0.5em; border: 1px solid gray; background: #fee }
+.indent { margin-left: 22% }
+-->
+</style>
+</head>
+<body>
+<div class='index'>
+<a href="#Implementation">Megvalósítás</a>
+<br>&nbsp; - <a href="#geotag">Geotag</a>
+<br>&nbsp; - <a href="#geosync">Geosync</a>
+<br>&nbsp; - <a href="#geotime">Geotime</a>
+<br><a href="#Geolocation">Geolokáció írása</a>
+<br><a href="#CSVFormat">CSV-fájlformátum</a>
+<br><a href="#Examples">Példák</a>
+<br><a href="#Options">Opciók</a>
+<br><a href="#Orient">Tájolás</a>
+<br><a href="#Troubleshooting">Hibaelhárítás</a>
+<br><a href="#Tips">Tippek</a>
+<hr>
+<a href="#Inverse">Fordított geotaggelés</a>
+<br>&nbsp; - <a href="#GPX">GPX-napló létrehozása</a>
+<br>&nbsp; - <a href="#KML">KML-fájl létrehozása</a>
+</div>
+<h1 class='up'>Geotaggelés az ExifToollal</h1>
+<p>Az ExifTool geotaggelési szolgáltatása GPS tageket ad a képekhez egy GPS
+nyomvonalnapló-fájlból vagy bármely támogatott, GPS-információt tartalmazó
+fájl(ok)ból származó adatok alapján.  A GPS nyomvonalnapló betöltődik, és lineáris
+interpolációval határozza meg a GPS-pozíciót a kép készítésének időpontjában, majd
+a következő tagek íródnak a képbe (ha a megfelelő információ elérhető):</p>
+
+<center><table>
+<tr><td>GPSLatitude</td><td>GPSLongitude</td><td>GPSAltitude</td><td>CameraElevationAngle</td><td>GPSPitch</td></tr>
+<tr><td>GPSLatitudeRef</td><td>GPSLongitudeRef</td><td>GPSAltitudeRef</td><td>GPSDateStamp</td><td>GPSRoll</td></tr>
+<tr><td>GPSTrack</td><td>GPSSpeed</td><td>GPSImgDirection</td><td>GPSTimeStamp</td><td> </td></tr>
+<tr><td>GPSTrackRef</td><td>GPSSpeedRef</td><td>GPSImgDirectionRef</td><td>GPSHPositioningError</td><td> </td></tr>
+<tr><td>GPSCoordinates</td><td>AmbientTemperature</td><td>GPSMeasureMode</td><td>GPSDOP</td><td> </td></tr>
+</table></center>
+
+<blockquote class=lt><i>Megjegyzés: a GPSPitch és a GPSRoll nem szabványos tagek, és
+<a href="#Orient">felhasználó által definiáltnak</a> kell lenniük.  A
+GPSCoordinates a preferált QuickTime csoportba íródik QuickTime formátumú fájlok
+írásakor.</i></blockquote>
+
+<p>Jelenleg támogatott GPS nyomvonalnapló-fájlformátumok:</p>
+
+<ul>
+<li>GPX</li>
+<li>NMEA (RMC, GGA, GLL és GSA mondatok)</li>
+<li>KML</li>
+<li>IGC (vitorlázórepülő-formátum)</li>
+<li>Garmin XML és TCX</li>
+<li>Magellan eXplorist PMGNTRK</li>
+<li>Honeywell PTNTHPR (lásd <a href="#Orient">Tájolás</a>)</li>
+<li>Bramor gEO log</li>
+<li>Winplus Beacon .TXT</li>
+<li><a href="TagNames/Garmin.html#FIT">Garmin .FIT</a></li>
+<li>Google Takeout .JSON</li>
+<li>GPS/IMU .CSV</li>
+<li>DJI .CSV</li>
+<li>Columbus .CSV</li>
+<li><a href="#CSVFormat">ExifTool .CSV fájl</a></li>
+<li>Plusz bármely támogatott, GPS-metaadatot tartalmazó fájl(ok)!</li>
+</ul>
+
+<a name="Implementation"></a>
+<h3>Megvalósítás</h3>
+
+<p>A geotaggelés az ExifToolban három speciális, csak írható
+<a href="TagNames/Extra.html">Extra tag</a> használatával valósul meg:
+<code>Geotag</code>, <code>Geosync</code> és <code>Geotime</code>.</p>
+
+<a name="geotag"></a>
+<h4>Geotag</h4>
+
+<p>A <code>Geotag</code> tag a GPS nyomvonalnapló-adatok definiálására szolgál. A
+geotaggelési szolgáltatás úgy aktiválódik, hogy egy nyomvonalnapló-fájl vagy
+bármely, GPS-t tartalmazó fájl(ok) nevét rendeled ehhez a taghez.  Példaként a
+következő parancssor GPS tageket ad a "/Users/Phil/Pictures" könyvtár összes
+képéhez az aktuális könyvtárban lévő "track.log" nyomvonalnapló-fájlban tárolt
+GPS-pozíciók alapján:</p>
+
+<pre>exiftool -geotag=track.log /Users/Phil/Pictures
+</pre>
+
+<p>A kényelem kedvéért (és hogy ez a szolgáltatás hangsúlyosabb legyen a
+dokumentációban) az exiftool alkalmazás egy <code>-geotag</code> opciót is kínál,
+így ez a parancs egyenértékű a fentivel:</p>
+
+<pre>exiftool -geotag track.log /Users/Phil/Pictures
+</pre>
+
+<p>Egyszerre több GPS-naplófájl is betölthető úgy, hogy ugyanabban a parancsban
+egynél több <code>-geotag</code> opciót vagy <code>-geotag=</code> hozzárendelést
+használsz, és/vagy helyettesítő karaktereket használsz a <code>-geotag</code> opció
+fájlnév-argumentumában (vedd figyelembe, hogy a helyettesítő karakterek nem
+támogatottak a <code>-geotag=</code> szintaxissal).  Ez lehetővé teszi különböző
+nyomvonalakat átfogó képek kötegelt feldolgozását, illetve geotaggelést egy csomó
+már geotaggelt fájlból egyetlen paranccsal.  Helyettesítő karakterek használatakor
+egyes rendszereken idézőjelbe kell tenni az argumentumot, hogy megakadályozd a
+shell általi behelyettesítést (globbing).  Például az "inbox" könyvtárban lévő
+képek geotaggeléséhez az aktuális könyvtárban lévő, már geotaggelt képek csoportja
+alapján:</p>
+
+<pre>exiftool -geotag "*.jpg" inbox
+</pre>
+
+<p>További példákért lásd lentebb a <a href="#Examples">példákat</a>.</p>
+
+<p>A <code>Geotag</code> tag törlése (a <code>-geotag=</code> segítségével) a
+<code>-geotag</code> szolgáltatás által írt GPS tagek törlését okozza.</p>
+
+<p>Egy speciális szolgáltatás lehetővé teszi, hogy csak a GPS dátum/idő tageket
+írd, amikor nincs elérhető pozíció, ha a naplófájl nevének "DATETIMEONLY"-t
+(csupa nagybetűvel) adsz meg.</p>
+
+<blockquote class=prog><b>Programozóknak</b>:  a <code>Geotag</code> értékeként vagy
+egy GPS-naplófájl nevét, vagy a GPS-naplóadatokat írhatod.  Ha az érték
+sortörést vagy null bájtot tartalmaz, akkor adatnak minősül, egyébként fájlnévnek
+veszi.</blockquote>
+
+<a name="geosync"></a>
+<h4>Geosync</h4>
+
+<p>A <code>Geosync</code> tagre csak akkor van szükség, ha a kép időbélyegei nincsenek
+megfelelően szinkronizálva a GPS-idővel.  A <code>Geosync</code>-be írt érték
+többféle alakot ölthet, de az alapformátum egy egyszerű időkülönbség, amely a
+<code>Geotime</code>-hoz adódik hozzá, mielőtt interpolálná a GPS-pozíciót a
+nyomvonalnaplóban.  Ez az időkülönbség "SS", "MM:SS", "HH:MM:SS" vagy
+"DD HH:MM:SS" alakú lehet (ahol SS=másodperc, MM=perc, HH=óra és DD=nap), és
+elé "+" vagy "-" tehető pozitív vagy negatív különbséghez (pozitív, ha a GPS-idő
+a fényképezőgép órája előtt járt).  A másodperc törtrésze megengedett (pl.
+"SS.ss").</p>
+
+<p>Például a "<code>-geosync=-1:20</code>" azt adja meg, hogy a GPS-idővel való
+szinkronizáció úgy valósul meg, hogy 1 perc 20 másodpercet kivonunk a
+<code>Geotime</code> értékéből.  További részletekért lásd lentebb az
+<a href="#TP1">Idő-szinkronizálási tippet</a>.</p>
+
+<blockquote class=lt><i>Vedd figyelembe, hogy egyetlen tizedes érték
+másodpercként értelmeződik, ha a <code>Geosync</code>-be íródik.  Ez eltér a többi
+dátum/idő eltolási értéktől, ahol egyetlen érték általában órának minősül.</i>
+</blockquote>
+
+<p>A <code>Geosync</code> érték 3 különböző formátummal is megadható, amelyek egy
+GPS-időt és egy hozzá tartozó fényképezőgép-órai időt adnak meg.  Bár ezek a
+formátumok egyszerű (állandó) idő-szinkronizálási eltoláshoz is használhatók,
+óradrift-korrekcióhoz (több szinkronizálási ponttal) szükségesek, és alább vannak
+leírva.</p>
+
+<p><b>Fényképezőgép-óra drift-korrekció:</b></p>
+
+<p>Egy fejlettebb <code>Geosync</code> szolgáltatás lehetővé teszi a GPS-idő és a
+kép idejének együttes megadását, megkönnyítve az idődrift-korrekciót, ha egynél
+több szinkronizálási pontot adsz meg.  Ehhez a <code>Geosync</code>-be írt érték
+a következő alakok egyikét ölti:</p>
+
+<blockquote>
+<table class='norm'>
+<tr><th>Formátum</th><th>Megjegyzések</th></tr>
+<tr><td><i>FILE</i></td>
+<td>A GPS- és a kép-időbélyeg is a megadott fájlból kerül
+kinyerésre. pl.) <code>-geosync=image.jpg</code></td></tr>
+<tr><td><i>GPSTIME</i>@<i>FILE</i></td><td>A GPS-idő a
+<code>Geosync</code> értékből származik, a kép-időbélyeg pedig a megadott
+fájlból kerül kinyerésre. pl.) <code>-geosync="12:58:05@image.jpg"</code></td></tr>
+<tr><td><i>GPSTIME</i>@<i>IMGTIME</i></td><td>A GPS- és a kép-időbélyeg is a
+<code>Geosync</code> értékből származik.  pl.)
+<code>-geosync="12:58:05@2010:01:02 12:25:26"</code></td></tr>
+</table></blockquote>
+
+<p>A parancssorban megadott <i>GPSTIME</i> és <i>IMGTIME</i> értékek
+tartalmazhatnak dátumot, de nem kötelező.</p>
+
+<p>Megjegyzések:</p>
+<ol>
+<li>Ha akár a GPS-, akár a kép-időbélyeg nem tartalmaz dátumot, a két
+időbélyeget olyan napokon feltételezi, amelyek 12 órán belülre helyezik őket
+egymáshoz képest.</li>
+<li>Ha sem a GPS-, sem a kép-időbélyeg nem tartalmaz dátumot, ez a
+szinkronizálási pont csak állandó időeltoláshoz használható (azaz nem
+alkalmazódik idődrift-korrekció).</li>
+<li>A GPS- és a kép-időt is helyinek feltételezi, hacsak nincs másik időzóna
+megadva (kivéve, ha a GPSTimeStamp-ből származik, amely UTC).</li>
+<li>A GPS- és a kép-időértékek is tartalmazhatnak tizedes másodperceket.</li>
+<li>Az idődrift-korrekció alkalmazott értéke a szinkronizálási pontok közötti
+szakaszonként lineáris interpolációból/extrapolációból számítódik, ha egynél
+több <code>Geosync</code> érték van definiálva.</li>
+<li>Fájlból való kinyeréskor az időbélyegek a következő tagek közül az első
+elérhetőből származnak:
+<ul>
+<li>Kép-időbélyeg: SubSecDateTimeOriginal, SubSecCreateDate, SubSecModifyDate,
+DateTimeOriginal, CreateDate, ModifyDate, FileModifyDate</li>
+<li>GPS-időbélyeg: GPSDateTime, GPSTimeStamp</li>
+</ul></li>
+</ol>
+
+<a name="geotime"></a>
+<h4>Geotime</h4>
+
+<p>A <code>Geotime</code> tag azt az időpontot adja meg, amelyre a GPS-pozíció
+kiszámításra kerül (a GPS nyomvonalnaplóban lévő fixpontok közötti interpolációval).
+ Ha nincs csoport megadva, az exiftool a generált tageket az alapértelmezett
+csoportokba írja.  Ha nincs megadva <code>Geotime</code> érték, akkor minden képnél
+a <code>SubSecDateTimeOriginal</code> (elsősorban) vagy a
+<code>DateTimeOriginal</code> formázatlan értékéből származik, de az érték bármely
+más dátum/idő tagből másolható, vagy közvetlenül egy dátum/idő sztringből
+beállítható.  Az alapértelmezett <code>Geotime</code> argumentum pontos alakja:</p>
+
+<pre>"-Geotime&lt;${DateTimeOriginal#;$_=$self->GetValue('SubSecDateTimeOriginal','ValueConv') || $_}"</pre>
+
+<p>Ha a dátum/idő tag nem tartalmaz időzónát, akkor hozzá lehet adni egyet (pl.
+<code>"-Geotime&lt;${CreateDate}-05:00"</code>), egyébként a helyi rendszeridőt
+feltételezi.  Az időértékben támogatottak a tizedes másodpercek.</p>
+
+<p>Alapértelmezés szerint a képfájlokban a GPS tagek EXIF-ben jönnek létre, a
+megfelelő XMP tagek pedig csak akkor frissülnek, ha már léteznek.  QuickTime
+formátumú fájlokban alapértelmezés szerint az XMP tagek is létrejönnek, és a
+QuickTime:GPSCoordinates is a preferált helyre íródik.  Azonban megadható EXIF,
+XMP vagy QuickTime csoportnév, hogy az írás csak a megadott helyre történjen.
+Például az <code>XMP:Geotime</code> vagy az <code>EXIF:Geotime</code> írása a
+generált GPS tageket csak XMP-be, illetve csak EXIF-be írja.  Vedd figyelembe,
+hogy XMP-be íráskor a <code>GPSLatitudeRef</code> és <code>GPSLongitudeRef</code>
+tagek nem használatosak, és a különálló EXIF <code>GPSDateStamp</code> és
+<code>GPSTimeStamp</code> tagek helyett az XMP <code>GPSDateTime</code> tag
+íródik. A <code>QuickTime:Geotime</code> használata kikapcsolja az XMP tagek
+írását QuickTime formátumú fájlokba, és a GPSPosition taget a preferált QuickTime
+helyen (alapértelmezés szerint ItemList) hozza létre, de megadható az
+<code>ItemList:Geotime</code>, <code>UserData:Geotime</code> vagy
+<code>Keys:Geotime</code>, hogy egy adott helyre írjon.</p>
+
+<p>A geotaggelési szolgáltatás különböző aspektusait szemléltető
+példaparancssorokért lásd lentebb a <a href="#Examples">Példák</a> szakaszt.</p>
+
+<blockquote class=prog><b>Programozóknak</b>:  vedd figyelembe, hogy az API-n
+keresztüli geotaggeléskor a <code>Geotime</code>-ot mindig meg kell adni (az
+alapértelmezett értéket az alkalmazás valósítja meg).  Emellett a
+<code>Geotime</code>-ot a <code>Geotag</code> és a <code>Geosync</code> után kell
+beállítani (az exiftool alkalmazás átrendezi a hozzárendeléseket, hogy ezt
+biztosítsa).
+</blockquote>
+
+<a name="Geolocation"></a>
+<h3>Geolokáció-tagek írása geotaggelés közben</h3>
+
+<p>A geolokációs város, állam/tartomány és ország tagek automatikusan írhatók a
+geotaggelt GPS-pozíció alapján, ha a Geolocate taget "geotag"-re állítod.
+Például:</p>
+
+<pre>exiftool -geotag track.gpx -geolocate=geotag c:\images</pre>
+
+<p>További információért lásd a
+<a href="geolocation.html#Geotag">Geolokáció-oldal „Geotaggelés közben" szakaszát</a>.</p>
+
+<a name="CSVFormat"></a>
+<h3>ExifTool CSV naplófájl-formátum</h3>
+
+<p>Az ExifTool támogatja a CSV formátumú bemeneti naplófájlokat, ahol az első sor
+ExifTool-tagnevek vagy -leírások alakú fejléceket tartalmaz.  Az érvényes
+oszlopfejlécek:</p>
+
+<blockquote><table class='norm'>
+<tr><th>Oszlopfejléc</th><th>Leírás</th></tr>
+<tr><td>GPSDateTime</td><td>Dátum és idő szabványos EXIF formátumban, vagy más
+formátumban, amelyet a <code>-d</code> opció ad meg, ha használatos.<br>Az időt
+UTC-nek feltételezi, hacsak az értékek nem tartalmaznak másik időzónát</td></tr>
+<tr><td>GPSDateStamp</td><td>Dátum szabványos EXIF formátumban</td></tr>
+<tr><td>GPSTimeStamp</td><td>Idő EXIF formátumban.  UTC-t feltételez, hacsak
+az értékek nem tartalmaznak időzónát</td></tr>
+<tr><td>GPSLatitude</td><td>Szélesség rugalmas ExifTool-formátumban (lásd <a href="faq.html#Q14">14. GYIK</a>)</td></tr>
+<tr><td>GPSLongitude</td><td>Hosszúság rugalmas ExifTool-formátumban (lásd <a href="faq.html#Q14">14. GYIK</a>)</td></tr>
+<tr><td>GPSLatitudeRef</td><td>"S"-sel kezdődő sztring déli koordinátákhoz (csak akkor használatos, ha a GPSLatitude nem előjeles, vagy nem adja meg a féltekét)</td></tr>
+<tr><td>GPSLongitudeRef</td><td>"W"-vel kezdődő sztring nyugati koordinátákhoz (csak akkor használatos, ha a GPSLongitude nem előjeles, vagy nem adja meg a féltekét)</td></tr>
+<tr><td>GPSAltitude</td><td>Magasság méterben a tengerszinthez viszonyítva (negatív a tengerszint alatt)</td></tr>
+<tr><td>GPSSpeed</td><td>Sebesség csomóban, vagy a megadott mértékegységben, ha a fejlécben "(km/h)", "(mph)" vagy "(m/s)" szerepel</td></tr>
+<tr><td>GPSTrack</td><td>Iránytű szerinti irány valós fokban</td></tr>
+<tr><td>GPSImgDirection</td><td>A fényképezőgép iránytű szerinti iránya valós fokban</td></tr>
+<tr><td>GPSPitch vagy<br>CameraElevationAngle</td><td>Bólintási szög fokban, ahol a pozitív bólintás felfelé mutat</td></tr>
+<tr><td>GPSRoll</td><td>Dőlési szög fokban</td></tr>
+</table></blockquote>
+
+<p>A kötelező oszlopok: GPSDateTime (vagy GPSDateStamp és GPSTimeStamp),
+GPSLatitude és GPSLongitude.  Minden más oszlop opcionális, és a fel nem ismert
+oszlopokat figyelmen kívül hagyja.</p>
+
+<a name="Examples"></a>
+<h3>Példák</h3>
+
+<a name="E1"></a>
+<p>1. Geotaggeld a "c:\images" könyvtár összes képét egy GPS nyomvonalnapló
+("c:\gps logs\track.log") pozícióinformációi alapján.  Mivel a <code>Geotime</code>
+idő nincs megadva, a <code>SubSecDateTimeOriginal#</code> (elsősorban) vagy a
+<code>DateTimeOriginal#</code> értéke használatos.  A helyi rendszeridőt
+feltételezi, hacsak a dátum/idő érték nem tartalmaz időzónát:</p>
+
+<pre>exiftool -geotag "c:\gps logs\track.log" c:\images</pre>
+
+<a name="E2"></a>
+<p>2. Geotaggeld a "dir" könyvtár összes képét a "track.log" (az aktuális
+könyvtárban lévő) GPS-pozíciói alapján, olyan fényképezőgép-órához, amely 25
+másodperccel lassabban járt, mint a GPS-óra:</p>
+
+<pre>exiftool -geotag track.log -geosync=+25 dir</pre>
+
+<a name="E3"></a>
+<p>3. Geotaggelj egy képet egy adott időponthoz tartozó GPS-pozícióval:</p>
+
+<pre>exiftool -geotag t.log -geotime="2009:04:02 13:41:12-05:00" a.jpg</pre>
+
+<a name="E4"></a>
+<p>4. Geotaggeld a "dir" könyvtár összes képét EXIF tagek helyett XMP tagekkel, a
+kép <code>CreateDate</code> értéke alapján:</p>
+
+<pre>exiftool -geotag log.gpx "-xmp:geotime&lt;createdate" dir</pre>
+
+<a name="E5"></a>
+<p>5. Geotaggeld a "dir"-ben lévő képeket a <code>CreateDate</code> használatával, a
+megadott időzónával.  Ha a <code>CreateDate</code> már tartalmazott időzónát, akkor
+a parancssorban megadott időzónát figyelmen kívül hagyja.  (Vedd figyelembe, hogy
+Windowson a következő 2 parancsban a <code>-geotime</code> argumentum körül
+egyszeres idézőjelek (<code>'</code>) helyett dupla idézőjeleket (<code>"</code>)
+kell használni):</p>
+
+<pre>exiftool -geotag a.log '-geotime&lt;${createdate}+01:00' dir</pre>
+
+<a name="E6"></a>
+<p>6. Geotaggelj olyan képeket, amelyeknél a fényképezőgép órája UTC-re (+00:00)
+volt állítva, a <code>DateTimeOriginal</code> idejét használva:</p>
+
+<pre>exiftool -geotag trk.gpx '-geotime&lt;${DateTimeOriginal}+00:00' dir</pre>
+
+<a name="E7"></a>
+<p>7. Töröld a geotag szolgáltatás által hozzáadott GPS tageket. (Vedd figyelembe,
+hogy ez nem távolítja el az összes GPS taget -- ehhez helyette a
+<code>-gps:all=</code>-t használd):</p>
+
+<pre>exiftool -geotag= a.jpg</pre>
+
+<a name="E8"></a>
+<p>8. Töröld a geotag szolgáltatás által hozzáadott XMP GPS tageket:</p>
+
+<pre>exiftool -xmp:geotag= a.jpg</pre>
+
+<a name="E9"></a>
+<p>9. Geotaggelj egy képet XMP tagekkel, a
+<code>SubSecDateTimeOriginal</code> vagy <code>DateTimeOriginal</code> idejét
+használva:</p>
+
+<pre>exiftool -xmp:geotag=track.log a.jpg</pre>
+
+<a name="E10"></a>
+<p>10. Kombinálj több nyomvonalnaplót, és geotaggelj egy teljes
+képkönyvtárfát:</p>
+
+<pre>exiftool -geotag a.log -geotag b.log -r dir</pre>
+
+<a name="E11"></a>
+<p>11. Használj helyettesítő karaktereket több nyomvonalfájl betöltéséhez (az
+idézőjelek a legtöbb operációs rendszernél szükségesek a fájlnév-kifejtés
+megakadályozásához):</p>
+
+<pre>exiftool -geotag "logs/*.log" dir</pre>
+
+<a name="E12"></a>
+<p>12. Geotaggelj egy másodperc alatti dátum/idő értékből másodperc alatti
+idő-szinkronizálással (csak akkor lehetséges, ha az EXIF másodperc alatti
+időbélyegek vagy az időzóna elérhető).
+<i>[Vedd figyelembe, hogy ez a példa elavult az ExifTool 13.29 óta, mert a
+SubSecDateTimeOriginal alapértelmezés szerint használatos, ha elérhető.]</i></p>
+
+<pre>exiftool -Geotag a.log -Geosync=+13.42 "-Geotime&lt;SubSecDateTimeOriginal" dir
+</pre>
+
+<a name="E13"></a>
+<p>13. Geotaggelj képeket szakaszonként lineáris idődrift-korrekcióval, három már
+geotaggelt kép GPS-idő-szinkronizálását használva:</p>
+
+<pre>exiftool -geotag a.log -geosync=1.jpg -geosync=2.jpg -geosync=3.jpg dir
+</pre>
+
+<a name="E14"></a>
+<p>14. Geotaggelj MP4 videókat a Keys:GPSCoordinates írásával (add hozzá az
+<code>-api QuickTimeUTC</code> opciót ehhez a parancshoz, ha a videóidban a
+CreateDate UTC):</p>
+
+<pre>exiftool -geotag a.log "-keys:geotime&lt;createdate" -ext MP4 dir
+</pre>
+
+<a name="E15"></a>
+<p>15. Geotaggeld a képeket EXIF-ben a DateTimeOriginal alapján, a videókat pedig a
+UserData-ban a CreateDate alapján:</p>
+
+<pre>exiftool -geotag a.log "-exif:geotime&lt;datetimeoriginal" "-userdata:geotime&lt;createdate" dir
+</pre>
+
+<a name="E16"></a>
+<p>15. Geotaggelj képeket egy videofájlban lévő időzített GPS-metaadatból (belsőleg
+az ExifTool az <a href="ExifTool.html#ExtractEmbedded">API ExtractEmbedded opciót</a>
+használja az időzített GPS kinyerésére a videóból, majd ezt használja
+nyomvonalként a képfájlok geotaggeléséhez):</p>
+
+<pre>exiftool -geotag video.mp4 c:\images
+</pre>
+
+<a name="Options"></a>
+<h3>Opciók</h3>
+
+<p>A geotaggelés a következő ExifTool-opciókkal konfigurálható.  Ezek az opciók
+beállíthatók a parancssori alkalmazás <code>-api</code> opciójával, az API
+Options() függvényével, vagy a konfigurációs fájl
+%Image::ExifTool::UserDefined::Options hasheével.  (A konfigurációs fájl
+használatáról a részletekért lásd a <a href="config.html">minta konfigurációs
+fájlt</a>.)</p>
+
+<blockquote>
+<table class='norm'>
+<tr><th>Opció</th><th>Leírás</th><th>Értékek</th><th>Alapértelmezett</th></tr>
+<tr><td>GeoMaxIntSecs</td>
+    <td>A geotaggelés maximális interpolációs ideje másodpercben.  A geotaggelés
+    extrapolációnak minősül, ha a Geotime érték ugyanazon nyomvonal két olyan
+    fixpontja közé esik, amelyeket ennél nagyobb számú másodperc választ el.
+     Egyébként a koordinátákat a Geotime érték két oldalán lévő legközelebbi
+    fixpontok közötti lineáris interpolációként számítja.  Állítsd 0-ra az
+    interpoláció kikapcsolásához, és helyette a legközelebbi fixpont
+    koordinátáinak használatához (feltéve, hogy az GeoMaxExtSecs-en belül van,
+    egyébként a geotaggelés sikertelen).</td>
+    <td align='center'>Egy&nbsp;lebegőpontos&nbsp;szám</td>
+    <td align='center'>1800</td></tr>
+<tr><td>GeoMaxExtSecs</td>
+    <td>A geotaggelés maximális extrapolációs ideje másodpercben.  A geotaggelés
+    sikertelen, ha a Geotime érték ennél nagyobb számú másodperccel esik egy
+    GPS-nyomvonalon kívülre.  Egyébként a legközelebbi fixpont koordinátáit
+    veszi.</td>
+    <td align='center'>Egy&nbsp;lebegőpontos&nbsp;szám</td>
+    <td align='center'>1800</td></tr>
+<tr><td>GeoMaxHDOP</td>
+    <td>A geotaggelés maximális vízszintes (2D) pontosságcsökkenése (Dilution Of
+    Precision).  A GPS-fixpontokat figyelmen kívül hagyja, ha a HDOP ennél
+    nagyobb.</td>
+    <td align='center'>Egy&nbsp;lebegőpontos&nbsp;szám, vagy undef a kikapcsoláshoz</td>
+    <td align='center'>undef</td></tr>
+<tr><td>GeoMaxPDOP</td>
+    <td>A geotaggelés maximális pozíció- (3D) pontosságcsökkenése (Dilution Of
+    Precision).  A GPS-fixpontokat figyelmen kívül hagyja, ha a PDOP ennél
+    nagyobb.</td>
+    <td align='center'>Egy&nbsp;lebegőpontos&nbsp;szám, vagy undef a kikapcsoláshoz</td>
+    <td align='center'>undef</td></tr>
+<tr><td>GeoHPosErr</td>
+    <td>Kifejezés a GPSHPositioningError beállítására a GPSDOP értéke alapján
+    geotaggeléskor.  Például használd a <code>'$GPSDOP * 4'</code>-et a
+    GPSHPositioningError GPSDOP négyszeresére állításához.</td>
+    <td align=center>Perl-kifejezés a <code>$GPSDOP</code> használatával</td>
+    <td align=center>undef</td></tr>
+<tr><td>GeoMinSats</td>
+    <td>A geotaggeléshez szükséges műholdak minimális száma.  A GPS-fixpontokat
+    figyelmen kívül hagyja, ha a befogott műholdak száma ennél kevesebb.</td>
+    <td align='center'>Egy pozitív egész szám, vagy undef a kikapcsoláshoz</td>
+    <td align='center'>undef</td></tr>
+<tr><td>GeoSpeedRef</td>
+    <td>A GPSSpeed írásának referencia-mértékegységei geotaggeléskor.</td>
+    <td align=center><table class=clear>
+    <tr><td valign=top align=right><b>K</b>,&nbsp;<b>k</b>&nbsp;vagy&nbsp;<b>km/h</b></td><td>=&nbsp;km/h</td></tr>
+    <tr><td valign=top align=right><b>M</b>,&nbsp;<b>m</b>&nbsp;vagy&nbsp;<b>mph</b></td><td>=&nbsp;mph</td></tr>
+    <tr><td valign=top align=right><i>(bármi&nbsp;más)</i></td><td>=&nbsp;csomó</td></tr>
+    </table></td><td align=center>undef</td></tr>
+<tr id="GeoUserTag"><td>GeoUserTag</td><td>További, felhasználó által definiált
+    tagek, amelyeket GPX- vagy CSV-fájlokból való geotaggeléskor kell írni.  A
+    formátum: '<i>TAG</i>=<i>TOKEN</i>,...', ahol a
+    <i>TAG</i> egy ExifTool-tagnév (opcionális csoportnévvel), a <i>TOKEN</i>
+    pedig a GPX-fájlbeli property neve vagy a CSV-fájlbeli oszlop neve.  pl.)
+    a '<code>Location=desc</code>' a Location taget a GPS-naplófájlbeli 'desc'
+    értéke alapján írja.  A tagérték az időben legközelebbi fixpontból származik.
+     Több tag is megadható vesszős elválasztással.</td>
+    <td align=center>'<i>TAG</i>=<i>TOKEN</i>,...' alakú sztring</td>
+    <td align=center>undef</td></tr>
+</table></blockquote>
+
+<a name="Orient"></a>
+<h3>Tájolás</h3>
+
+<p>Az ExifTool tájolási információt olvas ki a PTNTHPR mondatból, amelyet egyes
+Honeywell digitális iránytűk generálnak. Ez egy zárt NMEA-mondat, amely az
+irány-, bólintási és dőlési szögekről tartalmaz információt.  Ha ez az
+információ elérhető, az irány a GPSImgDirection-be íródik (és a
+GPSImgDirectionRef "T"-re áll), a bólintás pedig a CameraElevationAngle-be, de a
+dőléshez nincs szabványos tag.  Ettől függetlenül az ExifTool megpróbálja megírni
+a GPSRoll-t (és a GPSPitch-et). Ahhoz, hogy ezek a tagek megíródjanak, megfelelő,
+felhasználó által definiált tageket kell létrehozni.  Alább egy egyszerű
+konfigurációs fájl látható, amely definiálja a szükséges EXIF GPS tageket. A
+megfelelő XMP-exif tagek is létrehozhatók. További információért lásd a
+<a href="config.html">konfigurációs fájl dokumentációját</a>.</p>
+
+<pre>%Image::ExifTool::UserDefined = (
+    'Image::ExifTool::GPS::Main' => {
+        0xd000 => {
+            Name => 'GPSPitch',
+            Writable => 'rational64s',
+        },
+        0xd001 => {
+            Name => 'GPSRoll',
+            Writable => 'rational64s',
+        },
+    },
+);
+1; #end
+</pre>
+
+<a name="Troubleshooting"></a>
+<h3>Hibaelhárítás</h3>
+
+<a name="TR1"></a>
+<p>1. <b>„No track points found in GPS file"</b></p>
+
+<blockquote>Ha a fenti üzenetet látod, akkor vagy az exiftool még nem támogatja a
+nyomvonalnapló-fájlod formátumát, vagy a nyomvonalnaplód nem tartalmazza a
+szükséges pozíció-/időbélyeg-információt.  Például a KML-fájlokban minden
+Placemarknak tartalmaznia kell egy TimeStamp-et.  Ha úgy gondolod, hogy a
+nyomvonalnaplód tartalmazza a szükséges információt, kérlek, küldj egy mintafájlt,
+és hozzáadom a formátum támogatását.</blockquote>
+
+<a name="TR2"></a>
+<p>2. <b>„No writable tags set"</b> vagy <b>„0 image files updated"</b></p>
+
+<blockquote>Ha ezeket minden más figyelmeztető üzenet nélkül látod, akkor
+valószínűleg a <code>Geotime</code> nem lett megfelelően beállítva.</blockquote>
+
+<blockquote>Győződj meg róla, hogy a szükséges dátum/idő tag létezik a képedben a
+<code>Geotime</code>-ba másoláshoz.  Ha másképp nincs megadva, a szükséges tag a
+<code>DateTimeOriginal</code>.  A következő paranccsal kilistázhatók egy kép
+összes elérhető dátum/idő tagjének nevei és értékei:
+
+<pre>exiftool -s -time:all image.jpg
+</pre>
+
+Még ha nincs is metaadat a képben, előfordulhat, hogy be tudod állítani a
+<code>Geotime</code>-ot a kép fájlrendszeri módosítási dátumából (amely a fenti
+parancs kimenetében <code>FileModifyDate</code>-ként jelenik meg).
+Ebben az esetben érdemes lehet a <code>-P</code> opciót is hozzáadni, hogy megőrizd
+a <code>FileModifyDate</code> eredeti értékét:
+
+<pre>exiftool -geotag track.gpx "-geotime&lt;filemodifydate" -P image.jpg
+</pre>
+
+A <code>-P</code> opció nélkül a <code>FileModifyDate</code> az aktuális
+dátum/időre áll, amikor a fájl újraíródik.</blockquote>
+
+<a name="TR3"></a>
+<p>3. <b>„Warning: Time is too far before track in File:Geotime (ValueConvInv)"</b></p>
+
+<blockquote>Ha ilyen figyelmeztetést látsz, akkor lehet, hogy időzóna-problémád
+van, vagy idő-szinkronizálási gondod.  Tartsd észben, hogy a GPS-idők UTC-ben
+vannak, a fényképezőgép-idők viszont jellemzően a helyi időzónádban.</blockquote>
+
+<blockquote>Ha több részletet szeretnél látni arról, hogy mit csinál az ExifTool,
+próbáld meg hozzáadni a <code>-v2</code> opciót a parancsodhoz.  Ekkor ilyen
+üzeneteket kell látnod, ha a GPS nyomvonalnapló sikeresen betöltődött:
+
+<pre>Loaded 372 points from GPS track log file 'my_track.log'
+  GPS track start: 2009:03:30 19:45:25 UTC
+  GPS track end:   2009:04:03 11:16:04 UTC
+</pre>
+
+Ha a betöltött pontok száma és a kezdő/záró idők ésszerűnek tűnnek, akkor a
+probléma valószínűleg az idő-szinkronizálásban van.  Kiíródik a kép UTC-ideje
+is:
+
+<pre>  Geotime value:   2009:04:03 10:57:01 UTC (local timezone is -05:00)
+</pre>
+
+A „Geotime value"-nak a nyomvonalnaplóban lévő érvényes GPS-fixpont 1/2 óráján
+belül kell lennie ahhoz, hogy pozíció legyen kiszámítható. (Az 1/2 óra az
+alapértelmezés, de ez konfigurálható a geotaggelési <a href="#Options">Opciókkal</a>.)
+ Az idő-kalibráció a GPS-idő és a fényképezőgéped órája közötti megfelelő
+szinkronizáláson múlik.  Ha nincs időzóna megadva, a fenti üzenetben a helyi
+rendszer időzónája (ahogyan a shell TZ környezeti változója beállítja) íródik ki,
+és ez használatos a <code>Geotime</code> érték UTC-re alakításához.  Meg kell adnod
+a <code>Geotime</code> időzónáját, ha a képeid más időzónában készültek (lásd
+fentebb a <a href="#Examples">Példákat</a>).  Ha a fényképezőgép órája rossz volt, a
+<code>Geosync</code> taggel alkalmazható időkorrekció, vagy az ExifTool
+időeltolási szolgáltatásával beállíthatók a kép-idők a geotaggelés előtt -- lásd
+lentebb az <a href="#TP1">Idő-szinkronizálás</a> tippet a példákért.</blockquote>
+
+<a name="Tips"></a>
+<h3>Tippek</h3>
+
+<a name="TP1"></a>
+<p><b>1. Idő-szinkronizálás</b></p>
+
+<blockquote>A képeid GPS-idővel való pontos szinkronizálásának egyik módja, hogy
+fényképezés közben lefényképezed a GPS-egységeden megjelenített időt.  Aztán a
+képeid letöltése után ezzel a képpel szinkronizálhatod a kép-időbélyegeket a
+geotaggeléshez.  Ezt úgy teszed, hogy egy képnézegetővel leolvasod az időt a
+képen lévő GPS-kijelzőről, az exiftoollal pedig kinyered a
+<code>DateTimeOriginal</code>-t a fájlból. Például ha a GPS-kijelzőn az idő
+19:32:21 UTC, a <code>DateTimeOriginal</code> pedig 14:31:49, akkor ennél a
+képnél a fényképezőgép órája 32 másodperccel késett (feltéve, hogy a
+fényképezőgép órájának időzónája <span class=nr>-05:00</span> volt). Többféleképpen
+is felhasználhatod ezt az idő-szinkronizálást a geotaggelési pontosságod
+javítására:</blockquote>
+
+<blockquote>A) Használd a <code>Geosync</code> taget az időkülönbség megadására
+geotaggelés közben.  Ezzel a technikával a meglévő kép-időbélyegek nem
+korrigálódnak, de a geotaggelési folyamat által létrehozott
+<code>GPSTimeStamp</code> tag a helyes GPS-időt fogja tartalmazni:
+
+<pre>exiftool -geosync=+00:00:32 -geotag my_gps.log C:\Images
+</pre>
+vagy ezzel egyenértékűen,
+<pre>exiftool -geosync=19:32:21Z@14:31:49-05:00 -geotag my_gps.log C:\Images
+</pre>
+
+<i class=lt>(Vedd figyelembe, hogy ez a technika egy fejlettebb
+idődrift-korrekcióhoz is használható.  A részletekért lásd fentebb a
+<a href='#geosync'>Geosync szakaszt</a>.)</i></blockquote>
+
+<blockquote>B) Előbb javítsd ki a kép-időbélyegeket úgy, hogy eltolod őket a
+GPS-idővel való szinkronizáláshoz, majd geotaggelj a javított időbélyegekkel:
+
+<pre>exiftool -alldates+=00:00:32 C:\Images
+exiftool -geotag my_gps.log C:\Images
+</pre>
+
+C) Csináld mindkettőt ugyanabban a parancsban:
+
+<pre>exiftool -alldates+=00:00:32 -geosync=+00:00:32 -geotag my_gps.log C:\Images
+</pre>
+
+A fenti példák azt feltételezik, hogy a nyomvonalnapló-fájlod
+(<code>my_gps.log</code>) az aktuális könyvtárban van, hogy a képeket a
+<code>C:\Images</code> könyvtárba töltötted le, és hogy a számítógép és a
+fényképezőgép órája ugyanabban az időzónában van.</blockquote>
+
+<hr>
+<a name="Inverse"></a>
+<h2>Fordított geotaggelés</h2>
+
+<p>Az ExifTool <b>GPS nyomvonalfájlt is tud létrehozni geotaggelt képek
+sorozatából</b>. A <code>-p</code> opció bármennyi formátumban való fájlkiírásra
+használható. Ez a szakasz példákat ad GPX és KML kimeneti fájlok létrehozására
+geotaggelt képek csoportjából, illetve geotaggelt videofájlból.
+(De vedd figyelembe, hogy az alábbi parancsokhoz hozzá kell adni a
+<code>-ee3</code> opciót a teljes nyomvonal videofájlból való kinyeréséhez.)</p>
+
+<blockquote class=lt><i>(Ez eltér attól, amit néha „reverse geocoding"-nak
+neveznek, ami az <a href="geolocation.html">ExifTool geolokáció-szolgáltatás</a>.)</i>
+</blockquote>
+
+<a name="GPX"></a>
+<h4>GPX nyomvonalnapló létrehozása</h4>
+
+<p>A következő kiírási formátumfájl egy vagy több geotaggelt képből GPX
+nyomvonalnapló generálására használható:</p>
+
+<pre>#------------------------------------------------------------------------------
+# Fájl:         gpx.fmt
+#
+# Leírás:       Példa ExifTool kiírási formátumfájl GPX nyomvonalnapló generálására
+#
+# Használat:    exiftool -p gpx.fmt -ee3 FILE [...] &gt; out.gpx
+#
+# Igényel:      ExifTool 10.49-es vagy újabb verzió
+#
+# Változások:   2010/02/05 - P. Harvey létrehozta
+#               2018/01/04 - PH IF hozzáadva, hogy biztosan legyen pozíció
+#               2018/01/06 - PH DateFmt függvény használata a -d opció helyett
+#               2019/10/24 - PH A másodperc törtrészének megőrzése a GPSDateTime értékben
+#
+# Megjegyzések: 1) A bemeneti fájl(ok)nak tartalmazniuk kell GPSLatitude és GPSLongitude taget.
+#              2) A -ee3 opció a teljes nyomvonal kinyerésére szolgál videofájlokból.
+#              3) A -fileOrder opció használható a több fájl feldolgozásakor
+#                 generált nyomvonalpontok sorrendjének szabályozására.
+#------------------------------------------------------------------------------
+#[HEAD]&lt;?xml version="1.0" encoding="utf-8"?&gt;
+#[HEAD]&lt;gpx version="1.0"
+#[HEAD] creator="ExifTool $ExifToolVersion"
+#[HEAD] xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+#[HEAD] xmlns="http://www.topografix.com/GPX/1/0"
+#[HEAD] xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd"&gt;
+#[HEAD]&lt;trk&gt;
+#[HEAD]&lt;number&gt;1&lt;/number&gt;
+#[HEAD]&lt;trkseg&gt;
+#[IF]  $gpslatitude $gpslongitude
+#[BODY]&lt;trkpt lat="$gpslatitude#" lon="$gpslongitude#"&gt;
+#[BODY]  &lt;ele&gt;$gpsaltitude#&lt;/ele&gt;
+#[BODY]  &lt;time&gt;${gpsdatetime#;my ($ss)=/\.\d+/g;DateFmt("%Y-%m-%dT%H:%M:%SZ");s/Z/${ss}Z/ if $ss}&lt;/time&gt;
+#[BODY]&lt;/trkpt&gt;
+#[TAIL]&lt;/trkseg&gt;
+#[TAIL]&lt;/trk&gt;
+#[TAIL]&lt;/gpx&gt;
+</pre>
+
+<p>Ez a példa feltételezi, hogy a <code>GPSLatitude</code>,
+<code>GPSLongitude</code>, <code>GPSAltitude</code> és <code>GPSDateTime</code>
+tagek mind elérhetők minden feldolgozott <i>FILE</i>-ban.  A hiányzó tagekhez
+figyelmeztetések generálódnak.  A kimeneti GPX-formátum érvénytelen lesz, ha
+bármely <code>GPSLatitude</code> vagy <code>GPSLongitude</code> tag hiányzik, de
+rendben lesz hiányzó <code>GPSAltitude</code> vagy <code>GPSDateTime</code>
+tagek esetén.</p>
+
+<p>Vedd figyelembe, hogy a nyomvonalpontok sorrendje a kimeneti GPX-fájlban
+ugyanaz lesz, mint a bemeneti fájlok feldolgozásának sorrendje, ami a fájlok
+elnevezésétől függően lehet, hogy nem időrendi.  A <code>-fileOrder</code>
+opcióval kikényszeríthető a fájlok egy adott sorrendben való feldolgozása.  Például
+a következő parancs a fájlokat növekvő <code>GPSDateTime</code> sorrendben
+dolgozza fel:
+</p>
+
+<pre>exiftool -fileOrder gpsdatetime -p gpx.fmt /Users/Phil/Pictures > out.gpx
+</pre>
+
+<p>Mivel a <code>gpx.fmt</code>-hez nem adtunk meg könyvtárat, ennek a fájlnak az
+aktuális könyvtárban kell léteznie a fenti parancs végrehajtásakor. (Ha a
+<code>gpx.fmt</code> fájl nem található, akkor a <code>-p</code> argumentumot
+fájlnév helyett sztringként értelmezi, és a "<code>gpx.fmt</code>" szöveg kerül a
+kimenetre, ami nem az, amit szeretnénk.)</p>
+
+<p>Az <code>-if</code> opció hozzáadható annak biztosítására, hogy csak a
+GPS-információt tartalmazó fájlok kerüljenek feldolgozásra.  Például a következő
+parancs az aktuális könyvtárban létrehozza az "<code>out.gpx</code>"-et a
+"<code>pics</code>" könyvtárban és annak alkönyvtáraiban lévő, minden
+<code>GPSDateTime</code> információt tartalmazó képből:</p>
+
+<pre>exiftool -r -if '$gpsdatetime' -fileOrder gpsdatetime -p gpx.fmt pics > out.gpx
+</pre>
+
+<p>Megjegyzés:  Windowson a fenti <code>-if</code> argumentum körül egyszeres
+idézőjelek (<code>'</code>) helyett dupla idézőjeleket (<code>"</code>) kell
+használni.</p>
+
+<p>A teljes exiftool disztribúció "fmt_files" könyvtára tartalmazza ezt a
+minta formátumfájlt ("gpx.fmt"), valamint egy mintát, amely GPX útpontokat hoz
+létre képekkel ("gpx_wpt.fmt").</p>
+
+<a name="KML"></a>
+<h4>Google Earth KML-fájl létrehozása</h4>
+
+<p>Alább egy kiírási formátumfájl példája látható, amely geotaggelt képek
+gyűjteményéből Google Earth KML-fájlt generál.  Ez a példa az ExifTool 10.41-ben
+hozzáadott SECT szolgáltatást használja, hogy a helyjelzőket könyvtárnév alapján
+mappákba ossza:</p>
+
+<pre>#------------------------------------------------------------------------------
+# Fájl:         kml.fmt
+#
+# Leírás:       Példa ExifTool kiírási formátumfájl, amely geotaggelt képek
+#               gyűjteményéből Google Earth KML-fájlt generál
+#
+# Használat:    exiftool -p kml.fmt -r DIR [...] &gt; out.kml
+#
+# Igényel:      ExifTool 10.41-es vagy újabb verzió
+#
+# Változások:   2010/02/05 - P. Harvey létrehozta
+#               2013/02/05 - PH A fényképezőgép-ikon javítása az új Google Earthhöz
+#               2017/02/02 - PH Fájlkönyvtár alapján mappákba rendezés
+#               2018/01/04 - PH IF hozzáadva, hogy biztosan legyen pozíció
+#               2020/01/11 - F. Kotov Kép-előnézet méretének 500 px-re korlátozása
+#
+# Megjegyzések: 1) A bemeneti fájloknak tartalmazniuk kell GPSLatitude és GPSLongitude taget.
+#              2) Add hozzá a -ee3 opciót a teljes nyomvonal kinyeréséhez videofájlokból.
+#              3) Ahhoz, hogy a Google Earth megtalálja a képeket, a bemeneti
+#                 képeket relatív elérési úttal kell megadni, és az "out.kml"-nek
+#                 abban a könyvtárban kell maradnia, ahol a parancsot futtattad.
+#              4) A Google Earth kényes a képfájl-kiterjesztés kis-/nagybetűjére,
+#                 és lehet, hogy nem tudja megjeleníteni a képet, ha nagybetűs
+#                 kiterjesztést használsz.
+#              5) A -fileOrder opció használható a több fájl feldolgozásakor
+#                 generált helyjelzők sorrendjének szabályozására.
+#------------------------------------------------------------------------------
+#[HEAD]&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+#[HEAD]&lt;kml xmlns="http://earth.google.com/kml/2.0"&gt;
+#[HEAD]  &lt;Document&gt;
+#[HEAD]    &lt;name&gt;My Photos&lt;/name&gt;
+#[HEAD]    &lt;open&gt;1&lt;/open&gt;
+#[HEAD]    &lt;Style id="Photo"&gt;
+#[HEAD]      &lt;IconStyle&gt;
+#[HEAD]        &lt;Icon&gt;
+#[HEAD]          &lt;href&gt;http://maps.google.com/mapfiles/kml/pal4/icon38.png&lt;/href&gt;
+#[HEAD]          &lt;scale&gt;1.0&lt;/scale&gt;
+#[HEAD]        &lt;/Icon&gt;
+#[HEAD]      &lt;/IconStyle&gt;
+#[HEAD]    &lt;/Style&gt;
+#[SECT]    &lt;Folder&gt;
+#[SECT]      &lt;name&gt;$main:directory&lt;/name&gt;
+#[SECT]      &lt;open&gt;0&lt;/open&gt;
+#[IF]  $gpslatitude $gpslongitude
+#[BODY]      &lt;Placemark&gt;
+#[BODY]        &lt;description&gt;&lt;![CDATA[&lt;img src='$main:directory/$main:filename'
+#[BODY]          style='max-width:500px;max-height:500px;'&gt; ]]&gt;
+#[BODY]        &lt;/description&gt;
+#[BODY]        &lt;Snippet/&gt;
+#[BODY]        &lt;name&gt;$filename&lt;/name&gt;
+#[BODY]        &lt;styleUrl&gt;#Photo&lt;/styleUrl&gt;
+#[BODY]        &lt;Point&gt;
+#[BODY]          &lt;altitudeMode&gt;clampedToGround&lt;/altitudeMode&gt;
+#[BODY]          &lt;coordinates&gt;$gpslongitude#,$gpslatitude#,0&lt;/coordinates&gt;
+#[BODY]        &lt;/Point&gt;
+#[BODY]      &lt;/Placemark&gt;
+#[ENDS]    &lt;/Folder&gt;
+#[TAIL]  &lt;/Document&gt;
+#[TAIL]&lt;/kml&gt;
+</pre>
+
+<p>Ez a példafájl a teljes ExifTool disztribúció "fmt_files" könyvtárában
+található.  A KML-fájlok létrehozásáról további hasznos tippekért lásd
+<a href="https://exiftool.org/forum/index.php/topic,7836.0.html">ezt a
+fórumbejegyzést</a>.</p>
+
+<hr>
+<i>Létrehozva: 2009. április 2.</i><br>
+<i>Utoljára módosítva: 2026. április 14.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+  <title>Gyakori ExifTool-hibák</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+pre         { color: #800; margin-left: 2em }
+ol.index    { margin: 0; padding: 0 0 0 2em }
+-->
+</style>
+</head>
+<body>
+<div class='index'>
+<ol class='index'>
+<li><a href="#M1">Hiányzó duplikált tagek</a></li>
+<li><a href="#M2">A *.* túlzott használata</a></li>
+<li><a href="#M3">Túlszkriptelés</a></li>
+<li><a href="#M4">Több tag írása</a></li>
+<li><a href="#M5">Tagek átirányítása</a></li>
+</ol>
+</div>
+<h1 class='up'>Gyakori hibák az ExifTool használatakor</h1>
+
+<a name="M1"></a>
+<h3>1. Hiányzó duplikált tagek</h3>
+<blockquote>Alapértelmezésben az ExifTool elnyomja a duplikált tageket a
+kimenetben. Ez gyakran kívánatos, de néha az ember becsapva érezheti magát, azt
+hivén, hogy egy információ nem létezik, holott csak egy másik, azonos nevű tag
+takarja el. Például az alábbi parancs nem feltétlenül adja vissza az összes
+EXIF-taget:
+<pre>exiftool -exif:all image.jpg
+</pre>
+A probléma elkerüléséhez használd a <code>-a</code> opciót.
+</blockquote>
+
+<a name="M2"></a>
+<h3>2. Helyettesítő karakterek túlzott használata a fájlnevekben (pl. „<code>*.*</code>")</h3>
+<blockquote>Több okból is gyakran előnyösebb egy könyvtárnevet megadni (pl.
+„<code>.</code>"), mint helyettesítő karaktereket használni (pl. „<code>*.*</code>"):
+<ol type='a'>
+<li>A „<code>*.*</code>" minden olyan fájlt feldolgoz, amelynek a nevében van egy
+„.". Ez olyan fájlokat is magában foglal, amelyeket az ExifTool normál esetben
+nem dolgozna fel (mint például az „_original" biztonsági másolatok). Ha helyette
+egy könyvtárnevet adsz meg, az ExifTool csak a támogatott fájltípusokat dolgozza
+fel. Vagy használható a <code>-ext</code> opció konkrét fájltípusok
+feldolgozásához.</li>
+<li>A „<code>*.*</code>" minden olyan <b>alkönyvtárat</b> feldolgoz, amelynek a
+nevében van egy „.". Ez váratlan lehet.</li>
+<li>A <code>-r</code> opció (az alkönyvtárak rekurzív feldolgozásához) csak akkor
+hatásos, ha egy könyvtárnevet adnak meg, így nem működik, amikor a
+„<code>*.*</code>"-ot adják meg (kivéve, ha az első szintű könyvtárak nevében van
+egy „.", ahogy a fenti b) pont említi).</li>
+<li>Az olyan argumentumok, mint a „<code>*.jpg</code>", problémát okoznak a
+kis-/nagybetűérzékeny fájlneveket használó rendszereken (mint az OS X és a
+Linux), mert a nagybetűs kiterjesztésű JPG-képek kimaradnak. Jobb ezt a
+problémát elkerülni, és a „<code>-ext jpg .</code>"-ot használni az aktuális
+könyvtárban lévő összes JPG-kép feldolgozásához, mert ez a technika
+kis-/nagybetűre nem érzékeny.</li>
+<li>Ez biztonsági probléma lehet azokon a rendszereken, ahol a shell
+automatikusan kibontja a helyettesítő karaktereket (pl. Mac és Linux), mert a
+fájlnevek rosszindulatú elrendezése potenciálisan nemkívánatos hatásokkal
+járhat, mivel ExifTool-opcióként értelmeződhetnek (lásd
+<a href="index.html#security">Biztonsági kérdések</a>).</li>
+<li>A helyettesítő karakterekkel való illesztésnek problémái vannak a nevükben
+Unicode-karaktereket tartalmazó fájloknál a Windows-rendszereken.</li>
+</ol>
+</blockquote>
+
+<a name="M3"></a>
+<h3>3. Túlszkriptelés</h3>
+
+<blockquote>A felhasználók gyakran írnak shell szkripteket valamilyen konkrét
+kötegelt feldolgozáshoz, holott az exiftool alkalmazás már képes erre vagy
+szkriptelés nélkül, vagy egy jelentősen egyszerűsített szkripttel. Ez magában
+foglalja azt a képességet, hogy az alkönyvtárakban rekurzívan keressen egy adott
+fájlkiterjesztést (kis-/nagybetűre nem érzékenyen), metaadatértékek alapján
+nevezzen át fájlokat, és fájlokat helyezzen át más könyvtárakba.
+</blockquote>
+
+<blockquote>Például ez a Unix-szkript (innen:
+<a href="https://web.archive.org/web/20171223023104/http://www.tuxradar.com/answers/433">itt</a>):
+
+<pre>find -name '*.jpg' | while read PIC; do
+DATE=$(exiftool -p '$DateTimeOriginal' $PIC |
+sed 's/[: ]//g')
+touch -t $(echo $DATE | sed 's/\(..$\)/\.\1/') $PIC
+mv -i $PIC $(dirname $PIC)/$DATE.jpg
+done
+</pre>
+
+helyettesíthető ezzel az egyetlen paranccsal:
+<pre>exiftool -d %Y%m%d "-filename&lt;datetimeoriginal" "-filemodifydate&lt;datetimeoriginal#" -ext jpg -r .</pre>
+
+Egyetlen parancsként futtatva sokkal gyorsabb, mert az ExifTool betöltésének
+indítási ideje jelentős.</blockquote>
+
+<a name="M4"></a>
+<h3>4. Több tag írása/másolása</h3>
+<blockquote>Egyetlen parancssorban tetszőleges számú tag megadható, de az emberek
+gyakran külön parancsot futtatnak minden egyes tag írásához vagy másolásához,
+ami nagyon nem hatékony. Ha az összes tag-hozzárendelést egyetlen parancsba
+vonjuk össze, elkerüljük az exiftool elindításának jelentős többletköltségét a
+további parancsoknál. Például:
+<pre>exiftool -artist=phil -modifydate=now -tagsfromfile %d%f.xmp -xmp:title -xmp:description -ext jpg c:\images
+</pre>
+A <code>-@</code> opció használható a parancssori argumentumok fájlból való
+beolvasására, és hasznos lehet olyan helyzetekben, amikor nagyszámú argumentum
+van.</blockquote>
+
+<a name="M5"></a>
+<h3>5. Hibák és pazarlások a tagek átirányításakor</h3>
+
+<blockquote>A tagek másoláskori átirányításának szintaxisa
+<code>"-DSTTAG&lt;SRCTAG"</code>, de a szintaxis azt is megengedi, hogy a
+<code>SRCTAG</code> helyett tagneveket tartalmazó sztringet használjunk
+(<code>$</code> előtaggal). Három <b>gyakori hiba</b> ennek a szintaxisnak a
+használatakor:
+<ol type='a'>
+<li>Egy bevezető „<code>-</code>" hozzáadása a <code>SRCTAG</code> elé. (pl.
+<code>"-EXIF:Artist&lt;-XMP:Creator"</code>) Ez <b>hibás</b>, és a tag nem lesz
+lemásolva. (Helyesen <code>"-EXIF:Artist&lt;XMP:Creator"</code>.)</li>
+<li>Egy bevezető „<code>$</code>" hozzáadása egy egyszerű tag másolásakor. (pl.
+<code>"-comment&lt;$filename"</code>). Ez általában nem szükséges <i>(lásd a lenti
+kivételt)</i>, és az ExifTool számára kevésbé hatékony a forrássztring
+feldolgozása, mint a tag közvetlen másolása. Ráadásul a lista típusú és a
+rövidítés-tagek értékei a sztringben összefűződnek, nem pedig egyesével
+másolódnak, és helyettesítő karakterek nem megengedettek. További különbség,
+hogy egy apró figyelmeztetés keletkezik, ha egy tag nem létezik, amikor az
+értékét egy sztringben interpoláljuk (a „<code>$</code>" jellel), de nem
+keletkezik, amikor a taget közvetlenül másoljuk.</li>
+<li>A „<code>=</code>" használata „<code>&lt;</code>" helyett egy tag
+másolásához, vagy a „<code>&lt;</code>" használata „<code>=</code>" helyett egy
+érték hozzárendeléséhez.
+<table class=box><tr><td>A „<code>&lt;</code>" másolásra szolgál, amely esetben a
+forrás (jobb oldali) operandus az alábbiak egyikeként értelmeződik:
+<ol type='i'>
+<li>egy tagnév (ha az operandus nem tartalmaz „<code>$</code>" szimbólumot), vagy</li>
+<li>egy „<code>$</code>" szimbólumokkal előtagolt tagneveket tartalmazó sztring (ha az operandus tartalmaz „<code>$</code>" szimbólumot).</li>
+</ol>
+A „<code>=</code>" egy egyszerű tag-érték hozzárendelésére szolgál, és a forrás
+operandus egy sztring, amely közvetlenül a cél-tagbe íródik.<br>
+(A „<code>&lt;=</code>" kombináció pedig egy tag-érték hozzárendelésére szolgál egy fájl tartalmából.)<br>
+</td></tr></table></li>
+</ol>
+A fenti „b" szabály alóli kivétel akkor fordul elő, amikor egy tag értékét
+különböző tagek egy csoportjába próbáljuk másolni, például:
+<pre>exiftool "-time:all&lt;datetimeoriginal" FILE  <span class=blk>(HIBÁS!)</span></pre>
+A fenti parancs nem működik, mert az „All" cél-tagnév a forrással azonos nevű
+tagbe ír (azaz csak a „DateTimeOriginal"-ba). Amikor viszont egy sztringben
+interpoláljuk, a forrás-tag identitása elvész, így az alábbi parancs a Time
+csoport összes tagjébe ír:
+<pre>exiftool "-time:all&lt;$datetimeoriginal" FILE</pre>
+(Vedd figyelembe, hogy a fenti parancsban Mac/Linux alatt egyszeres idézőjelekre lenne szükség.)
+</blockquote>
+
+<hr>
+<i>Utoljára módosítva: 2021. március 11.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool kezdőlapjára</a></p>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+  <title>A FileName és a Directory tag</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+.prog    { padding: 0.5em; border: 1px solid gray; background: #fee }
+-->
+</style>
+</head>
+<body>
+<h2 class='up'>A "FileName" és a "Directory" tag írása</h2>
+
+<p>A <b>FileName</b> és/vagy <b>Directory</b> pszeudo tagek írásával az ExifTool
+használható képek átnevezésére és/vagy könyvtárakba mozgatására a képben lévő
+bármely információ alapján.  Ez egy erős szolgáltatás, ha a
+<code>-tagsFromFile</code> más tagek értékeit másoló képességével kombinálod.
+Ennek a szolgáltatásnak a leggyakoribb felhasználása a képek dátum/idő szerinti
+rendezése, de bármely más tagérték is használható.</p>
+
+<p>A <b>Directory</b> tag írása egy megadott könyvtárba mozgat egy fájlt.  A
+könyvtár létrejön, ha még nem létezik.</p>
+
+<p>A <b>FileName</b> tag írása átnevez egy fájlt.  Ha az új <b>FileName</b>
+könyvtármegadást is tartalmaz (azaz van benne '<code>/</code>' karakter), akkor a
+fájl a megadott könyvtárba is átkerül (lásd lentebb a
+<a href="#ex6">6. példát</a>), és a könyvtár szükség esetén létrejön.
+A meglévő fájlokat nem írja felül (de lásd lentebb a „Figyelmeztetést").</p>
+
+<p>A csak írható <b>TestName</b> tag mechanizmust biztosít az átnevezési
+szolgáltatás próbafuttatásához (dry-run).  A <b>TestName</b> írása megjeleníti a
+régi és az új neveket anélkül, hogy bármit is módosítana a fájlokon.  (Vedd
+figyelembe, hogy a <b>Directory</b>-hoz nincs megfelelő teszt-tag, de a
+<b>TestName</b> a <b>FileName</b>-hez hasonlóan támogatja a teljes elérési utat, így
+a könyvtár is tesztelhető.)</p>
+
+<p>A <b>FileName</b>, <b>Directory</b> vagy <b>TestName</b> tag írásakor a
+<code>%d</code>, <code>%f</code> és <code>%e</code> kód használható az eredeti fájl
+könyvtárának, nevének és kiterjesztésének jelölésére (a <code>-o</code>,
+<code>-w</code> és <code>-tagsFromFile</code> opciókhoz hasonló módon).  Emellett a
+<code>%c</code> használható másolatszám hozzáadására a kimeneti fájlnévhez, hogy
+elkerüld az ütközést a meglévő fájlnevekkel. Vedd figyelembe, hogy ezeket a
+kódokat egy extra <code>%</code>-kal kell escape-elni, ha dátumformátum-sztringen
+belül használod.  Módosítók is használhatók ezeknek a formátumkódoknak az
+alapértelmezett viselkedése megváltoztatására.  A részletekért lásd a
+<code>-w</code> opciót az <a href="exiftool_pod.html">alkalmazás
+dokumentációjában</a>.</p>
+
+<p>Amikor fájlokat rendezel dátum/idő szerint, a <code>-d</code> (dátumformátum)
+opció elengedhetetlen az új fájl- és/vagy könyvtárnév generálásához használt
+dátum/idő tag(ek) formátumának megadásához.  Az alábbi példák bemutatják ennek a
+szolgáltatásnak a használatát.  Emellett referenciaként megadunk egy listát a
+<a href="#codes">gyakori dátumformátum-kódokról</a>.</p>
+
+<blockquote class=prog><b class=red>Haladó szolgáltatás:</b> a csak írható
+<b>HardLink</b> tag a <b>FileName</b>-hez hasonló technikával írható.
+A fájl átnevezése vagy mozgatása helyett a <b>HardLink</b> írása egy hard linket
+hoz létre a megadott névvel.  Ez a szolgáltatás lehetővé teszi a fájlok rendezését
+az eredetiek érintése nélkül.  További információért lásd az
+<a href="TagNames/Extra.html">Extra Tags dokumentációt</a>.</blockquote>
+
+<a name="Notes"></a><h3>Megjegyzések:</h3>
+
+<p>A <b>FileName</b> és/vagy <b>Directory</b> tag önmagában való írása a fájl
+átnevezését vagy mozgatását okozza, nem másolását.  Ha azonban ugyanakkor bármilyen
+„valódi" taget is írsz, akkor a fájl az új célhelyre íródik újra, az eredeti fájl
+pedig változatlan marad.  (Csak az írható rendszer-tagek állíthatók be anélkül,
+hogy a fájl újraírásra kerülne.)  Ha kívánod, az
+<code>-overwrite_original</code> opcióval eltávolítható az eredeti másolat, amikor
+a fájl újraíródik.</p>
+
+<p>Ezzel szemben a <code>-o</code> opcióval rákényszeríthető az exiftool arra, hogy
+mindig másolatot készítsen a fájlról, még akkor is, ha egyetlen metainformáció-tag
+sem íródik.  Ez akkor is igaz, ha a <code>-o</code> opciót felváltja a
+<b>Directory</b> tag írása, vagy egy könyvtármegadást tartalmazó <b>FileName</b>.
+ (Lásd lentebb az <a href="#ex5">5. példát</a>.  A könyvtár-elsőbbségi szabályokhoz
+lásd még a <a href="#ex11">11. példát</a>.)</p>
+
+<p>Ha a <code>-d</code> opciót használod, a formázatlan dátum/idő értéknek
+érvényesnek kell lennie (azaz "<code>YYYY:mm:dd HH:MM:SS</code>" alakúnak),
+egyébként a dátumformázás sikertelen lesz, és a fájl nem lesz átnevezve vagy
+mozgatva (de ez megváltoztatható az <a href="ExifTool.html#StrictDate">API
+StrictDate opcióval</a>).</p>
+
+<p>Vedd figyelembe azt is, hogy a <code>-d</code> formázás az <code>-if</code>
+feltételekben használt dátum/idő tagekre is vonatkozik, hacsak a kiírási konverziót
+ki nem kapcsolod a tagnévhez fűzött <code>#</code> utótaggal.</p>
+
+<p>Egy Windows batch fájlban minden <code>%</code> karaktert
+<code>%%</code>-ként kell escape-elni.  Ez a <code>-d</code> opció használatakor
+olyan szélsőséges formátumkódokat eredményezhet, mint a
+<code>%%%%f</code>.</p>
+
+<blockquote class=prog><b class=red>Figyelmeztetés:</b>
+<b>Illegális fájlnevek</b> írása Windowson kiszámíthatatlan eredményekkel járhat, és
+<b>adatvesztést</b> okozhat.  Az illegális karakterek a Windows-fájlnevekben:
+<pre class=code>    / \ ? * : | " &lt; &gt;</pre>
+Minden olyan taget, amelyet fájlnév generálásához használsz, és amely ilyen
+karaktereket tartalmazhat, előbb szűrni kell ezeknek a karaktereknek az
+eltávolítására vagy átalakítására.  Egy speciális szolgáltatás lehetővé teszi
+ezeknek a karaktereknek az eltávolítását egy tagértékből úgy, hogy a tagnév után a
+kapcsos zárójelen belülre pontosvesszőt teszel.  Például:
+<pre class=code>    exiftool "-filename&lt;${model;}.%e" c:\images</pre>
+Ez a haladó formázási szolgáltatás bármely, formátumsztringben használt tagérték
+tetszőleges újraformázására is használható.  További részletekért lásd a
+<code>-p</code> opciót az <a href="exiftool_pod.html">alkalmazás
+dokumentációjában</a>.
+</blockquote>
+
+<h2>Példák</h2>
+
+<a name="ex0"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;0.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -d %Y%m%d_%H%M%%-c.%%e "-testname&lt;CreateDate" DIR
+</code></td></tr></table>
+<blockquote>
+A <b>TestName</b> tag a fájlátnevezési szolgáltatás próbafuttatásához (dry-run)
+használatos.  A fenti parancs megegyezik a következő példáéval, azzal a kivétellel,
+hogy a <b>FileName</b> helyett a <b>TestName</b> íródik.  Tehát a fájlok átnevezése
+helyett ez a parancs kiírja a régi és az új fájlneveket anélkül, hogy bármit is
+ténylegesen megváltoztatna.  Például:
+<blockquote><pre>&gt; <span class=code>exiftool -d %Y%m%d_%H%M%%-c.%%e "-testname&lt;CreateDate" tmp</span>
+'tmp/a.jpg' --&gt; 'tmp/20031031_1544.jpg'
+'tmp/b.jpg' --&gt; 'tmp/20010519_1836.jpg'
+    1 directories scanned
+    0 image files updated
+    2 image files unchanged</pre></blockquote>
+</blockquote>
+
+<a name="ex1"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;1.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -d %Y%m%d_%H%M%%-c.%%e "-filename&lt;CreateDate" DIR
+</code></td></tr></table>
+<blockquote>
+A '<code>DIR</code>' könyvtár összes képét olyan nevekre nevezi át, mint a
+'<code>20060327_1058-2.jpg</code>', ahol az egyes fájlnevek a CreateDate értékéből
+származnak (plusz egy vezető '<code>-</code>'-lal ellátott másolatszám, ha már
+létezik azonos nevű fájl), az eredeti képpel azonos kiterjesztéssel.  <i class=lt>[Vedd
+figyelembe, hogy a tagértékek '<code>&lt;</code>'-lal való másolása magában foglalja
+a '<code>-tagsfromfile @</code>'-t, hacsak másképp nincs megadva.  A részletekért
+lásd a <code>-tagsFromFile</code> leírását az
+<a href="exiftool_pod.html">alkalmazás dokumentációjában</a>.]</i>
+<p><b>GYIK:</b> <i>„Miért nem nevezi át ez a parancs a fájljaimat?"</i></p>
+<p>Ennek 2 gyakori oka van:</p>
+<p>a) Ha könyvtárnév van megadva, ez a parancs csak a könyvtárban lévő „írható"
+fájlokat nevezi át.  Az '<code>exiftool -listwf</code>' paranccsal listázhatók a
+jelenleg írható fájltípusok kiterjesztései.  Az <code>-ext</code> opcióval más
+fájltípusok is átnevezhetők (pl. '<code>-ext avi</code>').</p>
+<p>b) Ahhoz, hogy ez a parancs működjön, a CreateDate tagnek léteznie kell a
+forrásfájlban. Az '<code>exiftool -createdate FILE</code>' paranccsal ellenőrizheted,
+hogy egy fájl tartalmazza-e ezt az információt.  Ha nem, akkor egy másik dátum/idő
+taget kell használnod, például a DateTimeOriginal-t vagy a FileModifyDate-et.  Egy
+fájl összes elérhető dátum/idő tagjének (és azok helyének) megtekintéséhez használd
+az '<code>exiftool -a -G1 -s -time:all FILE</code>' parancsot.</p>
+</blockquote>
+
+<a name="ex2"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;2.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -d %Y-%m-%d "-directory&lt;datetimeoriginal" image.jpg
+</code></td></tr></table>
+<blockquote>
+Az '<code>image.jpg</code>'-t egy olyan könyvtárba mozgatja, amelynek nevét a
+DateTimeOriginal adja, '<code>2006-03-27</code>' alakban.
+</blockquote>
+
+<a name="ex3"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;3.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool '-filename&lt;%f_$imagesize.%e' dir
+</code></td></tr></table>
+<blockquote>
+Ez a példa egy kifejezéssel adja hozzá a képméretet a '<code>dir</code>' könyvtár
+összes képének nevéhez. Például ez egy '<code>image.jpg</code>' nevű 640x480-as
+képet '<code>image_640x480.jpg</code>'-re nevezne át. (Vedd figyelembe, hogy az
+egyszeres idézőjelek a '<code>$</code>' szimbólum miatt szükségesek Unix
+shellekben, Windows cmd shellben viszont helyette dupla idézőjelet kell használni.)
+</blockquote>
+
+<a name="ex4"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;4.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -r -directory=%e_images/%d pics
+</code></td></tr></table>
+<blockquote>
+Rekurzívan áthelyezi a '<code>pics</code>' könyvtárban lévő összes képet külön,
+fájlkiterjesztés szerint rendezett könyvtárfákba.  Például ebben a példában a
+'<code>pics/toys/new_car.jpg</code>' fájl a
+'<code>jpg_images/pics/toys/new_car.jpg</code>' helyre kerül.
+</blockquote>
+
+<a name="ex5"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;5.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -r -o %e_images/%d pics<br>
+exiftool -r -o . -directory=%e_images/%d pics
+</code></td></tr></table>
+<blockquote>
+Mindkét parancsnak ugyanaz a hatása, mint a fenti 4. példának, azzal a
+kivétellel, hogy a képek átmásolódnak, nem áthelyeződnek, mivel a <code>-o</code>
+opciót használtuk.  A <code>-o</code> opcióval megadott kimeneti könyvtárat a
+második példában felülírja a Directory tag írása.  A <code>-o</code> ál-könyvtárnévvel
+való használatának ez a technikája akkor szükséges, ha azt akarod, hogy a fájlok
+átmásolódjanak, ne áthelyeződjenek, és a könyvtárnév más tagek értékéből származik
+(pl. '<code>-directory&lt;createDate</code>').  (Mert más tagek értékei nem
+használhatók a <code>-o</code> opcióval.)
+</blockquote>
+
+<a name="ex6"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;6.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -r -d %Y/%m/%d/image_%H%M%S.%%e "-filename&lt;filemodifydate" DIR
+</code></td></tr></table>
+<blockquote>
+Rekurzívan átnevezi a '<code>DIR</code>'-ben és az abban lévő bármely
+alkönyvtárban lévő összes képet '<code>image_HHMMSS.EXT</code>' alakúra (ahol az
+'<code>ext</code>' az eredeti fájlkiterjesztés), és áthelyezi őket egy új, a
+fájlmódosítás dátuma alapján felépített könyvtárhierarchiába, olyan elérési
+utakkal, mint a '<code>2006/03/27/image_105859.jpg</code>'.
+</blockquote>
+
+<p>A következő példák bemutatják ennek a szolgáltatásnak az együttműködését más
+ExifTool-opciókkal:</p>
+
+<a name="ex7"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;7.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -filename=new.jpg dir/image.jpg
+</code></td></tr></table>
+<blockquote>
+A '<code>dir/image.jpg</code>'-t '<code>dir/new.jpg</code>'-re nevezi át.
+</blockquote>
+
+<a name="ex8"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;8.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -filename=new.jpg -comment=xxx dir/image.jpg
+</code></td></tr></table>
+<blockquote>
+Átmásolja a '<code>dir/image.jpg</code>'-t, hozzáad egy új megjegyzést, és a
+kimenetet a '<code>dir/new.jpg</code>'-be írja. Az eredeti
+'<code>dir/image.jpg</code>' fájl nem változik.
+</blockquote>
+
+<a name="ex9"></a><table cellpadding=6>
+<tr><td valign='top'>&nbsp;9.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -filename=new.jpg -comment=xxx -overwrite_original dir/image.jpg
+</code></td></tr></table>
+<blockquote>
+Újraírja a '<code>dir/image.jpg</code>'-t, hozzáad egy új megjegyzést, és a
+kimenetet a '<code>dir/new.jpg</code>'-be írja. Az eredeti
+'<code>dir/image.jpg</code>' fájl törlődik.
+</blockquote>
+
+<a name="ex10"></a><table cellpadding=6>
+<tr><td valign='top'>10.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -o tmp/ -filename=new.jpg image.jpg<br>
+exiftool -o tmp/xxx.jpg -filename=new.jpg image.jpg<br>
+exiftool -o tmp/new.jpg image.jpg
+</code></td></tr></table>
+<blockquote>
+A <b>FileName</b> vagy <b>Directory</b> taggel megadott fájlnév vagy könyvtár
+elsőbbséget élvez a <code>-o</code> opcióval megadottal szemben, így ennek a
+három parancsnak ugyanaz a hatása: létrejön a '<code>tmp/new.jpg</code>' az
+'<code>image.jpg</code>' megváltoztatása nélkül.  Vedd figyelembe, hogy az első
+parancsban a '<code>tmp/</code>' végén lévő '<code>/</code>' akkor szükséges, ha a
+'<code>tmp</code>' könyvtár még nem létezik, egyébként a '<code>tmp</code>'
+fájlnévnek minősülne, és a '<code>new.jpg</code>' az aktuális könyvtárban jönne
+létre.  Ahogy a fenti 4. példa is mutatja, a '<code>-o</code>' opció használatakor
+a fájl újraíródik, nem pusztán átnevezésre kerül.
+</blockquote>
+
+<a name="ex11"></a><table cellpadding=6>
+<tr><td valign='top'>11.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -directory=dir1 -filename=dir2/out.jpg -o dir3/ dir4/image.jpg
+</code></td></tr></table>
+<blockquote>
+Ez a példa bemutatja a különböző technikákkal megadott könyvtárnevek
+prioritásait.  A kimeneti könyvtár a következő lista első megadott könyvtára lesz:
+ 1) a <b>Directory</b> tag, 2) a <b>FileName</b> tag könyvtárrésze, 3) a
+<code>-o</code> opció könyvtárrésze, vagy 4) a forráskönyvtár, ebben a sorrendben.
+ A parancssori argumentumok sorrendje nem számít.  Ebben a példában a célfájl a
+'<code>dir1/image.jpg</code>'-be másolódik (nem áthelyeződik, mert a
+<code>-o</code> opciót használtuk). </blockquote>
+<blockquote>Vedd figyelembe, hogy mind a <b>FileName</b> tag, mind a
+<code>-o</code> opció használható könyvtármegadás nélkül, amely esetben a
+következő legmagasabb prioritású könyvtár használatos.  Vedd figyelembe azt is,
+hogy ha a <code>-o</code> könyvtárat ad meg, akkor a könyvtárnévnek
+'<code>/</code>'-lal kell végződnie, vagy a könyvtárnak már léteznie kell,
+egyébként az ExifTool az utolsó részt fájlnévként értelmezi. (Pl. az
+'<code>-o images/test</code>' az '<code>images</code>' könyvtárat adja meg, hacsak
+az '<code>images/test</code>' könyvtár már nem létezik, míg az '<code>-o
+images/test/</code>' egyértelműen az '<code>images/test</code>' könyvtárat adja
+meg.)
+</blockquote>
+
+<a name="ex12"></a><table cellpadding=6>
+<tr><td valign='top'>12.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -d %Y/%m "-directory&lt;filemodifydate" "-directory&lt;createdate" "-directory&lt;datetimeoriginal" .
+</code></td></tr></table>
+<blockquote>Áthelyezi a képfájlokat az aktuális könyvtárból (<code>.</code>) egy
+év/hónap alapú könyvtárhierarchiába.  Ebben a parancsban a Directory tag több
+másik dátum/idő tagből van beállítva.  Az ExifTool balról jobbra értékeli ki a
+parancssori argumentumokat, és ugyanahhoz a taghez az újabb hozzárendelések
+felülírják a korábbiakat, így az egyes képek Directory értékét végső soron a
+legjobboldalibb, az adott képre érvényes copy argumentum állítja be.  Konkrétan a
+Directory a DateTimeOriginal-ból van beállítva, ha az létezik, egyébként a
+CreateDate-ből, ha az létezik, végül pedig a FileModifyDate (amely mindig létezik)
+használatos tartalékként.</blockquote>
+
+<a name="ex13"></a><table cellpadding=6>
+<tr><td valign='top'>13.</td><td bgcolor='#dddddd'><code class='blk'>
+exiftool -d %Y '-filename&lt;$createdate/${model;}/${createdate#;DateFmt("%Y-%m-%d_%H%M%S")}.%e' pics
+</code></td></tr></table>
+<blockquote>Több dátum/idő formázási kód akkor válik szükségessé, amikor más
+tagek kerülnek a dátum/idő mezők közé.  Ezért áll rendelkezésre a
+<code>DateFmt</code> segédfüggvény, amelyet a formázatlan tagértékre (azaz a
+'<code>#</code>'-re végződő tagnévre) alkalmazol, hogy ugyanabban a sztringben
+más dátum/idő formázást érj el.  (Vedd figyelembe, hogy az egyszeres idézőjelek a
+'<code>$</code>' szimbólum miatt szükségesek Unix shellekben, Windows cmd shellben
+viszont helyette dupla idézőjelet kell használni.)</blockquote>
+
+<a name="codes"></a><h2>Gyakori dátumformátum-kódok</h2>
+<p>A dátumformátum-kódokat a <code>-d</code> opció argumentumában használjuk a
+dátum/idő sztring összetevőinek jelölésére.  Az alább felsorolt kódok a legtöbb
+rendszeren közösek, de az adott rendszereden további kódok is elérhetők lehetnek
+-- a részletekért lásd a <i>strftime</i> man-oldalt.  Az alapértelmezett EXIF
+dátum/idő formázás egyenértékű a '<code>%Y:%m:%d %H:%M:%S</code>'-szel.</p>
+<blockquote><table>
+<tr><th>%a</th><td>- rövidített, területi beállítás szerinti hétköznapnév</td></tr>
+<tr><th>%A</th><td>- teljes, területi beállítás szerinti hétköznapnév</td></tr>
+<tr><th>%b</th><td>- rövidített, területi beállítás szerinti hónapnév</td></tr>
+<tr><th>%B</th><td>- teljes, területi beállítás szerinti hónapnév</td></tr>
+<tr><th>%c</th><td>- a területi beállítás szerinti preferált dátum/idő ábrázolás</td></tr>
+<tr><th>%d</th><td>- a hónap napja (01-31)</td></tr>
+<tr><th>%f</th><td>- a másodperc törtrésze (lásd lentebb az 1. megjegyzést)</td></tr>
+<tr><th>%H</th><td>- óra 24 órás órán (00-23)</td></tr>
+<tr><th>%I</th><td>- óra 12 órás órán (01-12)</td></tr>
+<tr><th>%j</th><td>- az év napja (001-366)</td></tr>
+<tr><th>%m</th><td>- a hónap száma (01-12)</td></tr>
+<tr><th>%M</th><td>- perc (00-59)</td></tr>
+<tr><th>%p</th><td>- 'AM' vagy 'PM'</td></tr>
+<tr><th>%s</th><td>- az Epoch óta eltelt másodpercek száma, UTC (lásd lentebb a 2. megjegyzést)</td></tr>
+<tr><th>%S</th><td>- másodperc (00-59)</td></tr>
+<tr><th>%w</th><td>- a hétköznap száma (0-6)</td></tr>
+<tr><th>%W</th><td>- az év hetének száma (00-53)</td></tr>
+<tr><th>%x</th><td>- a területi beállítás szerinti preferált dátumábrázolás</td></tr>
+<tr><th>%X</th><td>- a területi beállítás szerinti preferált időábrázolás</td></tr>
+<tr><th>%y</th><td>- 2 számjegyű év (00-99)</td></tr>
+<tr><th>%Y</th><td>- 4 számjegyű év (pl. 2006)</td></tr>
+<tr><th>%z</th><td>- időzóna +/-hhmm alakban (lásd lentebb a 2. megjegyzést)</td></tr>
+<tr><th>%Z</th><td>- a rendszer időzónájának neve (lásd lentebb a 3. megjegyzést)</td></tr>
+<tr><th>%%</th><td>- egy szó szerinti '%' karakter</td></tr>
+</table></blockquote>
+<p>Az ExifTool fájlnév-formátumkódjai dátumformátum-sztringen belül is
+használhatók, amikor a parancssori felületen keresztül egy dátum/idő taggel
+állítod be a <b>FileName</b> vagy <b>Directory</b> tag értékét.  Ebben az esetben
+egy extra '<code>%</code>'-ot kell hozzáadni, hogy a formátumkód átjusson a
+dátum/idő értelmezőn:</p>
+<blockquote><table>
+<tr><th>%%d</th><td>- az eredeti fájl könyvtára (a záró "/"-lal, ha szükséges)</td></tr>
+<tr><th>%%f</th><td>- az eredeti fájlnév (kiterjesztés nélkül)</td></tr>
+<tr><th>%%e</th><td>- az eredeti fájlkiterjesztés (a "." nélkül)</td></tr>
+<tr><th>%%c</th><td>- másolatszám (csak kimeneti fájloknál)</td></tr>
+</table></blockquote>
+<p>Az ezekkel a névformátum-kódokkal elérhető speciális szolgáltatásokról a
+részletekért lásd a <code>-w</code> opciót az <a href="exiftool_pod.html">exiftool
+alkalmazás dokumentációjában</a>.</p>
+<p><b>Megjegyzések:</b></p>
+<ol>
+<li>A <code>%f</code> formátumkód egy ExifTool-specifikus bővítés, és opcionálisan
+támogatja a tizedespont utáni számjegyek megadását.  Például a
+<code>%3f</code> a másodperc törtrészét 3 számjeggyel adja (pl. ".123").
+A <code>%f</code> önmagában üres sztringet ad vissza, ha a dátum/idő nem
+tartalmaz másodperc alatti részt.  Egy "<code>-</code>" hozzáadható a tizedespont
+elhagyásához (pl. a <code>%-3f</code> "123"-at adna).  Az érték a megadott számú
+számjegyre kerekül, és a dátum/idő érték egy másodperccel nő, ha a kerekítés a
+következő másodpercre csordulna túl, még akkor is, ha a tizedesjegyek száma nulla
+(azaz <code>%0f</code>).  A <code>%f</code> nélkül a másodperc törtrésze egyszerűen
+eldobódik, és nem történik kerekítés.<br><br></li>
+
+<li>A <code>%s</code> és <code>%z</code> formátumkód a dátum/idő értékkel megadott
+időzónát használja.  Ha a dátum/idő érték nem tartalmaz időzóna-megadást, akkor
+helyi időként értelmeződik a rendszer időzónájában.  A <code>%z</code> az
+időzónát "-0500" formátumban adja vissza, és ha kettőspontot adsz a
+formátummegadóhoz (azaz <code>%:z</code>), az kettőspontot ad a visszaadott
+időzónához (pl. "-05:00").  Ezeket a formátumkódokat az ExifTool értelmezi, így
+minden rendszeren működniük kell.<br><br></li>
+
+<li>A <code>%Z</code> formátumkód figyelmen kívül hagyja a dátum/idő értékben
+megadott időzónát, és a megadott dátum/időhöz a rendszer időzónájának nevét adja
+vissza, helyi rendszeridőként értelmezve.</li>
+</ol>
+<hr>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
+</body>
+</html>

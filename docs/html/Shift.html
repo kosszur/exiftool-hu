@@ -1,0 +1,183 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ExifTool dátum/idő eltoló modul</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@66b96.p1s.plx.sd.apple.com" />
+<style type='text/css'><!-- pre { margin-left: 2em } --></style></head>
+
+<body>
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="_podblock_" style="background-color: #cccccc; color: #000" valign="middle">
+<big><strong><span class="_podblock_">&nbsp;ExifTool dátum/idő eltoló modul</span></strong></big>
+</td></tr>
+</table>
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#METHODS">METHODS</a>
+    <ul>
+      <li><a href="#ShiftTime">ShiftTime</a></li>
+    </ul>
+  </li>
+  <li><a href="#SHIFT-STRING">SHIFT STRING</a></li>
+  <li><a href="#NOTES">NOTES</a></li>
+  <li><a href="#TRICKY">TRICKY</a></li>
+  <li><a href="#BUGS">BUGS</a></li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+  <li><a href="#SEE-ALSO">SEE ALSO</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>Image::ExifTool::Shift.pl - ExifTool időeltoló rutinok</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>Ez a modul olyan rutinokat tartalmaz, amelyeket az ExifTool a dátum- és időértékek eltolására használ.</p>
+
+<h1 id="METHODS">METHODS</h1>
+
+<h2 id="ShiftTime">ShiftTime</h2>
+
+<p>Dátum/idő érték eltolása</p>
+
+<pre><code>use Image::ExifTool;
+$err = Image::ExifTool::ShiftTime($dateTime, $shift);</code></pre>
+
+<dl>
+
+<dt id="Inputs">Bemenetek:</dt>
+<dd>
+
+<p>0) Dátum/idő sztring EXIF-formátumban (pl. <code>2016:01:30 11:45:00</code>).</p>
+
+<p>1) Eltolássztring (lásd lentebb), opcionális bevezető előjellel az eltolás irányához.</p>
+
+<p>2) [opcionális] Az eltolás iránya (-1 vagy +1), vagy 0, illetve undef az eltolássztringben lévő előjel használatához.</p>
+
+<p>3) [opcionális] Hivatkozás egy időeltolás-hashre -- ezt a <b>ShiftTime</b> első hívása tölti ki, és a további hívások arra használják, hogy a dátum/idő értékeket ugyanazzal a relatív mértékkel tolják el (lásd a lenti <a href="#TRICKY">&quot;TRICKY&quot;</a> szakaszt).</p>
+
+<p>vagy</p>
+
+<p>0) Eltolássztring (a $_ pedig a bemeneti dátum/idő sztringet tartalmazza).</p>
+
+</dd>
+<dt id="Return-value">Visszatérési érték:</dt>
+<dd>
+
+<p>Hibasztring, vagy undef siker esetén, és a bemeneti dátum/idő sztring el van tolva a megadott mértékkel.</p>
+
+</dd>
+</dl>
+
+<h1 id="SHIFT-STRING">SHIFT STRING</h1>
+
+<p>Az időeltolások a szabványos EXIF-formátumú dátum/idő értékekre alkalmazódnak (pl. <code>2005:03:14 18:55:00</code>). A csak dátumot és a csak időt tartalmazó értékek is eltolhatók, és egy opcionális időzóna (pl. <code>-05:00</code>) is támogatott. Íme néhány általános szabály és példa annak megvilágítására, hogyan értelmeződnek az eltolássztringek:</p>
+
+<p>A csak dátumot tartalmazó értékek a következő formátumokkal tolódnak el:</p>
+
+<pre><code>&#39;Y:M:D&#39;     - dátum eltolása &#39;Y&#39; évvel, &#39;M&#39; hónappal és &#39;D&#39; nappal
+&#39;M:D&#39;       - csak hónapok és napok eltolása
+&#39;D&#39;         - a megadott számú nap eltolása</code></pre>
+
+<p>A csak időt tartalmazó értékek a következő formátumokkal tolódnak el:</p>
+
+<pre><code>&#39;h:m:s&#39;     - idő eltolása &#39;h&#39; órával, &#39;m&#39; perccel és &#39;s&#39; másodperccel
+&#39;h:m&#39;       - csak órák és percek eltolása
+&#39;h&#39;         - a megadott számú óra eltolása</code></pre>
+
+<p>Az időzóna-eltolások a következő formátumokban adhatók meg:</p>
+
+<pre><code>&#39;+h:m&#39;      - időzóna eltolása &#39;h&#39; órával és &#39;m&#39; perccel
+&#39;-h:m&#39;      - időzóna óráinak és perceinek negatív eltolása
+&#39;+h&#39;        - csak időzóna óráinak eltolása
+&#39;-h&#39;        - csak időzóna óráinak negatív eltolása</code></pre>
+
+<p>Egy érvényes eltolásérték egy vagy két argumentumból áll, szóközzel elválasztva. Ha csak egyet adnak meg, az időeltolásnak minősül, amikor csak időt tartalmazó vagy dátum/idő értékre alkalmazzák, vagy dátumeltolásnak, amikor csak dátumot tartalmazó értékre alkalmazzák. Például:</p>
+
+<pre><code>&#39;1&#39;         - eltolás 1 órával, ha idő vagy dátum/idő értékre
+              alkalmazzák, vagy egy nappal, ha dátumértékre
+&#39;2:0&#39;       - eltolás 2 órával (idő, dátum/idő), vagy 2 hónappal (dátum)
+&#39;5:0:0&#39;     - eltolás 5 órával (idő, dátum/idő), vagy 5 évvel (dátum)
+&#39;0:0:1&#39;     - eltolás 1 mp-cel (idő, dátum/idő), vagy 1 nappal (dátum)</code></pre>
+
+<p>Ha két argumentumot adnak meg, előbb a dátumeltolás jön, majd az időeltolás:</p>
+
+<pre><code>&#39;3:0:0 0&#39;         - dátum eltolása 3 évvel
+&#39;0 15:30&#39;         - idő eltolása 15 órával és 30 perccel
+&#39;1:0:0 0:0:0+5:0&#39; - dátum eltolása 1 évvel és időzóna 5 órával</code></pre>
+
+<p>A dátumeltolás egyszerűen figyelmen kívül marad, ha időértékre alkalmazzák, és fordítva.</p>
+
+<p>Az eltolásmezőkben megadott számok tartalmazhatnak tizedespontot:</p>
+
+<pre><code>&#39;1.5&#39;       - 1 óra 30 perc (idő, dátum/idő), vagy 1 nap (dátum)
+&#39;2.5 0&#39;     - 2 nap 12 óra (dátum/idő), 12 óra (idő) vagy
+              2 nap (dátum)</code></pre>
+
+<p>És a gépelés megspórolása érdekében a hiányzó számok helyén nullát feltételez:</p>
+
+<pre><code>&#39;1::&#39;       - eltolás 1 órával (idő, dátum/idő) vagy 1 évvel (dátum)
+&#39;26:: 0&#39;    - dátum eltolása 26 évvel
+&#39;+:30&#39;      - időzóna eltolása 30 perccel</code></pre>
+
+<p>Az alábbiakban néhány konkrét példa valós dátum- és/vagy időértékekre alkalmazva (a &#39;Dir&#39; az alkalmazott eltolás iránya: a &#39;+&#39; pozitív, a &#39;-&#39; negatív):</p>
+
+<pre><code> Original Value         Shift   Dir    Shifted Value
+---------------------  -------  ---  ---------------------
+&#39;20:30:00&#39;             &#39;5&#39;       +   &#39;01:30:00&#39;
+&#39;2005:01:27&#39;           &#39;5&#39;       +   &#39;2005:02:01&#39;
+&#39;2005:01:27 20:30:00&#39;  &#39;5&#39;       +   &#39;2005:01:28 01:30:00&#39;
+&#39;11:54:00&#39;             &#39;2.5 0&#39;   -   &#39;23:54:00&#39;
+&#39;2005:11:02&#39;           &#39;2.5 0&#39;   -   &#39;2005:10:31&#39;
+&#39;2005:11:02 11:54:00&#39;  &#39;2.5 0&#39;   -   &#39;2005:10:30 23:54:00&#39;
+&#39;2004:02:28 08:00:00&#39;  &#39;1 1.3&#39;   +   &#39;2004:02:29 09:18:00&#39;
+&#39;07:00:00&#39;             &#39;-5&#39;      +   &#39;07:00:00&#39;
+&#39;07:00:00+01:00&#39;       &#39;-5&#39;      +   &#39;07:00:00-04:00&#39;
+&#39;07:00:00Z&#39;            &#39;+2:30&#39;   -   &#39;07:00:00-02:30&#39;
+&#39;1970:01:01&#39;           &#39;35::&#39;    +   &#39;2005:01:01&#39;
+&#39;2005:01:01&#39;           &#39;400&#39;     +   &#39;2006:02:05&#39;
+&#39;10:00:00.00&#39;          &#39;::1.33&#39;  -   &#39;09:59:58.67&#39;</code></pre>
+
+<h1 id="NOTES">NOTES</h1>
+
+<p>Az eredeti dátum/idő érték formátuma nem változik az időeltolás alkalmazásakor. Ez azt jelenti, hogy a dátum/idő sztring hossza nem változik, és csak a sztringben lévő számok módosulnak. E szabály alóli egyetlen kivétel, hogy egy &#39;Z&#39; időzóna &#39;+00:00&#39; jelölésre változik, ha időzóna-eltolást alkalmaznak. Időzóna nem kerül hozzáadásra a dátum/idő sztringhez.</p>
+
+<h1 id="TRICKY">TRICKY</h1>
+
+<p>Ez a modul talán bonyolultabb a szükségesnél, mert úgy tervezték, hogy nagyon rugalmas legyen abban, ahogyan az időeltolásokat megadják és alkalmazzák...</p>
+
+<p>Az a képesség, hogy a dátumokat Y évvel, M hónappal stb. lehessen eltolni, ütközik azzal a tervezési céllal, hogy egy kötegelt eltolás alkalmazásakor minden időértékre állandó eltolás maradjon fenn. Ez azért van, mert az 1 hónappal való eltolás 28 és 31 nap közötti bármivel egyenértékű lehet, és 1 év 365 vagy 366 nap lehet, a kezdődátumtól függően.</p>
+
+<p>A következetlenséget úgy kezeljük, hogy az elsőként talált taget a tényleges megadott eltolással toljuk el, majd kiszámoljuk ennek az eltolásnak az egyenértékű időkülönbségét másodpercben, és ezt a különbséget alkalmazzuk a további tagekre egy kötegelt konverzióban. Így ha a tervek szerint működik, a viselkedésnek egyszerre kell intuitívnak és matematikailag helyesnek lennie, és a felhasználónak nem kell az ilyesféle részletekkel foglalkoznia (a Perl &quot;do the right thing&quot; filozófiájának megfelelően).</p>
+
+<h1 id="BUGS">BUGS</h1>
+
+<p>A szabványos időkönyvtár-függvények használata miatt a dátumok 32 bites rendszereken jellemzően az 1970 és 2038 közötti tartományra korlátozódnak.</p>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>Copyright 2003-2026, Phil Harvey (philharvey66 at gmail.com)</p>
+
+<p>Ez a könyvtár szabad szoftver; terjesztheted és/vagy módosíthatod ugyanazon feltételek szerint, mint magát a Perlt.</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p><a>Image::ExifTool(3pm)</a></p>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="3">
+<tr><td class="_podblock_" style="background-color: #cccccc; color: #000" valign="middle">
+<big><strong><span class="_podblock_">&nbsp;ExifTool dátum/idő eltoló modul</span></strong></big>
+</td></tr>
+</table>
+
+</body>
+
+</html>
+
+

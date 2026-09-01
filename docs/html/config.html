@@ -1,0 +1,399 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head><title>example.config</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+</head>
+<body>
+<pre>
+<span class=com>#------------------------------------------------------------------------------
+# Fájl:         example.config  --&gt;  ~/.ExifTool_config
+#
+# Leírás:       Példa felhasználói konfigurációs fájl az Image::ExifTool-hoz
+#
+# Megjegyzések: Ez a példafájl bemutatja, hogyan definiálhatsz saját
+#               rövidítéseket, és hogyan adhatsz hozzá új EXIF, IPTC, XMP, PNG,
+#               MIE és Composite tageket, valamint hogyan adhatod meg a
+#               preferált objektíveket a LensID taghez, és hogyan definiálhatsz
+#               új fájltípusokat, valamint alapértelmezett ExifTool API-opciókat
+#               és parancssori argumentumokat.
+#
+#               Vedd figyelembe, hogy az ismeretlen tagek akkor is kinyerhetők,
+#               ha nincsenek definiálva, de a tageket definiálni kell ahhoz,
+#               hogy írhatók legyenek.  Vedd figyelembe azt is, hogy egy meglévő
+#               tagdefiníció felülbírálható egy felhasználó által definiált
+#               taggel.
+#
+#               A fájl aktiválásához nevezd át ".ExifTool_config"-ra, és
+#               helyezd a home könyvtáradba vagy az exiftool alkalmazás
+#               könyvtárába.  (Macen és néhány Windows-rendszeren ezt a
+#               parancssorból kell megtenni, mert a grafikus felület esetleg
+#               nem engedi, hogy a fájlnevek ponttal kezdődjenek.  Használd a
+#               "rename" parancsot Windowson, vagy az "mv"-t Macen.)  Ennek
+#               hatására az ExifTool automatikusan betölti a fájlt futtatáskor.
+#               A home könyvtáradat a következő környezeti változók közül az
+#               első definiált határozza meg:
+#
+#                   1.  EXIFTOOL_HOME
+#                   2.  HOME
+#                   3.  HOMEDRIVE + HOMEPATH
+#                   4.  (az aktuális könyvtár)
+#
+#               Alternatívaként az exiftool alkalmazás -config opciója
+#               használható egy adott konfigurációs fájl betöltésére (vedd
+#               figyelembe, hogy ennek kell lennie a parancssor első opciójának):
+#
+#                   exiftool -config example.config ...
+#
+#               Ez a példafájl a következő 16 új taget definiálja, valamint
+#               néhány Shortcut és Composite taget:
+#
+#                   1.  EXIF:NewEXIFTag
+#                   2.  GPS:GPSPitch
+#                   3.  GPS:GPSRoll
+#                   4.  IPTC:NewIPTCTag
+#                   5.  XMP-xmp:NewXMPxmpTag
+#                   6.  XMP-exif:GPSPitch
+#                   7.  XMP-exif:GPSRoll
+#                   8.  XMP-xxx:NewXMPxxxTag1
+#                   9.  XMP-xxx:NewXMPxxxTag2
+#                  10.  XMP-xxx:NewXMPxxxTag3
+#                  11.  XMP-xxx:NewXMPxxxStruct
+#                  12.  PNG:NewPngTag1
+#                  13.  PNG:NewPngTag2
+#                  14.  PNG:NewPngTag3
+#                  15.  MIE-Meta:NewMieTag1
+#                  16.  MIE-Test:NewMieTag2
+#
+#               A tag-táblák és a taginformációs hashek definíciójáról részletes
+#               információért lásd a lib/Image/ExifTool/README fájlt.
+#------------------------------------------------------------------------------
+
+<a name='Shortcuts'># A Shortcut (rövidítés) tageket információ kinyerésekor használjuk a
+# gyakran használt parancsok egyszerűsítésére.  Használhatók tagcsoportok
+# jelölésére, vagy egy tagnév aliasának megadására.</a></span>
+%Image::ExifTool::UserDefined::Shortcuts = (
+    MyShortcut =&gt; ['exif:createdate','exposuretime','aperture'],
+    MyAlias =&gt; 'FocalLengthIn35mmFormat',
+);
+
+<span class=com># MEGJEGYZÉS: A következő táblákban használt összes tagnév kis-/nagybetűérzékeny.
+
+<a name='UserDefined'># A %Image::ExifTool::UserDefined hash a meglévő táblákhoz hozzáadandó
+# új tageket definiálja.</a></span>
+%Image::ExifTool::UserDefined = (
+    <span class=com># A GPS-en kívül minden EXIF tag a Main táblához adódik hozzá, és a
+    # WriteGroup adja meg, hová íródik a tag (alapértelmezésben ExifIFD).
+    # Vedd figyelembe, hogy egyedi EXIF tagek olvasásakor ugyanazt a
+    # konfigurációs fájlt kell használni, hogy a megadott nevekkel láthatók
+    # legyenek. A konfigurációs fájl nélkül csak ismeretlen tagekként
+    # láthatók a -u opcióval.</span>
+    'Image::ExifTool::Exif::Main' =&gt; {
+        <span class=com># 1. példa.  EXIF:NewEXIFTag</span>
+        0xd000 =&gt; {
+            Name =&gt; 'NewEXIFTag',
+            Writable =&gt; 'int16u',
+            WriteGroup =&gt; 'IFD0',
+        },
+        <span class=com># ide vegyél fel további, felhasználó által definiált EXIF tageket...</span>
+    },
+    <span class=com># a <a href="geotag.html">Geotag szolgáltatás</a> GPSPitch és GPSRoll tageket ír, de ezek
+    # nem szabványos EXIF-ek, így itt egyedi tageket definiálunk:</span>
+    'Image::ExifTool::GPS::Main' =&gt; {
+        <span class=com># 2. példa.  GPS:GPSPitch</span>
+        0xd000 =&gt; {
+            Name =&gt; 'GPSPitch',
+            Writable =&gt; 'rational64s',
+        },
+        <span class=com># 3. példa.  GPS:GPSRoll</span>
+        0xd001 =&gt; {
+            Name =&gt; 'GPSRoll',
+            Writable =&gt; 'rational64s',
+        },
+    },
+    <span class=com># Az IPTC tagek egy adott rekordtípushoz adódnak hozzá (pl. application record):
+    # (Megjegyzés: az IPTC tag ID-k a 0-255 tartományra korlátozódnak)</span>
+    'Image::ExifTool::IPTC::ApplicationRecord' =&gt; {
+        <span class=com># 4. példa.  IPTC:NewIPTCTag</span>
+        160 =&gt; {
+            Name =&gt; 'NewIPTCTag',
+            Format =&gt; 'string[0,16]',
+        },
+        <span class=com># ide vegyél fel további, felhasználó által definiált IPTC ApplicationRecord tageket...</span>
+    },
+    <span class=com># XMP tagek hozzáadhatók meglévő névterekhez:</span>
+    'Image::ExifTool::XMP::xmp' =&gt; {
+        <span class=com># 5. példa.  XMP-xmp:NewXMPxmpTag</span>
+        NewXMPxmpTag =&gt; { Groups =&gt; { 2 =&gt; 'Author' } },
+        <span class=com># ide vegyél fel további, felhasználó által definiált XMP-xmp tageket...</span>
+    },
+    <span class=com># speciális Geotag tagek az XMP-exif-hez:</span>
+    'Image::ExifTool::XMP::exif' =&gt; {
+        <span class=com># 6. példa.  XMP-exif:GPSPitch</span>
+        GPSPitch =&gt; { Writable =&gt; 'rational', Groups =&gt; { 2 =&gt; 'Location' } },
+        <span class=com># 7. példa.  XMP-exif:GPSRoll</span>
+        GPSRoll  =&gt; { Writable =&gt; 'rational', Groups =&gt; { 2 =&gt; 'Location' } },
+    },
+    <span class=com># az új XMP-névtereket (pl. xxx) a Main XMP táblához kell hozzáadni:</span>
+    'Image::ExifTool::XMP::Main' =&gt; {
+        <span class=com># névtér-definíció a 8-11. példához</span>
+        xxx =&gt; { <span class=com># &lt;-- meg kell egyeznie a NAMESPACE előtaggal</span>
+            SubDirectory =&gt; {
+                TagTable =&gt; 'Image::ExifTool::UserDefined::xxx',
+                <span class=com># (lásd ennek a táblának a definícióját lentebb)</span>
+            },
+        },
+        <span class=com># ide vegyél fel további, felhasználó által definiált XMP-névtereket...</span>
+    },
+    <span class=com># az új PNG tagek a PNG::TextualData táblához adódnak hozzá:</span>
+    'Image::ExifTool::PNG::TextualData' =&gt; {
+        <span class=com># 12. példa.  PNG:NewPngTag1</span>
+        NewPngTag1 =&gt; { }, <span class=com># (a Writable alapértelmezésben 'string' az XMP tageknél)</span>
+        <span class=com># 13. példa.  PNG:NewPngTag2</span>
+        NewPngTag2 =&gt; { iTXt =&gt; 1 }, <span class=com># (kényszeríti, hogy ez a tag iTXt-ként íródjon)</span>
+        <span class=com># 14. példa.  PNG:NewPngTag3</span>
+        NewPngTag3 =&gt; { },
+    },
+    <span class=com># új MIE tag (NewMieTag1) és csoport (MIE-Test) hozzáadása a MIE-Meta-hoz
+    # (Megjegyzés: a MIE csoportnevek NEM végződhetnek számmal)</span>
+    'Image::ExifTool::MIE::Meta' =&gt; {
+        <span class=com># 15. példa.  MIE-Meta:NewMieTag1</span>
+        NewMieTag1 =&gt; {
+            Writable =&gt; 'rational64u',
+            Units =&gt; [ 'cm', 'in' ],
+        },
+        <span class=com># új MIE „Test" csoport a 16. példához</span>
+        Test =&gt; {
+            SubDirectory =&gt; {
+                TagTable =&gt; 'Image::ExifTool::UserDefined::MIETest',
+                DirName =&gt; 'MIE-Test',
+            },
+        },
+    },
+    <span class=com># a Composite tagek a Composite táblához adódnak hozzá:</span>
+    'Image::ExifTool::Composite' =&gt; {
+        <span class=com># a Composite tagek értékei más tagek értékeiből származnak.  Az
+        # alábbi Require/Desire elemek olyan alkotórész-tageket adnak meg,
+        # amelyeknek léteznie kell / létezhet, és ezeknek a hasheknek a
+        # kulcsai indexként szolgálnak a ValueConv kifejezés @val tömbjében
+        # ezen tagek numerikus (-n) értékeinek eléréséhez.  A
+        # kiírás-konvertált értékek a @prt tömbön keresztül érhetők el.  Az
+        # összes Require-elt tagnek léteznie kell ahhoz, hogy a Composite tag
+        # kiértékelődjön.  Ha nincs Require-elt tag megadva, akkor a
+        # Desire-elt tagek közül legalább egynek léteznie kell.  További
+        # példákért lásd a Composite táblát az Image::ExifTool::Exif-ben, az
+        # összes részletért pedig a lib/Image/ExifTool/README fájlt.
+        # Az első néhány példa olyan egyszerűsítéseket mutat be, amelyek
+        # akkor használhatók, ha csak egy tag Require-elt vagy Desire-elt:
+        # 1) a Require kikeresés helyettesíthető egy egyszerű tagnévvel
+        # 2) a "$val" használható a "$val[0]" jelölésére a kifejezésben</span>
+        FileExtension =&gt; {
+            Require =&gt; 'FileName',
+            ValueConv =&gt; '$val=~/\.([^.]*)$/; $1',
+        },
+        <span class=com># a CircleOfConfusion tag felülbírálása, hogy D/1750-et használjon D/1440 helyett</span>
+        CircleOfConfusion =&gt; {
+            Require =&gt; 'ScaleFactor35efl',
+            Groups =&gt; { 2 =&gt; 'Camera' },
+            ValueConv =&gt; 'sqrt(24*24+36*36) / ($val * 1750)',
+            <span class=com># egy opcionális PrintConv használható az érték formázására</span>
+            PrintConv =&gt; 'sprintf("%.3f mm",$val)',
+        },
+        <span class=com># leírás generálása ehhez a fájltípushoz</span>
+        FileTypeDescription =&gt; {
+            Require =&gt; 'FileType',
+            ValueConv =&gt; 'GetFileType($val,1) || $val',
+        },
+        <span class=com># a fizikai képméret kiszámítása a felbontás alapján</span>
+        PhysicalImageSize =&gt; {
+            Require =&gt; {
+                0 =&gt; 'ImageWidth',
+                1 =&gt; 'ImageHeight',
+                2 =&gt; 'XResolution',
+                3 =&gt; 'YResolution',
+                4 =&gt; 'ResolutionUnit',
+            },
+            ValueConv =&gt; '$val[0]/$val[2] . " " . $val[1]/$val[3]',
+            <span class=com># (a @prt tömb kiírásra formázott értékeket tartalmaz)</span>
+            PrintConv =&gt; 'sprintf("%.1fx%.1f $prt[4]", split(" ",$val))',
+        },
+        <span class=com># [haladó] a legnagyobb JPEG előnézeti kép kiválasztása</span>
+        BigImage =&gt; {
+            Groups =&gt; { 2 =&gt; 'Preview' },
+            Desire =&gt; {
+                0 =&gt; 'JpgFromRaw',
+                1 =&gt; 'PreviewImage',
+                2 =&gt; 'OtherImage',
+                <span class=com># (a DNG-nek és az A100 ARW-nak lehet 2 PreviewImage-e)</span>
+                3 =&gt; 'PreviewImage (1)',
+                <span class=com># (ha az MPF-nek 2 előnézete van, az MPImage3 lehet a nagyobbik)</span>
+                4 =&gt; 'MPImage3',
+                5 =&gt; 'JpgFromRaw2', # újabb Panasonic modellek RW2-jében
+            },
+            <span class=com># a ValueConv kódreferencia is lehet
+            # Bemenetek: 0) hivatkozás az értékek listájára, 1) ExifTool objektum</span>
+            ValueConv =&gt; sub {
+                my $val = shift;
+                my ($image, $bigImage, $len, $bigLen);
+                foreach $image (@$val) {
+                    next unless ref $image eq 'SCALAR';
+                    <span class=com># JPEG kép ellenőrzése (vagy „Binary data", ha nincs -b használva)</span>
+                    next unless $$image =~ /^(\xff\xd8\xff|Binary data (\d+))/;
+                    $len = $2 || length $$image; <span class=com># a kép hosszának lekérése</span>
+                    <span class=com># a legnagyobb kép mentése</span>
+                    next if defined $bigLen and $bigLen &gt;= $len;
+                    $bigLen = $len;
+                    $bigImage = $image;
+                }
+                return $bigImage;
+            },
+        },
+        <span class=com># **** IDE VEGYÉL FEL TOVÁBBI COMPOSITE TAGDEFINÍCIÓKAT ****</span>
+    },
+);
+
+<a name='xmp-xxx'><span class=com># Ez egy alap példa egy új XMP-névtér definíciójára.
+# Erre a táblára a fenti %Image::ExifTool::UserDefined definícióban lévő
+# SubDirectory tagdefiníción keresztül hivatkozunk.
+# Ezeknek a tageknek a névtér-előtagja 'xxx', ami az ExifTool 'XMP-xxx'
+# nevű 1. családbeli csoportnevének felel meg.</span></a>
+%Image::ExifTool::UserDefined::xxx = (
+    GROUPS =&gt; { 0 =&gt; 'XMP', 1 =&gt; 'XMP-xxx', 2 =&gt; 'Image' },
+    NAMESPACE =&gt; { 'xxx' =&gt; 'http://ns.myname.com/xxx/1.0/' },
+    WRITABLE =&gt; 'string', <span class=com># (alapértelmezésben string típusú tagek)</span>
+    <span class=com># 8. példa.  XMP-xxx:NewXMPxxxTag1 (más nyelvi tag)</span>
+    <span class=com># - cseréld a "NewXMPxxxTag1"-et a saját tagnevedre (pl. "MyTag")</span>
+    NewXMPxxxTag1 =&gt; { Writable =&gt; 'lang-alt' },
+    <span class=com># 9. példa.  XMP-xxx:NewXMPxxxTag2 (string tag az Author kategóriában)</span>
+    NewXMPxxxTag2 =&gt; { Groups =&gt; { 2 =&gt; 'Author' } },
+    <span class=com># 10. példa.  XMP-xxx:NewXMPxxxTag3 (rendezetlen List típusú tag)</span>
+    NewXMPxxxTag3 =&gt; { List =&gt; 'Bag' },
+    <span class=com># 11. példa.  XMP-xxx:NewXMPxxxStruct (strukturált tag)</span>
+    <span class=com># - példa strukturált XMP tagre</span>
+    NewXMPxxxStruct =&gt; {
+        <span class=com># a "Struct" bejegyzés definiálja a struktúra mezőit</span>
+        Struct =&gt; {
+            <span class=com># opcionális névtér-előtag és URI a struktúramezőkhöz
+            # (csak akkor kötelező, ha eltér a fenti NAMESPACE-től)
+            # --> ebben a névtér-kikeresésben több bejegyzés is lehet,
+            # ahol az ábécében utolsó az alapértelmezett a mezőkhöz, de
+            # minden mezőnek lehet "Namespace" eleme, amely megadja,
+            # melyik előtagot használja</span>
+            NAMESPACE =&gt; { 'test' =&gt; 'http://x.y.z/test/' },
+            <span class=com># opcionális struktúranév (csak figyelmeztető üzenetekhez használatos)</span>
+            STRUCT_NAME =&gt; 'MyStruct',
+            <span class=com># opcionális rdf:type property a struktúrához</span>
+            TYPE =&gt; 'http://x.y.z/test/xystruct',
+            <span class=com># struktúramező-definíciók (nagyon hasonlóak a tagdefiníciókhoz)</span>
+            X =&gt; { Writable =&gt; 'integer' },
+            Y =&gt; { Writable =&gt; 'integer' },
+            <span class=com># egy beágyazott struktúra...</span>
+            Things =&gt; {
+                List =&gt; 'Bag',
+                Struct =&gt; {
+                    NAMESPACE =&gt; { thing =&gt; 'http://x.y.z/thing/' },
+                    What  =&gt; { },
+                    Where =&gt; { },
+                },
+            },
+        },
+        List =&gt; 'Seq', <span class=com># a struktúrák egy lista elemei is lehetnek</span>
+    },
+<span class=com>    # A struktúra minden mezőjéhez tartozik egy megfelelő lapított tag, amely
+    # automatikusan generálódik, ID-je az eredeti struktúra-tag ID és a
+    # mezőnév összefűzéséből áll (a mezőnév első betűjét szükség esetén
+    # nagybetűsítve).  Ezeknek a lapított tageknek a Name és/vagy Description
+    # értéke megváltoztatható, ha kívánod, de minden más tag-tulajdonság a
+    # struktúramező-definícióból származik.  A "Flat" jelzőt kell használni egy
+    # lapított tag Name vagy Description értékének beállításakor.  Például:</span>
+    NewXMPxxxStructX =&gt; { Name =&gt; 'SomeOtherName', Flat =&gt; 1 },
+);
+
+<span class=com># a névtér regisztrálható, hogy az ExifTool olvasáskor a várt 1. családbeli
+# csoportneveket generálja, ha a UserDefined névtér más előtagot használ</span>
+require Image::ExifTool::XMP;
+Image::ExifTool::XMP::RegisterNamespace(\%Image::ExifTool::UserDefined::xxx);
+
+<a name='MIE'><span class=com># Egy új MIE csoport hozzáadása néhány extra definíciót igényel</span></a>
+use Image::ExifTool::MIE;
+%Image::ExifTool::UserDefined::MIETest = (
+    %Image::ExifTool::MIE::tableDefaults,   <span class=com># alapértelmezett MIE táblabejegyzések</span>
+    GROUPS      =&gt; { 0 =&gt; 'MIE', 1 =&gt; 'MIE-Test', 2 =&gt; 'Document' },
+    WRITE_GROUP =&gt; 'MIE-Test',
+    <span class=com># 16. példa.  MIE-Test:NewMieTag2</span>
+    NewMieTag2  =&gt; { },     <span class=com># új, felhasználó által definiált tag a MIE-Test csoportban</span>
+);
+
+<a name='Lenses'><span class=com># Definiálható egy speciális 'Lenses' lista, amely a Composite:LensID taghez
+# tartozó objektívmodell meghatározási logikájában elsőbbséget ad bizonyos objektíveknek</span></a>
+@Image::ExifTool::UserDefined::Lenses = (
+    'Sigma AF 10-20mm F4-5.6 EX DC',
+    'Tokina AF193-2 19-35mm f/3.5-4.5',
+);
+
+<a name='FileTypes'><span class=com># Felhasználó által definiált, felismerendő fájltípusok</span></a>
+%Image::ExifTool::UserDefined::FileTypes = (
+    XXX =&gt; { <span class=com># &lt;-- az új fájltípus kiterjesztése (kis-/nagybetűre nem érzékeny)</span>
+        <span class=com># a BaseType adja meg a formátumot, amelyen ez a fájl alapul
+        # (kis-/nagybetűérzékeny).  Ha a BaseType definiálva van, akkor a
+        # fájl teljesen támogatott lesz, és ebben az esetben a Magic mintát
+        # nem szabad definiálni</span>
+        BaseType =&gt; 'TIFF',
+        MIMEType =&gt; 'image/x-xxx',
+        Description =&gt; 'My XXX file type',
+        <span class=com># ha a BaseType írható az ExifToollal, akkor az új fájltípus is
+        # írható lesz, hacsak másképp nincs megadva, így:</span>
+        Writable =&gt; 0,
+    },
+    YYY =&gt; {
+        <span class=com># BaseType nélkül a fájlt felismeri, de nem támogatja</span>
+        Magic =&gt; '0123abcd',    <span class=com># a fájl elején illesztendő reguláris kifejezés</span>
+        MIMEType =&gt; 'application/test',
+        Description =&gt; 'My YYY file type',
+    },
+    ZZZ =&gt; {
+        <span class=com># ha sem a BaseType, sem a Magic nincs definiálva, a fájlt csak
+        # kiterjesztés alapján ismeri fel.  A MIMEType application/unknown
+        # lesz, hacsak másképp nincs megadva</span>
+        Description =&gt; 'My ZZZ file type',
+    },
+    <span class=com># ha csak a BaseType van megadva, akkor a következő egyszerűsített
+    # szintaxis használható.  Ebben a példában a "TTT" kiterjesztésű fájlok
+    # JPEG fájlként kerülnek feldolgozásra</span>
+    TTT =&gt; 'JPEG',
+);
+
+<a name='PREF'><span class=com># A QuickTime tagek írásának alapértelmezett helyének megváltoztatása, hogy a Keys legyen a preferált
+# (alapértelmezésben a PREFERRED szintek: ItemList=2, UserData=1, Keys=0)</span></a>
+use Image::ExifTool::QuickTime;
+$Image::ExifTool::QuickTime::Keys{PREFERRED} = 3;
+
+<span class=com># Alapértelmezett ExifTool API-opciók megadása
+# (az elérhető opciókért lásd az <a href="ExifTool.html#Options">Options függvény dokumentációját</a>)</span>
+%Image::ExifTool::UserDefined::Options = (
+    CoordFormat =&gt; '%.6f',  <span class=com># az alapértelmezett GPS-koordináta formátum megváltoztatása</span>
+    Duplicates =&gt; 1,        <span class=com># a -a legyen alapértelmezett az exiftool alkalmazásnál</span>
+    GeoMaxHDOP =&gt; 4,        <span class=com># a HDOP &gt; 4 GPS-fixpontok figyelmen kívül hagyása</span>
+    RequestAll =&gt; 3,        <span class=com># normál esetben nem generált további tagek kérése</span>
+);
+
+<span class=com># Alapértelmezett exiftool parancssori argumentumok megadása
+# - a -config kivételével minden más opció elé beszúródik
+# - minden -execute-elt parancsra vonatkozik</span>
+@Image::ExifTool::UserDefined::Arguments = (
+    '-i', 'HIDDEN', <span class=com># alapértelmezésben hagyja figyelmen kívül a rejtett fájlokat (a "."-tal kezdődő neveket)</span>
+);
+
+<span class=com># Felhasználó által definiált városok hozzáadása a Geolokációs kikereséshez</span>
+@Image::ExifTool::UserDefined::Geolocation = (
+    <span class=com># (város,régió,alrégió,országkód,ország,időzóna,objektumkód,népesség,szél,hossz)</span>
+    ['Sinemorets','Burgas','Obshtina Tsarevo','BG','','Europe/Sofia','PPL',400,42.06115,27.97833],
+);
+
+<span class=com>#------------------------------------------------------------------------------</span>
+1;  <span class=com>#end</span>
+</pre>
+<hr>
+<p class='lf'># <a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
+</body>
+</html>

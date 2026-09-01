@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+  <title>A motorháztető alatt</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+pre         { margin: 0 }
+ol.index    { margin: 0; padding: 0 0 0 2em }
+-->
+</style>
+</head>
+<body>
+<div class='index'>
+<a href="#overview">Áttekintés</a>
+<br><a href="#conversions">Értékkonverziók</a>
+<br><a href="#philophies">Mögöttes filozófiák</a>
+<br><a href="#perl">Miért Perl?</a>
+</div>
+
+<h1 class='up'>Az ExifTool "a motorháztető alatt"</h1>
+
+<p>Ez az oldal az ExifTool belső működésének néhány részletét ismerteti.</p>
+
+<a name="overview"></a>
+<h2>Az ExifTool áttekintése</h2>
+
+<p>Az alábbi ábra az exiftool alkalmazás információáramlását mutatja.  Az ábrán a
+dobozokon kívül néhány, a feldolgozás különböző szakaszaihoz kapcsolódó
+parancssori opció szerepel.  Ezek az opciók mind közvetlenül megfeleltethetők az
+API-n (Application Programming Interface) keresztül elérhető opcióknak vagy
+függvényhívásoknak, kivéve a kimeneti szöveg formázását, amelyet az alkalmazás
+szintjén kezel a program.</p>
+
+<center><img src="overview.png" alt="ExifTool áttekintés" width="680" height="460"></center>
+
+<p>Az információáramlás két különálló módra oszlik: 1)
+<span class=blu>információ olvasása vagy kinyerése</span>, és 2)
+<span class=red>írás vagy szerkesztés</span>.  Az alkalmazás alapértelmezés
+szerint <b class=blu>olvasás</b> módban fut, de <b class=red>írás</b> módba vált,
+ha bármely taghez új értéket rendelnek (a parancssorban a "<code>-TAG=</code>",
+"<code>-tagsFromFile</code>", "<code>-geotag</code>", "<code>-csv=</code>" vagy
+"<code>-json=</code>" révén).</p>
+
+<a name="conversions"></a>
+<h2>Értékkonverziók</h2>
+<p>Amikor az ExifTool egy tag értékét olvassa vagy írja, minden értékre 3 külön
+konverzió vonatkozik, így minden tag értékének 4 különböző szintje van.
+Alapértelmezés szerint a felhasználók csak az ember által olvasható
+("<b>PrintConv</b>") értékkel érintkeznek, de a többi szint is elérhető
+különféle exiftool opciókon keresztül:</p>
+
+<ol start=3><li>A "<b>PrintConv</b>" érték a végső, ember által olvasható érték,
+amelyet megjelenítésre alakítottak át.  A "PrintConv" konverzió gyakran szavakká
+alakítja a számokat a jobb olvashatóság érdekében.  A <code>-lang</code>
+(Lang) opció adja meg ennek a konverziónak a nyelvét, a
+<code>-c</code> és <code>-d</code> (CoordFormat és DateFormat) opciók pedig a
+GPS-koordináták és a dátum/idő értékek formázását adják meg.</li></ol>
+
+<ol start=2><li>Numerikus értékek esetén a "<b>ValueConv</b>" érték egy
+gép által olvasható érték, amely számításokban használható, és jellemzően
+szabványos mértékegységekre van átváltva (pl. fok, méter vagy másodperc).
+Dátum/idő értékekhez a szabványos EXIF dátum/idő formátumot használja
+("YYYY:mm:dd HH:MM:SS", plusz a tizedmásodpercek és az időzóna, ha vannak).
+Zárt sztringválasztékú tagek esetén ez a sztring tárolt értéke.  A ValueConv
+érték minden taghez visszaadásra kerül a <code>-n</code> opció használatakor,
+egyes tagekhez pedig a tagnév <code>#</code> karakterrel való
+utótagozásával.</li></ol>
+
+<ol start=1><li>A "<b>Raw</b>" érték az az érték, amelyet a fájlból származó
+bináris adatok kezdeti formázása után kapunk.  A legtöbb taghez nincs külön
+"ValueConv" konverzió, így ezeknél a tageknél a "Raw" érték megegyezik a
+"ValueConv" értékkel. A racionális alakban tárolt értékeknek van egy
+"<b>Rational</b>" értékük is. Mind a Raw, mind a Rational érték megtekinthető a
+<code>-v</code> opcióval.</li></ol>
+
+<ol start=0><li>A "<b>Binary</b>" érték a fájlban tárolt tényleges bináris adat.
+Ez az adat hexadecimális alakban jelenik meg a <code>-v3</code> opcióval, vagy a
+<code>-htmlDump</code> szolgáltatással.  Vegye figyelembe, hogy ez az érték
+nincs kapcsolatban a <code>-b</code> (<code>-binary</code>) opcióval, amely
+valójában a "ValueConv" értéket adja vissza, és olyan tagekhez használatos, ahol
+ez az érték nem jeleníthető meg egyszerű szöveges formátumban.  A
+<a href="TagNames/index.html">tagnév-dokumentáció</a>
+Writable oszlopa adja meg ennek a bináris adatnak a formátumát az írható
+tagekhez.</li></ol>
+
+<p>Az alábbiakban néhány példa látható ezekre a különböző értékekre néhány tag
+esetében:</p>
+
+<blockquote><table class=norm>
+<tr><th>Tag</th><th>3.&nbsp;PrintConv</th><th>2.&nbsp;ValueConv</th><th>1.&nbsp;Raw (Rational)</th><th>0.&nbsp;Binary</th></tr>
+<tr align='center'><td>EXIF:Orientation</td><td>Horizontal (normal)</td><td>1</td><td>1</td><td><pre>00 01</pre></td></tr>
+<tr align='center'><td>EXIF:GPSLatitude</td><td>45 deg 20' 11.00"</td><td>45.3363888888889</td><td>45 20 11<br>(45/1 20/1 11/1)</td>
+  <td><pre>00 00 00 2d 00 00 00 01<br>00 00 00 14 00 00 00 01<br>00 00 00 0b 00 00 00 01</pre></td></tr>
+<tr align='center'><td>XMP:GPSLatitude</td><td>45 deg 20' 11.00"</td><td>45.3363888888889</td><td>45,20.183333N</td>
+  <td>"45,20.183333N"</td></tr>
+<tr align='center'><td>EXIF:ExposureTime</td><td>1/30</td><td>0.03333333333</td><td>0.03333333333<br>(1/30)</td>
+  <td><pre>00 00 00 01 00 00 00 1e</pre></td></tr>
+<tr align='center'><td>EXIF:ShutterSpeedValue</td><td>1/30</td><td>0.0333333334629176</td><td>4.90689059<br>(19868/4049)</td>
+  <td><pre>00 00 4d 9c 00 00 0f d1</pre></td></tr>
+<tr align='center'><td>EXIF:ModifyDate</td><td>(a <code>-d</code> opció állítja be)</td><td>2016:11:25 11:56:39</td><td>2016:11:25 11:56:39</td>
+  <td>"2016:11:25 11:56:39\0"</td></tr>
+<tr align='center'><td>XMP:ModifyDate</td><td>(a <code>-d</code> opció állítja be)</td><td>2016:11:25 11:56:39.00-05:00</td><td>2016-11-25T11:56:39.00-05:00</td>
+  <td>"2016-11-25T11:56:39.00-05:00"</td></tr>
+</table></blockquote>
+
+<a name="philophies"></a>
+<h2>Mögöttes filozófiák</h2>
+
+<p>Önnek joga van tudni a képeiben található metainformációról.  Az Exiftool
+projekt egyik fő célja, hogy ezt az információt szabadon elérhetővé tegye, mind a
+nagyközönség, mind más fejlesztők számára erőforrásként.</p>
+
+<p>Az exiftool tervezése során számos mögöttes filozófia befolyásolta az
+általános fejlesztést:</p>
+
+<ol>
+<li>Az <a href="ExifTool.html">Image::ExifTool</a> a lehető legfüggetlenebb
+    legyen más könyvtáraktól, hogy hordozható és könnyen telepíthető legyen.
+    (Rendszerek és Perl-verziók széles körére hordozható.)</li>
+<li>Az egyszerű feladatokhoz maradjon egyszerű a felület (néha azon az áron,
+    hogy összetettebb feladatokhoz bonyolultabbá válik).</li>
+<li>Az <a href="ExifTool.html#Methods">API-függvényeket</a> el kell szigetelni a
+    metainformáció-formátumok részleteitől (különben a felület egy óriási
+    gubanccá válik, akárcsak maga a metainformáció).</li>
+<li>Maradjon rugalmas, hogy a felhasználók szabadon azt tehessék, amit
+    szeretnének (pl. felhasználó által definiált tagek támogatása).</li>
+<li>A kód kötegelt feldolgozásra legyen hatékony, még ha ez növeli is a kezdeti
+    többletterhelést.</li>
+<li>Fájlok írásakor 3 dologra kell emlékezni: 1) adatintegritás, 2)
+    adatintegritás, és 3) adatintegritás.  Ha nem lehet jól csinálni, akkor
+    egyáltalán ne csináld.</li>
+<li>Ha lehetséges, a fájltípusokat a szerkezetük alapján ismerd fel, ne a
+    kiterjesztésük alapján.</li>
+<li>Az ExifTool API vagy a parancssori alkalmazás módosításakor őrizd meg a
+    visszafelé kompatibilitást.</li>
+</ol>
+
+<a name="perl"></a>
+<h2>Miért Perlben íródott az ExifTool?</h2>
+
+<p>Az ExifTool fejlesztésének kezdetén a Perl, a Python és a C++ is szóba került a
+projekt lehetséges nyelveként.  Nyilvánvaló volt, hogy a projekt jelentős
+erőfeszítést igényel, és a nyelv megválasztása erősen befolyásolhatja a
+szükséges munka mennyiségét.  A Python erős esélyes volt, de a C-szerű szintaxis
+iránti személyes preferencia miatt elesett.  A Perl a C++-szal szemben főként
+azért lett a választás, mert kevesebb munka a projektet fejleszteni és
+karbantartani.  Visszatekintve ez határozottan jó döntés volt, ráadásul további
+előnyt jelentett a Perl-szoftverek
+<a href="http://www.cpantesters.org/distro/I/Image-ExifTool.html">tesztelését</a> és
+<a href="https://metacpan.org/release/Image-ExifTool">terjesztését</a> támogató erős infrastruktúra.</p>
+
+<p>A Perl 5 nagyon kiforrott és rendkívül stabil, így szinte semennyi idő nem megy
+el fordítási problémákkal.  Hasonlítsuk ezt össze a C++-szal, ahol egy nagy
+projekt fejlesztési idejének jelentős része erre a területre mehet el.  Emellett
+a Perl beépített reguláris kifejezései fantasztikusan hasznosak egy
+metainformáció-könyvtárhoz szükséges összes sztringkezeléshez.  A Perl legnagyobb
+problémája, hogy nem támogatja a windowsos Unicode fájlneveket.</p>
+
+<p>A lényeg az, hogy a fejlesztési idő nagy része a metainformáció mechanikájával
+telik, aminek eredményeként az ExifTool egy teljes értékű
+metainformáció-könyvtár.  Egyetlen fő fejlesztővel (Phil Harvey) és 300 ezer
+sornyi kóddal (2025 decemberében) ez valódi teljesítmény.</p>
+
+<hr>
+<i>Létrehozva: 2009. június 24.</i><br>
+<i>Utoljára módosítva: 2025. december 9.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
+</body>
+</html>

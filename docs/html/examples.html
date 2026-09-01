@@ -1,0 +1,218 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"
+ "http://www.w3.org/TR/1998/REC-html40-19980424/loose.dtd">
+<html>
+<head>
+<title>ExifTool parancssori példák</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+pre      { color: #800 }
+label    { white-space: nowrap }
+<!--
+-->
+</style>
+<script language="JavaScript" type="text/JavaScript">
+<!-- Begin
+var cod = new Array;
+var lbl = new Array;
+var cmd = new Array;
+var txt = new Array;
+var bits = 0;
+var n = -1;
+
+function showHide(obj,mask,bit)
+{
+  var i;
+  if (obj && obj.checked != true) {
+    bits &= ~bit;
+  } else {
+    bits &= ~mask;
+    bits |= bit;
+  }
+  var desc = document.getElementById('desc').checked;
+  var head = document.getElementById('head').checked;
+  var text = '';
+  text += obj + ' ' + mask + ' ' + bit + ' ' + bits + '<br>';
+  for (i in cod) {
+    if ((cod[i] & bits) == bits) {
+      text += '<p>' + i + ') ';
+      if (head) { text += '<b>' + lbl[i] + '</b></p>\n<blockquote><pre>' + cmd[i] + '</pre>' }
+      else      { text += '<code>' + cmd[i] + '</code></p>\n<blockquote>' }
+      if (desc) { text += txt[i] + '</blockquote>\n' }
+      else      { text += '</blockquote>\n' }
+    }
+  }
+  if (text == '') { text = '<p><i>[no matching examples]</i></p>'; }
+  var p = document.getElementById('test');
+  p.innerHTML = text;
+}
+
+++n;
+cod[n] = 0x0f;
+lbl[n] = 'Információ kinyerése egy fájlból';
+cmd[n] = 'exiftool a.jpg';
+txt[n] = 'Egy alapparancs az összes metaadat kinyeréséhez egy <code>a.jpg</code> nevű fájlból.';
+++n;
+cod[n] = 0x17;
+lbl[n] = 'Alap írási példa';
+cmd[n] = 'exiftool -artist=me a.jpg';
+txt[n] = 'Az Artist taget írja az <code>a.jpg</code>-be. Mivel nincs csoport megadva, az EXIF:Artist íródik, és minden más meglévő Artist tag frissül az új értékkel ("<code>me</code>").';
+++n;
+cod[n] = 0x17;
+lbl[n] = 'Írás több fájlba';
+cmd[n] = 'exiftool -artist=me a.jpg b.jpg c.jpg';
+txt[n] = 'Az Artist taget három képfájlba írja.';
+++n;
+cod[n] = 0x17;
+lbl[n] = 'Írás egy könyvtár összes fájljába';
+cmd[n] = 'exiftool -artist=me c:/images';
+txt[n] = 'Az Artist taget a <code>c:/images</code> könyvtár összes fájljába írja.';
+++n;
+cod[n] = 0x17;
+lbl[n] = 'Több tag írása';
+cmd[n] = 'exiftool -artist="Phil Harvey" -copyright="2011 Phil Harvey" a.jpg';
+txt[n] = 'Két taget ír az <code>a.jpg</code>-be.';
+++n;
+cod[n] = 0x0f;
+lbl[n] = 'Duplikált tagek kinyerése';
+cmd[n] = 'exiftool -a -u -g1 a.jpg';
+txt[n] = 'Kiírja egy kép összes metainformációját, a duplikált és ismeretlen tageket is beleértve, csoport szerint rendezve (az 1. családhoz).';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -common dir';
+txt[n] = 'Kiírja a szokásos metainformációt a dir összes képéhez.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -T -createdate -aperture -shutterspeed -iso DIR &gt; out.txt';
+txt[n] = 'Kilistázza a metainformációt tabulátorral tagolt oszlopos formában a <code>DIR</code> könyvtár összes képéhez egy "out.txt" nevű kimeneti szövegfájlba.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -s -ImageSize -ExposureTime b.jpg';
+txt[n] = 'Kiírja az ImageSize és az ExposureTime tag nevét és értékét.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -l -canon c.jpg d.jpg';
+txt[n] = 'Kiírja a szabványos Canon információt két képfájlból.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -r -w .txt -common pictures';
+txt[n] = 'Rekurzívan kinyeri a szokásos metainformációt a C<pictures> könyvtárban lévő fájlokból, a szöveges kimenetet azonos nevű, de C<.txt> kiterjesztésű fájlokba írva.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -b -ThumbnailImage image.jpg &gt; thumbnail.jpg';
+txt[n] = 'Elmenti a bélyegképet a C<image.jpg>-ből egy C<thumbnail.jpg> nevű fájlba.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -b -JpgFromRaw -w _JFR.JPG -ext CRW -r .';
+txt[n] = 'Rekurzívan kinyeri a JPG képet az aktuális könyvtár összes Canon CRW fájljából, a kimeneti JPG fájlok nevéhez C<_JFR.JPG>-t fűzve.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -d "%r %a, %B %e, %Y" -DateTimeOriginal -S -s *.jpg';
+txt[n] = 'Kiírja a formázott dátum/időt az aktuális könyvtár összes JPG fájljához.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -IFD1:XResolution -IFD1:YResolution image.jpg';
+txt[n] = 'Kinyeri a kép felbontását az EXIF IFD1 információból (a bélyegkép IFD-je).';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool "-*resolution*" image.jpg';
+txt[n] = 'Kinyer egy képből minden olyan taget, amelynek nevében szerepel a "Resolution" szó.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -xmp:author:all -a image.jpg';
+txt[n] = 'Kinyeri egy képből az összes szerzővel kapcsolatos XMP információt.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -xmp -b a.jpg &gt; out.xmp';
+txt[n] = 'Kinyeri a teljes XMP adatrekordot érintetlenül az <code>a.jpg</code>-ből, és az <code>out.xmp</code>-be írja a speciális <code>XMP</code> tag használatával (lásd az <a href="TagNames/Extra.html">Extra Tags</a>-t).';
+++n;
+cod[n] = 0x09;
+cmd[n] = 'exiftool -p "$filename has date $dateTimeOriginal" -q -f dir';
+txt[n] = 'Egy sor kimenetet ír ki, amely a <code>dir</code> könyvtár minden képéhez tartalmazza a fájlnevet és a DateTimeOriginal-t.';
+++n;
+cod[n] = 0x0e;
+cmd[n] = 'exiftool -p \'$filename has date $dateTimeOriginal\' -q -f dir';
+txt[n] = 'Egy sor kimenetet ír ki, amely a <code>dir</code> könyvtár minden képéhez tartalmazza a fájlnevet és a DateTimeOriginal-t.';
+++n;
+cod[n] = 0x09;
+cmd[n] = 'exiftool -ee -p "$gpslatitude, $gpslongitude, $gpstimestamp" a.m2ts';
+txt[n] = 'Kinyeri az összes GPS-pozíciót egy AVCHD videóból.';
+++n;
+cod[n] = 0x0e;
+cmd[n] = 'exiftool -ee -p \'$gpslatitude, $gpslongitude, $gpstimestamp\' a.m2ts';
+txt[n] = 'Kinyeri az összes GPS-pozíciót egy AVCHD videóból.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -icc_profile -b -w icc image.jpg';
+txt[n] = 'Elmenti a teljes ICC_Profile-t egy képből egy azonos nevű, C<.icc> kiterjesztésű kimeneti fájlba.';
+++n;
+cod[n] = 0x0f;
+cmd[n] = 'exiftool -htmldump -w tmp/%f_%e.html t/images';
+txt[n] = 'HTML oldalakat generál a C<t/images> könyvtár összes képében lévő EXIF információ hexdumpjából.  A kimeneti HTML fájlok a C<tmp> könyvtárba íródnak (amely létrejön, ha nem létezett), "FILENAME_EXT.html" alakú nevekkel.';
+// End --->
+</script></head>
+<body onload="showHide(0,0x07,0x01)"><noscript><b class=V>--&gt;
+Engedélyezd a JavaScriptet az aktív kiemeléshez és az információs buboréksúgókhoz!
+</b></noscript>
+<h2>ExifTool parancssori példák <i class='red'>(fejlesztés alatt)</i></h2>
+<form id="theForm" action="" onsubmit="return false;">
+<!--
+date formatting (-d)
+for -@ argfile (-args)
+database import
+xml format
+json format
+structures
+binary data
+HTML format
+tab-delimited format (-t, -T)
+html dump
+
+gps coordinates (-c, -gps:all -a, -a "-gps*")
+specific tags
+groups of tags (wildcards, -group:tag)
+Tag ID's (-H -D)
+special characters (-E, -ex, -L, -charset)
+alternate languages (-lang)
+numerical values (-n, -Tag#)
+lists (-sep)
+verbose messages (-v)
+save output to file (-w, redirection)
+embedded images (preview, thumbnail, jpgfromraw)
+tag names/descriptions (-s)
+-->
+<fieldset><!-- <legend>Search Criteria</legend> -->
+<table cellpadding=0 cellspacing=0><tr><td><b>Rendszer:</b></td><td>
+<label><input name="os" type="radio" checked onclick="showHide(this,0x07,0x01);"/>Windows</label>
+<label><input name="os" type="radio" onclick="showHide(this,0x07,0x02);"/>Mac OS X</label>
+<label><input name="os" type="radio" onclick="showHide(this,0x07,0x04);"/>Linux</label>
+</td></tr><tr><td><b>Feladat:</b></td><td>
+<select name='task' size=1 onchange='showHide(0,0x38,this.options[this.selectedIndex].value)'>
+<option value='0x00'>Bármi</option>
+<option value='0x08'>Metaadat olvasása</option>
+<option value='0x10'>Metaadat írása</option>
+<option value='0x18'>Metaadat törlése</option>
+<option value='0x20'>Metaadat másolása</option>
+<option value='0x28'>Fájlok átnevezése</option>
+<option value='0x30'>Fájlok geotaggelése</option>
+</select>
+</td></tr><tr><td><b>Funkciók:</b></td><td>
+<label><input type="checkbox" onclick="showHide(this,0x100,0x100);"/>Speciális karakterek</label>
+<label><input type="checkbox" onclick="showHide(this,0x200,0x200);"/>Más nyelvek</label>
+<label><input type="checkbox" onclick="showHide(this,0x400,0x400);"/>Csoportnevek</label>
+<label><input type="checkbox" onclick="showHide(this,0x800,0x800);"/>Egyéb</label>
+<label><input type="checkbox" onclick="showHide(this,0x1000,0x1000);"/>Egyéb</label>
+<label><input type="checkbox" onclick="showHide(this,0x2000,0x2000);"/>Egyéb</label>
+<label><input type="checkbox" onclick="showHide(this,0x4000,0x4000);"/>Egyéb</label>
+</td><tr><tr><td><b>Példák:&nbsp;</b></td><td>
+<label><input id='head' type="checkbox" checked onclick="showHide(this,0,0);"/>Címsorok megjelenítése</label>
+&nbsp; <label><input id='desc' type="checkbox" checked onclick="showHide(this,0,0);"/>Leírások megjelenítése</label>
+</td></tr><tr><td><b>Funkció:</b></td><td>
+<select name='feature' size=1>
+<option value='0x000'>Bármi</option>
+<option value='0x100'>Geotag</option>
+<option value='0x200'>XML</option>
+</select>
+</td></tr></table></form>
+
+<span id=test></span>
+</body></html>

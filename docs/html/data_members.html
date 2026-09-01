@@ -1,0 +1,356 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+<title>Az ExifTool objektum adattagjai</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+</head>
+<body>
+<h2 class='up'>Az ExifTool objektum adattagjai</h2>
+
+<p>Az alábbi táblázat az ExifTool objektum adattagjait sorolja fel.  (Ha ez C++
+lenne, ezeket a fejlécfájlban a definíciók mellett dokumentálnánk, de ez Perl,
+úgyhogy ezt nem tehettem meg...)</p>
+
+<p>Az alább definiált változókon kívül az egyes modulok további ideiglenes
+változókat is hozzáadhatnak. Az ideiglenes változókat a nevükben lévő legalább
+egy kisbetű azonosítja, és minden új kép olvasása vagy írása előtt automatikusan
+törlődnek.  A Make, a Model és a CameraType ilyen ideiglenes változók, de ez a
+három különleges, mert üres sztringre inicializálódnak ahelyett, hogy minden kép
+feldolgozásának kezdetén törlődnének, ami lehetővé teszi a tesztelésüket anélkül,
+hogy definiálatlan értéket kellene ellenőrizni.</p>
+
+<blockquote><table class='norm'><tr><th>Név</th><th>Leírás</th></tr>
+
+<tr><td>ADD_DIRS</td><td>Az írás során hozzáadott minden könyvtárhoz tartozó
+    szülőkönyvtárak hash-e (Megjegyzés: a bejegyzés létezhet, de definiálatlan
+    lehet a legfelső szintű könyvtárnál!)  Egy könyvtár kétszeri hozzáadásának
+    elkerülése érdekében a bejegyzések törölhetők ebből a kikeresési táblából, de
+    csak a WriteDirectory() hívása UTÁN.</td></tr>
+
+<tr><td>BASE</td><td>Az aktuális kép abszolút pozíciója a tartalmazó fájlban
+    (például amikor egy FujiFilm RAF fájlban lévő JPEG-képet dolgozunk fel)</td></tr>
+
+<tr><td>BOTH</td><td>Hivatkozás a ValueConv/PrintConv tömbök HASH-ére, amely a
+    tagekhez mentődik, amikor a GetValue 'Both' értékekre hívódik, és arra
+    szolgál, hogy ne kelljen mindkét értéket újra kiszámolni (ami felgyorsítja a
+    Composite tagek felépítését, mert gyakran ugyanazt a taget több Composite tag
+    is Require-öli).</td></tr>
+
+<tr><td>CameraType</td><td>Egyes Olympus tagek dekódolásához használt fényképezőgép-típus</td></tr>
+
+<tr><td>CHANGED</td><td>Az írás során megváltoztatott tagek száma</td></tr>
+
+<tr><td>CHARSET</td><td>Az aktuális Charset-beállítás kikeresési táblája</td></tr>
+
+<tr><td>CHECK_WARN</td><td>A CHECK_PROC figyelmeztetések visszaadására szolgál</td></tr>
+
+<tr><td>Cleanup</td><td>Az Extract()-ből való visszatérés előtt meghívandó
+    szubrutinok listája.  Hívd az AddCleanup()-ot a listához való hozzáadáshoz.</td></tr>
+
+<tr><td>COMP_KEYS</td><td>A Composite tagekben használt tagkulcsok kikeresése</td></tr>
+
+<tr><td>Compression</td><td>Az aktuális EXIF IFD tömörítése (vagy '' ha nincs Compression tag).
+    Csak EXIF könyvtárakban érvényes, a 0x0103 utáni tagekhez.</td></tr>
+
+<tr><td>CUR_LANG</td><td>Hash-hivatkozás a lokalizált nyelvi kikereséshez, amely
+    az aktuális 'Lang' opcióbeállításnak felel meg.</td></tr>
+
+<tr><td>CUR_WRITE_GROUP</td><td>Az aktuális 1-es családba tartozó csoport írás
+    közben.  Jelenleg csak QuickTime-sávok írásakor használatos.</td></tr>
+
+<tr><td>DEL_GROUP</td><td>A törlendő csoportok hash-e.  Az érték 1, ha a csoportot
+    teljesen törölni kell, vagy 2, ha a csoport törlése után tageket adtak
+    vissza.  Kezdődhet "-" jellel, ha ki van zárva a törlésből.</td></tr>
+
+<tr><td>DEL_PREVIEW</td><td>Jelző az előnézeti kép törlésére a JPEG EOI utánról</td></tr>
+
+<tr><td>DemoteErrors</td><td>A hibák figyelmeztetésekké minősülnek vissza, és ez
+    a számláló növekszik, ha eleve nem nulla</td></tr>
+
+<tr><td>DIR_COUNT</td><td>Hash-hivatkozás a különböző típusú könyvtárak számlálóihoz (ICC, IPTC, ...)</td></tr>
+
+<tr><td>DIR_NAME</td><td>Az éppen feldolgozott könyvtár neve</td></tr>
+
+<tr><td>DOC_COUNT</td><td>A kinyerés során feldolgozott legfelső szintű beágyazott
+    aldokumentumok száma, vagy 0, ha egy sem lett feldolgozva</td></tr>
+
+<tr><td>DOC_NUM</td><td>Az aktuális dokumentumszám a kinyerés során (0, '' vagy undef a
+    fődokumentumhoz).  Al-aldokumentumoknál kötőjelet tartalmazhat (pl. '2-3-2').</td></tr>
+
+<tr><td>DoneID3</td><td>1, ha a hangfájlt átvizsgálták ID3 után,
+    vagy 2, ha ID3v1 trailert találtak</td></tr>
+
+<tr><td>DropTags</td><td>Jelző a "Drop" tagek kizárására íráskor</td></tr>
+
+<tr><td>DUPL_TAG</td><td>Az egyes duplikált tagekhez utoljára használt tagkulcs-indexszámok hash-e.</td></tr>
+
+<tr><td>EDIT_DIRS</td><td>Az írás során szerkesztett minden könyvtárhoz tartozó
+    szülőkönyvtárak hash-e (Megjegyzés: a bejegyzés létezhet, de definiálatlan
+    lehet a legfelső szintű könyvtárnál!)</td></tr>
+
+<tr><td>End</td><td>Az alkalmazás használja a feldolgozás végének jelzésére</td></tr>
+
+<tr><td>EndDir</td><td>Az alkalmazás használja az aktuális könyvtár végének jelzésére</td></tr>
+
+<tr><td>ESCAPE_PROC</td><td>XML- vagy HTML-escapelésre szolgáló rutin, ha az Escape opció be van állítva</td></tr>
+
+<tr><td>EXCL_TAG_LOOKUP</td><td>A kizárt tagek kikeresésére szolgáló hash (a kulcsok csoport nélküli, kisbetűs tagnevek)</td></tr>
+
+<tr><td>EXCL_XMP_LOOKUP</td><td>A kizárt "XMP-xxx:yyy" tagek kikeresésére szolgáló hash (a kulcsok kisbetűsek, a csoportot is beleértve).
+    Az "XMP-xxx" bármely ExifTool 1-es családbeli XMP-csoportnév lehet, vagy "XMP-all" bármely XMP-csoportra.  A "yyy"
+    bármely XMP-tulajdonságnév lehet (NEM ExifTool-tagnév), vagy "all" egy csoport összes tagjére</td></tr>
+
+<tr><td>EXIF_DATA</td><td>EXIF adatblokk (érvényes a fájlból való olvasás közben)</td></tr>
+
+<tr><td>EXIF_POS</td><td>Az EXIF adatok pozíciója a fájlban</td></tr>
+
+<tr><td>FILENAME</td><td>A bemeneti fájl neve a kinyerés során (csak ha mi nyitottuk meg, egyébként '')</td></tr>
+
+<tr><td>FILE_ORDER</td><td>Számok hash-e, amely megadja a tagek fájlból való
+    kinyerésének sorrendjét, tagkulcs szerint kulcsolva</td></tr>
+
+<tr><td>FILE_EXT</td><td>Nagybetűs fájlkiterjesztés (JPG, PEF, AVI stb.) Definiálatlan lehet, ha
+    a fájlnak nincs kiterjesztése.</td></tr>
+
+<tr><td>FILE_SEQUENCE</td><td>A fájl sorszáma az információ kinyerésekor</td></tr>
+
+<tr><td>FILE_TYPE</td><td>A gyökér fájlformátum-típusa (JPEG, TIFF, RIFF stb.)</td></tr>
+
+<tr><td>FileType</td><td>A ténylegesen azonosított fájltípus</td></tr>
+
+<tr><td>FIRST_EXIF_POS</td><td>Az első EXIF pozíciója a fájlban</td></tr>
+
+<tr><td>FMT_EXPR</td><td>Az aktuális haladó formázási kifejezés, amikor tagértékeket
+    interpolálunk egy sztringbe.  Ez a tag lehetővé teszi, hogy a formázási kifejezés elérhető legyen
+    a felhasználó által definiált Composite tagek ValueConv függvényében, ami mechanizmust ad arra, hogy
+    argumentumokat adjunk át a ValueConv függvénynek.</td></tr>
+
+<tr><td>FORCE_WRITE</td><td>Hash-hivatkozás azokhoz a metainformáció-típusokhoz, amelyek
+    újraírása kényszerítve van (lásd az Extra ForceWrite taget)</td></tr>
+
+<tr><td>FOUND_DIR</td><td>A fájlban talált könyvtárak nevei (a Validate szolgáltatás használja)</td></tr>
+
+<tr><td>FOUND_TAGS</td><td>A megtalált tagek helyes kis-/nagybetűvel és sorrendben</td></tr>
+
+<tr><td>GLOBAL_TIME_OFFSET</td><td>Időeltolás-hash a GlobalTimeShift opció első eltolt dátum/idő értékéhez</td></tr>
+
+<tr><td>HandlerType</td><td>[csak QuickTime] A legutóbbi Meta vagy Media objektum handler-típusa,
+    kivéve az 'alis' és 'url ' típusokat.</td></tr>
+
+<tr><td>HAS_DOC</td><td>A fájlban létező dokumentum- és aldokumentum-számok kikeresése</td></tr>
+
+<tr><td>HTML_DUMP</td><td>Hivatkozás a HtmlDump objektumra a HtmlDump szolgáltatás használatakor</td></tr>
+
+<tr><td>INDENT</td><td>Behúzás-sztring a részletes (verbose) kimenethez</td></tr>
+
+<tr><td>INDENT2</td><td>A részletes (verbose) SetNewValue kimenetben írás előtt használt behúzás</td></tr>
+
+<tr><td>IN_RESOURCE</td><td>A jelző azt jelzi, hogy egy Mac OS fájl resource forkját dolgozzuk fel</td></tr>
+
+<tr><td>IO_TAG_LIST</td><td>A kért tagek kimenetének listája helyes kis-/nagybetűvel és sorrendben</td></tr>
+
+<tr><td>IsWriting</td><td>Beállított jelző, amely azt jelzi, hogy metainformáció íródik ebbe a fájlba</td></tr>
+
+<tr><td>LIST_TAGS</td><td>Tagkulcsok hash-e tagInfo-hivatkozás szerint az aktív lista típusú
+    tagekhez.  Ez a hash minden könyvtár feldolgozásának kezdetén törlődik.
+    Íráskor nem használatos.</td></tr>
+
+<tr><td>LONG_PATH_IN</td><td>A WindowsLongPath függvény gyorsítótárazott bemenete</td></tr>
+
+<tr><td>LONG_PATH_OUT</td><td>A WindowsLongPath függvény gyorsítótárazott visszatérési értéke</td></tr>
+
+<tr><td>LOW_PRIORITY_DIR</td><td>Könyvtárnév alapú kikeresés azokhoz a könyvtárakhoz, ahol
+    a definiálatlan Priority tagek Priority 0 értékre állítódnak (pl. PreviewIFD minden képben,
+    és IFD1 a JPEG-képekben).  Ez egyenértékű azzal, hogy a PRIORITY értéket 0-ra állítjuk
+    a tagtáblához, de csak egy adott könyvtárnévhez.  A kikeresésben lévő '*' bejegyzés
+    bármely könyvtárban lévő tagek prioritásának csökkentését okozza.</td></tr>
+
+<tr><td>Make</td><td>Olvasás és írás során beállított fényképezőgép-gyártó</td></tr>
+
+<tr><td>MAKER_NOTE_BYTE_ORDER</td><td>A kinyert maker note-ok bájtsorrendje, ha blokként
+    lettek kinyerve.</td></tr>
+
+<tr><td>MAKER_NOTE_INFO</td><td>Az Image::ExifTool::CanonRaw használja ideiglenes tárolóként a
+    maker note információkhoz, amikor CRW-fájlból szintetizál maker note-okat a
+    MakerNotes opcióval.</td></tr>
+
+<tr><td>MAKER_NOTE_FIXUP</td><td>Fixup-információ a MakerNotes opcióval kinyert maker note-okhoz
+    (kivéve, ha a MakerNotes opció értéke 2). A SetNewValuesFromFile() használja a maker note IFD
+    eltolásainak beállításához</td></tr>
+
+<tr><td>MediaType</td><td>[csak QuickTime] A legutóbbi Media objektum handler-típusa.</td></tr>
+
+<tr><td>Model</td><td>Olvasás és írás során beállított fényképezőgép-modell neve</td></tr>
+
+<tr><td>MOVED_KEY</td><td>Az utolsó olyan tag tagkulcsa, amelyet egy magasabb prioritású tag
+    váltott fel a FoundTag() egy hívásában.</td></tr>
+
+<tr><td>NEW_VALUE</td><td>Új érték információk hash-e tag info hivatkozás szerint kulcsolva.
+    Az új érték információ hash elemei:
+    <table class='clear'>
+    <tr valign='top'><td>TagInfo</td><td>-</td><td>tag információ hivatkozás</td></tr>
+    <tr valign='top'><td>DelValue</td><td>-</td><td>a törlendő konkrét értékek listája</td></tr>
+    <tr valign='top'><td>Value</td><td>-</td><td>a hozzáadandó értékek listája</td></tr>
+    <tr valign='top'><td>IsCreating</td><td>-</td><td>be kell állítani ahhoz, hogy a tag hozzáadódjon, egyébként csak
+        megváltozik, ha már létezik.  A 2 érték új taget hoz létre, ha a csoportja már
+        létezik, de nem ad hozzá új csoportot</td></tr>
+    <tr valign='top'><td>EditOnly</td><td>-</td><td>beállított jelző, ha a taget sosem szabad létrehozni
+        (a fájltípustól függetlenül). Ha ez be van állítva, akkor az IsCreating hamis kell legyen</td></tr>
+    <tr valign='top'><td>CreateOnly</td><td>-</td><td>beállított jelző, ha csak létrehozás (meglévő tag sosem szerkesztendő)</td></tr>
+    <tr valign='top'><td>CreateGroups</td><td>-</td><td>az összes 0-s családbeli csoportnév hash-e, ahol a tag létrehozható</td></tr>
+    <tr valign='top'><td>WriteGroup</td><td>-</td><td>a csoportnév, ahová az információ íródik (helyes kis-/nagybetűvel)</td></tr>
+    <tr valign='top'><td>WantGroup</td><td>-</td><td>a függvényhívásban megadott csoportnév (kis-/nagybetűre nem érzékeny)</td></tr>
+    <tr valign='top'><td>Next</td><td>-</td><td>hivatkozás a láncolt listában lévő következő új érték hash-re,
+        ha ehhez a tagInfo-hoz több új érték hash is tartozik (különböző csoportokba való
+        íráshoz)</td></tr>
+    <tr valign='top'><td>NoReplace</td><td>-</td><td>beállítva, ha az értéket Replace=0 értékkel hozták létre</td></tr>
+    <tr valign='top'><td>AddBefore</td><td>-</td><td>egy későbbi Replace=0 hívással hozzáadott listaelemek száma</td></tr>
+    <tr valign='top'><td>IsNVH</td><td>-</td><td>jelző, amely azt jelzi, hogy ez egy új érték hash (mindig 1)</td></tr>
+    <tr valign='top'><td>Order</td><td>-</td><td>számláló, amely az új érték hash-ek létrehozásának sorrendjét jelzi</td></tr>
+    <tr valign='top'><td>Shift</td><td>-</td><td>eltolási érték</td></tr>
+    <tr valign='top'><td>Save</td><td>-</td><td>a SaveNewValues() hívása által beállított jelző, ha ezt az értéket
+        menteni kell</td></tr>
+    <tr><td colspan=3>MAKER_NOTE_FIXUP - mutató a fixupra, ha szükséges egy maker note értékhez</td></tr>
+    </table></td></tr>
+
+<tr><td>NewIPTCDigest</td><td>MD5-kivonat a legutóbb írt IPTC adatokhoz (definiálatlan, ha az IPTC nem
+    létezik, vagy ha törölték).  Csak akkor számítódik ki, ha 'new' értéket írnak
+    a Photoshop:IPTCDigest tagbe / törölnek belőle</td></tr>
+
+<tr><td>NO_LIST</td><td>Beállítva, ha a List tageket nem szabad listába gyűjteni.  Definiálatlan a
+    listák szokásos gyűjtéséhez, vagy 0 a listák TAG_EXTRA "NoList" elemben való gyűjtéséhez (és
+    TAG_EXTRA "NoListDel" jelző beállításához azokhoz a tagekhez, amelyek nem jöttek volna létre).</td></tr>
+
+<tr><td>NO_STRUCT</td><td>Beállítva, ha a struktúrákat nem szabad visszaállítani ehhez a metainformációhoz.
+    A struktúrák visszaállításának elkerülésére szolgál a nem XMP (pl. XML) információknál.</td></tr>
+
+<tr><td>NO_STRUCT_WARN</td><td>Beállítva, ha a struktúra-figyelmeztetéseket figyelmen kívül kell hagyni
+    a struktúrák újraépítésekor (kétes XML esetén).</td></tr>
+
+<tr><td>NO_UNKNOWN</td><td>Ne generáljon automatikusan ismeretlen tageket, még ha az Unknown opció be is van állítva</td></tr>
+
+<tr><td>NUM_FOUND</td><td>A talált tagek száma</td></tr>
+
+<tr><td>NV_COUNT</td><td>Minden létrehozott NEW_VALUE hash-hez növelt számláló</td></tr>
+
+<tr><td>OldIPTCDigest</td><td>MD5-kivonat az eredeti IPTC adatokhoz (definiálatlan, ha az IPTC nem
+    létezett).  Csak akkor számítódik ki, ha 'old' értéket írnak a
+    Photoshop:IPTCDigest tagbe / törölnek belőle</td></tr>
+
+<tr><td>OPTIONS</td><td>ExifTool opciók</td></tr>
+
+<tr><td>PATH</td><td>Listahivatkozás a SubDirectory útvonalára.  Pl.)
+    [qw(JPEG APP13 Photoshop IPTC)].  Többek között az 5-ös családbeli
+    csoportnevek generálására használatos.</td></tr>
+
+<tr><td>PDF_CAPTURE</td><td>A PDF modul használja információ tárolására íráskor</td></tr>
+
+<tr><td>PreferredGroup</td><td>A preferált 1-es családbeli csoport a tagek aktuális fájlba írásához.
+    Definiálatlan az alapértelmezett csoportprioritások használatához.  Az InitWriteDirs() hívásában állítódik be.</td></tr>
+
+<tr><td>PREVIEW_INFO</td><td>Az előnézeti képről szóló információ, amely csak JPEG-képek
+    írásakor használatos.  Ez egy hash-re mutató hivatkozás, a következő bejegyzésekkel:
+    <table class='clear'>
+    <tr valign='top'><td>Absolute</td><td>-</td><td>beállított jelző, ha a PreviewImage mutató a fájl
+    elejéhez viszonyított</td></tr>
+    <tr><td>BaseShift</td><td>-</td><td>eltolás a mutató-eltolások alapjához</td></tr>
+    <tr valign='top'><td>Data</td><td>-</td><td>a kiírandó PreviewImage adatai (lehet a régi vagy az új
+    kép adata, vagy 'LOAD_PREVIEW', amely azt jelzi, hogy az adatot az EXIF-szegmensen kívülről kell
+    betölteni)</td></tr>
+    <tr><td>Fixup</td><td>-</td><td>[kötelező] fixup a PreviewImage mutatókhoz JPEG-képek írásakor</td></tr>
+    <tr valign='top'><td>IsShort</td><td>-</td><td>a jelző azt jelzi, hogy a PreviewImage mutatók
+    2 bájtos (4 bájtos helyett) egész számok</td></tr>
+    <tr valign='top'><td>IsTrailer</td><td>-</td><td>a jelző azt jelzi, hogy a képet mindig JPEG
+    trailerként kell kiírni, még ha elférne is az APP1 EXIF-szegmensen belül (mint a Samsung STMN maker note-oknál)</td></tr>
+    <tr><td>Relative</td><td>-</td><td>jelző annak jelzésére, hogy a mutató-eltolások relatívak</td></tr>
+    </table></td></tr>
+
+<tr><td>PRIORITY</td><td>A tag Priority értékeinek hash-e az aktuális taghez, tagnév szerint kulcsolva (nem tagkulcs szerint!)</td></tr>
+
+<tr><td>PRIORITY_DIR</td><td>A prioritási könyvtár neve (azaz a teljes felbontású kép IFD-je)</td></tr>
+
+<tr><td>PROCESSED</td><td>Hivatkozás azon cím-/könyvtárnevek hash-ére, amelyeket olvasás
+    és/vagy írás során feldolgoztak</td></tr>
+
+<tr><td>RAF</td><td>Random access fájlobjektum a bemeneti fájlból való olvasáshoz</td></tr>
+
+<tr><td>Recreated</td><td>Íráskor újra létrehozott könyvtárak (annak megakadályozására, hogy
+    ugyanolyan típusú könyvtárból többet hozzunk létre újra)</td></tr>
+
+<tr><td>REQUESTED_TAGS</td><td>A kért tagek listája eredeti kis-/nagybetűvel</td></tr>
+
+<tr><td>REQ_TAG_LOOKUP</td><td>A kért tagek kikeresésére szolgáló hash (a kulcsok kisbetűs tagnevek)</td></tr>
+
+<tr><td>SAVE_COUNT</td><td>Számolja, hányszor hívták meg a SaveNewValues()-t</td></tr>
+
+<tr><td>SAVE_DEL_GROUP</td><td>A mentett DEL_GROUP bejegyzések hash-e</td></tr>
+
+<tr><td>SAVE_NEW_VALUE</td><td>Azon új érték információk hash-e, amelyeket a SaveNewValues()
+    hívása után felülírtak</td></tr>
+
+<tr><td>SaveFormat</td><td>Hash-hivatkozás annak ellenőrzésére, mely TIFF-formátumtípusokat használták
+    a fájlban.  Csak akkor érvényes, ha a (dokumentálatlan) SaveFormat opciót használják.
+    A config_files/tiff_version.config használja.</td></tr>
+
+<tr><td>SET_GROUP0</td><td>A 0-s családbeli csoportnévhez használandó érték, amikor új tageket
+    találunk</td></tr>
+
+<tr><td>SET_GROUP1</td><td>Az 1-es családbeli csoportnévhez használandó érték, amikor új tageket
+    találunk.  Kezdődhet '+' jellel a meglévő csoportnévhez való hozzáfűzéshez</td></tr>
+
+<tr><td>SubfileType</td><td>SubfileType az aktuális EXIF IFD-hez (vagy '' ha nincs SubfileType tag).
+    Csak EXIF könyvtárakban érvényes, a 0x00fe utáni tagekhez.</td></tr>
+    
+<tr><td>TAG_EXTRA</td><td>Extra tag információk hash-e tagkulcs szerint kulcsolva.  Az aktuális
+extra információ a következőket tartalmazhatja:
+    <table class='clear'>
+    <tr valign='top'><td>G0</td><td>-</td><td>felülírás a 0-s családbeli csoportnévhez</td></tr>
+    <tr valign='top'><td>G1</td><td>-</td><td>dinamikus 1-es családbeli csoportnév (pl. IFD-név vagy XMP-névtér),
+        vezető '+' jellel az érték hozzáfűzéséhez a meglévő 1-es csoportnévhez</td></tr>
+    <tr valign='top'><td>G3</td><td>-</td><td>szám a beágyazott dokumentumokhoz (pl. 1, 2 stb.)</td></tr>
+    <tr valign='top'><td>G#</td><td>-</td><td>#-os családbeli csoportnév</td></tr>
+    <tr valign='top'><td>Units</td><td>-</td><td>belsőleg használt a GoPro-értékek mértékegységeinek tárolására</td></tr>
+    <tr valign='top'><td>Struct</td><td>-</td><td>belsőleg használt a struktúra-tulajdonságok tárolására</td></tr>
+    <tr valign='top'><td>NoList</td><td>-</td><td>belsőleg használt a List típusú tagek értékeinek tárolására</td></tr>
+    <tr valign='top'><td>NoListDel</td><td>-</td><td>belsőleg használt jelző az érték törlésére, ha másik listában szerepel</td></tr>
+    <tr valign='top'><td>Fixup</td><td>-</td><td>fixup-információ a maker note blokkhoz</td></tr>
+    <tr valign='top'><td>BinVal</td><td>-</td><td>a tag nyers bináris értéke, ha a SaveBin opció be van állítva</td></tr>
+    <tr valign='top'><td>Rational</td><td>-</td><td>a racionális tagérték sztring törtként</td></tr>
+    </table></td></tr>
+
+<tr><td>TAG_INFO</td><td>tagInfo hash-hivatkozások hash-e, tagkulcs szerint kulcsolva</td></tr>
+
+<tr><td>TAGS_FROM_FILE</td><td>A kinyerés során használt jelző, amikor a SetNewValuesFromFile()-ból hívják.
+    Teszteld ezt a jelzőt, amikor olyan tageket nyersz ki, amelyeket normál esetben nem nyernénk ki.</td></tr>
+
+<tr><td>TIFF_END</td><td>A szabályos TIFF-fájl végének helye, amelyet a WriteExif() állít be</td></tr>
+
+<tr><td>TIFF_TYPE</td><td>A TIFF adat típusa, csak akkor beállítva, ha a FILE_TYPE TIFF.  Érvényes értékek:
+    APP1, APP3, TIFF, CR2, MRW, JP2, JPX, NEF, PEF, ORF, DNG stb.</td></tr>
+
+<tr><td>Validate</td><td>Jelző extra érvényesítési ellenőrzések elvégzésére</td></tr>
+
+<tr><td>VALUE</td><td>Nyers tagértékek hash-e tagkulcs szerint kulcsolva</td></tr>
+
+<tr><td>WAS_WARNED</td><td>Azon figyelmeztető üzenetek hash-e, amelyeket már egyszer kiadtak</td></tr>
+
+<tr><td>WRITE_GROUPS</td><td>Az írási csoportok listája prioritási sorrendben</td></tr>
+
+<tr><td>WRITE_PRIORITY</td><td>Írási prioritásértékek hash-e csoportnév szerint kulcsolva</td></tr>
+
+<tr><td>WRITTEN</td><td>A kiírt tagek hash-e (jelenleg csak a fájlrendszer dátum/idő tagjeihez használatos)</td></tr>
+
+<tr><td>XMP_CAPTURE</td><td>Tag információk hash-e (érték, attribútum-hash) XMP-tulajdonságútvonal
+    szerint kulcsolva, az XMP modul használja íráskor</td></tr>
+
+<tr><td>XMP_ERROR</td><td>Az XMP modul által íráskor használt hibasztring</td></tr>
+
+<tr><td>XMP_NS</td><td>URI-k hash-e névtér-előtag szerint kulcsolva, az XMP modul használja
+    íráskor az összes használt névtér megjegyzésére</td></tr>
+
+</table></blockquote>
+<hr>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool honlapjára</a></p>
+</body>
+</html>

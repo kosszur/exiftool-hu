@@ -1,0 +1,370 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>A Canon RAW (CRW) fájlformátum</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+table.norm th.lt { background: #eee }
+-->
+</style>
+</head>
+<body>
+<h1 class='up'>A Canon RAW (CRW) fájlformátum</h1>
+
+<p>Ez a Canon CRW fájlformátum leírása. A CRW fájlok Camera Image File Formatban
+(CIFF) íródnak. Az eredeti Canon CIFF-specifikáció letölthető innen:
+<a href="http://xyrion.org/ciff/">http://xyrion.org/ciff/</a> (amit végül csak e
+dokumentum megírása után fedeztem fel!). Vedd figyelembe, hogy a Canonnak három
+különböző RAW-formátuma van, az újabb modellek
+<a href="http://lclevy.free.fr/cr2/">TIFF-alapú CR2</a>-t vagy
+<a href="https://github.com/lclevy/canon_cr3">QuickTime-alapú CR3</a>-at
+állítanak elő az itt dokumentált CIFF-alapú CRW-formátummal szemben.</p>
+
+<h3>Megjegyzések a CRW-formátumról</h3>
+
+<p>A Canon CRW fájlformátummal öröm dolgozni. A szerkezete alapvetően hasonló a
+TIFF-hez, olyan könyvtárakkal, amelyek a fájlon belüli adatokra mutatnak. De a
+TIFF-hez képest jelentős fejlesztés, hogy az eltolások nem abszolútak, hanem az
+egyes könyvtárak adatblokkjának kezdetéhez viszonyítottak. Ez lehetővé teszi,
+hogy egy fájlon belüli alkönyvtárakat áthelyezzünk vagy egy másik fájlba
+másoljunk anélkül, hogy módosítanunk kellene az eltolásokat, ami fantasztikus,
+mert azt jelenti, hogy az újraíró szoftvernek nem kell értenie a teljes
+formátumot ahhoz, hogy sikeresen újra tudja írni a fájlt.</p>
+
+<p>Ráadásul az adat a fájlban a könyvtárak előtt jön, ami az információ írásának
+természetes módja, és minimalizálja az adat puffereléséhez szükséges memória
+mennyiségét (az EXIF-fel ellentétben, amelynél ez jellemzően fordítva van).</p>
+
+<blockquote class='aside'>
+<b>Rövid kirohanás a TIFF hiányosságairól:</b>
+<br>A TIFF-formátum ezzel szemben igazán rossz összehasonlításban (ez a JPEG-et
+is magában foglalja, mivel a JPEG a TIFF-formátumot használja az EXIF-információ
+tárolására). A fő problémák az abszolút eltolások használata és az egészek és
+mutatók (mint az egyedi IFD-khez használtak) közötti kétértelműség. Mivel az
+abszolút eltolásokat módosítani kell, valahányszor bármi elmozdul a fájlban, a
+fájl megfelelő szerkesztéséhez MINDEN benne foglalt adatszerkezet formátumát
+érteni kell. Ez lehetetlen helyzethez vezet, amikor olyan dokumentálatlan egyedi
+szerkezetekkel találkozunk, mint amilyeneket a modern digitális fényképezőgépek
+által írt maker note-ok használnak. Ezért olyan gyakori, hogy a képszerkesztők
+vagy összezavarják a maker note-okat, vagy teljesen eldobják őket. A hivatalos
+TIFF-ajánlás az, hogy az ismeretlen információt egy kép újraírásakor el kell
+dobni (ahogy a Photoshop teszi), de sok ember számára, engem is beleértve, ez az
+opció egyszerűen elfogadhatatlan.
+</blockquote>
+
+<p>A lényeg az, hogy egy Canon CRW fájl újraírása körülbelül 20-szor könnyebb, és
+sokkal kevésbé hibára hajlamos, mint egy TIFF vagy JPEG újraírása.</p>
+
+<h2>A CRW (CIFF) formátum specifikációja</h2>
+<h3>Fájlfejléc</h3>
+<p>Egy Canon CRW fájl a következő bájtsorozattal kezdődik:</p>
+<blockquote>
+<table class='norm'><tr><th>Eltolás</th>
+<th>Bájtok<br>száma</th><th>Érték</th><th>Név</th><th>Leírás</th></tr>
+<tr align='center'><td>0</td><td>2</td><td>"II"</td><td>ByteOrder</td>
+<td align='left'>Az "II" Intel (little-endian) sorrendet jelent, ami az egyetlen
+sorrend, amit láttam, mivel a Canon x86 processzorokat használ a jelenlegi
+fényképezőgépeiben, de feltehetően ez "MM" lehet a jövőbeli modelleknél.
+</td></tr>
+<tr align='center'><td>2</td><td>4</td><td>0x0000001a</td><td>HeaderLength</td>
+<td align='left'>32 bites egész, amely megadja a CRW fájlfejléc hosszát. A
+jelenlegi fényképezőgép-modelleknél a fejléc 26 bájt hosszú.</td></tr>
+<tr align='center'><td>6</td><td>8</td><td>"HEAPCCDR"</td><td>Signature</td>
+<td align='left'>Ez a karaktersorozat azonosítja a fájlt Canon CRW fájlként. A
+szignatúra "HEAPJPGM" a JPEG-képek APP0-jában lévő CIFF-információnál.</td></tr>
+<tr align='center'><td>14</td><td>4</td><td>0x00010002</td><td>CRWVersion</td>
+<td align='left'>32 bites egész, amely megadja a CRW fájl fő (felső 16 bit) és
+al- (alsó 16 bit) verziószámát. A jelenlegi fényképezőgépeknél a verzió 1.2.</td></tr>
+<tr align='center'><td>18</td><td>8</td><td>0</td><td>Reserved</td>
+<td align='left'>Két 32 bites egész, jelenleg nullára állítva.</td></tr>
+</table></blockquote>
+
+<h3>A könyvtárblokk szerkezete</h3>
+<p>A gyökérkönyvtár-blokk közvetlenül a fájlfejléc után kezdődik (a
+<b>HeaderLength</b> által megadott pozíción), és a fájl végén ér véget. Ennek a
+blokknak a szerkezete a következő:</p>
+<blockquote><table class='norm'>
+<tr><th>Eltolás<br>a blokkon belül</th><th>Bájtok<br>száma</th><th>Érték</th>
+<th>Név</th><th>Leírás</th></tr>
+<tr align='center'><td>0</td><td>S</td><td>-<br>-<br>-<br>-<br>-</td><td>ValueData</td>
+<td align='left'>A könyvtárban lévő eltolások által hivatkozott értékadat</td></tr>
+<tr align='center'><td>S</td><td>2</td><td>N</td><td>DirCount</td>
+<td align='left'>16 bites egész, amely megadja a könyvtárbejegyzések számát</td></tr>
+<tr align='center'><td>S + 2</td><td>N * 10</td><td>-<br>-<br>-</td><td>DirEntries</td>
+<td align='left'>A CRW könyvtárbejegyzések</td></tr>
+<tr align='center'><td>S + 2 + N*10</td><td><i>bármennyi</i></td><td>-</td><td>OtherData</td>
+<td align='left'><i>(vedd figyelembe, hogy itt más adat is lapulhat)</i></td></tr>
+<tr align='center'><td>BlockSize - 4</td><td>4</td><td>S</td><td>DirStart</td>
+<td align='left'>32 bites egész, amely megadja a <b>ValueData</b> méretét</td></tr>
+</table></blockquote>
+
+<p>Egy CRW könyvtárblokk értelmezéséhez először olvasd be a blokk végén lévő 4
+bájtot, hogy megkapd a <b>DirCount</b> helyét (S). Ezután olvasd be a
+<b>DirCount</b>-ot, hogy meghatározd a könyvtár bejegyzéseinek számát (N), majd
+olvasd be a könyvtárbejegyzéseket.</p>
+
+<p>A <b>ValueData</b> teljes alkönyvtár-blokkokat tartalmazhat, amelyek
+mindegyikének ugyanaz a formátuma, mint a fent megadott (és ezek az alkönyvtárak
+maguk is tartalmazhatnak al-alkönyvtárakat…). Ezeknél az alkönyvtáraknál a
+<b>BlockSize</b>-t a megfelelő könyvtárbejegyzésben megadott <b>Size</b> adja
+meg. A gyökérkönyvtárnál a <b>BlockSize</b> a fájl hossza.</p>
+
+<p>Az <b>OtherData</b> normál esetben nem létezik (pl. a <b>DirEntries</b>
+általában a <b>DirStart</b> mutatónál ér véget), de ez nem mindig így van: a
+Canon Digital Photo Professional a gyökérkönyvtár-blokk ezen területét használja
+<a href="TagNames/CanonVRD.html">VRD-adat</a> tárolására a szerkesztett
+CRW-képekben. (Vedd figyelembe, hogy a VRD támogatja a beágyazott XMP-t, ami
+technikát biztosít a modern metaadatok CRW-képekben való tárolására!)</p>
+
+<h3>A CRW könyvtárbejegyzés formátuma</h3>
+<p>A CRW könyvtár N darab 10 bájtos bejegyzésből áll. Az egyes bejegyzések
+formátuma a következő:</p>
+<blockquote><table class='norm'>
+<tr><th>Eltolás<br>a bejegyzésen belül</th><th>Bájtok<br>száma</th>
+<th>Név</th><th>Leírás</th></tr>
+<tr align='center'><td>0</td><td>2</td><td>Tag</td>
+<td align='left'>16 bites egész, amely az adat típusát azonosítja</td></tr>
+<tr align='center'><td>2</td><td>4</td><td>Size</td>
+<td align='left'>32 bites egész, amely megadja az értékadatban lévő bájtok számát</td></tr>
+<tr align='center'><td>6</td><td>4</td><td>Offset</td>
+<td align='left'>32 bites egész eltolás, amely megadja a bájtok számát a
+    <b>ValueData</b> blokk kezdetétől ezen könyvtárbejegyzés értékadatának kezdetéig</td></tr>
+</table></blockquote>
+
+<p>A 8 bájtnál rövidebb hosszúságú adatértékek tárolhatók a könyvtár
+<b>Size</b> és <b>Offset</b> mezőiben. Ezeknél az értékeknél a <b>Tag</b>-ben
+lévő <b>DataLocation</b> bitek 0x4000-re vannak állítva (lásd a lenti
+<b>DataLocation</b> táblát).</p>
+
+<p>A <b>ValueData</b> blokkban tárolt adatnak páros 2 bájtos határokra kell
+igazodnia, ami 2-vel osztható <b>Offset</b>-eket eredményez. Ennek eléréséhez a
+páratlan bájtszámú rekordokat egy nulla bájttal kell kitölteni.</p>
+
+<h3>Tag-bitek</h3>
+<p>A 16 bites <b>Tag</b> érték 3 bitmezőből áll a következők szerint:</p>
+<blockquote><table class='norm'>
+<tr><th>Bitek</th><th>Maszk</th><th>Név</th><th>Leírás</th></tr>
+<tr align='center'><td>14-15</td><td>0xc000</td><td>DataLocation</td>
+    <td align='left'>Megadja az adat helyét</td></tr>
+<tr align='center'><td>11-13</td><td>0x3800</td><td>DataFormat</td>
+    <td align='left'>Azonosítja az információ formátumát</td></tr>
+<tr align='center'><td>0-10</td><td>0x07ff</td><td>TagIndex</td>
+    <td align='left'>Index az információ konkrét típusának azonosítására</td></tr>
+</table></blockquote>
+
+<h4>DataLocation</h4>
+<p>Az értékadat tárolható vagy a <b>ValueData</b> blokkban, vagy a
+könyvtárbejegyzés <b>Size</b> és <b>Offset</b> mezőiben, ha 8 bájtnál rövidebb.
+A <b>DataLocation</b> bitek megadják, hol tárolódik az érték:</p>
+<blockquote><table class='norm'>
+<tr><th>DataLocation</th><th>Hol</th><th>Leírás</th></tr>
+<tr align='center'><td>0x0000</td><td>ValueData</td>
+    <td align='left'>Az értékek a <b>ValueData</b> blokkban tárolódnak, a megadott <b>Offset</b>
+    és <b>Size</b> szerint</td></tr>
+<tr align='center'><td>0x4000</td><td>Directory</td>
+    <td align='left'>Az értékek a könyvtárbejegyzés <b>Size</b> és <b>Offset</b>
+    mezőiben tárolódnak. Az itt tárolt értékek legfeljebb 8 bájt méretűek lehetnek.</td></tr>
+<tr align='center'><td>0x8000<br>0xc000</td><td>?</td><td align='left'>-</td></tr>
+</table></blockquote>
+
+<h4>DataFormat</h4>
+<p>Három <b>Tag</b>-bit szolgál az adatformátum megadására:</p>
+<blockquote><table class='norm'>
+<tr><th>DataFormat</th><th>Igazítás</th><th>Leírás</th></tr>
+<tr align='center'><td>0x0000</td><td>1 bájt</td>
+    <td align='left'>Bájtok sorozata</td></tr>
+<tr align='center'><td>0x0800</td><td>1 bájt</td>
+    <td align='left'>Null-terminált ASCII-sztring</td></tr>
+<tr align='center'><td>0x1000</td><td>2 bájt</td>
+    <td align='left'>16 bites egészek sorozata</td></tr>
+<tr align='center'><td>0x1800</td><td>4 bájt</td>
+    <td align='left'>32 bites egészek vagy lebegőpontos számok sorozata</td></tr>
+<tr align='center'><td>0x2000</td><td>1 bájt</td>
+    <td align='left'>Formátumok keverékéből álló struktúra</td></tr>
+<tr align='center'><td>0x2800<br>0x3000</td><td>1 bájt</td>
+    <td align='left'>Alkönyvtár-blokk</td></tr>
+<tr align='center'><td>0x3800</td><td>?</td>
+    <td align='left'>-</td></tr>
+</table></blockquote>
+
+<h4>TagID = DataFormat + TagIndex</h4>
+<p>A <b>DataFormat</b> és a <b>TagIndex</b> mező együtt egy <b>TagID</b>-t alkot,
+amely a CRW fájlon belüli tagek azonosítására használható. A következő az ismert
+<b>TagID</b> értékek listája, valamint a hozzájuk tartozó tag-számok az
+<b>EXIF</b> maker note-okban, amikor egy JPEG- vagy TIFF-képben találhatók.
+Szintén fel van sorolva annak a <b>SubDir</b>ectorynak a TagID-je, ahol az
+információ található. A lent felsorolt <b>Size</b> az értékadat megfigyelt
+mérete, és nem feltétlenül várható, hogy minden fényképezőgép-modellnél állandó
+marad.</p>
+
+<blockquote><table class='norm'>
+<tr><th>TagID</th><th>EXIF</th><th>SubDir</th><th>Név</th><th>Size</th><th>Leírás</th></tr>
+<tr><th class='lt' colspan=6>1 bájtos igazítás</th></tr>
+<tr align='center'><td>0x0000</td><td>-</td><td><i>bármely</i></td><td>NullRecord</td><td>0</td>
+    <td align='left'>Ez egy null könyvtárbejegyzés</td></tr>
+<tr align='center'><td>0x0001</td><td>-</td><td><i>bármely</i></td><td>FreeBytes</td><td><i>változó</i></td>
+    <td align='left'>Kihasználatlan bájtok a <b>ValueData</b>-ban</td></tr>
+<tr align='center'><td>0x0006</td><td>-</td><td>0x300b</td><td>-</td><td>8</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x0032</td><td>-</td><td>0x300b</td><td>CanonColorInfo1</td><td>768 vagy 2048</td>
+    <td align='left'>Színinformáció-blokk (formátum ismeretlen)</td></tr>
+<tr align='center'><td>0x0036</td><td>-</td><td>0x300b</td><td>?</td><td><i>változó</i></td><td align='left'>-</td></tr>
+<tr align='center'><td>0x003f</td><td>-</td><td>0x300b</td><td>?</td><td>5120</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x0040</td><td>-</td><td>0x300b</td><td>?</td><td>256</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x0041</td><td>-</td><td>0x300b</td><td>?</td><td>256</td><td align='left'>-</td></tr>
+<tr><th class='lt' colspan=6>ASCII-sztringek</th></tr>
+<tr align='center'><td>0x0805</td><td>-</td><td>0x2804</td><td>CanonFileDescription</td><td>32</td>
+    <td align='left'>A fájlformátum leírása.
+    pl.) "EOS DIGITAL REBEL CMOS RAW"</td></tr>
+<tr align='center'><td>0x0805</td><td>-</td><td>0x300a</td><td>UserComment</td><td>256</td>
+    <td align='left'>Felhasználói megjegyzés (általában üres)</td></tr>
+<tr align='center'><td>0x080a</td><td>-</td><td>0x2807</td><td>CanonRawMakeModel</td><td>32</td>
+    <td align='left'>Két egymás után írt, null-terminált ASCII-sztring, amely megadja a fényképezőgép gyártóját és modelljét.
+    pl.) "Canon","Canon EOS DIGITAL REBEL"</td></tr>
+<tr align='center'><td>0x080b</td><td>0x07</td><td>0x3004</td><td>CanonFirmwareVersion</td><td>32</td>
+    <td align='left'>Firmware-verzió. pl.) "Firmware Version 1.1.1"</td></tr>
+<tr align='center'><td>0x080c</td><td>-</td><td>?</td><td>ComponentVersion</td><td>?</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x080d</td><td>-</td><td>0x3004</td><td>ROMOperationMode</td><td>4</td>
+    <td align='left'>pl.) az "USA" sztring az Észak-Amerikában eladott 300D-knél</td></tr>
+<tr align='center'><td>0x0810</td><td>0x09</td><td>0x2807</td><td>OwnerName</td><td>32</td>
+    <td align='left'>A tulajdonos neve. pl.) "Phil Harvey"</td></tr>
+<tr align='center'><td>0x0815</td><td>0x06</td><td>0x2804</td><td>CanonImageType</td><td>32</td>
+    <td align='left'>A fájl típusa. pl.) "CRW:EOS DIGITAL REBEL CMOS RAW"</td></tr>
+<tr align='center'><td>0x0816</td><td>-</td><td>0x300a</td><td>OriginalFileName</td><td>32</td>
+    <td align='left'>Eredeti fájlnév. pl.) "CRW_1834.CRW"</td></tr>
+<tr align='center'><td>0x0817</td><td>-</td><td>0x300a</td><td>ThumbnailFileName</td><td>32</td>
+    <td align='left'>Bélyegkép-fájlnév. pl.) "CRW_1834.THM"</td></tr>
+<tr><th class='lt' colspan=6>2 bájtos igazítás</th></tr>
+<tr align='center'><td>0x100a</td><td>-</td><td>0x300a</td><td>TargetImageType</td><td>2</td>
+    <td align='left'>0=valós világbeli téma, 1=írott dokumentum</td></tr>
+<tr align='center'><td>0x1010</td><td>-</td><td>0x3002</td><td>ShutterReleaseMethod</td><td>2</td>
+    <td align='left'>0=egyszeri felvétel, 1=sorozatfelvétel</td></tr>
+<tr align='center'><td>0x1011</td><td>-</td><td>0x3002</td><td>ShutterReleaseTiming</td><td>2</td>
+    <td align='left'>0=zárkioldás elsőbbsége, 1=fókusz elsőbbsége</td></tr>
+<tr align='center'><td>0x1014</td><td>-</td><td>0x3002</td><td>-</td><td>8</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x1016</td><td>-</td><td>0x3002</td><td>ReleaseSetting</td><td>2</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x101c</td><td>-</td><td>0x3004</td><td>BaseISO</td><td>2</td>
+    <td align='left'>A fényképezőgép-váz alap-ISO-érzékenysége</td></tr>
+<tr align='center'><td>0x1026</td><td>-</td><td>0x300a</td><td>-</td><td>6</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x1028</td><td>0x03</td><td>0x300b</td><td>CanonFlashInfo?</td><td>8</td><td align='left'>Ismeretlen információ, vakuval kapcsolatos</td></tr>
+<tr align='center'><td>0x1029</td><td>0x02</td><td>0x300b</td><td>FocalLength</td><td>8</td>
+    <td align='left'>Négy 16 bites egész: 0) ismeretlen, 1) fókusztávolság mm-ben, 2-3) szenzor
+    szélessége és magassága 1/1000 hüvelyk egységekben</td></tr>
+<tr align='center'><td>0x102a</td><td>0x04</td><td>0x300b</td><td>CanonShotInfo</td><td><i>változó</i></td>
+    <td align='left'>Adatblokk, amely <a href="TagNames/Canon.html#ShotInfo">felvételinformációt</a> ad meg</td></tr>
+<tr align='center'><td>0x102c</td><td>-</td><td>0x300b</td><td>CanonColorInfo2</td><td>256</td>
+    <td align='left'>Színinformáció-adatblokk (formátum ismeretlen)</td></tr>
+<tr align='center'><td>0x102d</td><td>0x01</td><td>0x300b</td><td>CanonCameraSettings</td><td><i>változó</i></td>
+    <td align='left'>Adatblokk, amely <a href="TagNames/Canon.html#CameraSettings">fényképezőgép-beállításokat</a> ad meg</td></tr>
+<tr align='center'><td>0x1030</td><td>-</td><td>0x300b</td><td>WhiteSample</td><td>102 vagy 118</td>
+    <td align='left'><a href="TagNames/CanonRaw.html#WhiteSample">Fehérminta-információ</a> titkosított 8x8-as mintaadattal</td></tr>
+<tr align='center'><td>0x1031</td><td>-</td><td>0x300b</td><td>SensorInfo</td><td>34</td>
+    <td align='left'><a href="TagNames/Canon.html#SensorInfo">Szenzorméret- és felbontásinformáció</a></td></tr>
+<tr align='center'><td>0x1033</td><td>0x0f</td><td>0x300b</td><td>CanonCustomFunctions</td><td><i>változó</i></td>
+    <td align='left'>Adatblokk, amely <a href="TagNames/CanonCustom.html#Functions10D">Canon egyéni beállításokat</a> ad meg</td></tr>
+<tr align='center'><td>0x1038</td><td>0x12</td><td>0x300b</td><td>CanonAFInfo</td><td><i>változó</i></td>
+    <td align='left'>Adatblokk, amely <a href="TagNames/Canon.html#AFInfo">AF-specifikus információt</a> ad meg</td></tr>
+<tr align='center'><td>0x1039</td><td>0x13</td><td>0x300b</td><td>?</td><td>8</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x103c</td><td>-</td><td>0x300b</td><td>?</td><td>156</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x107f</td><td>-</td><td>0x300b</td><td>-</td><td><i>változó</i></td><td align='left'>-</td></tr>
+<tr align='center'><td>0x1093</td><td>0x93</td><td>0x300b</td><td>CanonFileInfo</td><td>18</td>
+    <td align='left'>Adatblokk, amely <a href="TagNames/Canon.html#FileInfo">fájlspecifikus információt</a> ad meg</td></tr>
+<tr align='center'><td>0x10a8</td><td>0xa8</td><td>0x300b</td><td>?</td><td>20</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x10a9</td><td>0xa9</td><td>0x300b</td><td>ColorBalance</td><td>82</td>
+    <td align='left'>16 bites egészek táblája. Az első egész (mint sok más adatblokknál) a
+    rekordban lévő bájtok száma. Ezt követik a vörös, zöld1, zöld2 és kék
+    szintek a WhiteBalance beállításokhoz: auto, nappali fény, árnyék, felhős, izzólámpa,
+    fénycső, vaku, egyéni és kelvin. Az utolsó 4 bejegyzés valamiféle
+    kiindulási vörös, zöld1, zöld2 és kék szintnek tűnik.</td></tr>
+<tr align='center'><td>0x10aa</td><td>0xaa</td><td>0x300b</td><td>?</td><td>10</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x10ad</td><td>-</td><td>0x300b</td><td>?</td><td>62</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x10ae</td><td>0xae</td><td>0x300b</td><td>ColorTemperature</td><td>2</td>
+    <td align='left'>16 bites egész, amely megadja a színhőmérsékletet</td></tr>
+<tr align='center'><td>0x10af</td><td>-</td><td>0x300b</td><td>?</td><td>2</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x10b4</td><td>0xb4</td><td>0x300b</td><td>ColorSpace</td><td>2</td>
+    <td align='left'>16 bites egész, amely megadja a színteret
+    (1=sRGB, 2=Adobe RGB, 0xffff=kalibrálatlan)</td></tr>
+<tr align='center'><td>0x10b5</td><td>0xb5</td><td>0x300b</td><td>RawJpgInfo</td><td>10</td>
+    <td align='left'>Adatblokk, amely <a href="TagNames/CanonRaw.html#RawJpgInfo">beágyazott JPG-információt</a> ad meg</td></tr>
+<tr align='center'><td>0x10c0</td><td>0xc0</td><td>0x300b</td><td>?</td><td>26</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x10c1</td><td>0xc1</td><td>0x300b</td><td>?</td><td>26</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x10c2</td><td>-</td><td>0x300b</td><td>?</td><td>884</td><td align='left'>-</td></tr>
+<tr><th class='lt' colspan=6>4 bájtos igazítás</th></tr>
+<tr align='center'><td>0x1803</td><td>-</td><td>0x300a</td><td>ImageFormat</td><td>8</td>
+    <td align='left'>32 bites egész, amely megadja a képformátumot (0x20001 a CRW-nél), majd
+    egy 32 bites lebegőpontos szám, amely megadja a cél-tömörítési arányt</td></tr>
+<tr align='center'><td>0x1804</td><td>-</td><td>0x300a</td><td>RecordID</td><td>4</td>
+    <td align='left'>A fényképezőgép gyártása óta készített képek száma</td></tr>
+<tr align='center'><td>0x1805</td><td>-</td><td>0x3002</td><td>-</td><td>8</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x1806</td><td>-</td><td>0x3002</td><td>SelfTimerTime</td><td>4</td>
+    <td align='left'>32 bites egész, amely megadja az önkioldó idejét ezredmásodpercben</td></tr>
+<tr align='center'><td>0x1807</td><td>-</td><td>0x3002</td><td>TargetDistanceSetting</td><td>4</td>
+    <td align='left'>32 bites lebegőpontos szám, amely megadja a céltávolságot mm-ben</td></tr>
+<tr align='center'><td>0x180b</td><td>0x0c</td><td>0x3004</td><td>SerialNumber</td><td>4</td>
+    <td align='left'>A fényképezőgép-váz száma az EOS-modelleknél. pl.) 00560012345</td></tr>
+<tr align='center'><td>0x180e</td><td>-</td><td>0x300a</td><td>TimeStamp</td><td>12</td>
+    <td align='left'>32 bites egész, amely megadja a képkészítés időpontját másodpercben,
+    majd egy 32 bites időzóna másodpercben</td></tr>
+<tr align='center'><td>0x1810</td><td>-</td><td>0x300a</td><td>ImageInfo</td><td>28</td>
+    <td align='left'>Adatblokk, amely <a href="TagNames/CanonRaw.html#ImageInfo">képinformációt tartalmaz, a forgatást is beleértve</a></td></tr>
+<tr align='center'><td>0x1812</td><td>-</td><td>0x3004</td><td>-</td><td>40</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x1813</td><td>-</td><td>0x3002</td><td>FlashInfo</td><td>8</td>
+    <td align='left'>Két 32 bites lebegőpontos szám: a vaku kulcsszáma és a vaku küszöbértéke</td></tr>
+<tr align='center'><td>0x1814</td><td>-</td><td>0x3003</td><td>MeasuredEV</td><td>4</td>
+    <td align='left'>32 bites lebegőpontos szám, amely megadja a mért EV-t</td></tr>
+<tr align='center'><td>0x1817</td><td>0x08</td><td>0x300a</td><td>FileNumber</td><td>4</td>
+    <td align='left'>32 bites egész, amely megadja ennek a fájlnak a számát. pl.) 1181834</td></tr>
+<tr align='center'><td>0x1818</td><td>-</td><td>0x3002</td><td>ExposureInfo</td><td>12</td>
+    <td align='left'>Három 32 bites lebegőpontos szám: expozíciókorrekció, Tv, Av</td></tr>
+<tr align='center'><td>0x1819</td><td>-</td><td>0x300b</td><td>-</td><td>64</td><td align='left'>-</td></tr>
+<tr align='center'><td>0x1834</td><td>0x10</td><td>0x300b</td><td>CanonModelID</td><td>4</td>
+    <td align='left'>Előjel nélküli 32 bites egész, amely egyedi modell-ID-t ad meg</td></tr>
+<tr align='center'><td>0x1835</td><td>-</td><td>0x300b</td><td>DecoderTable</td><td>16</td>
+    <td align='left'><a href="TagNames/CanonRaw.html#DecoderTable">RAW dekódolótábla-információ</a></td></tr>
+<tr align='center'><td>0x183b</td><td>0x15</td><td>0x300b</td><td>SerialNumberFormat</td><td>4</td>
+    <td align='left'>32 bites egész (0x90000000=1. formátum, 0xa0000000=2. formátum)</td></tr>
+<tr><th class='lt' colspan=6>Vegyes adatrekordok</th></tr>
+<tr align='center'><td>0x2005</td><td>-</td><td><i>gyökér</i></td><td>RawData</td><td><i>változó</i></td>
+    <td align='left'>Maga a raw adat (a CRW fájl zöme)</td></tr>
+<tr align='center'><td>0x2007</td><td>-</td><td><i>gyökér</i></td><td>JpgFromRaw</td><td><i>változó</i></td>
+    <td align='left'>A beágyazott JPEG-kép (2048x1360 pixel a 300D-nél Canon firmware-rel)</td></tr>
+<tr align='center'><td>0x2008</td><td>-</td><td><i>gyökér</i></td><td>ThumbnailImage</td><td><i>változó</i></td>
+    <td align='left'>Bélyegkép (JPEG, 160x120 pixel)</td></tr>
+<tr><th class='lt' colspan=6>Alkönyvtár-blokkok</th></tr>
+<tr align='center'><td>0x2804</td><td>-</td><td>0x300a</td><td>ImageDescription</td><td><i>változó</i></td>
+    <td align='left'>A képleírás-alkönyvtár</td></tr>
+<tr align='center'><td>0x2807</td><td>-</td><td>0x300a</td><td>CameraObject</td><td><i>változó</i></td>
+    <td align='left'>A fényképezőgép-objektum alkönyvtár</td></tr>
+<tr align='center'><td>0x3002</td><td>-</td><td>0x300a</td><td>ShootingRecord</td><td><i>változó</i></td>
+    <td align='left'>A felvételi rekord alkönyvtár</td></tr>
+<tr align='center'><td>0x3003</td><td>-</td><td>0x300a</td><td>MeasuredInfo</td><td><i>változó</i></td>
+    <td align='left'>A mért információ alkönyvtár</td></tr>
+<tr align='center'><td>0x3004</td><td>-</td><td>0x2807</td><td>CameraSpecification</td><td><i>változó</i></td>
+    <td align='left'>A fényképezőgép-specifikáció alkönyvtár</td></tr>
+<tr align='center'><td>0x300a</td><td>-</td><td><i>gyökér</i></td><td>ImageProps</td><td><i>változó</i></td>
+    <td align='left'>A fő alkönyvtár, amely az összes metainformációt tartalmazza</td></tr>
+<tr align='center'><td>0x300b</td><td>-</td><td>0x300a</td><td>ExifInformation</td><td><i>változó</i></td>
+    <td align='left'>Az alkönyvtár, amely a JPEG/TIFF EXIF-információ nagy részét tartalmazza</td></tr>
+</table></blockquote>
+
+<h3>Változások</h3>
+<p>2018. márc. 21. - Hozzáadva a CR3 fájlformátum említése</p>
+<p>2010. szept. 20. - Hozzáadva megjegyzés a VRD-adatban lévő XMP-támogatásról</p>
+<p>2009. febr. 12. - Áthelyezve néhány bejegyzés a TagID-táblában, amelyek rossz
+szakaszban voltak</p>
+<p>2008. febr. 4. - Hozzáadva néhány ismeretlen TagID, dekódolva néhány tag a
+WhiteSample és DecoderTable adatblokkokban, és javítva a hibás SubDir a
+SerialNumber taghez</p>
+<p>2007. nov. 16. - Hozzáadva néhány ismeretlen blokk</p>
+<p>2007. szept. 12. - A CanonPictureInfo rekord nevének megváltoztatása CanonAFInfo-ra</p>
+<p>2006. nov. 28. - Kiemelve az <b>OtherData</b> létezésének lehetősége a
+könyvtárblokkban</p>
+<hr>
+Kérjük, írj e-mailt az exiftool@gmail.com címre, ha bármilyen hibát vagy
+hiányosságot találsz ebben a dokumentumban - Köszönjük!
+<p class='lf'><i>Létrehozva: 2005. január 28.</i>
+<br><i>Utoljára módosítva: 2018. március 21.</i></p>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool kezdőlapjára</a></p>
+</body>
+</html>

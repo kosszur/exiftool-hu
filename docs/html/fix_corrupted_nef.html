@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html>
+<head>
+  <title>Sérült Nikon NEF képek javítása</title>
+<link rel=stylesheet type='text/css' href='style.css' title='Style'>
+<style type="text/css">
+<!--
+pre      { color: #800; margin-left: 2em }
+ol.index { margin: 0; padding: 0 0 0 2em }
+li.spc   { padding: 1em 0 0 0 }
+.warn    { padding: 0.5em; border: 1px solid gray; background: #fee }
+-->
+</style>
+</head>
+<body>
+<div class='index'>
+<ol class='index'>
+<li><a href="#win">Windows</a></li>
+<li><a href="#mac">Mac / Linux</a></li>
+</ol>
+</div>
+
+<h1 class='up'>Sérült Nikon NEF képek javítása</h1>
+
+<p>Ha az újabb Nikon fényképezőgépekről a <b>Nikon Transfer 1</b>-gyel vagy a
+<b>ViewNX 2</b> régebbi verzióival (és valószínűleg a Capture NX 2-vel) töltesz
+le NEF képeket, az <b>sérült NEF</b> képeket eredményezhet, amelyek többé nem
+nyithatók meg.</p>
+
+<p>Ez a segédeszköz <b>megjavítja ezeket a sérült NEF képeket</b> a D4, Df,
+D600, D610, D750, D800, D800E, D810, D850, D3200, D5200, D5300, D5500, D7100,
+D7200, D7500 és Z50 esetében.</p>
+
+<p><b><u>NEM JAVÍTJA</u></b> a <b>memóriakártya-problémák</b>, <b>lemezhibák</b>
+vagy <b>más szoftver</b> által megsérült képeket.
+<i class=lt>[A <b>Nikon NX-D</b>-ről is ismert, hogy megsérti a képeket (esetleg
+a fájl bájtsorrendjének megváltoztatásával kapcsolatban!), de ezeket a
+problémákat <b>ez a segédeszköz <u>nem</u> javítja</b>.]</i></p>
+
+<blockquote class=warn><b class=red>Figyelmeztetés!</b> Ha a sérült képeket
+bármilyen más szoftverrel módosítod, mielőtt ezzel a segédeszközzel megjavítanád
+őket, akkor a raw képadat véglegesen elveszhet! (Ez például akkor fordulhat elő,
+ha a View NX2-t használod a képek geotaggelésére a letöltés után.)</blockquote>
+
+<p>Kövesd az alábbi utasításokat ennek a segédeszköznek a futtatásához
+<a href="#win">Windows</a> vagy <a href="#mac">Mac / Linux</a> rendszereken.</p>
+
+<p><a href="https://exiftool.org/forum/index.php/topic,4220.msg20951.html#new">Nézd meg ezt a
+szálat az ExifTool fórumon</a>, ha bármilyen kérdésed vagy megjegyzésed van.</p>
+
+<p><i class=lt>[Vedd figyelembe, hogy a Nikon nem tanul a hibáiból, és egy hasonló probléma
+2 évvel korábban is előfordult a Nikon Transfer egy régebbi verziójával és a D5000-rel
+(<a href="http://geekswithblogs.net/felipe/archive/2010/07/12/140879.aspx">olvasd el itt</a>),
+és az új Nikon NX-D szoftvernek is vannak más sérülési problémái. A tanulság:
+Ne használd a Nikon Transfert <b>vagy bármely más segédeszközt, amely módosítja a
+fájlt</b> a féltett képeid letöltéséhez!]</i></p>
+
+<p>Nagyon szomorú, hogy ez a Nikon szoftverhiba csak a hűséges Nikon-tulajdonosokat
+bünteti (mivel csak azokat érinti, akiknek volt egy régebbi Nikon-szoftverpéldányuk
+egy korábbi fényképezőgépről), a Nikon ügyfélszolgálata mégsem nyújt más segítséget,
+mint azt javasolni, hogy vedd fel a kapcsolatot a memóriakártya gyártójával, hogy
+megnézd, helyreállíthatók-e az eredeti képek.</p>
+
+<hr><a name="win"></a><h2>Windows-felhasználók</h2>
+
+<ol><li><b>Töltsd le és nyisd meg</b> a(z) "<a href="https://exiftool.org/fix_corrupted_nef_win.zip">fix_corrupted_nef_win.zip</a>"-et, majd helyezd a
+   "fix_corrupted_nef.exe" alkalmazást a merevlemezedre.</li>
+
+<li class=spc><b>Húzd a sérült NEF fájlokat</b> és/vagy mappákat a
+   "fix_corrupted_nef.exe" alkalmazásra.</li>
+
+<li class=spc>Egy parancsablaknak kell megnyílnia, és a következő üzenettel kell rákérdeznie:<br><br>
+
+   "Bit depth of compressed images (12 or 14) [14]?"<br><br>
+
+   <b>Írd be vagy a "12"-t, vagy a "14"-et, majd nyomj RETURN-t</b>. Ha nem tudod a
+   tömörített NEF képeid bitmélységét, vagy ha vegyesen vannak 12 és
+   14 bites tömörített képeid, vagy ha csak tömörítetlen NEF képeid
+   vannak, egyszerűen írd be a "14"-et (vagy csak nyomj RETURN-t). Ha ez
+   hibás néhány képnél, nem fogod tudni megnyitni a javított képeket
+   (de ezeket törölheted, és később a másik bitmélységgel
+   újragenerálhatod). Vedd figyelembe, hogy ezt a számot figyelmen kívül hagyja
+   azoknál a modelleknél, ahol a tömörített NEF bitmélysége nem változtatható.</li>
+
+<li class=spc>Az alkalmazásnak most le kell futnia, és létre kell hoznia egy <b>"fixed" mappát</b>
+   minden eredeti NEF kép mellett. Ez a mappa tartalmazza a javított
+   NEF képeket az eredetiekkel azonos névvel.</li>
+
+<li class=spc><b>Ellenőrizd, hogy meg tudod-e nyitni a javított NEF képeket</b>. Ha egyik
+   képet sem tudod megnyitni, töröld őket, és menj vissza a 2. lépéshez, de ezúttal
+   válaszd a másik bitmélységet a 3. lépésben. (Csak az általad törölt képek
+   generálódnak újra, a többihez nem nyúl a program.)</li>
+</ol>
+
+<p>Egy kis szerencsével a Nikon szoftver által okozott zűrzavar most javítva van,
+és az összes <b>NEF képed helyreállt!</b></p>
+
+<p>Ha annyira boldognak érzed magad, hogy feltétlenül küldened kell nekem egy
+adományt, ezt megteheted az <a href="https://exiftool.org/index.html#donate">ExifTool kezdőlapjáról</a>.</p>
+
+<p> &nbsp; &nbsp; - Phil Harvey</p>
+
+<hr><a name="mac"></a><h2>Mac / Linux felhasználók</h2>
+
+<ol>
+<li><b>Töltsd le és bontsd ki</b> a(z) "<a href="https://exiftool.org/fix_corrupted_nef.zip">fix_corrupted_nef.zip</a>"-et egy könyvtárba a
+merevlemezeden.</li>
+
+<li class=spc><b>Nyiss egy Terminal ablakot</b>.
+   (Macen indítsd el a /Applications/Utilities/Terminal-t)</li>
+
+<li class=spc><b>Húzd a "fix_corrupted_nef.pl"-t</b> a Terminal ablakra.
+   (Megjegyzés: A disztribúcióban lévő "lib" mappának ugyanabban a mappában
+   kell lennie, mint a "fix_corrupted_nef.pl" alkalmazásnak. Ha áthelyezted a
+   "fix_corrupted_nef.pl"-t egy másik mappába, akkor a "lib" mappáját is
+   ugyanoda kell helyezned a futtatás előtt.)</li>
+
+<li class=spc><b>Húzd a sérült NEF fájlokat</b> és/vagy mappákat a
+   Terminal ablakra.</li>
+
+<li class=spc>Válaszd ki a Terminal ablakot, majd <b>nyomj RETURN-t</b> a billentyűzeten.</li>
+
+<li class=spc>A következő kérdést kell látnod:<br><br>
+
+   "Bit depth of compressed images (12 or 14) [14]?"<br><br>
+
+   <b>Írd be vagy a "12"-t, vagy a "14"-et, majd nyomj RETURN-t</b>. Ha nem tudod a
+   tömörített NEF képeid bitmélységét, vagy ha vegyesen vannak 12 és
+   14 bites tömörített képeid, vagy ha csak tömörítetlen NEF képeid
+   vannak, egyszerűen írd be a "14"-et (vagy csak nyomj RETURN-t). Ha ez
+   hibás néhány képnél, nem fogod tudni megnyitni a javított képeket
+   (de ezeket törölheted, és később a másik bitmélységgel
+   újragenerálhatod). Vedd figyelembe, hogy ezt a számot figyelmen kívül hagyja
+   azoknál a modelleknél, ahol a tömörített NEF bitmélysége nem változtatható.</li>
+
+<li class=spc>A "fix_corrupted_nef.pl" alkalmazásnak most le kell futnia, és létre kell hoznia egy
+   <b>"fixed" mappát</b> minden eredeti NEF kép mellett. Ez a mappa
+   tartalmazza a javított NEF képeket az eredetiekkel azonos névvel.</li>
+
+<li class=spc><b>Ellenőrizd, hogy meg tudod-e nyitni a javított NEF képeket</b>. Ha egyik
+   képet sem tudod megnyitni, töröld őket, és menj vissza a 3. lépéshez, de ezúttal
+   válaszd a másik bitmélységet a 6. lépésben. (Csak az általad törölt képek
+   generálódnak újra, a többihez nem nyúl a program.)</li>
+</ol>
+
+<p>Egy kis szerencsével a Nikon szoftver által okozott zűrzavar most javítva van,
+és az összes <b>NEF képed helyreállt!</b></p>
+
+<p>Ha annyira boldognak érzed magad, hogy feltétlenül küldened kell nekem egy
+adományt, ezt megteheted az <a href="https://exiftool.org/index.html#donate">ExifTool kezdőlapjáról</a>.</p>
+
+<p> &nbsp; &nbsp; - Phil Harvey</p>
+
+<hr><h3>Változások</h3>
+<p><b>2020-01-27 - 3.3-as verzió</b> - Hozzáadva a Z50 képek támogatása</p>
+<p><b>2019-01-09 - 3.2-es verzió</b> - Hozzáadva a D7500 képek támogatása</p>
+<p><b>2017-11-03 - 3.1-es verzió</b> - Hozzáadva a D850 képek támogatása</p>
+<p><b>2016-09-14 - 3.0-s verzió</b> - Hozzáadva a D5300 képek támogatása</p>
+<p><b>2016-08-04 - 2.9-es verzió</b> - Hozzáadva a D500 DX és 1.3x képek támogatása</p>
+<p><b>2015-09-25 - 2.8-as verzió</b> - Hozzáadva a D7200 képek támogatása</p>
+<p><b>2015-08-31 - 2.7-es verzió</b> - Hozzáadva a D5500 képek támogatása</p>
+<p><b>2015-08-13 - 2.6-os verzió</b> - Hozzáadva a többi D810 képméret támogatása</p>
+<p><b>2015-08-11 - 2.5-ös verzió</b> - Hozzáadva a D810 FX és DX képek támogatása</p>
+<p><b>2014-11-15 - 2.4-es verzió</b> - Hozzáadva a D750 FX, DX és 1.2x képek támogatása
+                                     és javítva a sérült képek felismerése</p>
+<p><b>2014-10-19 - 2.3-as verzió</b> - Hozzáadva a D4 1.2x és 5:4 kivágások támogatása</p>
+<p><b>2014-10-10 - 2.2-es verzió</b> - Hozzáadva a D4 DX képek támogatása</p>
+<p><b>2014-09-02 - 2.1-es verzió</b> - Hozzáadva a Df FX és DX képek támogatása</p>
+<p><b>2014-05-17 - 2.0-s verzió</b> - Hozzáadva a D610 képek támogatása</p>
+<p><b>2013-08-01 - 1.9-es verzió</b> - Hozzáadva a D600 videóra kivágott képek támogatása</p>
+<p><b>2013-06-17 - 1.8-as verzió</b> - Hozzáadva a D7100 1.3x kivágott képek támogatása</p>
+<p><b>2013-06-12 - 1.7-es verzió</b> - Hozzáadva a D5200 képek támogatása</p>
+<p><b>2013-05-16 - 1.6-os verzió</b> - Hozzáadva a D7100 képek és a D800 5:4 kivágott képek támogatása</p>
+<p><b>2013-03-26 - 1.5-ös verzió</b> - Hozzáadva a D600 DX képek támogatása</p>
+<p><b>2013-01-15 - 1.4-es verzió</b> - Hozzáadva a D3200 képek támogatása</p>
+<p><b>2013-01-07 - 1.3-as verzió</b> - Hozzáadva a D800 DX képek támogatása</p>
+<p><b>2012-11-03 - 1.2-es verzió</b> - Hozzáadva a D600 FX képek támogatása</p>
+<p><b>2012-09-26 - 1.1-es verzió</b> - Hozzáadva a D4 FX képek támogatása</p>
+<p><b>2012-09-08 - 1.0-s verzió</b> - Első kiadás (a D800 FX képeket javítja)</p>
+<hr>
+<i>Létrehozva: 2012. szeptember 8.</i>
+<p class='lf'><a href="index.html">&lt;-- Vissza az ExifTool kezdőlapjára</a></p>
+</body>
+</html>
